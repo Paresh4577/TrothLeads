@@ -1,0 +1,50 @@
+[33m6c4dc2d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: commit (merge): Merge branch 'main' of https://github.com/manishwhitepearl/TrothUI
+[33m26411d7[m HEAD@{1}: commit: productheader and policy list done
+[33m263da12[m HEAD@{2}: commit: bug fix
+[33mae961a3[m HEAD@{3}: commit: bug fixed
+[33m6fce5c4[m HEAD@{4}: commit (merge): Merge branch 'main' of https://github.com/manishwhitepearl/TrothUI
+[33m6dda6e3[m HEAD@{5}: commit: claim component has been modified
+[33m631dfc7[m HEAD@{6}: commit: get quote done
+[33m13ada92[m HEAD@{7}: commit: new changes done
+[33m53e834e[m HEAD@{8}: pull --tags origin main: Fast-forward
+[33m50ba1cc[m HEAD@{9}: pull --tags origin main: Fast-forward
+[33m98c93d0[m HEAD@{10}: commit: add claim with policyno done
+[33m048eaa6[m HEAD@{11}: pull --tags origin main: Merge made by the 'ort' strategy.
+[33m1375576[m HEAD@{12}: commit: new policy data changes
+[33m653aa17[m HEAD@{13}: commit: getPolicy Ui
+[33m385ceef[m HEAD@{14}: commit: new bug fixed
+[33m26d58c1[m HEAD@{15}: pull --tags origin main: Fast-forward
+[33me04e450[m HEAD@{16}: pull --tags origin main: Fast-forward
+[33m47fcfb2[m HEAD@{17}: pull --tags origin main: Merge made by the 'ort' strategy.
+[33m696f064[m HEAD@{18}: commit: Changes Done .
+[33m9465c98[m HEAD@{19}: commit: new bug solved of merge
+[33m52ebff9[m HEAD@{20}: commit: ...
+[33m7bfcff6[m HEAD@{21}: commit (merge): Merge branch 'main' of https://github.com/manishwhitepearl/TrothUI
+[33m33a5d41[m HEAD@{22}: commit: new changes done
+[33mf05578f[m HEAD@{23}: reset: moving to HEAD~
+[33m18011c5[m HEAD@{24}: reset: moving to HEAD~
+[33m80a777c[m HEAD@{25}: commit (merge): Merge branch 'main' of https://github.com/manishwhitepearl/TrothUI
+[33m18011c5[m HEAD@{26}: commit: design improved
+[33mf05578f[m HEAD@{27}: commit: ..
+[33m4d62301[m HEAD@{28}: commit (merge): Merge branch 'main' of https://github.com/manishwhitepearl/TrothUI
+[33meddfe55[m HEAD@{29}: commit: ....
+[33m7d46c47[m HEAD@{30}: commit: claim forward new changes done
+[33mb3f9d9d[m HEAD@{31}: commit: claim forward bug fixed and design improved
+[33mced81f1[m HEAD@{32}: pull --tags origin main: Merge made by the 'ort' strategy.
+[33m54dd0bc[m HEAD@{33}: commit: claim decision done
+[33m93078b0[m HEAD@{34}: commit: add claim assignment done
+[33m170a126[m HEAD@{35}: commit: ...
+[33m7478ae3[m HEAD@{36}: commit: new changes done
+[33m6d88871[m HEAD@{37}: pull --tags origin main: Merge made by the 'ort' strategy.
+[33m5688b3c[m HEAD@{38}: commit (merge): Merge branch 'main' of https://github.com/manishwhitepearl/TrothUI
+[33m942c5fc[m HEAD@{39}: commit: claim document preview done
+[33md6d2e4e[m HEAD@{40}: commit: the add document functionality updated
+[33m43bcbdb[m HEAD@{41}: commit: claim register changes done
+[33m1222faa[m HEAD@{42}: commit: minor bug fixed
+[33mef9955c[m HEAD@{43}: commit: ..
+[33m6474803[m HEAD@{44}: commit: forms component created
+[33m3ca76f0[m HEAD@{45}: commit: ...
+[33m752d2b4[m HEAD@{46}: commit: main layout bug fixed
+[33mc18c529[m HEAD@{47}: commit: dashboard done
+[33m8ef99d7[m HEAD@{48}: commit: bug fixed of login
+[33m127214e[m HEAD@{49}: clone: from https://github.com/manishwhitepearl/TrothUI
