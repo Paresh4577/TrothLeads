@@ -1,0 +1,50 @@
+.dummy-formField {
+    @apply flex
+    items-center 
+    px-2
+    w-full 
+    h-10 
+    text-gray-900
+     bg-white 
+     rounded-lg border border-gray-300 focus:outline-none focus:ring-0 focus:border-primary-500 #{!important};
+}
+
+.headingBorder {
+    background-color: rgb(241,245,249) !important;
+}
+
+.headingColor {
+    color: rgb(14 165 233);
+}
+
+span.mandatory {
+    @apply after:content-['*'] after:ml-1 after:text-red-500;
+}
+
+::ng-deep.dummy-formField .PAN{
+    margin-left: -8rem !important;
+}
+
+
+::ng-deep.dummy-formField .AADHAR{
+    margin-left: -7rem !important;
+}
+
+.readOnly-disble{
+input:read-only {
+    background-color: #dddd!important;
+}
+}
+
+
+@media screen and (min-width: 1280px) {
+    .QuotationResponsive {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+}
+
+@media screen and (min-width: 1470px) {
+    .QuotationResponsive {
+        grid-template-columns: auto auto auto auto auto min-content !important;
+    }
+}

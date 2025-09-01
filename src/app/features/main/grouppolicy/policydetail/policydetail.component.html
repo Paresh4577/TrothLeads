@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Policy Details</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href='https://unpkg.com/boxicons2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <style>
+    :root {
+      --title-bg: #3B82F6;
+      --tableNav-bg: #3B82F6;
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <div class="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg pl-0">
+    <!-- Header Section -->
+    <div class="text-white p-2 rounded-t-lg flex justify-between items-center" style="background-color: var(--title-bg);">
+      <div class="flex items-center space-x-3">
+        <button 
+          class="text-white hover:text-gray-200 cursor-pointer"
+          (click)="goBack()"
+          title="Go Back">
+          <i class="fas fa-arrow-left text-lg"></i>
+        </button>
+        <p class="m-2 text-base" style="font-weight: 500;">Policy Details</p>
+      </div>
+      <div class="flex items-center space-x-2">
+      
+      </div>
+    </div>
+
+    
+
+    
+
+    <!-- Policy Details Content -->
+    <div class="mt-2 relative">
+      <div class="p-6">
+        <!-- Policy Information Section -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow-md mb-6">
+          <div class="text-white p-3 rounded-t-lg" style="background-color: var(--tableNav-bg);">
+            <h3 class="text-lg font-medium">Policy Information</h3>
+          </div>
+          <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Policy ID</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{policyId }}</p>
+              </div>
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Policy No</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ PolicyNo || '-' }}</p>
+              </div>
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Policy Name</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ PolicyName || '-' }}</p>
+              </div>
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Sum Insured</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ SumInsured }}</p>
+              </div>
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Start Date</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ PolicyStartDate }}</p>
+              </div>
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">End Date</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ PolicyEndDate }}</p>
+              </div>
+              <div class="space-y-1">
+                
+              </div>
+             
+              
+          </div>
+        </div>
+
+        <!-- Company Information Section -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow-md mb-6">
+          <div class="text-white p-3 rounded-t-lg" style="background-color: var(--tableNav-bg);">
+            <h3 class="text-lg font-medium">Company Information</h3>
+          </div>
+          <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Company Name</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ CompanyName || '-' }}</p>
+              </div>
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Contact Email</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ ContactEmail || '-' }}</p>
+              </div>
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Contact Phone</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ ContactNumber || '-' }}</p>
+              </div>
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Address</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ Address || '-' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enrolled Employees Section -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow-md mb-6">
+          <div class="text-white p-3 rounded-t-lg" style="background-color: var(--tableNav-bg);">
+            <h3 class="text-lg font-medium">Enrolled Employees</h3>
+          </div>
+          <div class="p-6">
+            <div *ngIf="enrolledEmployees.length === 0" class="text-center text-gray-500 py-4">
+              No enrolled employees found for this policy.
+            </div>
+            <table *ngIf="enrolledEmployees.length > 0" class="min-w-full border-collapse shadow-md mb-2">
+              <thead class="sticky top-0 z-10">
+                <tr class="text-white" style="background-color: var(--tableNav-bg)">
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Employee Code</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Name</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Email</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Mobile</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let employee of enrolledEmployees" class="border-b bg-white">
+                  <td class="p-3">{{ employee.EmployeeCode || employee.EmpCode || '-' }}</td>
+                  <td class="p-3">{{ (employee.FirstName || '') + ' ' + (employee.LastName || '') || employee.FullName || '-' }}</td>
+                  <td class="p-3">{{ employee.Email || '-' }}</td>
+                  <td class="p-3">{{ employee.Mobile || employee.ContactPhone || '-' }}</td>
+                  <td class="p-3">
+                    <span class="text-green-600" *ngIf="employee.IsActive !== false">
+                      <i class="fas fa-check-circle"></i>
+                    </span>
+                    <span class="text-red-600" *ngIf="employee.IsActive === false">
+                      <i class="fas fa-times-circle"></i>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Family Members Section
+        <div class="bg-white border border-gray-200 rounded-lg shadow-md mb-6">
+          <div class="text-white p-3 rounded-t-lg" style="background-color: var(--tableNav-bg);">
+            <h3 class="text-lg font-medium">Family Members</h3>
+          </div>
+          <div class="p-6">
+            <div *ngIf="familyMembers.length === 0" class="text-center text-gray-500 py-4">
+              No family members found for this policy.
+            </div>
+            <table *ngIf="familyMembers.length > 0" class="min-w-full border-collapse shadow-md mb-2">
+              <thead class="sticky top-0 z-10">
+                <tr class="text-white" style="background-color: var(--tableNav-bg)">
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Name</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Relation</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Gender</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Date of Birth</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let member of familyMembers" class="border-b bg-white">
+                  <td class="p-3">{{ member.FamilyName || member.Name || '-' }}</td>
+                  <td class="p-3">{{ member.Relation || '-' }}</td>
+                  <td class="p-3">{{ member.Gender || '-' }}</td>
+                  <td class="p-3">{{ formatDate(member.DateOfBirth) }}</td>
+                 
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div> -->
+
+        <!-- Action Buttons Section -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow-md">
+          <div class="text-white p-3 rounded-t-lg" style="background-color: var(--tableNav-bg);">
+            <h3 class="text-lg font-medium">Actions</h3>
+          </div>
+          <div class="p-6">
+            <div class="flex flex-wrap gap-4">
+              
+              
+            
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</body>
+</html>

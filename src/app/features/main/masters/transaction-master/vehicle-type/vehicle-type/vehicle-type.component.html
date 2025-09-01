@@ -1,0 +1,181 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" [disabled]="VehicleTypeMappingForm.invalid"
+                (click)="submitform()" *ngIf="mode == 'Create' || mode == 'Edit'">Save</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()"
+                *ngIf="mode == 'Edit' || mode == 'Create'">Cancel</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'View'">Back</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+        <form class="text-md" [formGroup]="VehicleTypeMappingForm">
+
+            <div class="grid lg:grid-cols-3  md:grid-cols-2  gap-5 mt-4 grid-cols-1">
+
+                <!--   Vehicle Type -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id=" VehicleType" placeholder=" " />
+                    <label for=" VehicleType">Vehicle Type</label>
+                </div>
+
+
+                <!--   Vehicle Code (Auto) -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id="VehicleCode" placeholder=" " />
+                    <label for="VehicleCode" class="mandatory">Vehicle Code (Auto)</label>
+                </div>
+
+                <!--   Maker/Brand Name -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id="BrandName" placeholder=" " />
+                    <label for="BrandName" class="mandatory">Maker/Brand Name</label>
+                </div>
+
+                <!--   Model -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id="Model" placeholder=" " />
+                    <label for="Model" class="mandatory">Model</label>
+                </div>
+
+                <!--    Variant (Sub Model) -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id="SubModel" placeholder=" " />
+                    <label for="SubModel" class="mandatory">Variant (Sub Model)</label>
+                </div>
+
+                <!--   Body Type -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id="BodyType" placeholder=" " />
+                    <label for="BodyType" class="mandatory">Body Type</label>
+                </div>
+
+                <!--   Cubic Capacity -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id="CubicCapacity" placeholder=" " />
+                    <label for="CubicCapacity" class="mandatory">Cubic Capacity</label>
+                </div>
+
+                <!--   Fuel -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id="Fuel" placeholder=" " />
+                    <label for="Fuel" class="mandatory">Fuel</label>
+                </div>
+
+                <!--    Power -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id="Power" placeholder=" " />
+                    <label for="Power" class="mandatory">Power</label>
+                </div>
+
+                <!-- Seating Capacity -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id="SeatingCapacity" placeholder=" " />
+                    <label for="SeatingCapacity" class="mandatory">Seating Capacity</label>
+                </div>
+
+                <!--   Gross Vehicle Weight -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id="GrossVehicleWeight" placeholder=" " />
+                    <label for="GrossVehicleWeight" class="mandatory">Gross Vehicle Weight</label>
+                </div>
+
+                <!--   No. of Wheels -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id="NoofWheels" placeholder=" " />
+                    <label for="NoofWheels" class="mandatory">No. of Wheels</label>
+                </div>
+
+                <!--   Ex. Showroom Price -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id="ExShowroomPrice" placeholder=" " />
+                    <label for="ExShowroomPrice" class="mandatory">Ex. Showroom Price</label>
+                </div>
+
+                <!--   Price Year -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id="PriceYear" placeholder=" " />
+                    <label for="PriceYear" class="mandatory">Price Year</label>
+                </div>
+
+                <!--    Production -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id=" Production" placeholder=" " />
+                    <label for=" Production" class="mandatory">Production</label>
+                </div>
+
+                <!-- Status -->
+                <div class="font-medium py-3 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+                    <span for="Status" class="pr-2 py-1 font-medium ml-3">Status</span>
+                    <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1"
+                        (change)="onChange($event,'Status')">
+                        <span class="flex font-medium text-xl ml-3 mt-1.5">
+                            {{
+                            f['Status'].value == 1
+                            ? "Active"
+                            : "InActive"
+                            }}
+                        </span>
+                    </mat-slide-toggle>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <!-- endregion form -->
+</div>

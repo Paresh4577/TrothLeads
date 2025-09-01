@@ -1,0 +1,31 @@
+<div class="mt-1 px-2 w-full">
+    <!-- region Main Heading -->
+    <h1
+        class="new-head text-lg px-4 py-2 mb-1.5 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" (click)="submit()">Select</button>
+            <button mat-raised-button class="new-button" (click)="cancle()">Cancel</button>
+        </div>
+    </h1>
+    <!-- endregion Heading Controls -->
+
+    <!-- region dynamic list table component  -->
+    <!-- region dynamic list table component  -->
+    <gnx-table-list 
+        [headArray]="columnDef" 
+        [listDataObservable]="DataList$" 
+        [pagefilters]="pagefilters"
+        [masterName]="'Popup'" 
+        (onSort)="sortColumn($event)" 
+        (onSearch)="searchColumn($event)" 
+        (onNext)="nextPage()"
+        (onPrev)="previousPage()" 
+        (onLimitChange)="setLimit($event)" 
+        (onSelectedData)="selectedData($event)"
+        (onMultiSelectedData)="multiSelectedData($event)"
+        ></gnx-table-list>
+    <!-- endregion dynamic list table component  -->
+    <!-- endregion dynamic list table component  -->
+</div>

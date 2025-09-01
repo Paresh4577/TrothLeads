@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Family Details - Simple Design</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --title-bg: #2563eb;
+      --tableNav-bg: #3b82f6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f3f4f6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Loading State */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      color: var(--title-bg);
+      font-size: 16px;
+    }
+
+    .loading i {
+      font-size: 32px;
+      margin-bottom: 15px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Error State */
+    .error {
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid #fca5a5;
+    }
+
+    /* Main Container */
+    .w-full {
+      width: 100%;
+    }
+
+    .max-w-8xl {
+      max-width: 100%;
+    }
+
+    .mx-auto {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .bg-white {
+      background-color: white;
+    }
+
+    .shadow-lg {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .rounded-lg {
+      border-radius: 8px;
+    }
+
+    /* Header */
+    .header {
+      background-color: var(--title-bg);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 16px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      padding: 6px 13px;
+      border-radius: 25px;
+      border: none;
+      background-color: white;
+      color: black;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: #f8f9fa;
+      transform: translateY(-1px);
+    }
+
+    /* Content */
+    .content {
+      padding: 20px;
+    }
+
+    .family-header {
+      background-color: var(--tableNav-bg);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .family-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    /* Info Sections */
+    .info-section {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      color: var(--title-bg);
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Family Member Cards */
+    .family-member-card {
+      background-color: #f8faff;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .member-header {
+      background-color: var(--tableNav-bg);
+      color: white;
+      padding: 10px 15px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .member-details {
+      padding: 15px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+
+    .info-item {
+      background-color: white;
+      padding: 12px;
+      border-radius: 4px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .label {
+      display: block;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .value {
+      color: #1f2937;
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    /* No Data Message */
+    .no-data-message {
+      background-color: #f8faff;
+      padding: 30px;
+      border-radius: 6px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 16px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .no-data-message i {
+      font-size: 24px;
+      margin-bottom: 10px;
+      display: block;
+      color: var(--title-bg);
+    }
+
+    /* Footer */
+    .footer {
+      background-color: #f9fafb;
+      padding: 15px 20px;
+      border-top: 1px solid #e5e7eb;
+      text-align: center;
+      border-radius: 0 0 8px 8px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+
+      .content {
+        padding: 15px;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .member-header {
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading">
+      <i class="fas fa-spinner"></i>
+      Loading family members...
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="errorMessage" class="error">
+      <i class="fas fa-exclamation-circle"></i>
+      {{ errorMessage }}
+    </div>
+
+    <!-- Family Details -->
+    <div *ngIf="!isLoading && !errorMessage" class="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg">
+
+      <!-- Header -->
+      <div class="header">
+        <h1>
+          <i class="fas fa-users"></i>
+          Family Details
+        </h1>
+        <button class="btn" (click)="goBack()">
+          <i class="fas fa-arrow-left"></i>
+          Back
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+
+        <!-- Family Header -->
+        <div class="family-header">
+          <div class="family-title">
+            {{ employeeDetails.Name }}'s Family Members
+          </div>
+        </div>
+
+        <!-- Family Members Section -->
+        <div class="info-section">
+          <div class="section-title">
+            <i class="fas fa-user-friends"></i>
+            Family Members
+          </div>
+
+          <!-- Family Members List -->
+          <div *ngIf="familyList && familyList.length > 0; else noFamily">
+            <div class="family-member-card" *ngFor="let member of familyList; let i = index">
+              <div class="member-header">
+                <i class="fas fa-user"></i>
+                {{ member.FamilyMemberName }} ({{ member.Relation }})
+              </div>
+              <div class="member-details">
+                <div class="info-grid">
+                  <div class="info-item">
+                    <span class="label">Name:</span>
+                    <span class="value">{{ member.FamilyMemberName }}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="label">Relation:</span>
+                    <span class="value">{{ member.Relation }}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="label">Gender:</span>
+                    <span class="value">{{ member.Gender }}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="label">Date of Birth:</span>
+                    <span class="value">{{ member.DOB | date:'dd MMM yyyy' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="label">Phone:</span>
+                    <span class="value">{{ member.Phone || 'N/A' }}</span>
+                  </div>
+                  <!-- <div class="info-item">
+                    <span class="label">Section:</span>
+                    <span class="value">{{ member.Section || 'N/A' }}</span>
+                  </div> -->
+                  <!-- <div class="info-item">
+                    <span class="label">Policy No:</span>
+                    <span class="value">{{ member.PolicyNo || 'N/A' }}</span>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- No Family Members Message -->
+          <ng-template #noFamily>
+            <div class="no-data-message">
+              <i class="fas fa-info-circle"></i>
+              No family members found for this employee.
+            </div>
+          </ng-template>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        Total Family Members: {{ familyList?.length || 0 }}
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>

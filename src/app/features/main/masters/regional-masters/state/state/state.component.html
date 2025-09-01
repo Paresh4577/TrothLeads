@@ -1,0 +1,93 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1
+      class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+      {{ title }}
+  
+      <!-- region main heading controls-->
+      <div class="flex gap-x-3  items-center text-lg font-normal">
+        <button mat-raised-button class="new-button" [disabled]="StateForm.invalid"
+          (click)="submitform()" *ngIf="mode == 'Create' || mode == 'Edit'">Save</button>
+  
+        <button mat-raised-button class="new-button" (click)="backClicked()"
+          *ngIf="mode == 'Edit' || mode == 'Create'">Cancel</button>
+  
+        <button mat-raised-button class="new-button" (click)="backClicked()"
+          *ngIf="mode == 'View'">Back</button>
+      </div>
+      <!-- endregion main heading controls-->
+    </h1>
+    <!-- endregion main heading -->
+  
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+      <form [formGroup]="StateForm" class="sm:w-120 text-md">
+
+        <div class="grid gap-6">
+
+          <!-- State Code -->
+        <div class="relative">
+          <div class="icon">
+            <mat-icon>poll</mat-icon>
+          </div>
+          <input type="text" class="peer" id="Code" placeholder=" " formControlName="Code" maxlength="3"/>
+          <label for="Code" class="mandatory">State Code</label>
+        </div>
+
+        <!-- State Name -->
+        <div class="relative">
+          <div class="icon">
+            <mat-icon>domain</mat-icon>
+          </div>
+          <input type="text" class="peer" AlphabetOnly maxlength="256" formControlName="Name" id="Name" placeholder=" ">
+          <label for="Name" class="mandatory">State Name</label>
+        </div>
+
+        <!-- Country Name -->
+        <div class="relative">
+          <div class="icon">
+            <mat-icon>flag</mat-icon>
+          </div>
+          <div class="flex">
+            <input type="text" class="peer" AlphabetOnly formControlName="CountryName" placeholder=" " id="CountryName" [matAutocomplete]="CountrySearch">
+            <mat-autocomplete #CountrySearch="matAutocomplete" (optionSelected)="CountrySelected($event)" >
+              <mat-option *ngFor="let Country Of Countrys$ | async" [value]="Country">
+                {{Country.Name}}
+            </mat-option>
+            </mat-autocomplete>
+            <button class="-m-5 z-10" type="button" *ngIf="editable"
+            (click)="openDiolog('Country','Select Country')"><mat-icon
+              class="-ml-2">search</mat-icon></button>
+              <button
+              *ngIf="StateForm.get('CountryName').value && mode != 'View'"
+              type="button"
+              class="-m-7 z-10"
+              aria-label="clear"
+              matTooltip="Clear"
+              (click)="clear('CountryName', 'CountryId')"
+            >
+              <mat-icon>clear</mat-icon>
+            </button>
+          <label for="CountryName" class="mandatory">Country</label>
+        </div>
+        </div>
+
+        <!-- Status -->
+        <div class="font-medium py-5 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+          <span for="Status" class="pr-2 py-1 font-medium ml-3">Status</span>
+      <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1" (change)="onChange($event,'Status')">
+        <span class="flex font-medium text-xl ml-3 mt-1.5">
+          {{
+            StateForm.controls['Status'].value == 1
+          ? "Active"
+          : "InActive"
+          }}
+        </span>
+        </mat-slide-toggle>
+      </div>
+
+      </div>
+      </form>
+    </div>
+    <!-- endregion form -->
+  </div>

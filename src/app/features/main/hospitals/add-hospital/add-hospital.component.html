@@ -1,0 +1,140 @@
+<form (ngSubmit)="submitHospital()">
+  <div class="row">
+    <!-- Company Dropdown -->
+    <div class="col-md-6 mb-3">
+      <select class="form-control" [(ngModel)]="currentHospital.CompanyId" name="companyId" required>
+        <option [ngValue]="null" disabled selected>Select Company</option>
+        <option *ngFor="let company of companies" [value]="company.CompanyId">
+          {{ company.CompanyName }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Hospital Name -->
+    <div class="col-md-6 mb-3">
+      <input id="hospitalName" type="text" [(ngModel)]="currentHospital.HospitalName" name="hospitalName"
+        class="form-control" required autocomplete="off" placeholder="Hospital Name" />
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Display Name -->
+    <div class="col-md-6 mb-3">
+      <input id="displayName" type="text" [(ngModel)]="currentHospital.DisplayName" name="displayName"
+        class="form-control" placeholder="Display Name" />
+    </div>
+
+    <!-- Hospital Code -->
+    <div class="col-md-6 mb-3">
+      <input id="hospitalCode" type="text" [(ngModel)]="currentHospital.HospitalCode" name="hospitalCode"
+        class="form-control" placeholder="Hospital Code" />
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Logo URL -->
+    <div class="col-md-6 mb-3">
+      <input id="logo" type="text" [(ngModel)]="currentHospital.Logo" name="logo" class="form-control"
+        placeholder="Logo URL" />
+    </div>
+
+    <!-- PinCode -->
+    <div class="col-md-6 mb-3">
+      <input id="pincode" type="text" [(ngModel)]="currentHospital.Pincode" name="Pincode" class="form-control"
+        placeholder="Pin Code" />
+    </div>
+  </div>
+
+  <!-- State and City Dropdowns -->
+  <div class="row">
+    <!-- State Dropdown -->
+    <div class="col-md-6 mb-3">
+      <select class="form-control" [(ngModel)]="currentHospital.StateId" name="stateId" required
+        (change)="onStateChange($event)">
+        <option [ngValue]="null" disabled selected>Select State</option>
+        <option *ngFor="let state of states" [value]="state.StateId">
+          {{ state.StateName }}
+        </option>
+      </select>
+    </div>
+
+    <!-- City Dropdown -->
+    <div class="col-md-6 mb-3">
+      <select class="form-control" [(ngModel)]="currentHospital.CityId" name="cityId" required
+        [disabled]="!currentHospital.StateId">
+        <option [ngValue]="null" disabled selected>Select City</option>
+        <option *ngFor="let city of filteredCities" [value]="city.CityId">
+          {{ city.CityName }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Email -->
+    <div class="col-md-6 mb-3">
+      <input id="email" type="email" [(ngModel)]="currentHospital.Email" name="email" class="form-control"
+        placeholder="Email" />
+    </div>
+
+    <!-- Contact -->
+    <div class="col-md-6 mb-3">
+      <input id="contact" type="text" [(ngModel)]="currentHospital.Contact" name="contact" class="form-control"
+        placeholder="Contact Number" />
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Contact Person -->
+    <div class="col-md-6 mb-3">
+      <input id="contactPerson" type="text" [(ngModel)]="currentHospital.ContactPerson" name="contactPerson"
+        class="form-control" placeholder="Contact Person" />
+    </div>
+
+    <!-- Is Active (Checkbox) -->
+    <div class="col-md-6 mb-3">
+      <div class="form-check mt-2">
+        <input id="isActive" type="checkbox" [(ngModel)]="currentHospital.IsActive" name="isActive"
+          class="form-check-input" />
+        <label for="isActive" class="form-check-label">Active</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Address -->
+    <div class="col-md-6 mb-3">
+      <textarea id="address" rows="3" [(ngModel)]="currentHospital.Address" name="address" class="form-control"
+        placeholder="Address"></textarea>
+    </div>
+
+    <!-- Description -->
+    <div class="col-md-6 mb-3">
+      <textarea id="description" rows="3" [(ngModel)]="currentHospital.Description" name="description"
+        class="form-control" placeholder="Description"></textarea>
+    </div>
+  </div>
+
+  <!-- Read-Only Fields (Optional) -->
+  <div class="row">
+    <!-- Date Created (Read-Only) -->
+    <div class="col-md-6 mb-3">
+      <input id="dateCreated" type="text" [value]="currentHospital.DateCreated | date" name="dateCreated"
+        class="form-control-plaintext" readonly disabled placeholder="Auto-generated" />
+    </div>
+
+    <!-- Created By (Read-Only) -->
+    <div class="col-md-6 mb-3">
+      <input id="createdBy" type="text" [value]="currentHospital.CreatedBy" name="createdBy"
+        class="form-control-plaintext" readonly disabled placeholder="Auto-generated" />
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="row">
+    <div class="col-md-12 mb-3 d-flex justify-content-end gap-2">
+      <button type="submit" class="btn btn-success">Save</button>
+      <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    </div>
+  </div>
+</form>

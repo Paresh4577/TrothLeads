@@ -1,0 +1,28 @@
+// @import "../../../../../styles/base/global-variables";
+
+// gnx-content-root {
+//   position: relative;
+//   height: 100%;
+//   display: flex;
+//   flex-direction: column;
+//   flex: 1 1 auto;
+//   left: 0px;
+//   right: 0;
+
+//   &.gnx-sidenav-closed {
+//     width: 100%;
+//     left: 0;
+//   }
+
+//   &.gnx-sidenav-opened {
+//     left: $gnx-sidenav-width;
+//     width: calc(100% - $gnx-sidenav-width);
+//     max-width: calc(100% - $gnx-sidenav-width);
+//   }
+
+//   &.gnx-animations-enabled {
+//     transition-duration: 400ms;
+//     transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+//     transition-property: visibility, margin-left, margin-right, transform, width, max-width, min-width, position;
+//   }
+// }

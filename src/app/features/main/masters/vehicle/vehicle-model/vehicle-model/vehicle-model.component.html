@@ -1,0 +1,90 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" [disabled]="VehicleModelForm.invalid" (click)="submitform()"
+                *ngIf="mode == 'Create' || mode == 'Edit'">Save</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()"
+                *ngIf="mode == 'Edit' || mode == 'Create'">Cancel</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'View'">Back</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+        <form [formGroup]="VehicleModelForm" class="sm:w-120 text-md">
+
+            <div class="grid gap-6">
+                <!-- Vehicle Model Name -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>directions_car</mat-icon>
+                    </div>
+                    <input type="text" class="peer" maxlength="120" formControlName="Name" placeholder=" " id="Name" />
+                    <label for="Name" class="mandatory">Vehicle Model Name</label>
+                </div>
+                <!-- Vehicle Type -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>commute</mat-icon>
+                    </div>
+                    <select id="Status" name="Status" class="peer" formControlName="Type">
+                        <option value="">-- select --</option>
+                        <option *ngFor="let option of DropdownMaster.VehicleType" [value]="option.value">{{ option.name
+                            }}</option>
+                    </select>
+                    <label for="Type" class="mandatory">Vehicle Type</label>
+                </div>
+                <!-- Vehicle Brand -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>local_taxi</mat-icon>
+                    </div>
+                    <div class="flex">
+                        <input type="text" class="peer" maxlength="60" formControlName="BrandName" placeholder=" " id="BrandName"
+                            [matAutocomplete]="BrandSearch">
+                        <mat-autocomplete #BrandSearch="matAutocomplete"
+                            (optionSelected)="VehicleBrandSelected($event)">
+                            <mat-option *ngFor="let brand Of brands$ | async" [value]="brand">
+                                {{brand.Name}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <button class="-m-5 z-10" type="button" *ngIf="editable"
+                            (click)="openDiolog('Brand','Select Brand')"><mat-icon
+                                class="-ml-2">search</mat-icon></button>
+                        <button *ngIf="VehicleModelForm.get('BrandName').value && mode != 'View'" type="button"
+                            class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                            (click)="clear('BrandName', 'BrandId')">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                        <label for="BrandName" class="mandatory">Vehicle Brand</label>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="font-medium py-5 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+                    <span for="Status" class="pr-2 py-1 font-medium ml-3">Status</span>
+                    <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1"
+                        (change)="onChange($event,'Status')">
+                        <span class="flex font-medium text-xl ml-3 mt-1.5">
+                            {{
+                            VehicleModelForm.controls['Status'].value == 1
+                            ? "Active"
+                            : "InActive"
+                            }}
+                        </span>
+                    </mat-slide-toggle>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+</div>

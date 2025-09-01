@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      margin: 0;
+      color: #333;
+    }
+
+    .breadcrumb {
+      font-size: 14px;
+      color: #6c757d;
+      /* Changed to a medium gray */
+      font-weight: bold;
+    }
+
+    .breadcrumb a {
+      color: #6c757d;
+      /* Changed to a medium gray */
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .breadcrumb a:hover {
+      color: #adb5bd;
+      /* Lighter gray for hover */
+      text-shadow: 0 0 8px rgba(173, 181, 189, 0.7);
+      /* Updated shadow to match gray theme */
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .actions-left button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .actions-left button:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 123, 255, 0.7);
+    }
+
+    .actions-right button {
+      background-color: #fff;
+      color: #343a40;
+      border: 1px solid #ced4da;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .actions-right button:hover {
+      background-color: #f1f1f1;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(206, 212, 218, 0.5);
+    }
+
+    .filters {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .filters-left select {
+      padding: 8px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .filters-left select:hover {
+      background-color: #f1f1f1;
+      box-shadow: 0 0 10px rgba(206, 212, 218, 0.5);
+      transform: scale(1.05);
+    }
+
+    .filters-right input {
+      padding: 8px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      width: 200px;
+      transition: all 0.3s ease;
+    }
+
+    .filters-right input:hover {
+      box-shadow: 0 0 10px rgba(206, 212, 218, 0.5);
+      transform: scale(1.05);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      font-weight: normal;
+      color: #6c757d;
+      font-size: 14px;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    tr {
+      transition: all 0.3s ease;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+      transform: scale(1.02);
+      box-shadow: 0 0 15px rgba(206, 212, 218, 0.3);
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .delete-all {
+      color: #dc3545;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .delete-all:hover {
+      color: #ff8080;
+      text-shadow: 0 0 8px rgba(255, 128, 128, 0.7);
+    }
+
+    .actions-column button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      margin-right: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .edit-btn {
+      color: #28a745;
+      font-size: 18px;
+    }
+
+    .edit-btn:hover {
+      color: #80ff80;
+      text-shadow: 0 0 8px rgba(128, 255, 128, 0.7);
+      transform: scale(1.2);
+    }
+
+    .delete-btn {
+      color: #dc3545;
+      font-size: 18px;
+    }
+
+    .delete-btn:hover {
+      color: #ff8080;
+      text-shadow: 0 0 8px rgba(255, 128, 128, 0.7);
+      transform: scale(1.2);
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .pagination-buttons button {
+      padding: 8px 12px;
+      border: 1px solid #ced4da;
+      background-color: #fff;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .pagination-buttons button:hover {
+      background-color: #f1f1f1;
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(206, 212, 218, 0.5);
+    }
+
+    .pagination-buttons button.active {
+      background-color: #343a40;
+      color: #fff;
+      border-color: #343a40;
+    }
+
+    .pagination-buttons button:disabled {
+      color: #6c757d;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" id="app">
+    <div class="header">
+      <h1>Roles</h1>
+      <!-- <div class="breadcrumb">
+        <a href="#">Dashboard</a> > <span style="font-size: 16px;">Roles</span>
+      </div> -->
+    </div>
+
+    <div class="actions">
+      <div class="actions-left">
+        <button>☰ Role List</button>
+      </div>
+      <div class="actions-right">
+        <button (click)="createRole()">+ Create Role</button>
+      </div>
+    </div>
+
+    <div class="filters">
+      <div class="filters-left">
+        <label>Show </label>
+        <select>
+          <option>10</option>
+          <option>25</option>
+          <option>50</option>
+          <option>100</option>
+        </select>
+        <label> entries</label>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>
+            <div class="checkbox">
+              <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAll()">
+              <button class="delete-all" onclick="handleAllAction()">All</button>
+            </div>
+          </th>
+          <th>Name <span>↑</span></th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="roleTableBody">
+        <tr *ngFor="let user of users">
+          <td><input type="checkbox" class="row-checkbox"></td>
+          <td>{{ user.Role }}</td>
+          <td class="actions-column">
+            <button class="" (click)="editRole(user.RoleMasterId)"> <i class="fas fa-edit"></i></button>
+            <button class="" (click)="deleteRole(user.RoleMasterId)">  <i class="fas fa-trash-alt"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <div id="paginationInfo">Showing 1 to 3 of 3 entries</div>
+      <div class="pagination-buttons">
+        <button disabled>Previous</button>
+        <button class="active">1</button>
+        <button>Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let users = [
+      { RoleMasterId: 1, Role: 'Super Administrator' },
+      { RoleMasterId: 2, Role: 'Tester' },
+      { RoleMasterId: 3, Role: 'SalesPerson' }
+    ];
+
+    // Function to render the table rows
+    function renderTable() {
+      const tableBody = document.getElementById('roleTableBody');
+      tableBody.innerHTML = ''; // Clear existing rows
+
+      users.forEach(user => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><input type="checkbox" class="row-checkbox"></td>
+          <td>${user.Role}</td>
+          <td class="actions-column">
+            <button class="edit-btn" (click)="editRole(${user.RoleMasterId})">✏️</button>
+            <button class="delete-btn" (click)="deleteRole(${user.RoleMasterId})">🗑️</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+      // Update pagination
+      const paginationInfo = document.getElementById('paginationInfo');
+      paginationInfo.textContent = `Showing 1 to ${users.length} of ${users.length} entries`;
+
+      // Reset select all checkbox
+      document.getElementById('selectAllCheckbox').checked = false;
+    }
+
+    // Function to toggle select all checkboxes
+    function toggleSelectAll() {
+      const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+      const checkboxes = document.querySelectorAll('.row-checkbox');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAllCheckbox.checked;
+      });
+    }
+
+    // Function to handle the "All" button action (select or delete)
+    function handleAllAction() {
+      const checkboxes = document.querySelectorAll('.row-checkbox');
+      const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+
+      if (allChecked && users.length > 0) {
+        // If all are checked, prompt for deletion
+        if (confirm('Are you sure you want to delete all roles?')) {
+          users = []; // Clear all records
+          renderTable();
+          alert('All roles deleted successfully.');
+        }
+        // Uncheck all checkboxes after deletion
+        document.getElementById('selectAllCheckbox').checked = false;
+      } else {
+        // If not all are checked, toggle select all
+        toggleSelectAll();
+      }
+    }
+
+    // Function to handle Create Role
+    function createRole() {
+      // Simulate adding a new role
+      const newRoleId = users.length + 1;
+      const newRole = { RoleMasterId: newRoleId, Role: `New Role ${newRoleId}` };
+
+      // Add the new role to the users array
+      users.push(newRole);
+
+      // Re-render the table to reflect the new role
+      renderTable();
+
+      // For demonstration, show an alert (in a real app, this would likely navigate to a form)
+      alert(`Created new role: ${newRole.Role}`);
+    }
+
+    // Placeholder functions for edit and delete
+    function editRole(roleId) {
+      console.log(`Editing role with ID: ${roleId}`);
+      // In a real Angular app, this would be handled by the Angular component
+    }
+
+    function deleteRole(roleId) {
+      if (confirm(`Are you sure you want to delete role with ID: ${roleId}?`)) {
+        users = users.filter(user => user.RoleMasterId !== roleId);
+        renderTable();
+        alert(`Role with ID ${roleId} deleted successfully.`);
+      }
+    }
+
+    // Initial render of the table
+    renderTable();
+  </script>
+</body>
+
+</html>

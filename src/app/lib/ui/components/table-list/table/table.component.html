@@ -1,0 +1,191 @@
+<div class="overflow-x-scroll flex flex-col h-full">
+    <div class="flex-grow overflow-auto">
+        <table class="shadow-md relative w-full border">
+            <!-- region table header -->
+            <thead class="font-sans sticky top-0">
+                <!-- region column title  -->
+                <tr>
+
+                    <th *ngFor="let head of headArray"
+                    [ngStyle]="head?.width&&head?.minWidth?{width: head.width, minWidth: head.minWidth}
+                                : head?.minWidth?{minWidth: head.minWidth}
+                                : head?.width?{width: head.width}
+                                :{}"
+                        class="pt-2 pb-1 tracking-wide subpixel-antialiased font-normal ">
+                        <span  class="flex justify-between items-center hover:cursor-pointer"
+                            (click)="head.isSortable? head.sortFieldName ?  sortColumns(head.sortFieldName,head) : sortColumns(head.fieldName,head) :null"
+
+                            [ngClass]="{'pointer-events-none': !head.isSortable}">
+                            <span class="mr-2 truncate ">{{ head.head }}</span>
+                            <i *ngIf="head.isSortable && head.isSort" class="fa-solid fa-sort text-md"></i>
+                        </span>
+                    </th>
+
+                </tr>
+                <!-- endregion column title  -->
+
+                <!-- region column search  -->
+                <tr>
+                    <th *ngFor="let head of headArray" class="pt-0 pb-2">
+
+                        <!-- FOR search type text -->
+                        <input *ngIf="head.isFilterable && head.filterType == 'text'" id="{{head.fieldName}}" type="text" #input
+                        class="padding h-7 min-w-2/3 bg-accent-50  shadow text-on-accent-50 font-medium text-sm placeholder:font-medium rounded-md"
+                        (input)="columnSearch(head.searchFieldName, input.value,head.oprator,head.isAdditional)" >
+                       
+                        <!-- FOR search type number -->
+                        <input *ngIf="head.isFilterable && head.filterType == 'number'" id="{{head.fieldName}}" type="text" #input Decimal
+                        class="padding h-7 min-w-2/3 bg-accent-50  shadow text-on-accent-50 font-medium text-sm placeholder:font-medium rounded-md"
+                        (input)="columnSearch(head.searchFieldName, input.value,head.oprator,head.isAdditional)" >
+
+                        <!-- FOR search type dropdown -->
+                        <select *ngIf="head.isFilterable && head.filterType == 'dropdown'"
+                            id="{{head.fieldName}}"
+                            (change)="onSearchChange($event,head.searchFieldName,head.isAdditional)"
+                            class="h-7 py-0 appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 px-2 pr-4 rounded leading-none focus:outline-none focus:bg-white focus:border-gray-500">
+                            <option *ngFor="let options of head.drpDataList" [value]="options.Value">
+                                {{options.Text}}
+                            </option>
+                        </select>
+
+                        <!-- FOR search type date -->
+                        <div *ngIf="head.isFilterable && head.filterType == 'date'">
+                            <div class="flex">
+                                <input matInput id="{{head.searchFieldName}}" type="text" #inp [matDatepicker]="input"
+                                    datemask placeholder="__/__/____"
+                                    class="padding h-7 min-w-28 bg-accent-50 mt-1 shadow text-on-accent-50 font-medium text-sm placeholder:font-medium rounded-md "
+                                    (dateInput)="dateColumnSearch(inp.id, $event ,head.isAdditional,'eq',head.filterType)">
+                                <mat-datepicker-toggle class="-ml-9" matSuffix [for]="input"></mat-datepicker-toggle>
+                                <mat-datepicker #input></mat-datepicker>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+                <!-- endregion column search  -->
+            </thead>
+            <!-- endregion table header -->
+
+            <!-- region table body -->
+            <tbody *ngIf="pagedData">
+                <tr *ngFor="let item of pagedData['Data']['Items'],let i=index">
+                    <td class="h-min py-1" *ngFor="let head of headArray">
+
+                        <ng-container [ngSwitch]="head.head">
+
+                            <!-- table cell for Actions -->
+                            <div *ngSwitchCase="'Actions'" class="flex gap-x-4 justify-start items-center pr-6 w-full">
+                                <ng-container *ngFor="let action of head.listActions">
+                                    <i *ngIf="action && checkActionHidden(action.hidden, item)" [matTooltip]="action.tooltip" class="hover:text-primary-900 hover:cursor-pointer"
+                                    [ngClass]="action.icon" (click)="action.action && action.action(item)"
+                                        ></i>
+                                </ng-container>
+                            </div>
+
+                            <!-- table cell for Image -->
+                            <div *ngSwitchCase="'Image'">
+                                <img class="w-max max-h-7" [src]="item[head['fieldName']]" alt="">
+                            </div>
+
+
+                            <!-- table cell for Radio Button -->
+                            <!-- <div *ngSwitchCase="'Select'" (click)="valueChange(i)" class="w-fit">
+                                <mat-radio-button [value]="i" (click)="valueChange(i)"> </mat-radio-button>
+                            </div> -->
+
+                           
+
+
+                            <!-- table cell for default text fields -->
+                            <div *ngSwitchDefault>
+                                <ng-container [ngSwitch]="masterName">
+
+                                    <ng-container *ngSwitchCase="'Popup'">
+                                        <span>{{ item[head['fieldName']]}}</span>
+                                    </ng-container>
+
+                                    <ng-container *ngSwitchDefault>
+                                        <span class="" 
+                                        [ngClass]="head.action && checkActionHidden(head?.hidden, item) ? 'hover:cursor-pointer hover:text-sky-500' : ''"
+                                        (click)="(head.action && checkActionHidden(head?.hidden, item)) ? head.action(item) : ''">
+                                            {{ head.valueFormatter? head.valueFormatter(item[head['fieldName']]) : item[head['fieldName']] }}
+                                        </span>
+                                    </ng-container>
+
+                                </ng-container>
+                            </div>
+
+                        </ng-container>
+
+                    </td>
+                </tr>
+
+                <tr *ngIf="!pagedData['Data']['TotalCount']">
+                    <td colspan="3" class="hover:text-accent-800">
+                        No record found
+                    </td>
+                </tr>
+
+            </tbody>
+            <!-- endregion table body -->
+
+            <!-- region table footer -->
+            <tfoot *ngIf="pagedData">
+                <tr class="relative">
+                    <td [attr.colspan]="headArray.length + 1">
+                        <div [ngClass]="masterName == 'Popup'?' xl:flex-row xl:justify-between xl:items-center' :
+                                'md:flex-row md:justify-between md:items-center'" class="flex gap-y-2.5 flex-col">
+                            <div
+                                class="text-accent-500 flex sm:flex-row flex-col  sm:items-center gap-y-4 gap-x-8 xl:justify-between">
+
+                                <div class="flex gap-x-2 items-center">
+                                    <span for="limit">Items per page:</span>
+                                    <select id="limit" #limit name="limit" class="px-2 py-1 w-20"
+                                        (change)="setLimit(limit.value)" [value]="pageSize">
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                        <option value="200">200</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    Showing
+                                    {{
+                                    pagedData['Data']['TotalCount']? pagedData['Data']['CurrentPage'] *
+                                    pagedData['Data']['PageSize'] -
+                                    pagedData['Data']['PageSize'] + 1: 0
+                                    }}
+                                    to
+                                    {{
+                                    pagedData['Data']['TotalCount'] > pagedData['Data']['CurrentPage'] *
+                                    pagedData['Data']['PageSize']
+                                    ? pagedData['Data']['CurrentPage'] * pagedData['Data']['PageSize']
+                                    : pagedData['Data']['TotalCount']
+                                    }}
+                                    of {{ pagedData['Data']['TotalCount'] }} results
+                                </div>
+                            </div>
+
+                            <!-- region table navigations -->
+                            <div [ngClass]="masterName == 'Popup'? 'xl:right-0 xl:absolute' : 'lg:right-0 lg:absolute'"
+                                class="flex space-x-9 md:space-x-4 md:w-50 lg:justify-center">
+                                <button mat-raised-button
+                                    class="rounded-lg border w-20 button p-1 text-primary-500 hover:bg-primary hover:text-on-primary disabled:hover:bg-transparent disabled:hover:text-accent-500 disabled:text-accent-500"
+                                    [disabled]="!pagedData['Data']['HasPrevious']" (click)="pagePrevious()">
+                                    Previous
+                                </button>
+                                <button mat-raised-button
+                                    class="rounded-lg border w-20 button p-1 text-primary-500 hover:bg-primary hover:text-on-primary disabled:hover:bg-transparent disabled:hover:text-accent-500 disabled:text-accent-500"
+                                    [disabled]="!pagedData['Data']['HasNext']" (click)="pageNext()">
+                                    Next
+                                </button>
+                            </div>
+                            <!-- endregion table navigations -->
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+            <!-- endregion table footer -->
+        </table>
+    </div>
+</div>

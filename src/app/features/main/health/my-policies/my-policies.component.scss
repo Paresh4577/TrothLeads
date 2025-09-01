@@ -1,0 +1,11 @@
+:host {
+    @apply w-full h-full p-4 flex flex-col justify-items-stretch #{!important};
+}
+gnx-table{
+    height: calc(100% - 4rem);
+}
+
+.iconColor {
+    color: rgb(14, 165, 233);
+    // color: #248cd1;
+  }

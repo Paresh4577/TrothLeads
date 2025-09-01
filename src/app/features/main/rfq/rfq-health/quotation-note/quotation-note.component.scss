@@ -1,0 +1,52 @@
+.mat-mdc-row .mat-mdc-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+}
+
+.mat-icon {
+    color: rgb(14 165 233);
+}
+
+
+input[type="radio"][disabled]+label {
+    color: rgb(209, 209, 209);
+}
+
+.genderbtn {
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12) !important;
+
+    .mat-button-toggle-checked {
+        // background-color: rgb(4 100 164/var(--tw-bg-opacity)) !important;
+        background-color: rgb(125 211 252 / var(--tw-bg-opacity)) !important;
+        color: black !important;
+        font-weight: bold !important;
+    }
+
+    .mat-button-toggle-group,
+    .mat-button-toggle {
+        border-radius: 0%;
+        border-radius: 0;
+    }
+}
+
+.self {
+    margin-top: 18px !important;
+}
+
+.pad {
+    padding-right: 0px !important;
+}
+
+span.mandatory {
+    @apply after:content-['*'] after:ml-1 after:text-red-500;
+}
+
+.inputfile {
+	opacity: 0;
+	overflow: hidden;
+}
+
+.headingBorder {
+    background-color: rgb(241,245,249) !important;
+}

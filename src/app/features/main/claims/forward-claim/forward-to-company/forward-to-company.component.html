@@ -1,0 +1,105 @@
+<div class="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+      <!-- Card Header -->
+      <div class="text-white  rounded-t-lg flex justify-between items-center"
+        style="background-color: var(--title-bg);">
+        <div class="flex items-center">
+
+          <p class="m-2 text-base" style="font-weight: 500; padding-left: 5px;">Forward Claim</p>
+        </div>
+        <div class="flex items-center space-x-2">
+        </div>
+      </div>
+
+      <!-- Card Body -->
+      <div class="px-4 py-4">
+        <div class="mb-4 bg-gray-100 p-4 rounded-md">
+          <h5 class="text-md font-medium flex items-center mb-3 section-header">
+            <i class="fas fa-share-square text-primary mr-2"></i> Forward Details
+          </h5>
+
+          <!-- Display Selected Claim Details -->
+          <!-- <div class="bg-primary-lighter p-4 rounded-md border border-primary-lightest mb-4" *ngIf="selectedClaim">
+            <p class="text-xs font-medium text-primary-dark flex items-center">
+              <i class="fas fa-file-invoice mr-1 text-primary"></i> Selected Claim
+            </p>
+            <p class="text-sm text-gray-800 mt-1">
+              #{{selectedClaim.ClaimId}} - {{selectedClaim.FullName}} - {{selectedClaim.ClaimAmount | currency}}
+            </p>
+          </div> -->
+
+          <form [formGroup]="claimForm" (ngSubmit)="onSubmit()">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Forward Date -->
+              <div class="bg-primary-lighter p-4 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-calendar-alt mr-1 text-primary"></i> Forward Date
+                </p>
+                <input type="date" formControlName="forwardDate"
+                  class="form-control bg-white mt-1 w-full text-sm text-gray-800" required />
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('forwardDate')?.touched && claimForm.get('forwardDate')?.invalid">
+                  Forward date is required.
+                </div>
+              </div>
+
+              <!-- Forward Method -->
+              <div class="bg-primary-lighter p-4 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-paper-plane mr-1 text-primary"></i> Forward Method
+                </p>
+                <select formControlName="forwardMethod" class="form-control bg-white mt-1 w-full text-sm text-gray-800"
+                  required>
+                  <option [ngValue]="''" disabled>Select a method</option>
+                  <option *ngFor="let method of forwardingMethods" [value]="method">
+                    {{method}}
+                  </option>
+                </select>
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('forwardMethod')?.touched && claimForm.get('forwardMethod')?.invalid">
+                  Forward method is required.
+                </div>
+              </div>
+            </div>
+
+            <!-- Forward Comment -->
+            <div class="bg-primary-lighter p-4 rounded-md border border-primary-lightest mt-4">
+              <p class="text-xs font-medium text-primary-dark flex items-center">
+                <i class="fas fa-comment-dots mr-1 text-primary"></i> Forward Comment
+              </p>
+              <textarea formControlName="forwardComment" rows="3"
+                class="form-control bg-white mt-1 w-full text-sm text-gray-800"
+                placeholder="Add a comment about this forwarding"></textarea>
+              <div class="text-red-600 text-xs mt-1"
+                *ngIf="claimForm.get('forwardComment')?.touched && claimForm.get('forwardComment')?.invalid">
+                Please provide a comment.
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-6 flex justify-start space-x-3">
+              <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+                <i class="fas fa-share-square mr-1"></i>
+                <span *ngIf="!isLoading">Forward Claim</span>
+                <span *ngIf="isLoading">Processing...</span>
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="resetForm()">
+                <i class="fas fa-redo mr-1"></i> Reset
+              </button>
+            </div>
+
+            <!-- Messages -->
+            <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">
+              <i class="fas fa-exclamation-triangle mr-2"></i> {{ errorMessage }}
+            </div>
+            <div *ngIf="successMessage"
+              class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mt-4">
+              <i class="fas fa-check-circle mr-2"></i> {{ successMessage }}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

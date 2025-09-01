@@ -1,0 +1,262 @@
+<div class="px-4 pb-4 max-h-none w-full">
+
+    <!-- region main heading -->
+    <div class="pt-4 sticky z-30 headingBorder top-0 w-full">
+        <h1 class="new-head h-14 text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold">
+            Sales Dashboard
+        </h1>
+    </div>
+    <!-- ending main heading -->
+
+
+    <div class=" bg-white mt-5">
+        <div class="p-2">
+            <div class="border rounded-lg p-3 flex flex-col gap-y-2 px-2">
+                <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 mt-2"
+                    [formGroup]="salesDashboardFilterForm">
+
+                    <!-- Month-->
+                    <div class="relative ">
+                        <div class="icon">
+                            <mat-icon>timelapse</mat-icon>
+                        </div>
+                        <select class="peer" id="Month" formControlName="Month">
+                            <option value="">--Select--</option>
+                            <option *ngFor="let option of monthDrpList" [value]="option.value">
+                                {{option.name}}
+                            </option>
+                        </select>
+                        <label for="Month" class="">Month</label>
+                    </div>
+
+                    <!--  Financial Year -->
+                    <div class="relative ">
+                        <div class="icon">
+                            <mat-icon>event</mat-icon>
+                        </div>
+                        <select class="peer" id="FinancialYear" formControlName="FinancialYearId">
+                            <!-- <option value="">--Select--</option> -->
+                            <option *ngFor="let option of FinancialYearList" [value]="option.Id">
+                                {{option.FYCode}}</option>
+                        </select>
+
+                        <label for="FinancialYear" class="mandatory">Financial Year</label>
+                    </div>
+
+                    <!-- Branch -->
+                    <div class="relative ">
+                        <div class="icon">
+                            <mat-icon>spa</mat-icon>
+                        </div>
+                        <select class="peer" id="Branch" formControlName="BranchId">
+                            <option value="">--Select--</option>
+                            <option *ngFor="let Branch of branchs" [value]="Branch.Id">
+                                {{Branch.Name}}
+                            </option>
+                        </select>
+
+                        <label for="Branch" class="">Branch</label>
+                    </div>
+
+                    <!-- Verticle Head -->
+                    <div class="relative " *ngIf="canDisplayVerticleHead">
+                        <div class="icon">
+                            <mat-icon>person</mat-icon>
+                        </div>
+
+                        <div class="flex">
+                            <input type="text" class="peer " formControlName="VerticalHeadName" placeholder=" "
+                                id="VerticalHeadSearch" [matAutocomplete]="VerticalHeadSearch" autocomplete="off" />
+                            <mat-autocomplete #VerticalHeadSearch="matAutocomplete"
+                                (optionSelected)="autocompleteSelectedEvent($event,'VerticalHead')">
+                                <mat-option *ngFor="let VerticalHead of VerticalHeadList$ | async"
+                                    [value]="VerticalHead">
+                                    {{VerticalHead.FullName}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <button class="-m-5 z-10" type="button"
+                                (click)="openDiolog('User','Select Vertical Head','VerticalHead')">
+                                <mat-icon class="-ml-2">search</mat-icon>
+                            </button>
+                            <button type="button" class="-mx-7 z-10" matTooltip="Clear"
+                                (click)="autocompleteCleardEvent('VerticalHead')"
+                                *ngIf="salesDashboardFilterForm.get('VerticalHeadName').value">
+                                <mat-icon>clear</mat-icon>
+                            </button>
+                            <label for="VerticalHeadSearch">Verticle Head</label>
+                        </div>
+
+                    </div>
+
+                    <!-- BDM -->
+                    <div class="relative " *ngIf="canDisplayBDM">
+                        <div class="icon">
+                            <mat-icon>person</mat-icon>
+                        </div>
+
+                        <div class="flex">
+                            <input type="text" class="peer " formControlName="BDMName" placeholder=" " id="BDMSearch"
+                                [matAutocomplete]="BDMSearch" autocomplete="off" />
+                            <mat-autocomplete #BDMSearch="matAutocomplete"
+                                (optionSelected)="autocompleteSelectedEvent($event,'BDM')">
+                                <mat-option *ngFor="let BDM of BDMList$ | async" [value]="BDM">
+                                    {{BDM.FullName}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <button class="-m-5 z-10" type="button" (click)="openDiolog('User','Select BDM','BDM')">
+                                <mat-icon class="-ml-2">search</mat-icon>
+                            </button>
+                            <button type="button" class="-mx-7 z-10" matTooltip="Clear"
+                                (click)="autocompleteCleardEvent('BDM')"
+                                *ngIf="salesDashboardFilterForm.get('BDMName').value">
+                                <mat-icon>clear</mat-icon>
+                            </button>
+                            <label for="BDMSearch">BDM</label>
+                        </div>
+
+                    </div>
+
+                    <!-- BDO -->
+                    <div class="relative " *ngIf="canDisplayBDO">
+                        <div class="icon">
+                            <mat-icon>person</mat-icon>
+                        </div>
+
+                        <div class="flex">
+                            <input type="text" class="peer " formControlName="BDOName" placeholder=" " id="BDOSearch"
+                                [matAutocomplete]="BDOSearch" autocomplete="off" />
+                            <mat-autocomplete #BDOSearch="matAutocomplete"
+                                (optionSelected)="autocompleteSelectedEvent($event,'BDO')">
+                                <mat-option *ngFor="let BDO of BDOList$ | async" [value]="BDO">
+                                    {{BDO.FullName}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <button class="-m-5 z-10" type="button" (click)="openDiolog('User','Select BDO','BDO')">
+                                <mat-icon class="-ml-2">search</mat-icon>
+                            </button>
+                            <button type="button" class="-mx-7 z-10" matTooltip="Clear"
+                                (click)="autocompleteCleardEvent('BDO')"
+                                *ngIf="salesDashboardFilterForm.get('BDOName').value">
+                                <mat-icon>clear</mat-icon>
+                            </button>
+                            <label for="BDOSearch">BDO</label>
+                        </div>
+
+                    </div>
+
+                    <!-- POSP/Team Ref. -->
+                    <div class="relative " *ngIf="canDisplayPOSP">
+                        <div class="icon">
+                            <mat-icon>person</mat-icon>
+                        </div>
+
+                        <div class="flex">
+                            <input type="text" class="peer " formControlName="SalesPersonName" placeholder=" "
+                                id="SalesPerson" [matAutocomplete]="SalesSearch" autocomplete="off" />
+                            <mat-autocomplete #SalesSearch="matAutocomplete"
+                                (optionSelected)="autocompleteSelectedEvent($event,'Sales')">
+                                <mat-option *ngFor="let Sales of salesPersonList$ | async" [value]="Sales">
+                                    {{Sales.FullName}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <button class="-m-5 z-10" type="button"
+                                (click)="openDiolog('User','Select Sales Person','Sales')">
+                                <mat-icon class="-ml-2">search</mat-icon>
+                            </button>
+                            <button type="button" class="-mx-7 z-10" matTooltip="Clear"
+                                (click)="autocompleteCleardEvent('Sales')"
+                                *ngIf="salesDashboardFilterForm.get('SalesPersonName').value">
+                                <mat-icon>clear</mat-icon>
+                            </button>
+                            <label for="SalesPerson">POSP/Team Ref.</label>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="flex gap-3 flex-wrap">
+                    <button class="bg-royal text-white" type="button" mat-button (click)="searchFiltervalue()">Apply
+                        filter</button>
+                    <button class="bg-royal text-white" type="button" mat-button
+                        (click)="resetFiltervalue()">Refresh</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-5 box-shadow p-2">
+
+            <!-- GP -->
+            <div class="bg-[#00b050] rounded-md ">
+                <div class="flex justify-center my-2">
+                    <p class="font-semibold text-xl text-white">GP</p>
+                </div>
+                <div class="flex justify-around text-white font-medium text-lg my-2">
+                    <p>Total</p>
+                    <span>{{salesDashboardData?.GP?.TotalAmount | iNDcurrency}}</span>
+                </div>
+            </div>
+
+            <!-- CP -->
+            <div class="bg-[#d91656] rounded-md">
+                <div class="flex justify-center my-2">
+                    <p class="font-semibold text-xl text-white">CP</p>
+                </div>
+                <div class="flex justify-around text-white font-medium text-lg my-2">
+                    <p>Total</p>
+                    <span>{{salesDashboardData?.CP?.TotalAmount | iNDcurrency}}</span>
+                </div>
+            </div>
+
+            <!-- Policy -->
+            <div class="bg-[#4472c4] rounded-md">
+                <div class="flex justify-center my-2">
+                    <p class="font-semibold text-xl text-white">Policy</p>
+                </div>
+                <div class="flex justify-around text-white font-medium text-lg my-2">
+                    <p>Total</p>
+                    <span>{{salesDashboardData?.Policy?.TotalAmount | indCurrencyWithoutSymbol}}</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="flex flex-col sm:grid grid-cols-1 dashboard-category-chart-responsive gap-5  mt-5">
+
+            <!-- Category-wise GP -->
+            <div class="box-shadow">
+                <canvas baseChart class="mt-4 chart min-h-90 max-h-100" [data]="barChart1Data"
+                    [options]="barChart1Options" [plugins]="barChartPlugins" [type]="barChartType"
+                    [labels]="barChart1Labels">
+                </canvas>
+            </div>
+
+            <!-- Category-wise Policy -->
+            <div class="box-shadow">
+                <canvas baseChart class="mt-4 chart min-h-90 max-h-100" [data]="barChart2Data"
+                    [options]="barChart2Options" [plugins]="barChartPlugins" [type]="barChartType"
+                    [labels]="barChart2Labels">
+                </canvas>
+            </div>
+
+        </div>
+
+        <div class="grid sm:grid grid-cols-1 dashboard-policy-chart-responsive gap-5 mt-5">
+            <!-- Policy Type Wise Policy Count -->
+            <div class="box-shadow">
+                <canvas baseChart class="mt-4 chart min-h-90 max-h-100" [data]="doughnutChartData"
+                    [labels]="doughnutChartLabels" [type]="doughnutChartType" [plugins]="barChartPlugins"
+                    [options]="chartOptions" >
+                </canvas>
+            </div>
+
+            <!-- Month Wise Policy VS CP -->
+            <div class="box-shadow">
+                <canvas class=" mt-4 chart min-h-90 max-h-100" baseChart [data]="mixChartData" [labels]="mixChartLabels"
+                    [type]="mixChartType" [plugins]="barChartPlugins" [options]="mixChartOptions">
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+</div>

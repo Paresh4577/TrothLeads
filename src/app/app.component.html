@@ -1,0 +1,15 @@
+<!-- Login Page -->
+<div *ngIf="isLoginPage()">
+    <app-login></app-login>
+  </div>
+  
+  <!-- Forgot Password Page -->
+  <!-- <div *ngIf="isFPPage()">
+    <app-forget-password></app-forget-password>
+  </div> -->
+  
+  <!-- Main Layout -->
+  <div class="flex flex-col h-screen" *ngIf="!isLoginPage()">
+    <app-main-layout></app-main-layout>
+  </div>
+  

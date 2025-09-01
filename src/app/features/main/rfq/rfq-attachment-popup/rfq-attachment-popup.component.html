@@ -1,0 +1,124 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        Attachments
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <!-- <button mat-raised-button class="new-button" (click)="SubmitData()">Save</button> -->
+            <button mat-raised-button class="new-button" (click)="close()">Close</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- region main heading ends-->
+
+    <!-- Documents -->
+    <div class="flex justify-between pt-5">
+        <span class="pr-2 py-1 font-bold text-base">
+            Documents
+        </span>
+    </div>
+    <div class="mappingtable mt-4 overflow-auto ">
+        <table>
+            <thead>
+                    <tr class="bg-[#0284c7] text-white">
+                        <th class="col-srno"> Sr. No.</th>
+                        <th class="col-documentTypeName">Document Type</th>
+                        <th class="col-fileName">File Name</th>
+                        <th class="col-action">Action</th>
+                    </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of data.Documents.Documents; let i = index">
+                    <td>
+                        <div class="flex items-center justify-center p-2">
+                            {{i+1}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex items-center justify-left p-2">
+                            {{item.DocumentTypeName}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex items-center justify-left p-2">
+                            {{item.FileName}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex gap-3 items-center justify-center p-2">
+                            <button (click)="downloadAttachment(item)" matTooltip="Download">
+                                <i class="fa-solid fa-download"></i>
+                            </button>
+                            <button (click)="ViewAttachment(item)" matTooltip="View Document">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr  *ngIf=" data.Documents.Documents.length == 0">
+                    <td colspan="999" class="p-3">
+                        <span class="flex justify-center">No Data Found!!</span>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Quotation -->
+    <div class="flex justify-between pt-5">
+        <span class="pr-2 py-1 font-bold text-base">
+            Quotation
+        </span>
+    </div>
+    <div class="mappingtable mt-4 overflow-auto ">
+        <table >
+            <thead>
+                    <tr class="bg-[#0284c7] text-white">
+                        <th class="col-srno"> Sr. No.</th>
+                        <th class="col-documentTypeName">Document Type</th>
+                        <th class="col-fileName">File Name</th>
+                        <th class="col-action">Action</th>
+                    </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of data.Documents.QnDocuments; let i = index">
+                    <td>
+                        <div class="flex items-center justify-center p-2">
+                            {{i+1}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex items-center justify-left p-2">
+                            {{'Quotation'}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex items-center justify-left p-2">
+                            {{item.FileName}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex gap-3 items-center justify-center p-2">
+                            <button (click)="downloadAttachmentQuotation(item)" matTooltip="Download">
+                                <i class="fa-solid fa-download"></i>
+                            </button>
+                            <button (click)="ViewAttachment(item)" matTooltip="View Quotation">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr *ngIf=" data.Documents.QnDocuments.length == 0">
+                    <td colspan="999" class="p-3">
+                        <span class="flex justify-center">No Data Found!!</span>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>

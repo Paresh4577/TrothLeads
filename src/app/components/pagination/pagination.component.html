@@ -1,0 +1,15 @@
+<!-- Pagination -->
+<div class="flex justify-between items-center p-4 mt-6 border-t">
+  <div>
+    <label for="itemsPerPage" class="text-gray-700 mr-2">Items per page:</label>
+    <select id="itemsPerPage" class="border p-2 rounded-md text-gray-700 focus:ring-2 focus:ring-cyan-500"
+      (change)="onItemsPerPageChange($event)">
+      <option *ngFor="let option of itemsPerPageOptions" [value]="option" [selected]="itemsPerPage === option">
+        {{ option }}
+      </option>
+    </select>
+  </div>
+  <div class="text-gray-700">
+    Showing {{ startItem }} to {{ endItem }} of {{ totalItems }} results
+  </div>
+</div>

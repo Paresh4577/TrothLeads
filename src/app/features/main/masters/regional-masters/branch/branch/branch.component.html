@@ -1,0 +1,154 @@
+<div class="p-4 h-full w-full">
+  <!-- region main heading -->
+  <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+    {{ title }}
+
+    <!-- region main heading controls-->
+    <div class="flex gap-x-3  items-center text-lg font-normal">
+      <button mat-raised-button class="new-button" [disabled]="BranchForm.invalid" (click)="submitform()"
+        *ngIf="mode == 'Create' || mode == 'Edit'">Save</button>
+
+      <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'Edit' || mode == 'Create'">Cancel</button>
+
+      <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'View'">Back</button>
+    </div>
+    <!-- endregion main heading controls-->
+  </h1>
+  <!-- endregion main heading -->
+
+  <!-- region form -->
+  <div class="px-4 py-7 rounded bg-white">
+    <form [formGroup]="BranchForm" class="sm:w-120 text-md grid gap-6">
+
+      <!-- Branch Name  -->
+      <div class="relative">
+        <div class="icon">
+          <mat-icon>spa</mat-icon>
+        </div>
+        <input type="text" id="Name" class="peer" AlphabetOnly maxlength="120" formControlName="Name" placeholder=" " />
+        <label for="Name" class="mandatory">Branch Name</label>
+
+      </div>
+
+      <!-- Address  -->
+      <div class="relative">
+        <div class="icon">
+          <mat-icon>home</mat-icon>
+        </div>
+        <input type="text" id="Address" class="peer" maxlength="1024" formControlName="Address" placeholder=" " />
+        <label for="Address" class="mandatory">Address</label>
+
+      </div>
+
+      <!-- PinCodeNumber  -->
+      <div class="relative">
+        <div class="icon">
+            <mat-icon>pin_drop</mat-icon>
+        </div>
+        <div class="flex">
+            <input type="text" Onlynumber maxlength="6" class="peer" formControlName="PinCodeNumber" placeholder=" " id="PincodeNumber" [matAutocomplete]="oppoSearch" />
+            <mat-autocomplete class="peer" #oppoSearch="matAutocomplete" (optionSelected)="PinCodeSelected($event)">
+                <mat-option *ngFor="let pincode of pincodes$ | async" [value]="pincode">
+                    {{ pincode.PinCode }} {{ pincode.CityName }}
+                </mat-option>
+            </mat-autocomplete>
+            <button class="-m-5 z-10" type="button" *ngIf="editable" (click)="openDiolog('Pincode','Select Pincode')">
+              <mat-icon class="-ml-2">search</mat-icon>
+            </button>
+            <button *ngIf="BranchForm.get('PinCodeNumber').value && mode != 'View'" type="button" class="-m-7 z-10" aria-label="clear" matTooltip="Clear" (click)="clear('PinCodeNumber', 'PinCodeId')">
+                <mat-icon>clear</mat-icon>
+            </button>
+            <label for="PinCodeNumber" class="mandatory">PIN Code</label>
+        </div>
+      </div>
+
+      <!-- CityName  -->
+      <div class="relative">
+        <div class="icon">
+          <mat-icon>location_city</mat-icon>
+        </div>
+        <input type="text" id="CityName" class="peer" readonly formControlName="CityName" placeholder=" " />
+        <label for="CityName" class="mandatory">City Name</label>
+
+      </div>
+
+      <!-- State Name  -->
+      <div class="relative">
+        <div class="icon">
+          <mat-icon>domain</mat-icon>
+        </div>
+        <input type="text" id="StateName" class="peer" readonly formControlName="StateName" placeholder=" " />
+        <label for="StateName" class="mandatory">State Name</label>
+
+      </div>
+
+      <!-- BranchHeadName  -->
+      <div class="relative">
+        <div class="icon">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="flex">
+          <input type="text" class="peer " formControlName="BranchHeadName" placeholder=" " id="BranchHeadName" [matAutocomplete]="BranchHeadSearch" />
+          <mat-autocomplete #BranchHeadSearch="matAutocomplete" (optionSelected)="BranchHeadSelected($event)">
+              <mat-option *ngFor="let BranchHeadName of BranchHeadName$ | async" [value]="BranchHeadName">
+                {{BranchHeadName.FullName}}
+              </mat-option>
+          </mat-autocomplete>
+          <button class="-m-5 z-10" type="button" *ngIf="editable" (click)="openDiolog('User','Select Branch Head Name')">
+            <mat-icon class="-ml-2">search</mat-icon>
+          </button>
+          <button *ngIf="BranchForm.get('BranchHeadName').value && mode != 'View'" type="button" class="-m-7 z-10" aria-label="clear" matTooltip="Clear" (click)="clear('BranchHeadName', 'BranchHeadId')">
+              <mat-icon>clear</mat-icon>
+          </button>
+          <label for="BranchHeadName" class="mandatory">Branch Head Name</label>
+        </div>
+        <!-- <input type="text" id="BranchHeadName" class="peer" AlphabetOnly formControlName="BranchHeadName" placeholder=" " />
+        <label for="BranchHeadName" class="mandatory">Branch Head Name</label> -->
+
+      </div>
+
+      <!-- BrokerQualifiedPersonName  -->
+      <div class="relative">
+        <div class="icon">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="flex">
+          <input type="text" class="peer " formControlName="BrokerQualifiedPersonName" placeholder=" "
+            id="BQPNameSearch" [matAutocomplete]="BQPNameSearch" />
+          <mat-autocomplete #BQPNameSearch="matAutocomplete" (optionSelected)="BQPSelected($event)">
+            <mat-option *ngFor="let BrokerQualifiedPersonName of BQPName$ | async" [value]="BrokerQualifiedPersonName">
+              {{BrokerQualifiedPersonName.FullName}}
+            </mat-option>
+          </mat-autocomplete>
+          <button class="-m-5 z-10" type="button" *ngIf="editable"
+            (click)="openDiolog('BQPName','Select Broker Qualified Person Name')">
+            <mat-icon class="-ml-2">search</mat-icon>
+          </button>
+          <button *ngIf="BranchForm.get('BrokerQualifiedPersonName').value && mode != 'View'" type="button"
+            class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+            (click)="clear('BrokerQualifiedPersonName', 'BrokerQualifiedPersonId')">
+            <mat-icon>clear</mat-icon>
+          </button>
+          <label for="BrokerQualifiedPersonName" class="mandatory">Broker Qualified Person Name</label>
+        </div>
+      </div>
+
+      <!-- Status  -->
+      <div class="font-medium py-5 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+        <span for="Status" class="pr-2 py-1 font-medium ml-3">Status</span>
+        <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1"
+          (change)="onChange($event,'Status')">
+          <span class="flex font-medium text-xl ml-3 mt-1.5">
+            {{
+            BranchForm.controls['Status'].value == 1
+            ? "Active"
+            : "InActive"
+            }}
+          </span>
+        </mat-slide-toggle>
+      </div>
+
+    </form>
+  </div>
+  <!-- endregion form -->
+</div>

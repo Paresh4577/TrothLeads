@@ -1,0 +1,67 @@
+<div class="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg pl-0">
+  <div class="text-white p-2 rounded-t-lg flex justify-between items-center" style="background-color: var(--title-bg);">
+    <p class="m-2 text-base" style="font-weight: 500;">Employee Management</p>
+    <div class="flex items-center space-x-2">
+
+      <button
+        style="padding: 6px 13px; border-radius: 25px; border: none; background-color: white; color: black; font-size: 15px; cursor: pointer;"
+        (click)="addEmp()">
+        Add New
+      </button>
+
+    </div>
+  </div>
+
+  <div class="mt-2 relative overflow-x-auto" style="height: calc(100vh - 200px);">
+    <div class="absolute inset-0 overflow-x-auto">
+      <table class="min-w-full border-collapse shadow-md mb-2" style="background-color: var(--tableNav-bg);">
+        <thead class="sticky top-0 z-10">
+          <tr class="text-white" style="background-color: var(--tableNav-bg);">
+            <th class="ps-3 text-left whitespace-nowrap font-medium text-sm"> Name</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Last Name</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Mobile</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Employee Code</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background-color: var(--tableNav-bg);">
+            <td class="p-1 align-middle ps-3 pb-2">
+
+            </td>
+            <td class="p-1 align-middle pb-2"></td>
+            <td class="p-1 align-middle pb-2"></td>
+            <td class="p-1 align-middle pb-2"></td>
+            <td class="p-1 align-middle"></td>
+          </tr>
+          <tr *ngFor="let emp of employeeDetails" class="border-b bg-white">
+            <td class="p-3 w-40">{{ emp.FirstName || '-' }}</td>
+            <td class="p-3 w-40">{{ emp.LastName || '-' }}</td>
+            <td class="p-3 w-40">{{ emp.Mobile || '-' }}</td>
+            <td class="p-3 w-40">{{ emp.EmployeeCode || '-' }}</td>
+            <td class="p-3 w-40">
+              <button class="btn" (click)="viewemployee(emp.EmpId)">
+                <i class="bx bx-show text-2xl"></i>
+              </button>
+              <button class="btn ml-2" (click)="addClaim(emp.EmpId)" title="Add Claim">
+                <i class="bx bx-plus-medical text-2xl"></i>
+              </button>
+              <!-- <button class="btn ml-2" (click)="addClaim(emp.CompanyId)" title="Add Claim">
+                <i class="bx bx-plus-medical text-2xl"></i>
+              </button> -->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- 
+  <div *ngIf="!isLoading && employees.length === 0" class="mt-6 bg-gray-100 p-6 rounded-md text-center shadow-md">
+    <p class="text-gray-600">No Record found.</p>
+  </div>
+
+  <app-pagination [itemsPerPage]="itemsPerPage" [currentPage]="currentPage" [totalItems]="totalItems"
+    [currentPageItems]="paginatedEmployees.length" [itemsPerPageOptions]="itemsPerPageOptions"
+    (itemsPerPageChange)="onItemsPerPageChange($event)">
+  </app-pagination>
+</div> -->

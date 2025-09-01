@@ -1,0 +1,23 @@
+.headingBorder {
+    background-color: rgb(241, 245, 249) !important;
+}
+
+
+.dummy-formField {
+    @apply items-center px-2 text-gray-900 bg-white rounded-lg border border-gray-300 focus:outline-none focus:ring-0 focus:border-primary-500 #{!important};
+}
+
+
+
+span.mandatory {
+    @apply after:content-['*'] after:ml-1 after:text-red-500;
+}
+
+.mt-que {
+    border-bottom-width: 1px !important;
+    border-color: rgba(var(--gnx-primary-500-rgb), var(--tw-border-opacity)) !important;
+}
+
+.headingBorder {
+    background-color: rgb(241, 245, 249) !important;
+}

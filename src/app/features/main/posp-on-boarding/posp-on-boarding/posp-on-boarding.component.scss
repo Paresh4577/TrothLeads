@@ -1,0 +1,32 @@
+.headingBorder {
+    background-color: rgb(241, 245, 249) !important;
+}
+
+.custom-bg-blue {
+    background-color: #357ba9;
+}
+
+:host {
+    width: 100% !important;
+}
+
+::ng-deep .mdc-tab.mdc-tab--active {
+    background-color: #0464a4 !important;
+}
+
+::ng-deep .mdc-tab.mdc-tab--active .mdc-tab__text-label {
+    color: white !important;
+}
+
+.custom-w-30 {
+    width: 7.5rem !important;
+}
+
+::ng-deep.mat-mdc-tab-group .mat-mdc-tab-header .mat-mdc-tab-label-container {
+    margin: 0 !important;
+}
+
+::ng-deep.mat-mdc-tab-group .mat-mdc-tab-body-content {
+    padding: 24px 0px 24px 0px !important;
+}
+

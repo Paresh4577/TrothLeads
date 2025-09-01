@@ -1,0 +1,66 @@
+<form (ngSubmit)="submitEmployee()">
+    <div class="row">
+      <!-- First Name -->
+      <div class="col-md-6 mb-3">
+        <input id="firstName" type="text" [(ngModel)]="currentEmployee.FirstName" name="firstName"
+          class="form-control" required autocomplete="off" placeholder="First Name" />
+      </div>
+  
+      <!-- Last Name -->
+      <div class="col-md-6 mb-3">
+        <input id="lastName" type="text" [(ngModel)]="currentEmployee.LastName" name="lastName"
+          class="form-control" required autocomplete="off" placeholder="Last Name" />
+      </div>
+    </div>
+  
+    <div class="row">
+      <!-- Email -->
+      <div class="col-md-6 mb-3">
+        <input id="email" type="email" [(ngModel)]="currentEmployee.Email" name="email"
+          class="form-control" required placeholder="Email" />
+      </div>
+  
+      <!-- Role -->
+      <div class="col-md-6 mb-3">
+        <input id="role" type="text" [(ngModel)]="currentEmployee.Role" name="role"
+          class="form-control" required placeholder="Role" />
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <input id="mobile" type="text" [(ngModel)]="currentEmployee.Mobile" name="mobile"
+          class="form-control" required placeholder="Mobile" />
+      </div>
+    </div>
+  
+    <div class="row">
+  
+  
+      <!-- Is Active (Checkbox) -->
+      <div class="col-md-6 mb-3">
+        <div class="form-check mt-2">
+          <input id="isActive" type="checkbox" [(ngModel)]="currentEmployee.IsActive" name="isActive"
+            class="form-check-input" />
+          <label for="isActive" class="form-check-label">Active</label>
+        </div>
+      </div>
+    </div>
+  
+    <div class="row">
+      <!-- Last Assigned At -->
+      <div class="col-md-6 mb-3">
+        <input id="lastAssignedAt" type="datetime-local" [(ngModel)]="currentEmployee.LastAssignedAt" name="lastAssignedAt"
+          class="form-control" placeholder="Last Assigned At" />
+      </div>
+    </div>
+  
+    <!-- Read-Only Fields -->
+   
+  
+    <!-- Buttons -->
+    <div class="row">
+      <div class="col-md-12 mb-3 d-flex justify-content-end gap-2">
+        <button type="submit" class="btn btn-success">Save</button>
+        <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+      </div>
+    </div>
+  </form>

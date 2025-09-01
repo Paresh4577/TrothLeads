@@ -1,0 +1,270 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" [disabled]="VehicleModelForm.invalid" (click)="submitform()"
+                *ngIf="mode == 'Create' || mode == 'Edit'">Save</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()"
+                *ngIf="mode == 'Edit' || mode == 'Create'">Cancel</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'View'">Back</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+        <form [formGroup]="VehicleModelForm" class=" text-md">
+
+            <div class="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                <!-- Vehicle Sub Model -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>two_wheeler</mat-icon>
+                    </div>
+                    <input [readOnly]="isReadOnly" type="text" class="peer " maxlength="120" formControlName="Name" id="Name" placeholder=" " />
+                    <label for="Name" class="mandatory">Vehicle Sub Model</label>
+                </div>
+                <!-- Vehicle Model -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>directions_car</mat-icon>
+                    </div>
+                    <div class="flex">
+                        <input [readOnly]="isReadOnly" type="text" class="peer" maxlength="60" formControlName="ModelName" placeholder=" " id="ModelName"
+                            [matAutocomplete]="ModelSearch">
+                        <mat-autocomplete #ModelSearch="matAutocomplete"
+                            (optionSelected)="ModelSelected($event)">
+                            <mat-option *ngFor="let Model Of Models$ | async" [value]="Model">
+                                {{Model.Name}} - {{Model.TypeName}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <button [disabled]="isReadOnly" class="-m-5 z-10" type="button" *ngIf="editable"
+                            (click)="openDiolog('Model','Select Model')"><mat-icon
+                                class="-ml-2">search</mat-icon></button>
+                        <button [disabled]="isReadOnly" *ngIf="VehicleModelForm.get('ModelName').value && mode != 'View'" type="button"
+                            class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                            (click)="clear('ModelName', 'ModelId')">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                        <label for="ModelName" class="mandatory">Vehicle Model</label>
+                    </div>
+                </div>
+                <!-- Vehicle Type -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>commute</mat-icon>
+                    </div>
+                    <input type="text" class="peer" readonly formControlName="Type" id="Type" placeholder=" " />
+                    <label for="Type" class="mandatory">Vehicle Type</label>
+                </div>
+                <!-- Vehicle Brand -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>local_taxi</mat-icon>
+                    </div>
+                    <input type="text" class="peer" readonly formControlName="BrandName" id="BrandName"
+                        placeholder=" " />
+                    <label for="BrandName" class="mandatory">Vehicle Brand</label>
+                </div>
+
+                 <!-- Fuel Type -->
+                 <div class="relative">
+                    <div class="icon">
+                        <mat-icon>developer_board</mat-icon>
+                    </div>
+                    <select class="peer" formControlName="FuelType" (change)="onFuelTypeSelected($event)">
+                        <option value="">Select</option>
+                        <option *ngFor="let option of VehicleSubmodelFuelTypeList"
+                        [disabled]="checkValueForDisabled(option.value)" [value]="option.value">{{ option.name }}</option>
+                    </select>
+                    <label for="FuelType" class="mandatory">Fuel Type</label>
+                </div>
+
+                 <!-- CC -->
+                 <div class="relative">
+                    <div class="icon">
+                        <mat-icon>poll</mat-icon>
+                    </div>
+                    <input type="text"  Onlynumber maxlength="5" class="peer" formControlName="CC" id="CC"
+                        placeholder=" " />
+                    <label for="CC" class="mandatory">CC</label>
+                </div>
+
+
+                <!-- Vehicle  SubType -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>extension</mat-icon>
+                    </div>
+                    <select class="peer" formControlName="VehicleSubType">
+                        <option value="">Select</option>
+                        <option *ngFor="let option of VehicleSubTypeList" [value]="option.title">{{ option.title }}</option>
+                    </select>
+                    <label for="FuelType" class="mandatory">Vehicle SubType</label>
+                </div>
+
+                <!-- Showroom Price -->
+                <div class="relative">
+                    <div class="icon rs">₹</div>
+                    <input type="text" Decimal maxlength="15" class="peer" formControlName="ShowroomPrice" id="Showroom"
+                        placeholder=" " />
+                    <label for="Showroom">Showroom Price</label>
+                </div>
+
+                <!-- Price Year -->
+                <div class="relative w-fit min-w-60">
+                <div class="flex year-picker">
+                    <div class="icon ">
+                        <mat-datepicker-toggle  class="-ml-2"  matIconSuffix  [for]="ManufacturingYearpicker"></mat-datepicker-toggle>
+                        <mat-datepicker panelClass="year-picker" #ManufacturingYearpicker startView="multi-year" (yearSelected)="chosenYearHandler($event, ManufacturingYearpicker)" ></mat-datepicker>
+                    </div>
+                    <input matInput type="text" Onlynumber id="ManufacturingYear" maxlength="4" formControlName="PriceYear" class="peer w-full rounded-md border border-accent-400" >
+                    <label for="ManufacturingYear">Price Year</label>
+                    <input
+                     [max]="maxPriceyear" [min]="minPriceyear" Onlynumber class="invisible -ml-64 " maxlength="4"
+                        [matDatepicker]="ManufacturingYearpicker" />
+                </div>
+            </div>
+
+                   <!-- Power -->
+                   <div class="relative">
+                       <div class="icon">
+                           <mat-icon>gavel</mat-icon>
+                       </div>
+                       <input type="text" Decimal maxlength="15" class="peer" formControlName="Power" id="Power"
+                           placeholder=" " />
+                       <label for="Power">Power</label>
+                   </div>
+
+                 <!-- Body Type -->
+                 <div class="relative">
+                     <div class="icon">
+                         <mat-icon>dns</mat-icon>
+                     </div>
+                     <input type="text"  maxlength="15" class="peer" formControlName="BodyType" id="BodyType"
+                         placeholder=" " />
+                     <label for="BodyType">Body Type</label>
+                 </div>
+
+                  <!-- Production -->
+                 <div class="relative">
+                     <div class="icon">
+                         <mat-icon>extension</mat-icon>
+                     </div>
+                     <select class="peer" formControlName="ProductionStatus">
+                         <option value="">Select</option>
+                         <option value="Under Production">Under Production</option>
+                         <option value="No">No</option>
+                         <option value="Discontinued">Discontinued</option>
+                         
+                     </select>
+                     <label for="FuelType" class="mandatory">Production</label>
+                 </div>
+
+                 <!-- Body Type -->
+                 <div class="relative">
+                    <div class="icon">
+                        <mat-icon>airline_seat_recline_normal</mat-icon>
+                    </div>
+                    <input type="text"  maxlength="5" Onlynumber class="peer" id="SeatCapacity" formControlName="SeatCapacity"
+                        placeholder=" " />
+                    <label for="SeatCapacity">Seat Capacity</label>
+                </div>
+
+
+                <!-- Status -->
+                <div class="font-medium py-3 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+                    <span for="Status" class="pr-2 py-1 font-medium ml-3">Status</span>
+                    <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1"
+                        (change)="onChange($event,'Status')">
+                        <span class="flex font-medium text-xl ml-3 mt-1.5">
+                            {{
+                            VehicleModelForm.controls['Status'].value == 1
+                            ? "Active"
+                            : "InActive"
+                            }}
+                        </span>
+                    </mat-slide-toggle>
+                </div>
+
+            </div>
+
+            <div class="block py-5">
+                <span class="pr-2 py-1 font-bold text-base"> <!-- after:content-['*'] after:ml-1 after:text-red-500 -->
+                    Insurance Company Mapping(Online)
+                </span>
+
+                <div *ngIf="editable" class="inline">
+                    <button mat-raised-button class="bg-sky-400 text-on-primary-800" (click)="addVehicleInsuranceMappingRow()">
+                        <!-- <mat-icon>add</mat-icon> -->
+                        Add
+                    </button>
+                </div>
+
+                <div class="mappingtable overflow-x-scroll overflow-y-hidden">
+                    <table formArrayName="VehicleInsuranceMapping" class="bg-white mt-5">
+                        <tr *ngIf="inf.length>0">
+                            <th>Company Code</th>
+                            <th>Vehicle Code</th>
+                            <th>Brand Name</th>
+                            <th>Model Name</th>
+                            <th>Sub Model Name</th>
+                            <th>No. Of Wheels</th>
+                            <th>CC</th>
+                            <th>Seat Capacity</th>
+                            <th>Gross Weight</th>
+                            <th>Carry Capacity</th>
+                            <th>Fuel Type</th>
+                            <th>Transmission Type</th>
+                            <th>Segment</th>
+                            <th>Action</th>
+                        </tr>
+
+                        <tr *ngFor="let element of inf.controls,let i=index">
+                            <td [formGroupName]="i">
+                            <!-- <input type="text" formControlName="InsuranceCompanyCode"> -->
+                            <select class="select" id="" formControlName="InsuranceCompanyCode">
+                                <option value="">--Select--</option>
+                                <option *ngFor="let Company Of InsuranceCompany$ | async" [value]="Company.Code">
+                                    {{Company.ShortName}}
+                                </option>
+                            </select>
+                            </td>
+                            <td [formGroupName]="i"><input type="text" formControlName="InsuranceVehicleCode"></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="BrandName"></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="ModelName"></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="SubModelName"></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="NumberOfWheels" Onlynumber ></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="CC" Onlynumber ></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="SeatCapacity" Onlynumber ></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="GrossWeight" Onlynumber ></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="CarryCapacity" Onlynumber ></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="FuelType"></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="TransmissionType"></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="Segment"></td>
+                            <td [formGroupName]="i">
+                                <div *ngIf="editable">
+                                    <button mat-icon-button type="button" matTooltip="Remove"
+                                        (click)="deleteVehicleInsuranceMappingRow(i)">
+                                        <mat-icon color="warn">delete</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+
+                        </tr>
+
+
+                    </table>
+                </div>
+
+
+            </div>
+        </form>
+    </div>
+</div>

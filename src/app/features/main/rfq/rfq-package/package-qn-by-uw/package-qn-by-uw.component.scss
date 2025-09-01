@@ -1,0 +1,68 @@
+.headingBorder {
+    background-color: rgb(241, 245, 249) !important;
+}
+
+.custom-checkbox-label {
+    display: flex !important;
+    gap: 5px !important;
+
+    label {
+        position: unset !important;
+        font-size: small !important;
+    }
+}
+
+.mappingtable {
+    table {
+        width: 100% !important;
+
+    }
+
+    th {
+        font-weight: normal !important;
+    }
+
+    th,
+    td {
+        border: 1px solid #CBD5E1;
+    }
+
+    input,
+    select {
+        padding: 5px !important;
+        height: auto !important;
+        min-width: 85px !important;
+        // border: 0cap;
+    }
+
+    .icon-input {
+        padding-left: 2.5rem !important;
+        // padding-right: 2.5rem !important;
+    }
+
+
+    .col-make {
+        width: 10% !important;
+        // min-width: 150px !important;
+    }
+
+    .col-modelno {
+        width: 20% !important;
+        // min-width: 300px !important;
+    }
+
+    .col-serialno {
+        width: 20% !important;
+        // min-width: 300px !important;
+    }
+
+    .col-manufacturingyear {
+        width: 10% !important;
+        // min-width: 150px !important;
+    }
+
+    .col-action {
+        width: 5% !important;
+        // min-width: 75px !important;
+    }
+}

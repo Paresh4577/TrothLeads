@@ -1,0 +1,18 @@
+    <!-- region Main Heading -->
+    <h1
+        class="new-head text-lg px-4 py-1.5 mb-4 rounded flex justify-between items-center font-semibold">
+        {{title}}
+
+        <!-- region Heading Controls -->
+        <div class="flex gap-x-3  items-center text-md font-normal">
+            <button [routerLink]="['create']" mat-raised-button class="new-button"  *ngIf="canDisplayCreateBtn">Add</button>
+        </div>
+    </h1>
+    <!-- endregion Heading Controls -->
+
+    <!-- region dynamic list table component  -->
+    <gnx-table [headArray]="columnDef" [listDataObservable]="BranchList$" [masterName]="'Branch'"
+        (onSort)="sortColumn($event)" (onSearch)="searchColumn($event)" (onNext)="nextPage()" (onPrev)="previousPage()"
+        (onLimitChange)="setLimit($event)">
+    </gnx-table>
+    <!-- endregion dynamic list table component  -->

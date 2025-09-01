@@ -1,0 +1,15 @@
+
+<!-- region Main Heading -->
+<h1 class="new-head text-lg px-4 py-1.5 mb-4 rounded flex justify-between items-center font-semibold min-h-13">
+    {{pagetitle}}
+    <!-- region Heading Controls -->
+</h1>
+
+<!-- endregion main heading -->
+
+<div >
+    <ng-container *ngFor="let setting of reports; index as i">
+      <gnx-accordion [title]="setting.title" [ListData]="setting.items" [AccordionIndex]="i" [ActiveAccordionIndex]="currentActiveAccordionIndex" 
+      (onActive)="setActiveAccordionIndex($event)"></gnx-accordion>
+    </ng-container>
+  </div>

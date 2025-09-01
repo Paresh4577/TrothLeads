@@ -1,0 +1,23 @@
+<div class="card shadow-lg rounded" [ngClass]="dropdownPopoverShow ? 'mb-2': 'mb-2'">
+    <div 
+        class="card-header relative inline-flex align-middle w-full h-full bg-primary-600 text-on-primary-600 rounded shadow-sm hover:cursor-pointer" 
+        (click)="toggleDropdown($event)"
+        #btnDropdownRef
+    >
+        <h1 #inputDropdownRef class="w-full px-4 py-2 text-base font-medium"> {{title}} </h1>
+        <i class="fa-sharp fa-solid fa-angle-right accent-700 absolute right-0 top-1/2 -translate-y-1/2 -translate-x-4" *ngIf="!dropdownPopoverShow" @fadeOut></i>
+        <i class="fa-sharp fa-solid fa-angle-down accent-700 absolute right-0 top-1/2 -translate-y-1/2 -translate-x-4" *ngIf="dropdownPopoverShow" @fadeIn></i>
+    </div>
+
+    <ng-content *ngIf="type=='Content'"></ng-content>
+
+    <div 
+        *ngIf="type!='Content'"
+        class="card-body grid grid-cols-1 gap-1 sm:grid-cols-2 md:grid-cols-3 md:gap-x-4 lg:grid-cols-4 px-4 py-3 bg-white w-full rounded-br rounded-bl transition-all space-y-0.5"
+        [ngClass]="!dropdownPopoverShow ? 'h-0 opacity-0 ease-out pointer-events-none': 'py-3 ease-in'"
+    >
+        <button [routerLink]="[item.target]" routerLinkActive="router-link-active" *ngFor="let item of ListData" class="border text-base text-primary-900 hover:opacity-90 font-medium hover:bg-gray-200  rounded-lg px-4 py-2 transition-all duration-100 whitespace-nowrap text-ellipsis overflow-hidden">
+            {{item.title}}
+        </button>
+    </div>
+</div>

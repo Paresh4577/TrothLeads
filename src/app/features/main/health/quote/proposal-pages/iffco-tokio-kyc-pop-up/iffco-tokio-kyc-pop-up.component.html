@@ -1,0 +1,255 @@
+<div class="mt-1 px-2 w-full">
+    <!-- Start of Header region -->
+    <h1 class="new-head text-lg px-4 py-2 mb-1.5 rounded flex justify-between items-center font-semibold">
+        Iffco Tokio KYC
+
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="button button-primary" (click)="submitForm()">
+                Submit
+            </button>
+            <button mat-raised-button class="button button-primary" (click)="cancle()">
+                Close
+            </button>
+        </div>
+    </h1>
+    <!-- End of Header region -->
+
+    <!-- Start of body -->
+    <div>
+        <mat-card class="px-4 py-3 gap-2 container mx-auto">
+          <form [formGroup]="KYCForm">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- title -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>title</mat-icon>
+                    </div>
+                    <select class="peer py-0" formControlName="Prefix">
+                        <option value="">Select</option>
+                        <option *ngFor="let option of DropdownMaster.FormalTitlesOptions" [value]="option.value">
+                            {{ option.name }}
+                        </option>
+                    </select>
+                    <label for="Prefix" class="mandatory">Prefix</label>
+                </div>
+
+                <!-- First Name -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>person</mat-icon>
+                    </div>
+                    <input type="text" id="FirstName"  formControlName="FirstName" placeholder=" " class="peer" />
+                    <label for="FirstName" class="mandatory">First Name</label>
+                </div>
+
+                <!-- Middle Name -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>person</mat-icon>
+                    </div>
+                    <input type="text" id="MiddleName"  formControlName="MiddleName" placeholder=" " class="peer" />
+                    <label for="MiddleName" class="mandatory">Middle Name</label>
+                </div>
+
+                <!-- Last Name -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>person</mat-icon>
+                    </div>
+                    <input type="text" id="LastName"  formControlName="LastName" placeholder=" " class="peer" />
+                    <label for="LastName" class="mandatory">Last Name</label>
+                </div>
+
+                <!-- Gender -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>person_outline</mat-icon>
+                    </div>
+                    <select class="peer py-0" formControlName="Gender">
+                        <option value="">Select</option>
+                        <option *ngFor="let option of GenderList" [value]="option.Name">
+                            {{ option.Name }}
+                        </option>
+                    </select>
+                    <label for="Gender" class="mandatory">Gender</label>
+                </div>
+
+                <!-- DOB -->
+                <div class="relative">
+                    <div class="flex">
+                        <div class="icon">
+                            <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                [for]="dob"></mat-datepicker-toggle>
+                            <mat-datepicker #dob></mat-datepicker>
+                        </div>
+                        <input matInput type="text" id="DOB" formControlName="DOB" class="peer" placeholder="__/__/____" datemask [matDatepicker]="dob">
+                        <label for="DOB" class="mandatory">Date of Birth</label>
+                    </div>
+                </div>
+
+                <!-- MobileNo -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>phone</mat-icon>
+                    </div>
+                    <input type="text" id="MobileNo"  formControlName="MobileNo" placeholder=" " class="peer" />
+                    <label for="MobileNo" class="mandatory">Mobile No.</label>
+                </div>
+
+                <!-- Email -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>email</mat-icon>
+                    </div>
+                    <input type="text" id="Email"  formControlName="Email" placeholder=" " class="peer" />
+                    <label for="Email" class="mandatory">Email</label>
+                </div>
+
+                <!-- Address -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>home</mat-icon>
+                    </div>
+                    <input type="text" id="Address"  formControlName="Address" placeholder=" " class="peer" />
+                    <label for="Address" class="mandatory">Address</label>
+                </div>
+
+                <!-- PinCode -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>pin_drop</mat-icon>
+                    </div>
+                    <input type="text" Onlynumber id="PinCode" maxlength="6" class="peer" matInput formControlName="PinCode" [matAutocomplete]="oppoSearch1" placeholder=" " required />
+                    <mat-autocomplete #oppoSearch1="matAutocomplete" [displayWith]="displayFnPinCode" (optionSelected)="PinCodeSelected($event)">
+                        <mat-option *ngFor="let pincode of pincodes$ | async" [value]="pincode">
+                            {{ pincode.PinCode }} {{ pincode.CityName }}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <label for="PinCode" class="mandatory">Pin Code</label>
+                </div>
+
+                <!-- District -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>location_city</mat-icon>
+                    </div>
+                    <input type="text" id="District"  formControlName="District" placeholder=" " class="peer" />
+                    <label for="District" class="mandatory">District</label>
+                </div>
+
+                <!-- City -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>location_city</mat-icon>
+                    </div>
+                    <input type="text" id="City"  formControlName="City" placeholder=" " class="peer" />
+                    <label for="City" class="mandatory">City</label>
+                </div>
+
+                <!-- State -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>domain</mat-icon>
+                    </div>
+                    <input type="text" id="State"  formControlName="State" placeholder=" " class="peer" />
+                    <label for="State" class="mandatory">State</label>
+                </div>
+
+                <!-- Country -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" id="Country"  formControlName="Country" placeholder=" " class="peer" />
+                    <label for="Country" class="mandatory">Country</label>
+                </div>
+
+                <!-- Relation -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>people</mat-icon>
+                    </div>
+                    <select class="peer  py-0" formControlName="Relation">
+                        <option value="">Select</option>
+                        <option *ngFor="let option of RelationList" [value]="option.Name">
+                            {{ option.Name }}
+                        </option>
+                    </select>
+                    <label for="Relation" class="mandatory">Relation</label>
+                </div>
+
+                <!-- RelatedPersonPrefix -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>title</mat-icon>
+                    </div>
+                    <select class="peer py-0" formControlName="RelatedPersonPrefix">
+                        <option value="">Select</option>
+                        <option *ngFor="let option of DropdownMaster.FormalTitlesOptions" [value]="option.value">
+                            {{ option.name }}
+                        </option>
+                    </select>
+                    <label for="RelatedPersonPrefix" class="mandatory">Related Person Prefix</label>
+                </div>
+
+                <!-- RelatedPersonFirstName -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>person</mat-icon>
+                    </div>
+                    <input type="text" id="RelatedPersonFirstName"  formControlName="RelatedPersonFirstName" placeholder=" " class="peer" />
+                    <label for="RelatedPersonFirstName" class="mandatory">Related Person First Name</label>
+                </div>
+
+                <!-- RelatedPersonMiddleName -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>person</mat-icon>
+                    </div>
+                    <input type="text" id="RelatedPersonMiddleName"  formControlName="RelatedPersonMiddleName" placeholder=" " class="peer" />
+                    <label for="RelatedPersonMiddleName" class="mandatory">Related Person Middle Name</label>
+                </div>
+
+                <!-- RelatedPersonLastName -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>person</mat-icon>
+                    </div>
+                    <input type="text" id="RelatedPersonLastName"  formControlName="RelatedPersonLastName" placeholder=" " class="peer" />
+                    <label for="RelatedPersonLastName" class="mandatory">Related Person Last Name</label>
+                </div>
+
+            </div>
+
+            <div formArrayName="KYCDocuments"class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
+                <div *ngFor="let item of List ,let i=index" >
+                    <div [formGroupName]="i" class="space-y-5">
+                        <p class="font-semibold text-center">
+                            {{item.title}}
+                        </p>
+                        <!-- IdNumber -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>credit_card</mat-icon>
+                            </div>
+                            <input type="text" id="IdNumber{{i}}" formControlName="IdNumber" placeholder=" " class="peer" />
+                            <label for="IdNumber{{i}}" class="mandatory">{{item.data}} Number</label>
+                        </div>
+                        <!-- IdAttachment -->
+                        <div class="flex relative border border-[rgb(203 213 225/ var(--tw-border-opacity))] rounded-[0.5rem]">
+                            <div class="icon">
+                                <mat-icon>attachment</mat-icon>
+                            </div>
+                            <input type="file" id="IdAttachment{{i}}" class="inputfile" multiple (change)="selectFiles($event,i)" />
+                            <span class="-ml-56 mt-2" *ngIf="documentArray.at(i).get('IdAttachment').value"> {{documentArray.at(i).get('name').value}} </span>
+                            <label for="IdAttachment{{i}}" class="mandatory">Id Attachment</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          </form>
+        </mat-card>
+    </div>
+    <!-- End of body -->
+</div>

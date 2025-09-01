@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Details - Simple Design</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --title-bg: #2563eb;
+      --tableNav-bg: #3b82f6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f3f4f6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Loading State */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      color: var(--title-bg);
+      font-size: 16px;
+    }
+
+    .loading i {
+      font-size: 32px;
+      margin-bottom: 15px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Error State */
+    .error {
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid #fca5a5;
+    }
+
+    /* Main Container */
+    .w-full {
+      width: 100%;
+    }
+
+    .max-w-8xl {
+      max-width: 100%;
+    }
+
+    .mx-auto {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .bg-white {
+      background-color: white;
+    }
+
+    .shadow-lg {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .rounded-lg {
+      border-radius: 8px;
+    }
+
+    /* Header */
+    .header {
+      background-color: var(--title-bg);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 16px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      padding: 6px 13px;
+      border-radius: 25px;
+      border: none;
+      background-color: white;
+      color: black;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: #f8f9fa;
+      transform: translateY(-1px);
+    }
+
+    /* Content */
+    .content {
+      padding: 20px;
+    }
+
+    .employee-header {
+      background-color: var(--tableNav-bg);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .employee-name {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .family-btn {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .family-btn:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Info Sections */
+    .info-section {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      color: var(--title-bg);
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 15px;
+    }
+
+    .info-item {
+      background-color: #f8faff;
+      padding: 15px;
+      border-radius: 6px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .info-item.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .label {
+      display: block;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .value {
+      color: #1f2937;
+      font-size: 15px;
+      word-break: break-word;
+    }
+
+    .value.link {
+      color: var(--title-bg);
+      text-decoration: none;
+    }
+
+    .value.link:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer Actions */
+    .footer-actions {
+      background-color: #f9fafb;
+      padding: 15px 20px;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .action-btn {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .add-btn {
+      background-color: #10b981;
+      color: white;
+    }
+
+    .add-btn:hover {
+      background-color: #059669;
+    }
+
+    .edit-btn {
+      background-color: #f59e0b;
+      color: white;
+    }
+
+    .edit-btn:hover {
+      background-color: #d97706;
+    }
+
+    .delete-btn {
+      background-color: #ef4444;
+      color: white;
+    }
+
+    .delete-btn:hover {
+      background-color: #dc2626;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+
+      .employee-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+
+      .content {
+        padding: 15px;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-actions {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading">
+      <i class="fas fa-spinner"></i>
+      Loading employee details...
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="!isLoading && errorMessage" class="error">
+      <i class="fas fa-exclamation-circle"></i>
+      {{ errorMessage }}
+    </div>
+
+    <!-- Employee Details -->
+    <div *ngIf="!isLoading && !errorMessage && employeeDetails"
+      class="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg">
+
+      <!-- Header -->
+      <div class="header">
+        <h1>
+          <i class="fas fa-user"></i>
+          Employee Details
+        </h1>
+        <button class="btn" (click)="goBack()">
+          <i class="fas fa-arrow-left"></i>
+          Back
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+
+        <!-- Employee Header -->
+        <div class="employee-header">
+          <div class="employee-name">
+            {{ employeeDetails.Name }} {{ employeeDetails.MidName }} {{ employeeDetails.LastName }}
+          </div>
+          <button class="family-btn" (click)="viewEmployeeFamily(employeeDetails.EmpId)">
+            Family <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- Contact Details -->
+        <div class="info-section">
+          <div class="section-title">
+            <i class="fas fa-address-card"></i>
+            Contact Details
+          </div>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Email:</span>
+              <span class="value">{{ employeeDetails.Email }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Mobile:</span>
+              <span class="value">{{ employeeDetails.Mobile }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Employee Code:</span>
+              <span class="value">{{ employeeDetails.Employeecode }}</span>
+            </div>
+            <!-- <div class="info-item">
+              <span class="label">Policy Name:</span>
+              <span class="value">{{ employeeDetails.PolicyName }}</span>
+            </div> -->
+            <div class="info-item">
+              <span class="label">Birthdate:</span>
+              <span class="value">{{ employeeDetails.Birthdate | date:'dd MMM yyyy' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Policy Info -->
+        <div class="info-section">
+          <div class="section-title">
+            <i class="fas fa-file-alt"></i>
+            Policy Information
+          </div>
+          <!-- <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Policy No:</span>
+              <span class="value">{{ employeeDetails.PolicyNo || 'N/A' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Sum Insured:</span>
+              <span class="value">₹{{ employeeDetails.SumInsured | number:'1.0-0' }}</span>
+            </div>
+
+          </div> -->
+        </div>
+
+        <!-- Document Section -->
+        <!-- <div class="info-section" *ngIf="employeeDetails.Document">
+          <div class="section-title">
+            <i class="fas fa-paperclip"></i>
+            Document
+          </div>
+          <div class="info-grid">
+            <div class="info-item full-width">
+              <span class="label">File:</span>
+              <a [href]="employeeDetails.Document" target="_blank" class="value link">
+                <i class="fas fa-external-link-alt"></i> View Document
+              </a>
+            </div>
+          </div>
+        </div> -->
+
+      </div>
+
+      <!-- Footer Actions -->
+      <div class="footer-actions">
+        <button class="action-btn add-btn" title="Add Family" (click)="addEmployeeFamily(employeeDetails.EmpId)">
+          <i class="fas fa-plus"></i>
+        </button>
+        <button class="action-btn edit-btn" title="Edit Employee" (click)="editEmployee(employeeDetails.UserAdminId)">
+          <i class="fas fa-edit"></i>
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>

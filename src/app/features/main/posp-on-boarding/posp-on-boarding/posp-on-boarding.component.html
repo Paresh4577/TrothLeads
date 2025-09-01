@@ -1,0 +1,643 @@
+<!-- Wrapper -->
+<div
+    class="w-full h-16 sticky top-0 flex flex-0 items-center  px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-transparent print:hidden">
+    <div class="flex items-center pr-2 space-x-2">
+        <div class="flex justify-center">
+            <!-- Brand logo -->
+            <img [src]="[LogoURL]" class="custom-w-30 self-center" />
+        </div>
+    </div>
+</div>
+
+<div class="px-4 pb-4 max-h-none w-full">
+    <!-- region form -->
+    <div class="py-5 rounded">
+        <form [formGroup]="pospOnBoardingForm">
+
+            <div class="pl-20 py-5 min-w-full rounded bg-white">
+                <div class="flex gap-5 mt-4 ">
+                    <p
+                        class="rounded-full text-xl text-center custom-bg-blue text-white font-bold py-5 px-3 lg:w-8/12 xl:w-4/12 w-full">
+                        Become a PoSP with Us
+                    </p>
+                </div>
+
+                <div class="flex gap-5 mt-4 ">
+                    <p
+                        class="rounded text-xl text-center bg-slate-200 text-royal font-bold p-3 mt-3 lg:w-8/12 xl:w-4/12 w-full">
+                        Let's Begin Your Journey as a Troth Partner
+                    </p>
+                </div>
+            </div>
+
+            <div class="pl-20 pt-1 min-w-full rounded bg-white" *ngIf="!isBankDetailsShow">
+
+                <div class="lg:w-8/12 xl:w-4/12 w-full mt-4">
+
+                    <!-- FirstName -->
+                    <div class="relative my-5">
+                        <div class="icon">
+                            <mat-icon>person</mat-icon>
+                        </div>
+                        <input type="text" class="peer " formControlName="FirstName" maxlength="120" id="FirstName"
+                            placeholder=" " autocomplete="off" />
+                        <label for="FirstName" class="mandatory">First Name</label>
+                    </div>
+
+                    <!-- MiddleName -->
+                    <div class="col-start-1 relative my-5">
+                        <div class="icon">
+                            <mat-icon>person</mat-icon>
+                        </div>
+                        <input type="text" class="peer " formControlName="MiddleName" maxlength="120" id="MiddleName"
+                            placeholder=" " autocomplete="off" />
+                        <label for="MiddleName" class="">Middle Name</label>
+                    </div>
+
+                    <!-- LastName -->
+                    <div class="col-start-1 relative my-5">
+                        <div class="icon">
+                            <mat-icon>person</mat-icon>
+                        </div>
+                        <input type="text" class="peer " formControlName="LastName" maxlength="120" id="LastName"
+                            placeholder=" " autocomplete="off" />
+                        <label for="LastName" class="mandatory">Last Name</label>
+                    </div>
+
+
+                    <!-- Email ID -->
+                    <div class="col-start-1 relative my-5">
+                        <div class="icon">
+                            <mat-icon>email</mat-icon>
+                        </div>
+                        <input type="text" class="peer " formControlName="EmailId" maxlength="60" id="EmailId"
+                            placeholder=" " autocomplete="off" />
+                        <label for="EmailId" class="mandatory">Email ID </label>
+                    </div>
+
+                    <!-- Mobile No -->
+                    <div class="col-start-1 relative my-5">
+                        <div class="icon">
+                            <mat-icon>phone</mat-icon>
+                        </div>
+                        <input type="text" class="peer " Onlynumber formControlName="MobileNo" maxlength="10"
+                            id="MobileNo" placeholder=" " autocomplete="off" />
+                        <label for="MobileNo" class="mandatory">Mobile No </label>
+                    </div>
+
+                </div>
+
+                <!-- Get Started -->
+                <!-- mt-5  -->
+                <div class="invisible">
+                    <button class="bg-royal text-white " type="button" mat-button (click)="validateBasicInformation()">
+                        Get Started
+                    </button>
+                </div>
+            </div>
+
+            <div class="pl-20 pb-5 min-w-full rounded bg-white" *ngIf="!isBankDetailsShow">
+
+                <div class="flex gap-5">
+                    <p
+                        class="bg-slate-200 text-royal font-semibold text-base p-2 rounded text-center lg:w-8/12 xl:w-4/12 w-full ">
+                        Become a Troth Insurance Partner
+                    </p>
+                </div>
+
+                <div class="lg:w-8/12 xl:w-4/12 w-full gap-5 mt-4">
+                    <mat-tab-group #tabGroup (selectedTabChange)="onTabChange($event)">
+
+                        <!-- Basic Information -->
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <span for="BasicInformation">Basic Information</span>
+                            </ng-template>
+
+                            <div class="grid grid-cols-1 gap-5 mt-4">
+
+                                <!-- Date Of Birth(As per PAN) -->
+                                <div class="relative">
+                                    <div class="flex">
+                                        <div class="icon">
+                                            <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                [for]="DateOfBirth"></mat-datepicker-toggle>
+                                            <mat-datepicker #DateOfBirth></mat-datepicker>
+                                        </div>
+                                        <input matInput type="text" id="DateOfBirth" class="peer" [max]="maxBirthDate"
+                                            formControlName="DateOfBirth" placeholder="__/__/____" datemask
+                                            [matDatepicker]="DateOfBirth" autocomplete="off">
+                                        <label for="DateOfBirth" class="mandatory">Date Of Birth(As per PAN)</label>
+                                    </div>
+                                </div>
+
+                                <!-- Gender  -->
+                                <div class="col-start-1 relative">
+                                    <div class="icon">
+                                        <mat-icon>person_outline</mat-icon>
+                                    </div>
+                                    <select id="Gender" name="Gender" class="peer" formControlName="Gender"
+                                        placeholder=" ">
+                                        <option value="">-- Select --</option>
+                                        <option class="example-radio-button" *ngFor="let option of genderList"
+                                            [value]="option.Code">
+                                            {{ option.Name }}
+                                        </option>
+                                    </select>
+                                    <label class="Gender" class="mandatory">Gender</label>
+                                </div>
+
+                                <!-- Pin code -->
+                                <div class="col-start-1 relative">
+                                    <div class="icon">
+                                        <mat-icon>pin_drop</mat-icon>
+                                    </div>
+                                    <div class="flex">
+                                        <input type="text" Onlynumber maxlength="6" class="peer" id="PinCodeNumber"
+                                            placeholder=" " required formControlName="PinCodeNumber"
+                                            [matAutocomplete]="oppoSearch" autocomplete="off" />
+                                        <mat-autocomplete #oppoSearch="matAutocomplete"
+                                            (optionSelected)="PinCodeSelected($event)">
+                                            <mat-option *ngFor="let pincode of pincodes$ | async" [value]="pincode">
+                                                {{ pincode.PinCode }} {{ pincode.CityName }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+
+                                        <button class="-m-5 z-10" type="button"
+                                            (click)="openDiologPincode('Pincode', 'Select PIN Code')">
+                                            <mat-icon class="-ml-2">search</mat-icon>
+                                        </button>
+                                        <button *ngIf="pospOnBoardingForm.get('PinCodeNumber').value " type="button"
+                                            class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                                            (click)="clear('PinCodeNumber', 'PinCodeId')">
+                                            <mat-icon>clear</mat-icon>
+                                        </button>
+                                        <label for="PinCodeNumber" class="mandatory">Pincode</label>
+                                    </div>
+                                </div>
+
+                                <!-- City Name -->
+                                <div class="col-start-1 relative">
+                                    <div class="icon">
+                                        <mat-icon>location_city</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" id="City" formControlName="CityName" placeholder=" "
+                                        autocomplete="off" readonly />
+                                    <label for="City" class="mandatory">City</label>
+                                </div>
+
+                                <!-- State Name -->
+                                <div class="col-start-1 relative">
+                                    <div class="icon">
+                                        <mat-icon>domain</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" id="State" formControlName="StateName"
+                                        placeholder=" " autocomplete="off" readonly />
+                                    <label for="State" class="mandatory">State</label>
+                                </div>
+
+                                <!-- Communication Address -->
+                                <div class="col-start-1 relative">
+                                    <div class="icon">
+                                        <mat-icon>edit_document</mat-icon>
+                                    </div>
+                                    <textarea type="text" class="peer max-h-30 min-h-20" id="Address" maxlength="1024"
+                                        placeholder=" " formControlName="Address" autocomplete="off"></textarea>
+                                    <label for="Address" class="mandatory">Communication Address </label>
+                                </div>
+                            </div>
+
+                            <!-- KYC Detail -->
+                            <div class="flex justify-between pt-5">
+                                <div class="w-52 pr-4 py-1 bg-royal rounded">
+                                    <span class="pl-2 py-1 text-base text-white rounded">
+                                        KYC Detail
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-5 mt-4">
+                                <!-- Aadhar Card Number -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>credit_card</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" id="AadharNumber" formControlName="AadharNumber"
+                                        placeholder=" " maxlength="12" autocomplete="off" maximum />
+                                    <label for="AadharNumber" class="mandatory">Aadhar Card Number</label>
+                                </div>
+
+                                <!-- PAN Card Number -->
+                                <div class="col-start-1 relative">
+                                    <div class="icon">
+                                        <mat-icon>credit_card</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer uppercase" id="PANNumber" formControlName="PANNumber"
+                                        placeholder=" " maxlength="10" autocomplete="off" />
+                                    <label for="PANNumber" class="mandatory">PAN Card Number</label>
+                                </div>
+                            </div>
+
+                            <!-- Educational Qualifications -->
+                            <div class="flex justify-between pt-5">
+                                <div class="w-52 pr-4 py-1 bg-royal rounded">
+                                    <span class="pl-2 py-1 text-base text-white rounded">
+                                        Educational Qualifications
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-5 mt-4">
+                                <!-- Latest Qualification  -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>history_edu</mat-icon>
+                                    </div>
+                                    <select id="Qualification" name="Qualification" class="peer"
+                                        formControlName="Qualification" placeholder=" ">
+                                        <option value="">-- Select --</option>
+                                        <option class="example-radio-button" *ngFor="let option of qualifications"
+                                            [value]="option.value">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                    <label class="Qualification" class="mandatory">Latest Qualification</label>
+                                </div>
+
+                                <!-- Specify Education -->
+                                <div class="col-start-1 relative"
+                                    *ngIf="pospOnBoardingForm.get('Qualification').value == 'Other'">
+                                    <div class="icon">
+                                        <mat-icon>school</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" id="SpecificEducation" maxlength="200"
+                                        formControlName="SpecificEducation" placeholder=" " autocomplete="off" />
+                                    <label for="SpecificEducation" class="mandatory">Specify Education</label>
+                                </div>
+                            </div>
+
+                            <div class="mt-3 flex flex-wrap gap-3">
+                                <button class="bg-royal text-white " type="button" mat-button
+                                    (click)="validateBasicInformation()">Next</button>
+                            </div>
+
+                        </mat-tab>
+
+                        <!-- Bank Details -->
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <span for="BankDetails">Bank Details</span>
+                            </ng-template>
+
+                            <div class="grid grid-cols-1 gap-5 mt-4">
+
+                                <!-- Account Holder Name  -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>person</mat-icon>
+                                    </div>
+                                    <input type="text" id="NameAsPerBank" formControlName="NameAsPerBank"
+                                        placeholder=" " class="peer" maxlength="120" autocomplete="off">
+                                    <label for="NameAsPerBank" class="mandatory">Account Holder Name</label>
+                                </div>
+
+                                <!-- Bank Name  -->
+                                <div class="col-start-1 relative">
+                                    <div class="icon">
+                                        <mat-icon>account_balance</mat-icon>
+                                    </div>
+                                    <div class="flex">
+                                        <input type="text" AlphabetOnly class="peer" formControlName="BankName"
+                                            placeholder=" " id="BankName" [matAutocomplete]="BankSearch"
+                                            autocomplete="off">
+                                        <mat-autocomplete #BankSearch="matAutocomplete"
+                                            (optionSelected)="bankSelected($event)">
+                                            <mat-option *ngFor="let Bank of Banks$ | async" [value]="Bank">
+                                                {{Bank.Name}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <button class="-m-5 z-10" type="button"
+                                            (click)="openDiolog('Bank','Select Bank')"><mat-icon
+                                                class="-ml-2">search</mat-icon></button>
+                                        <button *ngIf="pospOnBoardingForm.get('BankName').value" type="button"
+                                            class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                                            (click)="clear('BankName', 'BankId')">
+                                            <mat-icon>clear</mat-icon>
+                                        </button>
+                                        <label for="BankName" class="mandatory">Bank Name</label>
+                                    </div>
+                                </div>
+
+                                <!-- Account Number  -->
+                                <div class="col-start-1 relative">
+                                    <div class="icon">
+                                        <mat-icon>account_box</mat-icon>
+                                    </div>
+                                    <input type="text" id="AccountNumber" formControlName="AccountNumber"
+                                        placeholder=" " maxlength="20" class="peer" autocomplete="off">
+                                    <label for="AccountNumber" class="mandatory">Account Number</label>
+                                </div>
+
+                                <!-- IFSC  -->
+                                <div class="col-start-1 relative">
+                                    <div class="icon">
+                                        <mat-icon>poll</mat-icon>
+                                    </div>
+                                    <input type="text" id="IFSCCode" formControlName="IFSCCode" placeholder=" "
+                                        class="peer" maxlength="20" autocomplete="off">
+                                    <label for="IFSCCode" class="mandatory">IFSC</label>
+                                </div>
+                            </div>
+
+                            <div class="mt-3 flex flex-wrap gap-3">
+                                <button class="bg-royal text-white " type="button" mat-button (click)="prevTab()">
+                                    Previous
+                                </button>
+                                <button class="bg-royal text-white " type="button" mat-button
+                                    (click)="validateBankDetails()">Next</button>
+                            </div>
+
+                        </mat-tab>
+
+                        <!-- Upload Document -->
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <span for="UploadDocument">Upload Document</span>
+                            </ng-template>
+
+                            <!-- 1. Qualification Document -->
+                            <div class="flex justify-between pt-5 mr-2">
+                                <div class="w-52 pr-4 py-1 bg-royal rounded">
+                                    <span class="pl-2 text-base bg-royal text-white ">
+                                        1. Qualification Document
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-5 mt-4 mr-2">
+
+                                <!-- Latest Qualification  -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>history_edu</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" id="Qualification" placeholder=" "
+                                        [value]="pospOnBoardingForm.get('Qualification').value" readonly
+                                        autocomplete="off" />
+                                    <label for="Qualification" class="mandatory">Latest Qualification</label>
+                                </div>
+
+                                <!-- Attach Education Certificates -->
+                                <div class="col-start-1 relative ">
+                                    <mat-icon
+                                        *ngIf="pospOnBoardingForm?.get('EducationCertificateDocument.FileName')?.value"
+                                        (click)="removeDocument('EducationCertificate')"
+                                        class="absolute -right-2 -top-3 text-red-500 cursor-pointer z-10">cancel</mat-icon>
+                                    <div class="dummy-formField justify-start">
+                                        <div class="icon">
+                                            <mat-icon>attach_file</mat-icon>
+                                        </div>
+                                        <input type="file" class="hidden" #ECAttachDocument
+                                            (change)="SelectDocument($event,'EducationCertificate')">
+                                        <p class="text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                            matTooltip="{{pospOnBoardingForm?.get('EducationCertificateDocument.FileName')?.value}}"
+                                            (click)="ECAttachDocument.click()">
+                                            {{ pospOnBoardingForm?.get('EducationCertificateDocument.FileName')?.value
+                                            ||
+                                            'Choose File'
+                                            |
+                                            excerpt:'max' }}
+                                        </p>
+                                        <label for="ECAttachDocument" class="mandatory">Education Certificate</label>
+                                        <div class="flex justify-end absolute right-2 bg-white"
+                                            matTooltip="View Document"
+                                            *ngIf="pospOnBoardingForm?.get('EducationCertificateDocument.FileName')?.value">
+                                            <mat-icon
+                                                (click)="ViewDocuments(pospOnBoardingForm?.get('EducationCertificateDocument.StorageFilePath')?.value)"
+                                                class="cursor-pointer">visibility</mat-icon>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 2. Aadhaar Card -->
+                            <div class="flex justify-between pt-5 mr-2">
+                                <div class="w-52 pr-4 py-1 bg-royal rounded">
+                                    <span class="pl-2 py-1 text-base text-white rounded">
+                                        2. Aadhaar Card
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-5 mt-4 mr-2">
+
+                                <!-- Attach Front Aadhar Card -->
+                                <div class="relative">
+                                    <mat-icon *ngIf="pospOnBoardingForm?.get('AadharCardFrontDocument.FileName')?.value"
+                                        (click)="removeDocument('UIDFront')"
+                                        class="absolute -right-2 -top-3 text-red-500 cursor-pointer z-10">cancel</mat-icon>
+                                    <div class="dummy-formField justify-start">
+                                        <div class="icon">
+                                            <mat-icon>attach_file</mat-icon>
+                                        </div>
+                                        <input type="file" class="hidden" #UIDAttachDocument
+                                            (change)="SelectDocument($event,'UIDFront')">
+                                        <p class="text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                            matTooltip="{{pospOnBoardingForm?.get('AadharCardFrontDocument.FileName')?.value}}"
+                                            (click)="UIDAttachDocument.click()">
+                                            {{ pospOnBoardingForm?.get('AadharCardFrontDocument.FileName')?.value ||
+                                            'Choose File'
+                                            |
+                                            excerpt:'max' }}
+                                        </p>
+                                        <label for="UIDAttachDocument" class="mandatory">Front Side </label>
+                                        <div class="flex justify-end absolute right-2 bg-white"
+                                            matTooltip="View Document"
+                                            *ngIf="pospOnBoardingForm?.get('AadharCardFrontDocument.FileName')?.value">
+                                            <mat-icon
+                                                (click)="ViewDocuments(pospOnBoardingForm?.get('AadharCardFrontDocument.StorageFilePath')?.value)"
+                                                class="cursor-pointer">visibility</mat-icon>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Attach Back Aadhar Card -->
+                                <div class="relative ">
+                                    <mat-icon *ngIf="pospOnBoardingForm?.get('AadharCardBackDocument.FileName')?.value"
+                                        (click)="removeDocument('UIDBack')"
+                                        class="absolute -right-2 -top-3 text-red-500 cursor-pointer z-10">cancel</mat-icon>
+                                    <div class="dummy-formField justify-start">
+                                        <div class="icon">
+                                            <mat-icon>attach_file</mat-icon>
+                                        </div>
+                                        <input type="file" class="hidden" #UIDBackAttachDocument
+                                            (change)="SelectDocument($event,'UIDBack')">
+                                        <p class="text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                            matTooltip="{{pospOnBoardingForm?.get('AadharCardBackDocument.FileName')?.value}}"
+                                            (click)="UIDBackAttachDocument.click()">
+                                            {{ pospOnBoardingForm?.get('AadharCardBackDocument.FileName')?.value ||
+                                            'Choose File'
+                                            |
+                                            excerpt:'max' }}
+                                        </p>
+                                        <label for="UIDBackAttachDocument" class="mandatory">Back Side </label>
+                                        <div class="flex justify-end absolute right-2 bg-white"
+                                            matTooltip="View Document"
+                                            *ngIf="pospOnBoardingForm?.get('AadharCardBackDocument.FileName')?.value">
+                                            <mat-icon
+                                                (click)="ViewDocuments(pospOnBoardingForm?.get('AadharCardBackDocument.StorageFilePath')?.value)"
+                                                class="cursor-pointer">visibility</mat-icon>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 3. PAN Card -->
+                            <div class="flex justify-between pt-5 mr-2">
+                                <div class="w-52 pr-4 py-1 bg-royal rounded">
+                                    <span class="pl-2 py-1 text-base text-white rounded">
+                                        3. PAN Card
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Attach PAN Card -->
+                            <div class="grid grid-cols-1 gap-5 mt-4 mr-2">
+                                <div class="relative ">
+                                    <mat-icon *ngIf="pospOnBoardingForm?.get('PANDocument.FileName')?.value"
+                                        (click)="removeDocument('PAN')"
+                                        class="absolute -right-2 -top-3 text-red-500 cursor-pointer z-10">cancel</mat-icon>
+                                    <div class="dummy-formField justify-start">
+                                        <div class="icon">
+                                            <mat-icon>attach_file</mat-icon>
+                                        </div>
+                                        <input type="file" class="hidden" #PANAttachDocument
+                                            (change)="SelectDocument($event,'PAN')">
+                                        <p class="text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                            matTooltip="{{pospOnBoardingForm?.get('PANDocument.FileName')?.value}}"
+                                            (click)="PANAttachDocument.click()">
+                                            {{ pospOnBoardingForm?.get('PANDocument.FileName')?.value || 'Choose File' |
+                                            excerpt:'max' }}
+                                        </p>
+                                        <label for="PANAttachDocument" class="mandatory">Attach PAN Card</label>
+                                        <div class="flex justify-end absolute right-2 bg-white"
+                                            matTooltip="View Document"
+                                            *ngIf="pospOnBoardingForm?.get('PANDocument.FileName')?.value">
+                                            <mat-icon
+                                                (click)="ViewDocuments(pospOnBoardingForm?.get('PANDocument.StorageFilePath')?.value)"
+                                                class="cursor-pointer">visibility</mat-icon>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 4. Passport Size Photo -->
+                            <div class="flex justify-between pt-5 mr-2">
+                                <div class="w-52 pr-4 py-1 bg-royal rounded">
+                                    <span class="pl-2 py-1 text-base text-white rounded">
+                                        4. Passport Size Photo
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Attach Passport Size Photo -->
+                            <div class="grid grid-cols-1 gap-5 mt-4 mr-2">
+                                <div class="relative ">
+                                    <mat-icon *ngIf="pospOnBoardingForm?.get('PhotoDocument.FileName')?.value"
+                                        (click)="removeDocument('Photo')"
+                                        class="absolute -right-2 -top-3 text-red-500 cursor-pointer z-10">cancel</mat-icon>
+                                    <div class="dummy-formField justify-start">
+                                        <div class="icon">
+                                            <mat-icon>attach_file</mat-icon>
+                                        </div>
+                                        <input type="file" class="hidden" #PhotoDocument
+                                            (change)="SelectDocument($event,'Photo')">
+                                        <p class="text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                            matTooltip="{{pospOnBoardingForm?.get('PhotoDocument.FileName')?.value}}"
+                                            (click)="PhotoDocument.click()">
+                                            {{ pospOnBoardingForm?.get('PhotoDocument.FileName')?.value || 'Choose File'
+                                            |
+                                            excerpt:'max' }}
+                                        </p>
+                                        <label for="PhotoDocument" class="mandatory">Passport Size Photo</label>
+                                        <div class="flex justify-end absolute right-2 bg-white"
+                                            matTooltip="View Document"
+                                            *ngIf="pospOnBoardingForm?.get('PhotoDocument.FileName')?.value">
+                                            <mat-icon
+                                                (click)="ViewDocuments(pospOnBoardingForm?.get('PhotoDocument.StorageFilePath')?.value)"
+                                                class="cursor-pointer">visibility</mat-icon>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 5. Cancelled Cheque -->
+                            <div class="flex justify-between pt-5 mr-2">
+                                <div class="w-52 pr-4 py-1 bg-royal rounded">
+                                    <span class="pl-2 py-1 text-base text-white rounded">
+                                        5. Cancelled Cheque
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Attach Cancelled Cheque -->
+                            <div class="grid grid-cols-1 gap-5 mt-4 mr-2">
+                                <div class="relative ">
+                                    <mat-icon *ngIf="pospOnBoardingForm?.get('CancelledChequeDocument.FileName')?.value"
+                                        (click)="removeDocument('CancelledCheque')"
+                                        class="absolute -right-2 -top-3 text-red-500 cursor-pointer z-10">cancel</mat-icon>
+                                    <div class="dummy-formField justify-start">
+                                        <div class="icon">
+                                            <mat-icon>attach_file</mat-icon>
+                                        </div>
+                                        <input type="file" class="hidden" #CCAttachDocument
+                                            (change)="SelectDocument($event,'CancelledCheque')">
+                                        <p class="text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                            matTooltip="{{pospOnBoardingForm?.get('CancelledChequeDocument.FileName')?.value}}"
+                                            (click)="CCAttachDocument.click()">
+                                            {{ pospOnBoardingForm?.get('CancelledChequeDocument.FileName')?.value ||
+                                            'Choose File'
+                                            |
+                                            excerpt:'max' }}
+                                        </p>
+                                        <label for="CCAttachDocument" class="mandatory">Canceled Cheque</label>
+                                        <div class="flex justify-end absolute right-2 bg-white"
+                                            matTooltip="View Document"
+                                            *ngIf="pospOnBoardingForm?.get('CancelledChequeDocument.FileName')?.value">
+                                            <mat-icon
+                                                (click)="ViewDocuments(pospOnBoardingForm?.get('CancelledChequeDocument.StorageFilePath')?.value)"
+                                                class="cursor-pointer">visibility</mat-icon>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3 flex flex-wrap gap-3">
+                                <button class="bg-royal text-white " type="button" mat-button
+                                    (click)="prevTab()">Previous</button>
+                                <button class="bg-royal text-white " type="button" mat-button
+                                    (click)="validateUploadDocumentDetails()">Submit</button>
+                            </div>
+
+                        </mat-tab>
+
+                    </mat-tab-group>
+                </div>
+
+                <!-- <div class="mt-3 flex flex-wrap gap-3">
+                    <button class="bg-royal text-white " type="button" mat-button
+                        (click)="isBankDetailsShow = !isBankDetailsShow">
+                        Back
+                    </button>
+
+                    <button class="bg-royal text-white " type="button" mat-button (click)="validateOtherInformation()">
+                        Submit
+                    </button>
+                </div> -->
+
+            </div>
+
+        </form>
+
+    </div>
+</div>

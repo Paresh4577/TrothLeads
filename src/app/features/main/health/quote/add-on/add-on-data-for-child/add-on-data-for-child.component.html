@@ -1,0 +1,45 @@
+<div class="mt-1 px-2 w-full">
+    <!-- region Main Heading -->
+    <h1 class="new-head text-lg px-4 py-2 mb-1.5 rounded flex justify-between items-center font-semibold">
+      {{ title }}
+  
+      <div class="flex gap-x-3  items-center text-lg font-normal">
+        <button mat-raised-button class="button button-primary" (click)="save()">
+            Save
+          </button>
+        <button mat-raised-button class="button button-primary" (click)="cancle()">
+          Close
+        </button>
+      </div>
+    </h1>
+    <div>
+      <mat-card class="px-4 py-3 gap-2 container mx-auto" [formGroup]="childOccupationForm">
+        <div class="grid md:grid-cols-5 gap-7">
+          <div class="relative min-w-58 md:col-span-2">
+            <input id="income" type="text" maxlength="7" Onlynumber placeholder=" " class="peer" formControlName="Income" >
+            <label class="mandatory" for="income">Proposer Monthly Income</label>
+          </div>
+          <div class="relative md:col-span-2">
+            <select formControlName="SumInsured">
+              <option *ngFor="let sum of Amount" [value]="sum.value"> {{sum.name}} </option>
+            </select>
+            <label class="mandatory" for="SumInsured">Sum Insured</label>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-3 gap-4 mt-3" *ngFor="let item of numberOfChildren">
+          <div class="relative">
+            <input type="text" readonly value="{{item.name}}">
+            <label class="mandatory" for="">Name</label>
+          </div>
+              
+          <div class="relative md:col-span-2">
+            <select class="peer" formControlName="{{item.label}}">
+              <option *ngFor="let list of OccupationList" [value]="list.Code">{{ list.Name }}</option>
+            </select>
+            <label class="mandatory" for="">Occupation</label>
+          </div>
+        </div>
+          
+      </mat-card>
+    </div>
+</div>

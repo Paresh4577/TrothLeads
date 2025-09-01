@@ -1,0 +1,41 @@
+.mappingtable {
+    table {
+        width: 100% !important;
+
+    }
+
+    th {
+            font-weight: normal !important;
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+            color: white !important;
+        }
+
+    th,
+    td {
+        border: 1px solid #CBD5E1;
+    }
+
+
+
+    .col-srno {
+        width: 5% !important;
+        min-width: 50px !important;
+    }
+
+    .col-fileName {
+        width: 60% !important;
+        min-width: 200px !important;
+    }
+
+    .col-documentTypeName {
+        width: 25% !important;
+        min-width: 120px !important;
+    }
+
+
+    .col-action {
+        width: 5% !important;
+        min-width: 30px !important;
+    }
+}

@@ -1,0 +1,65 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" (click)="submitForm()">Save</button>
+            <button mat-raised-button class="new-button" (click)="backClicked()">Cancel</button>
+        </div>
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+
+        <form [formGroup]="scrollBarMSGForm" class="text-md">
+
+            <div class="grid md:grid-cols-2 gap-4">
+
+                <!-- Message 1  -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>rate_review</mat-icon>
+                    </div>
+                    <input type="text" id="Message1" class="peer" placeholder=" " minlength="1" maxlength="150"
+                        formControlName="Event1" />
+                    <label for="Message1" class="">Message 1</label>
+                </div>
+
+                <!-- Message 2  -->
+                <div class="col-start-1 relative">
+                    <div class="icon">
+                        <mat-icon>rate_review</mat-icon>
+                    </div>
+                    <input type="text" id="Message2" class="peer" placeholder=" " minlength="1" maxlength="150"
+                        formControlName="Event2" />
+                    <label for="Message2" class="">Message 2</label>
+                </div>
+
+                <!-- Message 3  -->
+                <div class="col-start-1 relative">
+                    <div class="icon">
+                        <mat-icon>rate_review</mat-icon>
+                    </div>
+                    <input type="text" id="Message3" class="peer" placeholder=" " minlength="1" maxlength="150"
+                        formControlName="Event3" />
+                    <label for="Message3" class="">Message 3</label>
+                </div>
+
+                <!-- Message 4  -->
+                <div class="col-start-1 relative">
+                    <div class="icon">
+                        <mat-icon>rate_review</mat-icon>
+                    </div>
+                    <input type="text" id="Message4" class="peer" placeholder=" " minlength="1" maxlength="150"
+                        formControlName="Event4" />
+                    <label for="Message4" class="">Message 4</label>
+                </div>
+
+
+            </div>
+        </form>
+    </div>
+    <!-- endregion form -->
+</div>

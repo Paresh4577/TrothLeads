@@ -1,0 +1,609 @@
+<div class="px-4 pb-4 max-h-none w-full">
+
+    <!-- region main heading -->
+    <div class="pt-4 sticky z-30 headingBorder top-0 w-full">
+        <!-- region main heading -->
+        <h1 class="new-head h-14 text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold">
+            {{ pagetitle }}
+            <div class="flex gap-x-3  items-center text-lg font-normal">
+                <button mat-raised-button class="new-button" (click)="backButton()">Back</button>
+                <button mat-raised-button class="new-button" (click)="ExpandCollaps()">
+                    {{isExpand ? 'Collapse' : 'Expand All'}}
+                </button>
+            </div>
+        </h1>
+    </div>
+    <!-- endregion main heading -->
+    <!-- endregion main heading -->
+
+    <!-- Start of Body -->
+    <form [formGroup]="COForm">
+        <!-- Region Form -->
+        <div class="px-4 py-5 rounded">
+            <mat-stepper orientation="vertical" #stepper [ngClass]="isExpand ? 'showstep' : ''">
+
+                <!-- First stepper -->
+                <mat-step label="RFQ Details">
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mt-4">
+
+                        <!-- RFQ No. -->
+                        <div class="relative min-w-56">
+                            <div class="icon">
+                                <mat-icon>confirmation_number</mat-icon>
+                            </div>
+                            <input matInput maxlength="30" type="text" id="RFQNo" [value]="DisplayForm.RFQNo"
+                                placeholder=" " class="peer" readonly required />
+                            <label for="RFQNo" class="mandatory">RFQ No.</label>
+                        </div>
+
+                        <!-- RFQ Date -->
+                        <div class="relative min-w-56">
+                            <div class="icon">
+                                <mat-datepicker-toggle class="-ml-2 pointer-events-none" matIconSuffix
+                                    [for]="RFQDate"></mat-datepicker-toggle>
+                                <mat-datepicker #RFQDate></mat-datepicker>
+                            </div>
+                            <div class="flex">
+                                <input matInput type="text" id="RFQDate" placeholder="__/__/____" datemask
+                                    [value]="DisplayForm.RFQDate" [matDatepicker]="RFQDate" class="peer mb-1"
+                                    readonly />
+                                <label for="RFQDate" class="mandatory">RFQ Date</label>
+                            </div>
+                        </div>
+
+                        <!-- QN No. -->
+                        <div class="relative min-w-56">
+                            <div class="icon">
+                                <mat-icon>confirmation_number</mat-icon>
+                            </div>
+                            <input matInput maxlength="30" type="text" id="QNNo" [value]="DisplayForm.QNNo"
+                                placeholder=" " class="peer" required readonly />
+                            <label for="QNNo" class="mandatory">QN No.</label>
+                        </div>
+
+                        <!-- QN Date -->
+                        <div class="relative min-w-56">
+                            <div class="icon">
+                                <mat-datepicker-toggle class="-ml-2 pointer-events-none" matIconSuffix
+                                    [for]="QNDate"></mat-datepicker-toggle>
+                                <mat-datepicker #QNDate></mat-datepicker>
+                            </div>
+                            <div class="flex">
+                                <input matInput type="text" id="QNDate" placeholder="__/__/____" datemask
+                                    [value]="DisplayForm.QNDate" [matDatepicker]="QNDate" class="peer mb-1" readonly />
+                                <label for="QNDate" class="mandatory">QN Date</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white mx-3" type="button" mat-button matStepperNext>
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
+
+                <!-- Second stepper -->
+                <mat-step label="Basic Details">
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mt-4">
+
+                        <!-- Vehicle Category -->
+                        <div class="relative min-w-56">
+                            <div class="icon">
+                                <mat-icon>category</mat-icon>
+                            </div>
+                            <input matInput maxlength="30" type="text" id="VehicleCategory"
+                                [value]="DisplayForm.SubCategoryName" placeholder=" " class="peer" readonly required />
+                            <label for="VehicleCategory" class="mandatory">Vehicle Category</label>
+                        </div>
+
+                        <!-- Policy Type -->
+                        <div class="relative min-w-56">
+                            <div class="icon">
+                                <mat-icon>timelapse</mat-icon>
+                            </div>
+                            <input matInput maxlength="30" type="text" id="PolicyType"
+                                [value]="DisplayForm.CategoryType" placeholder=" " class="peer" readonly required />
+                            <label for="PolicyType" class="mandatory">Policy Type</label>
+                        </div>
+
+                        <!-- Category Type -->
+                        <div class="relative min-w-56">
+                            <div class="icon">
+                                <mat-icon>timelapse</mat-icon>
+                            </div>
+                            <input matInput maxlength="30" type="text" id="CategoryType"
+                                [value]="DisplayForm.PolicyType" placeholder=" " class="peer" readonly required />
+                            <label for="CategoryType" class="mandatory">Category Type</label>
+                        </div>
+
+                    </div>
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mt-4">
+
+                        <!-- Registration No. -->
+                        <div class="relative min-w-56">
+                            <div class="icon" [ngSwitch]="DisplayForm.SubCategoryCode">
+                                <mat-icon *ngSwitchDefault>directions_car</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.TwoWheeler">motorcycle</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.MiscellaneousD">rv_hookup</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.GCV">local_shipping</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.PCV">directions_bus</mat-icon>
+                            </div>
+                            <input matInput maxlength="30" type="text" id="RegistrationNo"
+                                [value]="DisplayForm.VehicleDetail.VehicleNumber" placeholder=" " class="peer" required
+                                readonly />
+                            <label for="RegistrationNo" class="mandatory">Registration No.</label>
+                        </div>
+
+                        <!-- Registration Date -->
+                        <div class="relative min-w-56">
+                            <div class="icon">
+                                <mat-datepicker-toggle class="-ml-2 pointer-events-none" matIconSuffix
+                                    [for]="RegistrationDate"></mat-datepicker-toggle>
+                                <mat-datepicker #RegistrationDate></mat-datepicker>
+                            </div>
+                            <div class="flex">
+                                <input matInput type="text" id="RegistrationDate" placeholder="__/__/____" datemask
+                                    [value]="DisplayForm.VehicleDetail.RegistrationDate"
+                                    [matDatepicker]="RegistrationDate" class="peer mb-1" readonly />
+                                <label for="RegistrationDate" class="mandatory">Registration Date</label>
+                            </div>
+                        </div>
+
+                        <!-- RTO Code -->
+                        <div class="relative min-w-56">
+                            <div class="icon">
+                                <mat-icon>timelapse</mat-icon>
+                            </div>
+                            <input matInput maxlength="30" type="text" id="RTOCode"
+                                [value]="DisplayForm.VehicleDetail.RTOCode" placeholder=" " class="peer" required
+                                readonly />
+                            <label for="RTOCode" class="">RTO Code</label>
+                        </div>
+
+                    </div>
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mt-4">
+
+                        <!-- Manufacturer/Brand Name -->
+                        <div class="relative min-w-56">
+                            <div class="icon" [ngSwitch]="DisplayForm.SubCategoryCode">
+                                <mat-icon *ngSwitchDefault>directions_car</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.TwoWheeler">motorcycle</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.MiscellaneousD">rv_hookup</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.GCV">local_shipping</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.PCV">directions_bus</mat-icon>
+                            </div>
+                            <input matInput maxlength="30" type="text" id="Manufacturer/BrandName"
+                                [value]="DisplayForm.VehicleDetail.BrandName" placeholder=" " class="peer" required
+                                readonly />
+                            <label for="Manufacturer/BrandName" class="mandatory">Manufacturer/Brand Name</label>
+                        </div>
+
+                        <!-- Model Name -->
+                        <div class="relative min-w-56">
+                            <div class="icon" [ngSwitch]="DisplayForm.SubCategoryCode">
+                                <mat-icon *ngSwitchDefault>directions_car</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.TwoWheeler">motorcycle</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.MiscellaneousD">rv_hookup</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.GCV">local_shipping</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.PCV">directions_bus</mat-icon>
+                            </div>
+                            <input matInput maxlength="30" type="text" id="Model"
+                                [value]="DisplayForm.VehicleDetail.ModelName" placeholder=" " class="peer" required
+                                readonly />
+                            <label for="Model" class="mandatory">Model</label>
+                        </div>
+
+                        <!-- SubModel Name -->
+                        <div class="relative min-w-56">
+                            <div class="icon" [ngSwitch]="DisplayForm.SubCategoryCode">
+                                <mat-icon *ngSwitchDefault>directions_car</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.TwoWheeler">motorcycle</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.MiscellaneousD">rv_hookup</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.GCV">local_shipping</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.PCV">directions_bus</mat-icon>
+                            </div>
+                            <input matInput maxlength="30" type="text" id="SubModel"
+                                [value]="DisplayForm.VehicleDetail.SubModelName" placeholder=" " class="peer" required
+                                readonly />
+                            <label for="SubModel" class="mandatory">Sub Model</label>
+                        </div>
+
+                        <!-- Fuel Type -->
+                        <div class="relative min-w-60 w-fit">
+                            <div class="icon">
+                                <mat-icon>local_gas_station</mat-icon>
+                            </div>
+                            <select class="peer bg-white " name="FuelType" [value]="DisplayForm.VehicleDetail.FuelType">
+                                <option value="P" disabled>Petrol</option>
+                                <option value="D" disabled>Diesel</option>
+                                <option value="E" disabled>Electric</option>
+                                <option value="C" disabled>CNG</option>
+                                <option value="L" disabled>LPG</option>
+                                <option value="H" disabled>Hybrid</option>
+                            </select>
+                            <label for="FuelType" class="mandatory">Fuel Type</label>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white mx-3" type="button" mat-button matStepperPrevious>
+                            Back
+                        </button>
+                        <button class="bg-royal text-white mx-3" type="button" mat-button matStepperNext>
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
+
+                <!-- Third stepper -->
+                <mat-step label="Query Details" [stepControl]="QueryDetailsValidation()">
+
+                    <div class="pt-3 min-w-full rounded bg-white">
+
+                        <!-- Insurer -->
+                        <div formArrayName="InsurerQueries" class="border rounded-lg p-3">
+
+                            <div class="flex justify-between"
+                                [ngClass]="InsurerQueries.value?.length > 0 ? 'mb-3' : ''">
+                                <p class="font-semibold text-primary-600">
+                                    Query/Counter offer by Insurance company
+                                </p>
+
+                                <!-- Add Button -->
+                                <div class="relative" *ngIf="(!IsLoggedUserSameasRfqCreatedUser) || IsAdmin">
+                                    <button class="bg-royal text-white mx-2" type="button" mat-button
+                                        matTooltip="Add Query" (click)="addQueryDetails('Insurer')">
+                                        + Add
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div *ngFor="let item of InsurerQueries.controls, let i=index">
+                                <div class="grid grid-cols-[minmax(7px,2%)_minmax(114px,94%)_minmax(10px,3%)] mb-2"
+                                    *ngIf="item.value.QueryRaiseBy == 'Insurer'">
+
+                                    <div class="relative content-center">
+                                        <span class="font-bold ">{{i + 1}}</span>
+                                    </div>
+
+                                    <div [formGroupName]="i"
+                                        class="grid lg:grid-cols-5 md:grid-cols-3 sd:grid-cols-1 gap-2">
+
+                                        <!-- Query Date -->
+                                        <div class="relative min-w-36">
+                                            <div class="icon">
+                                                <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                    [for]="QueryDate"></mat-datepicker-toggle>
+                                                <mat-datepicker #QueryDate></mat-datepicker>
+                                            </div>
+                                            <!-- formControlName="QueryCounterDate" -->
+                                            <div class="flex">
+                                                <input matInput type="text" id="QueryDate{{i}}" placeholder="__/__/____"
+                                                    datemask [matDatepicker]="QueryDate" class="peer mb-1"
+                                                    formControlName="QueryDate" />
+                                                <label for="QueryDate{{i}}" class="mandatory">Query Date</label>
+                                            </div>
+                                        </div>
+
+                                        <!-- QueryDetails -->
+                                        <div class="relative min-w-36">
+                                            <div class="icon">
+                                                <mat-icon>contact_support</mat-icon>
+                                            </div>
+                                            <input type="text" class="peer" id="QueryDetails{{i}}" name="QueryDetails"
+                                                placeholder=" " formControlName="QueryDetails" maxlength="150">
+                                            <label for="QueryDetails{{i}}" class="">Query Details</label>
+                                        </div>
+
+                                        <!-- Mode of Communication -->
+                                        <div class="relative min-w-36">
+                                            <div class="icon">
+                                                <mat-icon>contact_phone</mat-icon>
+                                            </div>
+                                            <input type="text" class="peer" id="ModeOfCommunication{{i}}"
+                                                name="ModeOfCommunication" placeholder=" "
+                                                formControlName="ModeOfCommunication" maxlength="150">
+                                            <label for="ModeOfCommunication{{i}}" class="">Mode of Communication</label>
+                                        </div>
+
+                                        <!-- Next Follow up Date -->
+                                        <div class="relative min-w-36">
+                                            <div class="icon">
+                                                <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                    [for]="NextFollowUpDate"></mat-datepicker-toggle>
+                                                <mat-datepicker #NextFollowUpDate></mat-datepicker>
+                                            </div>
+                                            <div class="flex">
+                                                <input matInput type="text" id="QueryDate{{i}}" placeholder="__/__/____"
+                                                    datemask [matDatepicker]="NextFollowUpDate" class="peer mb-1"
+                                                    formControlName="NextFollowUpDate" />
+                                                <label for="QueryDate{{i}}" class="">Next Follow Up Date</label>
+                                            </div>
+                                        </div>
+
+                                        <!-- Attachment -->
+                                        <div class="relative min-w-36">
+                                            <div class="dummy-formField ">
+                                                <div class="icon">
+                                                    <mat-icon>attach_file</mat-icon>
+                                                </div>
+                                                <input type="file" class="hidden" accept=".jpg, .jpeg, .png ,.pdf" #file
+                                                    (change)="uploadQueryDocument($event,i, 'Insurer')">
+                                                <p class="ml-10 text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                                    matTooltip="{{item.value.FileName}}"
+                                                    (click)="((!IsLoggedUserSameasRfqCreatedUser) || IsAdmin)? file.click(): ''">
+                                                    {{item.value.FileName || 'Choose File' | excerpt:'max' }}</p>
+                                                <label for="Attachment{{i}}" class="">Attachment</label>
+
+                                                <div class="flex justify-end absolute right-2 bg-white"
+                                                    matTooltip="View Document">
+                                                    <mat-icon *ngIf="item.value?.StorageFilePath"
+                                                        (click)="ViewAttachedDocument(item.value?.StorageFilePath)"
+                                                        class="cursor-pointer">
+                                                        visibility
+                                                    </mat-icon>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="relative content-center text-center">
+                                        <mat-icon matTooltip="Remove"
+                                            *ngIf="(!IsLoggedUserSameasRfqCreatedUser) || IsAdmin"
+                                            (click)="removeQueryDetails(i, 'Insurer')">
+                                            delete
+                                        </mat-icon>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Customer -->
+                        <div formArrayName="CustomerQueries" class="border rounded-lg p-5 mt-4">
+
+                            <div class="flex gap-2 justify-between"
+                                [ngClass]="CustomerQueries.value?.length > 0 ? 'mb-5' : ''">
+                                <p class="font-semibold text-primary-600">
+                                    Customer's Response
+                                </p>
+
+                                <!-- Add Button -->
+                                <div class="relative" *ngIf="IsLoggedUserSameasRfqCreatedUser || IsAdmin">
+                                    <button class="bg-royal text-white mx-2" type="button" mat-button
+                                        matTooltip="Add Query" (click)="addQueryDetails('Customer')">
+                                        + Add
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div *ngFor="let item of CustomerQueries.controls, let i=index">
+                                <div class="grid grid-cols-[minmax(7px,2%)_minmax(114px,94%)_minmax(10px,3%)] mb-2">
+
+                                    <div class="relative content-center">
+                                        <span class="font-bold ">{{i + 1}}</span>
+                                    </div>
+
+                                    <div [formGroupName]="i"
+                                        class="grid lg:grid-cols-5 md:grid-cols-3 sd:grid-cols-1 gap-5">
+
+                                        <!-- Query Date -->
+                                        <div class="relative min-w-36">
+                                            <div class="icon">
+                                                <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                    [for]="QueryDate"></mat-datepicker-toggle>
+                                                <mat-datepicker #QueryDate></mat-datepicker>
+                                            </div>
+                                            <!-- formControlName="QueryCounterDate" -->
+                                            <div class="flex">
+                                                <input matInput type="text" id="QueryDate{{i}}" placeholder="__/__/____"
+                                                    datemask [matDatepicker]="QueryDate" class="peer mb-1"
+                                                    formControlName="QueryDate" />
+                                                <label for="QueryDate{{i}}" class="mandatory">Query Date</label>
+                                            </div>
+                                        </div>
+
+                                        <!-- QueryDetails -->
+                                        <div class="relative min-w-36">
+                                            <div class="icon">
+                                                <mat-icon>contact_support</mat-icon>
+                                            </div>
+                                            <input type="text" class="peer" id="QueryDetails{{i}}" name="QueryDetails"
+                                                placeholder=" " formControlName="QueryDetails" maxlength="150">
+                                            <label for="QueryDetails{{i}}" class="">Query Details</label>
+                                        </div>
+
+                                        <!-- Mode of Communication -->
+                                        <div class="relative min-w-36">
+                                            <div class="icon">
+                                                <mat-icon>contact_phone</mat-icon>
+                                            </div>
+                                            <input type="text" class="peer" id="ModeOfCommunication{{i}}"
+                                                name="ModeOfCommunication" placeholder=" "
+                                                formControlName="ModeOfCommunication" maxlength="150">
+                                            <label for="ModeOfCommunication{{i}}" class="">Mode of Communication</label>
+                                        </div>
+
+                                        <!-- Next Follow up Date -->
+                                        <div class="relative min-w-36">
+                                            <div class="icon">
+                                                <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                    [for]="NextFollowUpDate"></mat-datepicker-toggle>
+                                                <mat-datepicker #NextFollowUpDate></mat-datepicker>
+                                            </div>
+                                            <div class="flex">
+                                                <input matInput type="text" id="QueryDate{{i}}" placeholder="__/__/____"
+                                                    datemask [matDatepicker]="NextFollowUpDate" class="peer mb-1"
+                                                    formControlName="NextFollowUpDate" />
+                                                <label for="QueryDate{{i}}" class="">Next Follow Up Date</label>
+                                            </div>
+                                        </div>
+
+                                        <!-- Attachment -->
+                                        <div class="relative min-w-36">
+                                            <div class="dummy-formField ">
+                                                <div class="icon">
+                                                    <mat-icon>attach_file</mat-icon>
+                                                </div>
+                                                <input type="file" class="hidden" accept=".jpg, .jpeg, .png ,.pdf" #file
+                                                    (change)="uploadQueryDocument($event,i, 'Customer')">
+                                                <p class="ml-10 text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                                    matTooltip="{{item.value.FileName}}"
+                                                    (click)="((IsLoggedUserSameasRfqCreatedUser) || IsAdmin)? file.click(): ''">
+                                                    {{item.value.FileName || 'Choose File' | excerpt:'max' }}</p>
+                                                <label for="Attachment{{i}}" class="">Attachment</label>
+
+                                                <div class="flex justify-end absolute right-2 bg-white"
+                                                    matTooltip="View Document">
+                                                    <mat-icon *ngIf="item.value?.StorageFilePath"
+                                                        (click)="ViewAttachedDocument(item.value?.StorageFilePath)"
+                                                        class="cursor-pointer">
+                                                        visibility
+                                                    </mat-icon>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="relative content-center text-center">
+
+                                        <mat-icon matTooltip="Remove"
+                                            *ngIf="IsLoggedUserSameasRfqCreatedUser || IsAdmin"
+                                            (click)="removeQueryDetails(i, 'Customer')">
+                                            delete
+                                        </mat-icon>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid lg:grid-cols-3 md:grid-cols-2  gap-4 my-4 ">
+
+                            <div class="relative">
+                                <p class="font-semibold text-primary-600">Final Status</p>
+                            </div>
+
+
+                            <div class="flex items-center justify-between gap-2 col-start-1">
+                                <span for="Reject">RFQ Rejected?</span>
+
+                                <select class="peer bg-white w-fit pl-2" formControlName="IsReject">
+                                    <option [value]='true'>Yes</option>
+                                    <option [value]='false'>No</option>
+                                </select>
+                            </div>
+
+                            <div class="flex items-center justify-between gap-2 col-start-1"
+                                *ngIf="COForm.get('IsReject').value == false || COForm.get('IsReject').value == 'false'">
+                                <span for="Reject">Any Modification given by insurance Company?</span>
+
+                                <select class="peer bg-white w-fit pl-2" formControlName="IsModify">
+                                    <option [value]='true'>Yes</option>
+                                    <option [value]='false'>No</option>
+                                </select>
+                            </div>
+
+                            <!-- Modification Details  -->
+                            <div class="relative"
+                                *ngIf="(COForm.get('IsReject').value == false || COForm.get('IsReject').value == 'false')
+                                                    && COForm.get('IsModify').value == true || COForm.get('IsModify').value == 'true'">
+                                <div class="icon">
+                                    <mat-icon>edit_document</mat-icon>
+                                </div>
+                                <input type="text" class="peer" id="ModificationDetails" name="ModificationDetails"
+                                    placeholder=" " formControlName="ModificationDetails">
+                                <label for="ModificationDetails">Modification Details</label>
+                            </div>
+
+
+                            <!-- Loading Premium  -->
+                            <div class="flex items-center justify-between gap-2 col-start-1"
+                                *ngIf="(COForm.get('IsReject').value == false || COForm.get('IsReject').value == 'false')">
+                                <span for="Reject">Loading Premium?</span>
+
+                                <select class="peer bg-white w-fit pl-2" formControlName="LoadingPremium">
+                                    <option [value]='true'>Yes</option>
+                                    <option [value]='false'>No</option>
+                                </select>
+                            </div>
+
+                            <!-- GrossPremium -->
+                            <div class="relative"
+                                *ngIf="COForm.get('LoadingPremium').value == 'true' || COForm.get('LoadingPremium').value == true">
+                                <div class="icon rs">₹</div>
+                                <input type="text" class="peer" id="GrossPremium" placeholder=" " readonly
+                                    [value]="GrossPremium">
+                                <label for="GrossPremium">Gross Premium</label>
+                            </div>
+
+                            <!-- Loading Premium Amount  -->
+                            <div class="relative"
+                                *ngIf="COForm.get('LoadingPremium').value == 'true' || COForm.get('LoadingPremium').value == true">
+                                <div class="icon rs">₹</div>
+                                <input type="text" class="peer" id="LoadingPremiumAmount" decimal
+                                    onfocus="this.select()" name="LoadingPremiumAmount" placeholder=" "
+                                    formControlName="LoadingPremiumAmount" (keydown)="DecimalWithMinus($event)"
+                                    (blur)="DecimalWithMinus($event)" maxlength="10">
+                                <label for="LoadingPremiumAmount" class="mandatory">Loading Premium Amount</label>
+                            </div>
+
+                            <!-- Reason (Send Back / Reject) -->
+                            <!-- <div class="relative col-span-2 col-start-1">
+                                <div class="icon">
+                                    <mat-icon>timelapse</mat-icon>
+                                </div>
+                                <input matInput type="text" id="Remarks" formControlName="SendBackRejectDesc"
+                                    placeholder=" " class="peer" required />
+                                <label for="Remarks" class="mandatory">Reason (For Send Back/Reject)</label>
+                            </div> -->
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="my-4">
+                        <button class="bg-royal text-white mx-3" type="button" mat-button matStepperPrevious
+                            *ngIf="!isExpand">
+                            Back
+                        </button>
+
+                        <!-- Send Back -->
+                        <!-- <button *ngIf="mode!='view'" class="bg-royal text-white mx-3" type="button" mat-button
+                            (click)="SendBackButton()">
+                            Send Back
+                        </button> -->
+
+                        <button *ngIf="mode!='view' && ((!IsLoggedUserSameasRfqCreatedUser) || IsAdmin)"
+                            class="bg-royal text-white mx-3" type="button" mat-button (click)="SubmitForm(true)">
+                            Submit
+                        </button>
+
+                        <button *ngIf="mode!='view'" class="bg-royal text-white mx-3" type="button" mat-button
+                            (click)="SubmitForm(false)">
+                            Save
+                        </button>
+
+                    </div>
+
+                </mat-step>
+
+            </mat-stepper>
+        </div>
+        <!-- Region Form End -->
+    </form>
+</div>
+<!-- End of Body -->

@@ -1,0 +1,2400 @@
+<div class="p-4 h-full w-full">
+  <!-- region main heading -->
+  <h1
+    class="new-head h-14 text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold"
+  >
+    {{ pagetitle }}
+    <button *ngIf="showFreshQuotebutton" mat-raised-button (click)="ResetStepper(stepper)" class="new-button">
+      Fresh Quote
+    </button>
+  </h1>
+  <!-- endregion main heading -->
+
+  <!-- region form -->
+  <div class="px-4 py-5 rounded">
+    <mat-stepper
+      orientation="vertical"
+      linear
+      #stepper
+      (selectionChange)="selectionChange($event)"
+    >
+      <!-- First stepper -->
+
+      <mat-step label="Member Details" [stepControl]="_StepOneSubmit(stepper)">
+        <ng-template matStepLabel>Who would you like to insure?</ng-template>
+        <form [formGroup]="HealthQuateForm">
+          <ng-template matStepLabel></ng-template>
+
+          <h3>Select Your Gender:</h3>
+          <br />
+
+          <mat-button-toggle-group
+            #group="matButtonToggleGroup"
+            [value]="SelfGender"
+            (change)="SetSelfGender($event, group.value)"
+            class="genderbtn"
+          >
+            <mat-button-toggle value="Male"> Male </mat-button-toggle>
+            <mat-button-toggle value="Female"> Female </mat-button-toggle>
+          </mat-button-toggle-group>
+          <h3 class="mandatory mt-4">Who would you like to insure?</h3>
+
+          <div class="flex flex-wrap">
+            <div class="w-full">
+              <div class="flex flex-wrap text-black">
+                <div class="my-4 w-full lg:mt-3">
+                  <div
+                    class="grid md:grid-cols-6 grid-cols-2 xl:grid-cols-12 gap-x-4"
+                  >
+                    <!-- Self -->
+                    <button
+                      class="shadow-lg rounded-lg text-center mt-4"
+                      [ngClass]="
+                        HealthQuateForm.get('SelfCoverRequired').value == true
+                          ? 'bg-sky-300'
+                          : 'bg-gray-100'
+                      "
+                      (click)="SetCover('Self')"
+                    >
+                      <div class="rounded-full w-fit py-2 px-5 self mx-auto">
+                        <div
+                          *ngIf="
+                            this.HealthQuateForm.controls['SelfGender'].value ==
+                            'Male'
+                          "
+                        >
+                          <img src="/assets/icons/male.png" alt="" />
+                        </div>
+                        <div
+                          *ngIf="
+                            this.HealthQuateForm.controls['SelfGender'].value ==
+                            'Female'
+                          "
+                        >
+                          <img src="/assets/icons/woman.png" alt="woman" />
+                        </div>
+                      </div>
+                      <p class="text-sm mt-2 pb-4 font-semibold">
+                        Self <br />(Proposer)
+                      </p>
+                    </button>
+                    <!-- Spouse -->
+                    <button
+                      class="shadow-lg rounded-lg text-center mt-4"
+                      [ngClass]="
+                        HealthQuateForm.get('SpouseCoverRequired').value == true
+                          ? 'bg-sky-300'
+                          : 'bg-gray-100'
+                      "
+                      (click)="SetCover('Spouse')"
+                    >
+                      <div class="rounded-full w-fit py-2 px-5 mx-auto">
+                        <div
+                          *ngIf="
+                            this.HealthQuateForm.controls['SelfGender'].value ==
+                            'Female'
+                          "
+                        >
+                          <img src="/assets/icons/male.png" alt="" />
+                        </div>
+                        <div
+                          *ngIf="
+                            this.HealthQuateForm.controls['SelfGender'].value ==
+                            'Male'
+                          "
+                        >
+                          <img src="/assets/icons/woman.png" alt="woman" />
+                        </div>
+                      </div>
+                      <p class="text-sm mt-2 pb-4 font-semibold">Spouse</p>
+                    </button>
+                    <!-- daughter -->
+                    <button
+                      class="shadow-lg rounded-lg text-center mt-4"
+                      [ngClass]="
+                        HealthQuateForm.get('daughterCoverRequired').value ==
+                        true
+                          ? 'bg-sky-300'
+                          : 'bg-gray-100'
+                      "
+                      (click)="SetCover('daughter')"
+                    >
+                      <div class="rounded-full w-fit py-2 px-5 mx-auto">
+                        <div>
+                          <img src="/assets/icons/girl.png" alt="girl" />
+                        </div>
+                      </div>
+                      <p class="text-sm mt-2 pb-4 font-semibold">
+                        <span
+                          *ngIf="
+                            HealthQuateForm.get('daughterCoverRequired')
+                              .value == true
+                          "
+                          >{{ HealthQuateForm.get("noOfDaughter").value }}</span
+                        >
+                        Daughter<span
+                          *ngIf="HealthQuateForm.get('noOfDaughter').value > 1"
+                          >s</span
+                        >
+                      </p>
+                    </button>
+                    <!-- son -->
+                    <button
+                      class="shadow-lg rounded-lg text-center mt-4"
+                      [ngClass]="
+                        HealthQuateForm.get('sonCoverRequired').value == true
+                          ? 'bg-sky-300'
+                          : 'bg-gray-100'
+                      "
+                      (click)="SetCover('son')"
+                    >
+                      <div class="rounded-full w-fit py-2 px-5 mx-auto">
+                        <div>
+                          <img src="/assets/icons/son.png" alt="son" />
+                        </div>
+                      </div>
+                      <p class="text-sm mt-2 pb-4 font-semibold">
+                        <span
+                          *ngIf="
+                            HealthQuateForm.get('sonCoverRequired').value ==
+                            true
+                          "
+                          >{{ HealthQuateForm.get("noOfSon").value }}</span
+                        >
+                        Son<span
+                          *ngIf="HealthQuateForm.get('noOfSon').value > 1"
+                          >s</span
+                        >
+                      </p>
+                    </button>
+                    <!-- Mother -->
+                    <button
+                      class="shadow-lg rounded-lg text-center mt-4"
+                      [ngClass]="
+                        HealthQuateForm.get('MotherCoverRequired').value == true
+                          ? 'bg-sky-300'
+                          : 'bg-gray-100'
+                      "
+                      (click)="SetCover('Mother')"
+                    >
+                      <div class="rounded-full w-fit py-2 px-5 mx-auto">
+                        <div>
+                          <img src="/assets/icons/mother.png" alt="mother" />
+                        </div>
+                      </div>
+                      <p class="text-sm mt-2 pb-4 font-semibold">Mother</p>
+                    </button>
+                    <!-- Father -->
+                    <button
+                      class="shadow-lg rounded-lg text-center mt-4"
+                      [ngClass]="
+                        HealthQuateForm.get('FatherCoverRequired').value == true
+                          ? 'bg-sky-300'
+                          : 'bg-gray-100'
+                      "
+                      (click)="SetCover('Father')"
+                    >
+                      <div class="rounded-full w-fit py-2 px-5 mx-auto">
+                        <div>
+                          <img src="/assets/icons/father.png" alt="father" />
+                        </div>
+                      </div>
+                      <p class="text-sm mt-2 pb-4 font-semibold">Father</p>
+                    </button>
+                  </div>
+                  <div class="grid sm:grid-cols-1 md:grid-cols-2">
+                    <div
+                      class="grid grid-rows-1 grid-cols-1 md:grid-rows-1 md:grid-cols-2 md:col-span-2 xl:col-span-1 sm:grid-rows-2 sm:grid-cols-1"
+                    >
+                      <div
+                        class="shadow-lg rounded-lg text-center mt-4 py-4"
+                        *ngIf="
+                          HealthQuateForm.controls['daughterCoverRequired']
+                            .value == true
+                        "
+                      >
+                      <!-- noOfDaughter -->
+                        <div>Number of Daughters to Insure</div>
+                        <div>
+                          <div class="flex justify-evenly px-2 mt-2">
+                            <div class="px-2">
+                              <input
+                                type="radio"
+                                [checked]="
+                                  HealthQuateForm.get('noOfDaughter').value == 1
+                                "
+                                name="noOfDaughter"
+                                value="1"
+                                (click)="onChildSelection('Daughter', 1)"
+                                [attr.disabled]="isDisabled(0, 1)"
+                              />
+                              <span for="" class="ml-2">1</span>
+                            </div>
+                            <div class="px-2">
+                              <input
+                                type="radio"
+                                [checked]="
+                                  HealthQuateForm.get('noOfDaughter').value == 2
+                                "
+                                name="noOfDaughter"
+                                value="2"
+                                (click)="onChildSelection('Daughter', 2)"
+                                [attr.disabled]="isDisabled(0, 2)"
+                              />
+                              <span for="" class="ml-2">2</span>
+                            </div>
+                            <div class="px-2">
+                              <input
+                                type="radio"
+                                [checked]="
+                                  HealthQuateForm.get('noOfDaughter').value == 3
+                                "
+                                name="noOfDaughter"
+                                value="3"
+                                (click)="onChildSelection('Daughter', 3)"
+                                [attr.disabled]="isDisabled(0, 3)"
+                              />
+                              <span for="" class="ml-2">3</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div
+                        class="shadow-lg rounded-lg text-center mt-4 py-4"
+                        *ngIf="
+                          HealthQuateForm.controls['sonCoverRequired'].value ==
+                          true
+                        "
+                      >
+                      <!-- noOfSon -->
+                        <div>Number of Sons to Insure</div>
+                        <div>
+                          <div class="flex justify-evenly px-2 mt-2">
+                            <div class="px-2">
+                              <input
+                                type="radio"
+                                [checked]="
+                                  HealthQuateForm.get('noOfSon').value == 1
+                                "
+                                name="noOfSon"
+                                value="1"
+                                (click)="onChildSelection('Son', 1)"
+                                [attr.disabled]="isDisabled(1, 1)"
+                              />
+                              <span for="" class="ml-2">1</span>
+                            </div>
+                            <div class="px-2">
+                              <input
+                                type="radio"
+                                [checked]="
+                                  HealthQuateForm.get('noOfSon').value == 2
+                                "
+                                name="noOfSon"
+                                value="2"
+                                (click)="onChildSelection('Son', 2)"
+                                [attr.disabled]="isDisabled(1, 2)"
+                              />
+                              <span for="" class="ml-2">2</span>
+                            </div>
+                            <div class="px-2">
+                              <input
+                                type="radio"
+                                [checked]="
+                                  HealthQuateForm.get('noOfSon').value == 3
+                                "
+                                name="noOfSon"
+                                value="3"
+                                (click)="onChildSelection('Son', 3)"
+                                [attr.disabled]="isDisabled(1, 3)"
+                              />
+                              <span for="" class="ml-2">3</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="">
+            <button
+              class="bg-royal text-white mx-3"
+              mat-button
+              matStepperNext
+              (click)="submitStep(stepper, 2)"
+              (click)="members()"
+              (click)="_StepOneError()"
+            >
+              Next
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Second stepper -->
+
+      <mat-step label="Personal Details" [stepControl]="_StepTwoSubmit()">
+        <form [formGroup]="HealthQuateForm">
+          <div class="px-4 py-5 rounded">
+            <div class="text-md">
+              <p class="text-right text-red-600">Note: Please insert the full name (First name + Middle name + Last name)</p>
+              <div class="tablecontent mat-expansion-panel-body">
+                <!-- self -->
+                <div
+                  *ngIf="HealthQuateForm.get('SelfCoverRequired').value == true"
+                  class="md:grid grid-cols-[minmax(50px,90px)_minmax(300px,1fr)] gap-9 py-2"
+                >
+                  <div class="self-center col-start-1">
+                    <div class="w-fit h-fit">
+                      <div
+                        *ngIf="
+                          this.HealthQuateForm.controls['SelfGender'].value ==
+                          'Male'
+                        "
+                      >
+                        <img src="/assets/icons/male.png" alt="" />
+                      </div>
+                      <div
+                        *ngIf="
+                          this.HealthQuateForm.controls['SelfGender'].value ==
+                          'Female'
+                        "
+                      >
+                        <img src="/assets/icons/woman.png" alt="woman" />
+                      </div>
+                      <p class="text-center">Self</p>
+                    </div>
+                  </div>
+                  <div
+                    class="md:grid grid-cols-4 lg:grid-cols-8 gap-9 self-center py-2"
+                  >
+                    <div class="relative col-span-2 my-3">
+                      <div class="icon">
+                        <mat-icon>person</mat-icon>
+                      </div>
+                      <input
+                        type="text"
+                        class="peer"
+                        id="Name"
+                        AlphabetOnly
+                        formControlName="Name"
+                        placeholder=" "
+                      />
+                      <label for="Name" class="mandatory">Full Name</label>
+                    </div>
+                    <div class="relative col-span-2 my-3">
+                      <div class="icon">
+                        <mat-datepicker-toggle
+                          class="-ml-2"
+                          matIconSuffix
+                          [for]="icker"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #icker></mat-datepicker>
+                      </div>
+                      <div class="flex">
+                        <input
+                          matInput
+                          type="text"
+                          id="SelfDOB"
+                          [max]="maxBirthDate"
+                          placeholder="__/__/____"
+                          datemask
+                          [matDatepicker]="icker"
+                          class="peer mb-1"
+                          formControlName="SelfDOB"
+                        />
+                        <label for="SelfDOB" class="mandatory">Date Of Birth</label>
+                      </div>
+                    </div>
+                    <div class="col-span-2 my-3 min-w-52">
+                      <span
+                        class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                        for=""
+                        >Habit of Smoking/Tobacco?</span
+                      >
+                      <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="smokingTobacco"
+                            id="SelfTobaccoYes"
+                            value="true"
+                            [checked]="
+                              HealthQuateForm.get('SelfSmokerTibcoCheck')
+                                .value == true
+                            "
+                            (click)="
+                              SelectSmokingOrTobacco('SelfSmokerTibco', true)
+                            "
+                          />
+                          <label for="SelfTobaccoYes">Yes</label>
+                        </div>
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="smokingTobacco"
+                            id="SelfTobaccoNo"
+                            value="false"
+                            [checked]="
+                              HealthQuateForm.get('SelfSmokerTibcoCheck')
+                                .value == false
+                            "
+                            (click)="
+                              SelectSmokingOrTobacco('SelfSmokerTibco', false)
+                            "
+                          />
+                          <label for="SelfTobaccoNo">No</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-span-2 my-3 min-w-52">
+                      <span
+                        class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                        for=""
+                        >Any Existing Illness?</span
+                      >
+                      <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="SelfExistingIllness"
+                            value="true"
+                            id="SelfExistingIllnessYes"
+                            [checked]="
+                              HealthQuateForm.get('SelfExistingIllnessCheck')
+                                .value == true
+                            "
+                            (click)="
+                              SelectExistingIllness(
+                                'SelfExistingIllness',
+                                'SelfExistingIllnessDetail',
+                                true,
+                                'Self Existing Illness Detail'
+                              )
+                            "
+                          />
+                          <label for="SelfExistingIllnessYes">Yes</label>
+                        </div>
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="SelfExistingIllness"
+                            id="SelfExistingIllnessNo"
+                            value="false"
+                            [checked]="
+                              HealthQuateForm.get('SelfExistingIllnessCheck')
+                                .value == false
+                            "
+                            (click)="
+                              SelectExistingIllness(
+                                'SelfExistingIllness',
+                                'SelfExistingIllnessDetail',
+                                false,
+                                ''
+                              )
+                            "
+                          />
+                          <label for="SelfExistingIllnessNo">No</label>
+                        </div>
+                        <div
+                          *ngIf="
+                            HealthQuateForm.get('SelfExistingIllness').value ==
+                            true
+                          "
+                        >
+                          <button
+                            [disabled]="
+                              HealthQuateForm.get('SelfExistingIllness')
+                                .value == false
+                            "
+                            (click)="
+                              openDiolog(
+                                'SelfExistingIllness',
+                                'SelfExistingIllnessDetail',
+                                'Self Existing Illness Detail'
+                              )
+                            "
+                          >
+                            <mat-icon>fact_check</mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- spouse -->
+                <div
+                  *ngIf="
+                    HealthQuateForm.get('SpouseCoverRequired').value == true
+                  "
+                  class="md:grid grid-cols-[minmax(50px,90px)_minmax(300px,1fr)] gap-9 py-2"
+                >
+                  <div class="self-center col-start-1">
+                    <div class="w-fit h-fit">
+                      <div
+                        *ngIf="
+                          this.HealthQuateForm.controls['SelfGender'].value ==
+                          'Female'
+                        "
+                      >
+                        <img src="/assets/icons/male.png" alt="" />
+                      </div>
+                      <div
+                        *ngIf="
+                          this.HealthQuateForm.controls['SelfGender'].value ==
+                          'Male'
+                        "
+                      >
+                        <img src="/assets/icons/woman.png" alt="woman" />
+                      </div>
+                      <p class="text-center">Spouse</p>
+                    </div>
+                  </div>
+                  <div
+                    class="md:grid grid-cols-4 lg:grid-cols-8 gap-9 self-center py-2"
+                  >
+                    <div class="relative col-span-2 my-3">
+                      <div class="icon">
+                        <mat-icon>person</mat-icon>
+                      </div>
+                      <input
+                        type="text"
+                        class="peer"
+                        id="SpouseName"
+                        AlphabetOnly
+                        placeholder=" "
+                        formControlName="SpouseName"
+                      />
+                      <label for="SpouseName" class="mandatory">Full Name</label>
+                    </div>
+                    <div class="relative col-span-2 my-3">
+                      <div class="icon">
+                        <mat-datepicker-toggle
+                          class="-ml-2"
+                          matIconSuffix
+                          [for]="pick"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #pick></mat-datepicker>
+                      </div>
+                      <div class="flex">
+                        <input
+                          matInput
+                          type="text"
+                          id="DOB"
+                          [max]="maxBirthDate"
+                          placeholder="__/__/____"
+                          datemask
+                          [matDatepicker]="pick"
+                          class="peer mb-1"
+                          formControlName="SpouseDOB"
+                        />
+                        <label for="DOB" class="mandatory">Date Of Birth</label>
+                      </div>
+                    </div>
+                    <div class="col-span-2 my-3 min-w-52">
+                      <span
+                        class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                        for=""
+                        >Habit of Smoking/Tobacco?</span
+                      >
+                      <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="SpouseSmokerTibco"
+                            id="SpouseSmokerTibcoYes"
+                            value="true"
+                            [checked]="
+                              HealthQuateForm.get('SpouseSmokerTibcoCheck')
+                                .value == true
+                            "
+                            (click)="
+                              SelectSmokingOrTobacco('SpouseSmokerTibco', true)
+                            "
+                          />
+                          <label for="SpouseSmokerTibcoYes">Yes</label>
+                        </div>
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="SpouseSmokerTibco"
+                            id="SpouseSmokerTibcoNo"
+                            value="false"
+                            [checked]="
+                              HealthQuateForm.get('SpouseSmokerTibcoCheck')
+                                .value == false
+                            "
+                            (click)="
+                              SelectSmokingOrTobacco('SpouseSmokerTibco', false)
+                            "
+                          />
+                          <label for="SpouseSmokerTibcoNo">No</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-span-2 my-3 min-w-52">
+                      <span
+                        class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                        for=""
+                        >Any Existing Illness?</span
+                      >
+                      <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="SpouseExistingIllness"
+                            value="true"
+                            id="SpouseExistingIllnessYes"
+                            [checked]="
+                              HealthQuateForm.get('SpouseExistingIllnessCheck')
+                                .value == true
+                            "
+                            (click)="
+                              SelectExistingIllness(
+                                'SpouseExistingIllness',
+                                'SpouseExistingIllnessDetail',
+                                true,
+                                'Spouse Existing Illness Detail'
+                              )
+                            "
+                          />
+                          <label for="SpouseExistingIllnessYes">Yes</label>
+                        </div>
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="SpouseExistingIllness"
+                            id="SpouseExistingIllnessNo"
+                            value="false"
+                            [checked]="
+                              HealthQuateForm.get('SpouseExistingIllnessCheck')
+                                .value == false
+                            "
+                            (click)="
+                              SelectExistingIllness(
+                                'SpouseExistingIllness',
+                                'SpouseExistingIllnessDetail',
+                                false,
+                                ''
+                              )
+                            "
+                          />
+                          <label for="SpouseExistingIllnessNo">No</label>
+                        </div>
+                        <div
+                          *ngIf="
+                            HealthQuateForm.get('SpouseExistingIllness')
+                              .value == true
+                          "
+                        >
+                          <button
+                            [disabled]="
+                              HealthQuateForm.get('SpouseExistingIllness')
+                                .value == false
+                            "
+                            (click)="
+                              openDiolog(
+                                'SpouseExistingIllness',
+                                'SpouseExistingIllnessDetail',
+                                'Spouse Existing Illness Detail'
+                              )
+                            "
+                          >
+                            <mat-icon>fact_check</mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- daughter -->
+                <div
+                  *ngIf="
+                    HealthQuateForm.get('daughterCoverRequired').value == true
+                  "
+                >
+                  <!-- first Daughter -->
+                  <div
+                    *ngIf="HealthQuateForm.get('noOfDaughter').value > 0"
+                    class="md:grid grid-cols-[minmax(50px,90px)_minmax(300px,1fr)] gap-9 py-2"
+                  >
+                    <div class="self-center col-start-1">
+                      <div class="w-fit h-fit">
+                        <img src="/assets/icons/girl.png" alt="" />
+
+                        <p class="text-center">Daughter 1</p>
+                      </div>
+                    </div>
+                    <div
+                      class="md:grid grid-cols-4 lg:grid-cols-8 gap-9 self-center py-2"
+                    >
+                      <div class="relative col-span-2 my-3">
+                        <div class="icon">
+                          <mat-icon>person</mat-icon>
+                        </div>
+                        <input
+                          type="text"
+                          id="Child1Name"
+                          AlphabetOnly
+                          placeholder=" "
+                          class="peer"
+                          formControlName="Child1Name"
+                        />
+                        <label for="Child1Name" class="mandatory">Full Name</label>
+                      </div>
+                      <div class="relative col-span-2 my-3">
+                        <div class="icon">
+                          <mat-datepicker-toggle
+                            class="-ml-2"
+                            matIconSuffix
+                            [for]="daug1"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #daug1></mat-datepicker>
+                        </div>
+                        <div class="flex">
+                          <input
+                            matInput
+                            id="Child1DOB"
+                            type="text"
+                            placeholder="__/__/____"
+                            datemask
+                            [matDatepicker]="daug1"
+                            [max]="maxBirthDate"
+                            class="peer mb-1"
+                            formControlName="Child1DOB"
+                          />
+                          <label for="Child1DOB" class="mandatory">Date Of Birth</label>
+                        </div>
+                      </div>
+                      <div class="col-span-2 my-3 min-w-52">
+                        <span
+                          class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                          for=""
+                          >Habit of Smoking/Tobacco?</span
+                        >
+                        <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child1SmokerTibco"
+                              id="Child1SmokerTibcoYes"
+                              value="true"
+                              [checked]="
+                                HealthQuateForm.get('Child1SmokerTibcoCheck')
+                                  .value == true
+                              "
+                              (click)="
+                                SelectSmokingOrTobacco(
+                                  'Child1SmokerTibco',
+                                  true
+                                )
+                              "
+                            />
+                            <label for="Child1SmokerTibcoYes">Yes</label>
+                          </div>
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child1SmokerTibco"
+                              id="Child1SmokerTibcoNo"
+                              value="false"
+                              [checked]="
+                                HealthQuateForm.get('Child1SmokerTibcoCheck')
+                                  .value == false
+                              "
+                              (click)="
+                                SelectSmokingOrTobacco(
+                                  'Child1SmokerTibco',
+                                  false
+                                )
+                              "
+                            />
+                            <label for="Child1SmokerTibcoNo">No</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-span-2 my-3 min-w-52">
+                        <span
+                          class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                          for=""
+                          >Any Existing Illness?</span
+                        >
+                        <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child1ExistingIllness"
+                              value="true"
+                              id="Child1ExistingIllnessYes"
+                              [checked]="
+                                HealthQuateForm.get(
+                                  'Child1ExistingIllnessCheck'
+                                ).value == true
+                              "
+                              (click)="
+                                SelectExistingIllness(
+                                  'Child1ExistingIllness',
+                                  'Child1ExistingIllnessDetail',
+                                  true,
+                                  'Daughter 1 Existing Illness Detail'
+                                )
+                              "
+                            />
+                            <label for="Child1ExistingIllnessYes">Yes</label>
+                          </div>
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child1ExistingIllness"
+                              id="Child1ExistingIllnessNo"
+                              value="false"
+                              [checked]="
+                                HealthQuateForm.get(
+                                  'Child1ExistingIllnessCheck'
+                                ).value == false
+                              "
+                              (click)="
+                                SelectExistingIllness(
+                                  'Child1ExistingIllness',
+                                  'Child1ExistingIllnessDetail',
+                                  false,
+                                  ''
+                                )
+                              "
+                            />
+                            <label for="Child1ExistingIllnessNo">No</label>
+                          </div>
+                          <div
+                            *ngIf="
+                              HealthQuateForm.get('Child1ExistingIllness')
+                                .value == true
+                            "
+                          >
+                            <button
+                              [disabled]="
+                                HealthQuateForm.get('Child1ExistingIllness')
+                                  .value == false
+                              "
+                              (click)="
+                                openDiolog(
+                                  'Child1ExistingIllness',
+                                  'Child1ExistingIllnessDetail',
+                                  'Daughter 1 Existing Illness Detail'
+                                )
+                              "
+                            >
+                              <mat-icon>fact_check</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Second Daughter -->
+                  <div
+                    *ngIf="HealthQuateForm.get('noOfDaughter').value > 1"
+                    class="md:grid grid-cols-[minmax(50px,90px)_minmax(300px,1fr)] gap-9 py-2"
+                  >
+                    <div class="self-center col-start-1">
+                      <div class="w-fit h-fit">
+                        <img src="/assets/icons/girl.png" alt="" />
+                        <p class="text-center">Daughter 2</p>
+                      </div>
+                    </div>
+                    <div
+                      class="md:grid grid-cols-4 lg:grid-cols-8 gap-9 self-center py-2"
+                    >
+                      <div class="relative col-span-2 my-3">
+                        <div class="icon">
+                          <mat-icon>person</mat-icon>
+                        </div>
+                        <input
+                          type="text"
+                          class="peer"
+                          id="Child2Name"
+                          AlphabetOnly
+                          placeholder=" "
+                          formControlName="Child2Name"
+                        />
+                        <label for="Child2Name" class="mandatory">Full Name</label>
+                      </div>
+                      <div class="relative col-span-2 my-3">
+                        <div class="icon">
+                          <mat-datepicker-toggle
+                            class="-ml-2"
+                            matIconSuffix
+                            [for]="daug2"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #daug2></mat-datepicker>
+                        </div>
+                        <div class="flex">
+                          <input
+                            matInput
+                            type="text"
+                            id="Child2DOB"
+                            placeholder="__/__/____"
+                            datemask
+                            [matDatepicker]="daug2"
+                            [max]="maxBirthDate"
+                            class="peer mb-1"
+                            formControlName="Child2DOB"
+                          />
+                          <label for="Child2DOB" class="mandatory">Date Of Birth</label>
+                        </div>
+                      </div>
+                      <div class="col-span-2 my-3 min-w-52">
+                        <span
+                          class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                          for=""
+                          >Habit of Smoking/Tobacco?</span
+                        >
+                        <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child2SmokerTibco"
+                              id="Child2SmokerTibcoYes"
+                              value="true"
+                              [checked]="
+                                HealthQuateForm.get('Child2SmokerTibcoCheck')
+                                  .value == true
+                              "
+                              (click)="
+                                SelectSmokingOrTobacco(
+                                  'Child2SmokerTibco',
+                                  true
+                                )
+                              "
+                            />
+                            <label for="Child2SmokerTibcoYes">Yes</label>
+                          </div>
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child2SmokerTibco"
+                              id="Child2SmokerTibcoNo"
+                              value="false"
+                              [checked]="
+                                HealthQuateForm.get('Child2SmokerTibcoCheck')
+                                  .value == false
+                              "
+                              (click)="
+                                SelectSmokingOrTobacco(
+                                  'Child2SmokerTibco',
+                                  false
+                                )
+                              "
+                            />
+                            <label for="Child2SmokerTibcoNo">No</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-span-2 my-3 min-w-52">
+                        <span
+                          class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                          for=""
+                          >Any Existing Illness?</span
+                        >
+                        <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child2ExistingIllness"
+                              value="true"
+                              id="Child2ExistingIllnessYes"
+                              [checked]="
+                                HealthQuateForm.get(
+                                  'Child2ExistingIllnessCheck'
+                                ).value == true
+                              "
+                              (click)="
+                                SelectExistingIllness(
+                                  'Child2ExistingIllness',
+                                  'Child2ExistingIllnessDetail',
+                                  true,
+                                  'Daughter 2 Existing Illness Detail'
+                                )
+                              "
+                            />
+                            <label for="Child2ExistingIllnessYes">Yes</label>
+                          </div>
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child2ExistingIllness"
+                              id="Child2ExistingIllnessNo"
+                              value="false"
+                              [checked]="
+                                HealthQuateForm.get(
+                                  'Child2ExistingIllnessCheck'
+                                ).value == false
+                              "
+                              (click)="
+                                SelectExistingIllness(
+                                  'Child2ExistingIllness',
+                                  'Child2ExistingIllnessDetail',
+                                  false,
+                                  ''
+                                )
+                              "
+                            />
+                            <label for="Child2ExistingIllnessNo">No</label>
+                          </div>
+                          <div
+                            *ngIf="
+                              HealthQuateForm.get('Child2ExistingIllness')
+                                .value == true
+                            "
+                          >
+                            <button
+                              [disabled]="
+                                HealthQuateForm.get('Child2ExistingIllness')
+                                  .value == false
+                              "
+                              (click)="
+                                openDiolog(
+                                  'Child2ExistingIllness',
+                                  'Child2ExistingIllnessDetail',
+                                  'Daughter 2 Existing Illness Detail'
+                                )
+                              "
+                            >
+                              <mat-icon>fact_check</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- third Daughter -->
+                  <div
+                    *ngIf="HealthQuateForm.get('noOfDaughter').value > 2"
+                    class="md:grid grid-cols-[minmax(50px,90px)_minmax(300px,1fr)] gap-9 py-2"
+                  >
+                    <div class="self-center col-start-1">
+                      <div class="w-fit h-fit">
+                        <img src="/assets/icons/girl.png" alt="" />
+
+                        <p class="text-center">Daughter 3</p>
+                      </div>
+                    </div>
+                    <div
+                      class="md:grid grid-cols-4 lg:grid-cols-8 gap-9 self-center py-2"
+                    >
+                      <div class="relative col-span-2 my-3">
+                        <div class="icon">
+                          <mat-icon>person</mat-icon>
+                        </div>
+                        <input
+                          type="text"
+                          id="Child3Name"
+                          AlphabetOnly
+                          placeholder=" "
+                          class="peer"
+                          formControlName="Child3Name"
+                        />
+                        <label for="Child3Name" class="mandatory">Full Name</label>
+                      </div>
+                      <div class="relative col-span-2 my-3">
+                        <div class="icon">
+                          <mat-datepicker-toggle
+                            class="-ml-2"
+                            matIconSuffix
+                            [for]="daug3"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #daug3></mat-datepicker>
+                        </div>
+                        <div class="flex">
+                          <input
+                            matInput
+                            type="text"
+                            id="Child3DOB"
+                            placeholder="__/__/____"
+                            datemask
+                            [matDatepicker]="daug3"
+                            [max]="maxBirthDate"
+                            class="peer mb-1"
+                            formControlName="Child3DOB"
+                          />
+                          <label for="Child3DOB" class="mandatory">Date Of Birth</label>
+                        </div>
+                      </div>
+                      <div class="col-span-2 my-3 min-w-52">
+                        <span
+                          class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                          for=""
+                          >Habit of Smoking/Tobacco?</span
+                        >
+                        <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child3SmokerTibco"
+                              id="Child3SmokerTibcoYes"
+                              value="true"
+                              [checked]="
+                                HealthQuateForm.get('Child3SmokerTibcoCheck')
+                                  .value == true
+                              "
+                              (click)="
+                                SelectSmokingOrTobacco(
+                                  'Child3SmokerTibco',
+                                  true
+                                )
+                              "
+                            />
+                            <label for="Child3SmokerTibcoYes">Yes</label>
+                          </div>
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child3SmokerTibco"
+                              id="Child3SmokerTibcoNo"
+                              value="false"
+                              [checked]="
+                                HealthQuateForm.get('Child3SmokerTibcoCheck')
+                                  .value == false
+                              "
+                              (click)="
+                                SelectSmokingOrTobacco(
+                                  'Child3SmokerTibco',
+                                  false
+                                )
+                              "
+                            />
+                            <label for="Child3SmokerTibcoNo">No</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-span-2 my-3 min-w-52">
+                        <span
+                          class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                          for=""
+                          >Any Existing Illness?</span
+                        >
+                        <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child3ExistingIllness"
+                              value="true"
+                              id="Child3ExistingIllnessYes"
+                              [checked]="
+                                HealthQuateForm.get(
+                                  'Child3ExistingIllnessCheck'
+                                ).value == true
+                              "
+                              (click)="
+                                SelectExistingIllness(
+                                  'Child3ExistingIllness',
+                                  'Child3ExistingIllnessDetail',
+                                  true,
+                                  'Daughter 3 Existing Illness Detail'
+                                )
+                              "
+                            />
+                            <label for="Child3ExistingIllnessYes">Yes</label>
+                          </div>
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child3ExistingIllness"
+                              id="Child3ExistingIllnessNo"
+                              value="false"
+                              [checked]="
+                                HealthQuateForm.get(
+                                  'Child3ExistingIllnessCheck'
+                                ).value == false
+                              "
+                              (click)="
+                                SelectExistingIllness(
+                                  'Child3ExistingIllness',
+                                  'Child3ExistingIllnessDetail',
+                                  false,
+                                  ''
+                                )
+                              "
+                            />
+                            <label for="Child3ExistingIllnessNo">No</label>
+                          </div>
+                          <div
+                            *ngIf="
+                              HealthQuateForm.get('Child3ExistingIllness')
+                                .value == true
+                            "
+                          >
+                            <button
+                              [disabled]="
+                                HealthQuateForm.get('Child3ExistingIllness')
+                                  .value == false
+                              "
+                              (click)="
+                                openDiolog(
+                                  'Child3ExistingIllness',
+                                  'Child3ExistingIllnessDetail',
+                                  'Daughter 3 Existing Illness Detail'
+                                )
+                              "
+                            >
+                              <mat-icon>fact_check</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- son -->
+                <div
+                  *ngIf="HealthQuateForm.get('sonCoverRequired').value == true"
+                >
+                  <!-- First Son -->
+                  <div
+                    *ngIf="HealthQuateForm.get('noOfSon').value > 0"
+                    class="md:grid grid-cols-[minmax(50px,90px)_minmax(300px,1fr)] gap-9 py-2"
+                  >
+                    <div class="self-center col-start-1">
+                      <div class="w-fit h-fit">
+                        <img src="/assets/icons/son.png" alt="" />
+
+                        <p class="text-center">Son 1</p>
+                      </div>
+                    </div>
+                    <div
+                      class="md:grid grid-cols-4 lg:grid-cols-8 gap-9 self-center py-2"
+                    >
+                      <div class="relative col-span-2 my-3">
+                        <div class="icon">
+                          <mat-icon>person</mat-icon>
+                        </div>
+                        <input
+                          type="text"
+                          id="Child4Name"
+                          AlphabetOnly
+                          placeholder=" "
+                          class="peer"
+                          formControlName="Child4Name"
+                        />
+                        <label for="Child4Name" class="mandatory">Full Name</label>
+                      </div>
+                      <div class="relative col-span-2 my-3">
+                        <div class="icon">
+                          <mat-datepicker-toggle
+                            class="-ml-2"
+                            matIconSuffix
+                            [for]="boy1"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #boy1></mat-datepicker>
+                        </div>
+                        <div class="flex">
+                          <input
+                            matInput
+                            type="text"
+                            id="Child4DOB"
+                            placeholder="__/__/____"
+                            datemask
+                            [matDatepicker]="boy1"
+                            [max]="maxBirthDate"
+                            class="peer mb-1"
+                            formControlName="Child4DOB"
+                          />
+                          <label for="Child4DOB" class="mandatory">Date Of Birth</label>
+                        </div>
+                      </div>
+                      <div class="col-span-2 my-3 min-w-52">
+                        <span
+                          class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                          for=""
+                          >Habit of Smoking/Tobacco?</span
+                        >
+                        <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child4SmokerTibco"
+                              id="Child4SmokerTibcoYes"
+                              value="true"
+                              [checked]="
+                                HealthQuateForm.get('Child4SmokerTibcoCheck')
+                                  .value == true
+                              "
+                              (click)="
+                                SelectSmokingOrTobacco(
+                                  'Child4SmokerTibco',
+                                  true
+                                )
+                              "
+                            />
+                            <label for="Child4SmokerTibcoYes">Yes</label>
+                          </div>
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child4SmokerTibco"
+                              id="Child4SmokerTibcoNo"
+                              value="false"
+                              [checked]="
+                                HealthQuateForm.get('Child4SmokerTibcoCheck')
+                                  .value == false
+                              "
+                              (click)="
+                                SelectSmokingOrTobacco(
+                                  'Child4SmokerTibco',
+                                  false
+                                )
+                              "
+                            />
+                            <label for="Child4SmokerTibcoNo">No</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-span-2 my-3 min-w-52">
+                        <span
+                          class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                          for=""
+                          >Any Existing Illness?</span
+                        >
+                        <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child4ExistingIllness"
+                              value="true"
+                              id="Child4ExistingIllnessYes"
+                              [checked]="
+                                HealthQuateForm.get(
+                                  'Child4ExistingIllnessCheck'
+                                ).value == true
+                              "
+                              (click)="
+                                SelectExistingIllness(
+                                  'Child4ExistingIllness',
+                                  'Child4ExistingIllnessDetail',
+                                  true,
+                                  'Son 1 Existing Illness Detail'
+                                )
+                              "
+                            />
+                            <label for="Child4ExistingIllnessYes">Yes</label>
+                          </div>
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child4ExistingIllness"
+                              id="Child4ExistingIllnessNo"
+                              value="false"
+                              [checked]="
+                                HealthQuateForm.get(
+                                  'Child4ExistingIllnessCheck'
+                                ).value == false
+                              "
+                              (click)="
+                                SelectExistingIllness(
+                                  'Child4ExistingIllness',
+                                  'Child4ExistingIllnessDetail',
+                                  false,
+                                  ''
+                                )
+                              "
+                            />
+                            <label for="Child4ExistingIllnessNo">No</label>
+                          </div>
+                          <div
+                            *ngIf="
+                              HealthQuateForm.get('Child4ExistingIllness')
+                                .value == true
+                            "
+                          >
+                            <button
+                              [disabled]="
+                                HealthQuateForm.get('Child4ExistingIllness')
+                                  .value == false
+                              "
+                              (click)="
+                                openDiolog(
+                                  'Child4ExistingIllness',
+                                  'Child4ExistingIllnessDetail',
+                                  'Son 1 Existing Illness Detail'
+                                )
+                              "
+                            >
+                              <mat-icon>fact_check</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Second Son -->
+                  <div
+                    *ngIf="HealthQuateForm.get('noOfSon').value > 1"
+                    class="md:grid grid-cols-[minmax(50px,90px)_minmax(300px,1fr)] gap-9 py-2"
+                  >
+                    <div class="self-center col-start-1">
+                      <div class="w-fit h-fit">
+                        <img src="/assets/icons/son.png" alt="" />
+                        <p class="text-center">Son 2</p>
+                      </div>
+                    </div>
+                    <div
+                      class="md:grid grid-cols-4 lg:grid-cols-8 gap-9 self-center py-2"
+                    >
+                      <div class="relative col-span-2 my-3">
+                        <div class="icon">
+                          <mat-icon>person</mat-icon>
+                        </div>
+                        <input
+                          type="text"
+                          id="Child5Name"
+                          AlphabetOnly
+                          placeholder=" "
+                          class="peer"
+                          formControlName="Child5Name"
+                        />
+                        <label for="Child5Name" class="mandatory">Full Name</label>
+                      </div>
+                      <div class="relative col-span-2 my-3">
+                        <div class="icon">
+                          <mat-datepicker-toggle
+                            class="-ml-2"
+                            matIconSuffix
+                            [for]="boy2"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #boy2></mat-datepicker>
+                        </div>
+                        <div class="flex">
+                          <input
+                            matInput
+                            type="text"
+                            id="Child5DOB"
+                            placeholder="__/__/____"
+                            datemask
+                            [matDatepicker]="boy2"
+                            [max]="maxBirthDate"
+                            class="peer mb-1"
+                            formControlName="Child5DOB"
+                          />
+                          <label for="Child5DOB" class="mandatory">Date Of Birth</label>
+                        </div>
+                      </div>
+                      <div class="col-span-2 my-3 min-w-52">
+                        <span
+                          class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                          for=""
+                          >Habit of Smoking/Tobacco?</span
+                        >
+                        <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child5SmokerTibco"
+                              id="Child5SmokerTibcoYes"
+                              value="true"
+                              [checked]="
+                                HealthQuateForm.get('Child5SmokerTibcoCheck')
+                                  .value == true
+                              "
+                              (click)="
+                                SelectSmokingOrTobacco(
+                                  'Child5SmokerTibco',
+                                  true
+                                )
+                              "
+                            />
+                            <label for="Child5SmokerTibcoYes">Yes</label>
+                          </div>
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child5SmokerTibco"
+                              id="Child5SmokerTibcoNo"
+                              value="false"
+                              [checked]="
+                                HealthQuateForm.get('Child5SmokerTibcoCheck')
+                                  .value == false
+                              "
+                              (click)="
+                                SelectSmokingOrTobacco(
+                                  'Child5SmokerTibco',
+                                  false
+                                )
+                              "
+                            />
+                            <label for="Child5SmokerTibcoNo">No</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-span-2 my-3 min-w-52">
+                        <span
+                          class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                          for=""
+                          >Any Existing Illness?</span
+                        >
+                        <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child5ExistingIllness"
+                              value="true"
+                              id="Child5ExistingIllnessYes"
+                              [checked]="
+                                HealthQuateForm.get(
+                                  'Child5ExistingIllnessCheck'
+                                ).value == true
+                              "
+                              (click)="
+                                SelectExistingIllness(
+                                  'Child5ExistingIllness',
+                                  'Child5ExistingIllnessDetail',
+                                  true,
+                                  'Son 2 Existing Illness Detail'
+                                )
+                              "
+                            />
+                            <label for="Child5ExistingIllnessYes">Yes</label>
+                          </div>
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child5ExistingIllness"
+                              id="Child5ExistingIllnessNo"
+                              value="false"
+                              [checked]="
+                                HealthQuateForm.get(
+                                  'Child5ExistingIllnessCheck'
+                                ).value == false
+                              "
+                              (click)="
+                                SelectExistingIllness(
+                                  'Child5ExistingIllness',
+                                  'Child5ExistingIllnessDetail',
+                                  false,
+                                  ''
+                                )
+                              "
+                            />
+                            <label for="Child5ExistingIllnessNo">No</label>
+                          </div>
+                          <div
+                            *ngIf="
+                              HealthQuateForm.get('Child5ExistingIllness')
+                                .value == true
+                            "
+                          >
+                            <button
+                              [disabled]="
+                                HealthQuateForm.get('Child5ExistingIllness')
+                                  .value == false
+                              "
+                              (click)="
+                                openDiolog(
+                                  'Child5ExistingIllness',
+                                  'Child5ExistingIllnessDetail',
+                                  'Son 2 Existing Illness Detail'
+                                )
+                              "
+                            >
+                              <mat-icon>fact_check</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Third Son -->
+                  <div
+                    *ngIf="HealthQuateForm.get('noOfSon').value > 2"
+                    class="md:grid grid-cols-[minmax(50px,90px)_minmax(300px,1fr)] gap-9 py-2"
+                  >
+                    <div class="self-center col-start-1">
+                      <div class="w-fit h-fit">
+                        <img src="/assets/icons/son.png" alt="" />
+                        <p class="text-center">Son 3</p>
+                      </div>
+                    </div>
+                    <div
+                      class="md:grid grid-cols-4 lg:grid-cols-8 gap-9 self-center py-2"
+                    >
+                      <div class="relative col-span-2 my-3">
+                        <div class="icon">
+                          <mat-icon>person</mat-icon>
+                        </div>
+                        <input
+                          type="text"
+                          id="Child6Name"
+                          AlphabetOnly
+                          placeholder=" "
+                          class="peer"
+                          formControlName="Child6Name"
+                        />
+                        <label for="Child6Name" class="mandatory">Full Name</label>
+                      </div>
+                      <div class="relative col-span-2 my-3">
+                        <div class="icon">
+                          <mat-datepicker-toggle
+                            class="-ml-2"
+                            matIconSuffix
+                            [for]="boy3"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #boy3></mat-datepicker>
+                        </div>
+                        <div class="flex">
+                          <input
+                            matInput
+                            type="text"
+                            id="Child6DOB"
+                            placeholder="__/__/____"
+                            datemask
+                            [matDatepicker]="boy3"
+                            [max]="maxBirthDate"
+                            class="peer mb-1"
+                            formControlName="Child6DOB"
+                          />
+                          <label for="Child6DOB" class="mandatory">Date Of Birth</label>
+                        </div>
+                      </div>
+                      <div class="col-span-2 my-3 min-w-52">
+                        <span
+                          class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                          for=""
+                          >Habit of Smoking/Tobacco?</span
+                        >
+                        <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child6SmokerTibco"
+                              id="Child6SmokerTibcoYes"
+                              value="true"
+                              [checked]="
+                                HealthQuateForm.get('Child6SmokerTibcoCheck')
+                                  .value == true
+                              "
+                              (click)="
+                                SelectSmokingOrTobacco(
+                                  'Child6SmokerTibco',
+                                  true
+                                )
+                              "
+                            />
+                            <label for="Child6SmokerTibcoYes">Yes</label>
+                          </div>
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child6SmokerTibco"
+                              id="Child6SmokerTibcoNo"
+                              value="false"
+                              [checked]="
+                                HealthQuateForm.get('Child6SmokerTibcoCheck')
+                                  .value == false
+                              "
+                              (click)="
+                                SelectSmokingOrTobacco(
+                                  'Child6SmokerTibco',
+                                  false
+                                )
+                              "
+                            />
+                            <label for="Child6SmokerTibcoNo">No</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-span-2 my-3 min-w-52">
+                        <span
+                          class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                          for=""
+                          >Any Existing Illness?</span
+                        >
+                        <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child6ExistingIllness"
+                              value="true"
+                              id="Child6ExistingIllnessYes"
+                              [checked]="
+                                HealthQuateForm.get(
+                                  'Child6ExistingIllnessCheck'
+                                ).value == true
+                              "
+                              (click)="
+                                SelectExistingIllness(
+                                  'Child6ExistingIllness',
+                                  'Child6ExistingIllnessDetail',
+                                  true,
+                                  'Son 3 Existing Illness Detail'
+                                )
+                              "
+                            />
+                            <label for="Child6ExistingIllnessYes">Yes</label>
+                          </div>
+                          <div class="lableInputbox">
+                            <input
+                              type="radio"
+                              name="Child6ExistingIllness"
+                              id="Child6ExistingIllnessNo"
+                              value="false"
+                              [checked]="
+                                HealthQuateForm.get(
+                                  'Child6ExistingIllnessCheck'
+                                ).value == false
+                              "
+                              (click)="
+                                SelectExistingIllness(
+                                  'Child6ExistingIllness',
+                                  'Child6ExistingIllnessDetail',
+                                  false,
+                                  ''
+                                )
+                              "
+                            />
+                            <label for="Child6ExistingIllnessNo">No</label>
+                          </div>
+                          <div
+                            *ngIf="
+                              HealthQuateForm.get('Child6ExistingIllness')
+                                .value == true
+                            "
+                          >
+                            <button
+                              [disabled]="
+                                HealthQuateForm.get('Child6ExistingIllness')
+                                  .value == false
+                              "
+                              (click)="
+                                openDiolog(
+                                  'Child6ExistingIllness',
+                                  'Child6ExistingIllnessDetail',
+                                  'Son 3 Existing Illness Detail'
+                                )
+                              "
+                            >
+                              <mat-icon>fact_check</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- mother -->
+                <div
+                  *ngIf="
+                    HealthQuateForm.get('MotherCoverRequired').value == true
+                  "
+                  class="md:grid grid-cols-[minmax(50px,90px)_minmax(300px,1fr)] gap-9 py-2"
+                >
+                  <div class="self-center col-start-1">
+                    <div class="w-fit h-fit">
+                      <img src="/assets/icons/mother.png" alt="" />
+                      <p class="text-center">Mother</p>
+                    </div>
+                  </div>
+                  <div
+                    class="md:grid grid-cols-4 lg:grid-cols-8 gap-9 self-center py-2"
+                  >
+                    <div class="relative col-span-2 my-3">
+                      <div class="icon">
+                        <mat-icon>person</mat-icon>
+                      </div>
+                      <input
+                        type="text"
+                        id="MotherName"
+                        AlphabetOnly
+                        placeholder=" "
+                        class="peer"
+                        formControlName="MotherName"
+                      />
+                      <label for="MotherName" class="mandatory">Full Name</label>
+                    </div>
+                    <div class="relative col-span-2 my-3">
+                      <div class="icon">
+                        <mat-datepicker-toggle
+                          class="-ml-2"
+                          matIconSuffix
+                          [for]="pic"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #pic></mat-datepicker>
+                      </div>
+                      <div class="flex">
+                        <input
+                          matInput
+                          type="text"
+                          id="MotherDOB"
+                          placeholder="__/__/____"
+                          datemask
+                          [matDatepicker]="pic"
+                          [max]="maxBirthDate"
+                          class="peer mb-1"
+                          formControlName="MotherDOB"
+                        />
+                        <label for="MotherDOB" class="mandatory">Date Of Birth</label>
+                      </div>
+                    </div>
+                    <div class="col-span-2 my-3 min-w-52">
+                      <span
+                        class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                        for=""
+                        >Habit of Smoking/Tobacco?</span
+                      >
+                      <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="MotherSmokerTibco"
+                            id="MotherSmokerTibcoYes"
+                            value="true"
+                            [checked]="
+                              HealthQuateForm.get('MotherSmokerTibcoCheck')
+                                .value == true
+                            "
+                            (click)="
+                              SelectSmokingOrTobacco('MotherSmokerTibco', true)
+                            "
+                          />
+                          <label for="MotherSmokerTibcoYes">Yes</label>
+                        </div>
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="MotherSmokerTibco"
+                            id="MotherSmokerTibcoNo"
+                            value="false"
+                            [checked]="
+                              HealthQuateForm.get('MotherSmokerTibcoCheck')
+                                .value == false
+                            "
+                            (click)="
+                              SelectSmokingOrTobacco('MotherSmokerTibco', false)
+                            "
+                          />
+                          <label for="MotherSmokerTibcoNo">No</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-span-2 my-3 min-w-52">
+                      <span
+                        class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                        for=""
+                        >Any Existing Illness?</span
+                      >
+                      <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="MotherExistingIllness"
+                            value="true"
+                            id="MotherExistingIllnessYes"
+                            [checked]="
+                              HealthQuateForm.get('MotherExistingIllnessCheck')
+                                .value == true
+                            "
+                            (click)="
+                              SelectExistingIllness(
+                                'MotherExistingIllness',
+                                'MotherExistingIllnessDetail',
+                                true,
+                                'Mother Existing Illness Detail'
+                              )
+                            "
+                          />
+                          <label for="MotherExistingIllnessYes">Yes</label>
+                        </div>
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="MotherExistingIllness"
+                            id="MotherExistingIllnessNo"
+                            value="false"
+                            [checked]="
+                              HealthQuateForm.get('MotherExistingIllnessCheck')
+                                .value == false
+                            "
+                            (click)="
+                              SelectExistingIllness(
+                                'MotherExistingIllness',
+                                'MotherExistingIllnessDetail',
+                                false,
+                                ''
+                              )
+                            "
+                          />
+                          <label for="MotherExistingIllnessNo">No</label>
+                        </div>
+                        <div
+                          *ngIf="
+                            HealthQuateForm.get('MotherExistingIllness')
+                              .value == true
+                          "
+                        >
+                          <button
+                            [disabled]="
+                              HealthQuateForm.get('MotherExistingIllness')
+                                .value == false
+                            "
+                            (click)="
+                              openDiolog(
+                                'MotherExistingIllness',
+                                'MotherExistingIllnessDetail',
+                                'Mother Existing Illness Detail'
+                              )
+                            "
+                          >
+                            <mat-icon>fact_check</mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- father -->
+                <div
+                  *ngIf="
+                    HealthQuateForm.get('FatherCoverRequired').value == true
+                  "
+                  class="md:grid grid-cols-[minmax(50px,90px)_minmax(300px,1fr)] gap-9 py-2"
+                >
+                  <div class="self-center col-start-1">
+                    <div class="w-fit h-fit">
+                      <img src="/assets/icons/father.png" alt="" />
+                      <p class="text-center">Father</p>
+                    </div>
+                  </div>
+                  <div
+                    class="md:grid grid-cols-4 lg:grid-cols-8 gap-9 self-center py-2"
+                  >
+                    <div class="relative col-span-2 my-3">
+                      <div class="icon">
+                        <mat-icon>person</mat-icon>
+                      </div>
+                      <input
+                        type="text"
+                        id="FatherName"
+                        AlphabetOnly
+                        placeholder=" "
+                        class="peer"
+                        formControlName="FatherName"
+                      />
+                      <label for="FatherName" class="mandatory">Full Name</label>
+                    </div>
+                    <div class="relative col-span-2 my-3">
+                      <div class="icon">
+                        <mat-datepicker-toggle
+                          class="-ml-2"
+                          matIconSuffix
+                          [for]="nick"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #nick></mat-datepicker>
+                      </div>
+                      <div class="flex">
+                        <input
+                          matInput
+                          type="text"
+                          id="FatherDOB"
+                          placeholder="__/__/____"
+                          datemask
+                          [matDatepicker]="nick"
+                          [max]="maxBirthDate"
+                          class="peer mb-1"
+                          formControlName="FatherDOB"
+                        />
+                        <label for="FatherDOB" class="mandatory">Date Of Birth</label>
+                      </div>
+                    </div>
+                    <div class="col-span-2 my-3 min-w-52">
+                      <span
+                        class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                        for=""
+                        >Habit of Smoking/Tobacco?</span
+                      >
+                      <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="FatherSmokerTibco"
+                            id="FatherSmokerTibcoYes"
+                            value="true"
+                            [checked]="
+                              HealthQuateForm.get('FatherSmokerTibcoCheck')
+                                .value == true
+                            "
+                            (click)="
+                              SelectSmokingOrTobacco('FatherSmokerTibco', true)
+                            "
+                          />
+                          <label for="FatherSmokerTibcoYes">Yes</label>
+                        </div>
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="FatherSmokerTibco"
+                            id="FatherSmokerTibcoNo"
+                            value="false"
+                            [checked]="
+                              HealthQuateForm.get('FatherSmokerTibcoCheck')
+                                .value == false
+                            "
+                            (click)="
+                              SelectSmokingOrTobacco('FatherSmokerTibco', false)
+                            "
+                          />
+                          <label for="FatherSmokerTibcoNo">No</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-span-2 my-3 min-w-52">
+                      <span
+                        class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                        for=""
+                        >Any Existing Illness?</span
+                      >
+                      <div class="grid grid-cols-4 w-full gap-5 mt-2">
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="FatherExistingIllness"
+                            value="true"
+                            id="FatherExistingIllnessYes"
+                            [checked]="
+                              HealthQuateForm.get('FatherExistingIllnessCheck')
+                                .value == true
+                            "
+                            (click)="
+                              SelectExistingIllness(
+                                'FatherExistingIllness',
+                                'FatherExistingIllnessDetail',
+                                true,
+                                'Father Existing Illness Detail'
+                              )
+                            "
+                          />
+                          <label for="FatherExistingIllnessYes">Yes</label>
+                        </div>
+                        <div class="lableInputbox">
+                          <input
+                            type="radio"
+                            name="FatherExistingIllness"
+                            id="FatherExistingIllnessNo"
+                            value="false"
+                            [checked]="
+                              HealthQuateForm.get('FatherExistingIllnessCheck')
+                                .value == false
+                            "
+                            (click)="
+                              SelectExistingIllness(
+                                'FatherExistingIllness',
+                                'FatherExistingIllnessDetail',
+                                false,
+                                ''
+                              )
+                            "
+                          />
+                          <label for="FatherExistingIllnessNo">No</label>
+                        </div>
+                        <div
+                          *ngIf="
+                            HealthQuateForm.get('FatherExistingIllness')
+                              .value == true
+                          "
+                        >
+                          <button
+                            [disabled]="
+                              HealthQuateForm.get('FatherExistingIllness')
+                                .value == false
+                            "
+                            (click)="
+                              openDiolog(
+                                'FatherExistingIllness',
+                                'FatherExistingIllnessDetail',
+                                'Father Existing Illness Detail'
+                              )
+                            "
+                          >
+                            <mat-icon>fact_check</mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button
+              class="bg-royal text-white"
+              mat-button
+              matStepperPrevious
+              (click)="submitStep(stepper, 1)"
+            >
+              Back
+            </button>
+            <button
+              class="bg-royal text-white mx-3"
+              mat-button
+              matStepperNext
+              (click)="_StepThreeError()"
+            >
+              Next
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Third stepper -->
+
+      <mat-step label="Proposer's Details">
+        <form [formGroup]="HealthQuateForm">
+          <div class="px-4 py-7 min-w-full rounded bg-white">
+            <div class="grid grid-cols-7 gap-3 w-fit">
+              <div *ngFor="let item of myMembers" class="h-min">
+                <img src="{{ item.member }}" alt="" class="h-7 w-7" />
+              </div>
+            </div>
+            <div
+              class="md:grid lg:grid-cols-4 grid-cols-3 space-y-6 gap-x-14"
+            >
+              <div class="relative self-end min-w-36">
+                <div class="icon">
+                  <mat-icon>phone</mat-icon>
+                </div>
+                <input
+                  matInput
+                  type="text"
+                  Onlynumber
+                  maxlength="10"
+                  formControlName="Mobile"
+                  id="Mobile"
+                  placeholder=" "
+                  class="peer pad"
+                  required
+                />
+                <label for="Mobile" class="mandatory">Mobile No.</label>
+              </div>
+
+              <div class="relative min-w-36">
+                <div class="icon">
+                  <mat-icon>email</mat-icon>
+                </div>
+                <input
+                  matInput
+                  type="email"
+                  formControlName="EmailId"
+                  id="EmailId"
+                  placeholder=" "
+                  class="peer w-fit pad"
+                  required
+                />
+                <label for="EmailId" class="mandatory">Email Id</label>
+              </div>
+              <div class="relative min-w-36">
+                <div class="icon">
+                  <mat-icon>pin_drop</mat-icon>
+                </div>
+                <div class="flex">
+                  <input
+                    type="text"
+                    Onlynumber
+                    maxlength="6"
+                    class="peer"
+                    matInput
+                    formControlName="PinCode"
+                    id="PinCode"
+                    placeholder=" "
+                    required
+                    [disabled]="true"
+                    [matAutocomplete]="oppoSearch"
+                  />
+                  <mat-autocomplete
+                    #oppoSearch="matAutocomplete"
+                    (optionSelected)="PinCodeSelected($event)"
+                  >
+                    <mat-option
+                      *ngFor="let pincode of pincodes$ | async"
+                      [value]="pincode"
+                    >
+                      {{ pincode.PinCode }} {{ pincode.CityName }}
+                    </mat-option>
+                  </mat-autocomplete>
+
+                  <button
+                    class="-m-5 z-10"
+                    type="button"
+                    (click)="openDiologPincode('Pincode', 'Select PIN Code')"
+                  >
+                    <mat-icon class="-ml-2">search</mat-icon>
+                  </button>
+                  <button
+                    *ngIf="
+                      HealthQuateForm.get('PinCode').value && mode != 'View'
+                    "
+                    type="button"
+                    class="-m-7 z-10"
+                    aria-label="clear"
+                    matTooltip="Clear"
+                    (click)="clear('PinCode')"
+                  >
+                    <mat-icon>clear</mat-icon>
+                  </button>
+                  <label for="PinCode" class="mandatory">PIN Code</label>
+                </div>
+              </div>
+              <div>
+              <div class="relative min-w-36">
+                <div class="icon">
+                  <mat-icon>timelapse</mat-icon>
+                </div>
+                <select
+                  class="w-fit pb-2.5"
+                  name="PolicyPeriod"
+                  id="PolicyPeriod"
+                  formControlName="PolicyPeriod"
+                >
+                  <option [value]="1">1 Year</option>
+                  <option [value]="2">2 Year</option>
+                  <option [value]="3">3 Year</option>
+                </select>
+
+                <label for="PolicyPeriod">Policy Period</label>
+              </div>
+              </div>
+              <div>
+              <div class="relative min-w-36">
+                <div class="icon rs">₹</div>
+                <select
+                  class="w-fit pb-2.5"
+                  name=""
+                  id=""
+                  formControlName="SumInsured"
+                >
+                 <option *ngFor="let sum of DropdownMaster.SumInsuredButtonOptions" [value]="sum.value"> {{sum.name}} </option>
+
+                </select>
+                <label for="SumInsured" class="mandatory">Sum Insured</label>
+              </div>
+            </div>
+            <div *ngIf="HealthQuateForm.get('SumInsured').value == sumInsuredAmount.Other">
+              <div class="relative min-w-36">
+                <div class="icon rs">₹</div>
+                <input matInput maxlength="10" type="text" id="SumInsuredOtherAmount" Onlynumber formControlName="SumInsuredOtherAmount" placeholder=" " class="peer" required/>
+                <label for="SumInsuredOtherAmount" class="mandatory">Insured Amount</label>
+              </div>
+            </div>
+              <div class="relative min-w-36" *ngIf="isTopup">
+                <div class="icon rs">₹</div>
+                <input
+                  matInput
+                  type="text"
+                  Onlynumber
+                  formControlName="Deductable"
+                  maxlength="9"
+                  id="Deductable"
+                  placeholder=" "
+                  class="peer w-fit pad"
+                />
+                <label for="Deductable" class="mandatory">Deductable</label>
+              </div>
+              <div *ngIf="flag">
+              <div class="relative min-w-36">
+                <div class="icon rs">%</div>
+                <select
+                  class="w-fit pb-2.5"
+                  name=""
+                  id=""
+                  formControlName="CoPay"
+                >
+                <option *ngFor="let per of PercentageList" [ngValue]="per"> {{per}} %</option>
+                </select>
+                <label for="SumInsured" class="">CoPay</label>
+              </div>
+                <div class="">
+                  <small>This option is only for the ICICI Golder Shield plan</small>
+                </div>
+
+              </div>
+              <div class="min-w-36 col-span-2">
+                <span>Policy Type</span>
+                <div class="relative flex gap-5 mt-2">
+                  <div *ngIf="this.myMembers.length == 1">
+                    <span
+                      class="pl-1 flex-shrink-0 font-normal"
+                      for="MultiIndividual"
+                      >Individual</span
+                    >
+                  </div>
+                  <div *ngIf="this.myMembers.length > 1">
+                    <input
+                      type="radio"
+                      class="peer"
+                      [checked]="
+                        HealthQuateForm.get('PolicyType').value ==
+                        'FamilyFloater'
+                      "
+                      name="PolicyType"
+                      value="FamilyFloater"
+                      formControlName="PolicyType"
+                    />
+                    <span
+                      class="pl-1 flex-shrink-0 font-normal"
+                      for="FamilyFloater"
+                      >Family Floater</span
+                    >
+                  </div>
+                  <div *ngIf="this.myMembers.length > 1">
+                    <input
+                      type="radio"
+                      class="peer"
+                      [checked]="
+                        HealthQuateForm.get('PolicyType').value ==
+                        'MultiIndividual'
+                      "
+                      name="PolicyType"
+                      value="MultiIndividual"
+                      formControlName="PolicyType"
+                    />
+                    <span
+                      class="pl-1 flex-shrink-0 font-normal"
+                      for="MultiIndividual"
+                      >Individual</span
+                    >
+                  </div>
+
+
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </form>
+        <div class="">
+          <button
+            type="button"
+            class="bg-royal text-white"
+            mat-button
+            matStepperPrevious
+            (click)="submitStep(stepper, 2)"
+          >
+            Back
+          </button>
+          <button
+            type="button"
+            class="bg-royal text-white ml-3"
+            mat-button
+            (click)="GetQuote(stepper)"
+          >
+            View Plans
+          </button>
+        </div>
+      </mat-step>
+    </mat-stepper>
+  </div>
+  <!-- endregion form -->
+</div>

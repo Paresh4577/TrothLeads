@@ -1,0 +1,190 @@
+<div class="p-4 h-full w-full border">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" [disabled]="CityForm.invalid" (click)="submitform()"
+                *ngIf="mode == 'Create' || mode == 'Edit'">Save</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()"
+                *ngIf="mode == 'Edit' || mode == 'Create'">Cancel</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'View'">Back</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+        <form [formGroup]="CityForm" class="text-md">
+
+            <div class="sm:w-120 grid gap-6">
+
+                <!-- City Name -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>location_city</mat-icon>
+                    </div>
+                    <input type="text" id="Name" AlphabetOnly class="peer" maxlength="256" formControlName="Name" placeholder=" " />
+                    <label for="Name" class="mandatory">City Name</label>
+                </div>
+
+                <!-- State -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>domain</mat-icon>
+                    </div>
+                    <div class="flex">
+                        <input type="text" class="peer" formControlName="StateName" maxlength="120" AlphabetOnly placeholder=" "
+                            id="StateName" [matAutocomplete]="StateSearch">
+                        <mat-autocomplete #StateSearch="matAutocomplete"
+                            (optionSelected)="StateSelected($event)">
+                            <mat-option *ngFor="let State Of States$ | async" [value]="State">
+                                {{State.Name}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <button class="-m-5 z-10" type="button" *ngIf="editable"
+                            (click)="openDiolog('State','Select State')"><mat-icon
+                                class="-ml-2">search</mat-icon></button>
+                        <button *ngIf="CityForm.get('StateName').value && mode != 'View'" type="button"
+                            class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                            (click)="clear('StateName', 'StateId')">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                        <label for="StateName" class="mandatory">State</label>
+                    </div>
+                </div>
+
+
+                <!-- Country -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" id="CountryName" AlphabetOnly class="peer" placeholder=" "
+                        formControlName="CountryName" />
+                    <label for="CountryName" class="mandatory">Country</label>
+                </div>
+            </div>
+
+
+            <!-- Status  -->
+            <div class="sm:w-120 font-medium py-3 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+                <span for="Status" class="pr-2 py-1 font-medium ml-3">Status</span>
+                <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1"
+                    (change)="onChange($event,'Status')">
+                    <span class="flex font-medium text-xl ml-3 mt-1.5">
+                        {{
+                        CityForm.controls['Status'].value == 1
+                        ? "Active"
+                        : "InActive"
+                        }}
+                    </span>
+                </mat-slide-toggle>
+            </div>
+
+            <div class="py-5">
+
+                <!-- PIN code -->
+                <span class="pr-2 py-1 font-bold text-base after:content-['*'] after:ml-1 after:text-red-500">
+                    PIN Code Mapping
+                </span>
+
+                <table formArrayName="CityPinCode" class="bg-white mt-5 outerTable block">
+                    <div *ngFor="let element of inf.controls,let i=index">
+                        <div [formGroupName]="i">
+                            <tr>
+                                <th>PIN Code ( 6 DIGIT )</th>
+                                <th>Area</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr >
+                                <td><input type="text" maxlength="6" Onlynumber formControlName="PinCode"></td>
+                                <td><input type="text" maxlength="120" formControlName="Area"></td>
+                                <td>
+                                    <div *ngIf="editable">
+                                        <button mat-icon-button type="button" matTooltip="Remove"
+                                            (click)="deleteCityPincodeRow(i)">
+                                            <mat-icon color="warn">delete</mat-icon>
+                                        </button>
+                                    </div>
+                                </td>
+                                <div *ngIf="editable">
+                                    <button mat-raised-button class="bg-sky-400 text-on-primary-800" (click)="addInsurenceMappingsRow(i)">
+                                        <!-- <mat-icon>add</mat-icon> -->
+                                        Add
+                                    </button>
+                                </div>
+                            </tr>
+                            <div class="innertable overflow-auto mb-3">
+                                <table formArrayName="CityPinCodeInsurenceMappings" class="mt-5 mb-2">
+
+                                    <tr *ngIf="subinf(i).length>0">
+                                        <th>Category Type</th>
+                                        <th>Insurance Company Code</th>
+                                        <th>Zone</th>
+                                        <th>City Code</th>
+                                        <th>City</th>
+                                        <th>District Code</th>
+                                        <th>District</th>
+                                        <th>State Code</th>
+                                        <th>State</th>
+                                        <th>Region Code</th>
+                                        <th>Region</th>
+                                        <th>Country Code</th>
+                                        <th>Country</th>
+                                        <th>Value</th>
+                                        <th>Description</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    <tr *ngFor="let item of subinf(i).controls,let j=index">
+                                        <td [formGroupName]="j"><input type="text" formControlName="CategoryType"></td>
+                                        <td [formGroupName]="j"><input type="text" formControlName="InsuranceCompanyCode"></td>
+                                        <td [formGroupName]="j"><input type="text" formControlName="Zone"></td>
+                                        <td [formGroupName]="j"><input type="text" formControlName="CityCode"></td>
+                                        <td [formGroupName]="j"><input type="text" formControlName="City"></td>
+                                        <td [formGroupName]="j"><input type="text" formControlName="DistrictCode"></td>
+                                        <td [formGroupName]="j"><input type="text" formControlName="District"></td>
+                                        <td [formGroupName]="j"><input type="text" formControlName="StateCode"></td>
+                                        <td [formGroupName]="j"><input type="text" formControlName="State"></td>
+                                        <td [formGroupName]="j"><input type="text" formControlName="RegionCode"></td>
+                                        <td [formGroupName]="j"><input type="text" formControlName="Region"></td>
+                                        <td [formGroupName]="j"><input type="text" formControlName="CountryCode"></td>
+                                        <td [formGroupName]="j"><input type="text" formControlName="Country"></td>
+                                        <td [formGroupName]="j"><input type="text" formControlName="Value"></td>
+                                        <td [formGroupName]="j"><textarea formControlName="Description"></textarea></td>
+                                        <td>
+                                            <div *ngIf="editable">
+                                                <button mat-icon-button type="button" matTooltip="Remove"
+                                                    (click)="deleteInsurenceMappingsRow(i,j)">
+                                                    <mat-icon color="warn">delete</mat-icon>
+                                                </button>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+                </table>
+
+                <div *ngIf="editable">
+                    <button mat-raised-button class="bg-sky-400 text-on-primary-800" (click)="addCityPincodeRow()">
+                        <!-- <mat-icon>add</mat-icon> -->
+                        Add PIN Code
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+    <!-- endregion form -->
+</div>

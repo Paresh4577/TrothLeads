@@ -1,0 +1,586 @@
+<div class="px-4 pb-4 max-h-none w-full">
+    <div class="pt-4 sticky z-30 headingBorder top-0 w-full">
+        <!-- region main heading -->
+        <h1 class="new-head h-14 text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold">
+            {{ title }}
+            <div class="flex gap-x-3  items-center text-lg font-normal">
+                <button mat-raised-button class="new-button" (click)="backClicked()">Cancel</button>
+                <button mat-raised-button class="new-button" (click)="resetForm()">Reset</button>
+                <!-- <button mat-raised-button class="new-button" (click)="ExpandCollaps()">
+                    {{isExpand ? 'Collapse' : 'Expand All'}}
+                </button> -->
+                <button mat-raised-button class="new-button" (click)="generateReport()">Generate</button>
+            </div>
+        </h1>
+    </div>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <form [formGroup]="policyRegisterForm">
+        <!-- region body -->
+        <div class="py-5 rounded">
+            <mat-stepper orientation="vertical" #stepper [linear]="true" [ngClass]="isExpand ? 'showstep' : ''">
+
+                <!-- Policy & Policy Period -->
+                <mat-step label="Policy & Policy Period" [stepControl]="policyDetailsValidations()">
+
+                    <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-5 mt-4">
+
+                        <!-- Policy -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <mat-icon>policy</mat-icon>
+                            </div>
+                            <select class="peer" id="PolicyPeriod" formControlName="Policy">
+                                <option value="">--Select--</option>
+                                <option *ngFor="let option of displayedPolicy" [value]="option.value">
+                                    {{option.name}}
+                                </option>
+                            </select>
+                            <label for="PolicyPeriod" class="mandatory">Policy</label>
+                        </div>
+
+                        <!-- Policy Period -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <mat-icon>pending_actions</mat-icon>
+                            </div>
+                            <select class="peer" id="PolicyPeriod" formControlName="PolicyPeriod">
+                                <option value="">--Select--</option>
+                                <option *ngFor="let option of displayedPolicyPeriod" [value]="option.value">
+                                    {{option.name}}
+                                </option>
+                            </select>
+                            <label for="Type" class="mandatory">Policy Period</label>
+                        </div>
+
+
+                        <!-- From Date -->
+                        <div class="relative col-start-1"
+                            *ngIf="policyRegisterForm.get('PolicyPeriod').value == 'DateRange'">
+                            <div class="icon">
+                                <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                    [for]="FromDate"></mat-datepicker-toggle>
+                                <mat-datepicker #FromDate></mat-datepicker>
+                            </div>
+                            <div class="flex">
+                                <input matInput type="text" id="FromDate" placeholder="__/__/____" datemask
+                                    formControlName="FromDate" [matDatepicker]="FromDate" class="peer" />
+                                <label for="FromDate" class="mandatory">From Date</label>
+                            </div>
+                        </div>
+
+                        <!-- To Date -->
+                        <div class="relative" *ngIf="policyRegisterForm.get('PolicyPeriod').value == 'DateRange'">
+                            <div class="icon">
+                                <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                    [for]="ToDate"></mat-datepicker-toggle>
+                                <mat-datepicker #ToDate></mat-datepicker>
+                            </div>
+                            <div class="flex">
+                                <input matInput type="text" id="ToDate" placeholder="__/__/____" datemask
+                                    formControlName="ToDate" [min]="policyRegisterForm.get('FromDate').value"
+                                    [matDatepicker]="ToDate" class="peer" />
+                                <label for="ToDate" class="mandatory">To Date</label>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="mt-3 flex flex-wrap gap-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white" type="button" mat-button matStepperNext
+                            (click)="policyDetailsError()">
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
+
+                <!-- Transaction ID -->
+                <mat-step label="Transaction ID">
+
+                    <div class="grid lg:grid-cols-3 sm:grid-cols-2 gap-5 mt-4">
+
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>receipt_long</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" class="peer" maxlength="120" id="TransactionID"
+                                    formControlName="TransactionID" placeholder=" " [matAutocomplete]="TransactionID"
+                                    autocomplete="off">
+                                <mat-autocomplete class="peer" #TransactionID="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'TransactionID')">
+                                    <mat-option *ngFor="let data of transactionList$ | async" [value]="data">
+                                        {{ data.TransactionNo }}
+                                    </mat-option>
+                                </mat-autocomplete>
+
+                                <button class="-m-5 z-10" type="button"
+                                    (click)="openDiolog('CoShareTransaction','Select Transaction No.','CoShareTransaction')">
+                                    <mat-icon class="-ml-2">
+                                        search
+                                    </mat-icon></button>
+                                <button type="button" class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    *ngIf="policyRegisterForm.get('TransactionID').value.length"
+                                    (click)="clearSingleValue('TransactionID')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="TransactionID" class="">Transaction ID</label>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3 flex flex-wrap gap-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white" type="button" mat-button matStepperPrevious>
+                            Back
+                        </button>
+                        <button class="bg-royal text-white" type="button" mat-button matStepperNext>
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
+
+                <!-- Insurance Co. & Policy Details -->
+                <mat-step label="Insurance Co. & Policy Details">
+
+                    <div class="grid lg:grid-cols-3 sm:grid-cols-2 gap-5 mt-4">
+
+                        <!-- Insurance Co. -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <mat-icon>domain</mat-icon>
+                            </div>
+                            <select class="peer" id="PolicyPeriod" formControlName="InsuranceCompany">
+                                <option value="">--Select--</option>
+                                <option *ngFor="let option of insuranceCompanyList"
+                                    [value]="option.InsuranceCompanyCode">
+                                    {{option.InsuranceCompanyCode}}
+                                </option>
+                            </select>
+                            <label for="Type" class="">Insurance Co.</label>
+                        </div>
+
+                        <!-- Product/Plan Name -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <mat-icon>inventory_2</mat-icon>
+                            </div>
+                            <select id="" formControlName="ProductPlanName">
+                                <option value="">--Select--</option>
+                                <option *ngFor="let Product Of productPlan$ | async" [value]="Product.ProductCode">
+                                    {{Product.Name}}
+                                </option>
+                            </select>
+                            <label for="Type" class="">Product/Plan Name</label>
+                        </div>
+
+                        <!-- Policy Type -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <mat-icon>policy</mat-icon>
+                            </div>
+                            <select id="" formControlName="PolicyType">
+                                <option value="">--Select--</option>
+                                <option *ngFor="let option of displayedPolicyType" [value]="option.value">
+                                    {{option.key}}
+                                </option>
+                            </select>
+                            <label for="Type" class="">Policy Type</label>
+                        </div>
+
+                        <!-- Policy Number -->
+                        <div class="relative col-start-1">
+                            <div class="icon">
+                                <mat-icon>category</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" class="peer" maxlength="120" id="PolicyNumber"
+                                    formControlName="PolicyNumber" placeholder=" " [matAutocomplete]="PolicyNumber"
+                                    autocomplete="off">
+                                <mat-autocomplete class="peer" #PolicyNumber="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'PolicyNumber')">
+                                    <mat-option *ngFor="let data of transactionList$ | async" [value]="data">
+                                        {{ data.PolicyNo }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button"
+                                    (click)="openDiolog('PolicyNumber','Select Policy Number','PolicyNumber')">
+                                    <mat-icon class="-ml-2">
+                                        search
+                                    </mat-icon></button>
+                                <button type="button" class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    (click)="clearSingleValue('PolicyNumber')"
+                                    *ngIf="policyRegisterForm.get('PolicyNumber').value.length">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="InsertTransactionNo" class="">Policy Number</label>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3 flex flex-wrap gap-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white" type="button" mat-button matStepperPrevious>
+                            Back
+                        </button>
+                        <button class="bg-royal text-white" type="button" mat-button matStepperNext>
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
+
+                <!-- Branch, Customer & Team Details -->
+                <mat-step label="Branch, Customer & Team Details">
+
+                    <div class="grid lg:grid-cols-3 sm:grid-cols-2 gap-5 mt-4">
+
+                        <!-- Branch -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <mat-icon>spa</mat-icon>
+                            </div>
+                            <select id="Branch" formControlName="BranchId">
+                                <option value="" *ngIf="branches.length > 1">--Select--</option>
+                                <option *ngFor="let Branch of branches" [value]="Branch.Id">
+                                    {{Branch.Name}}
+                                </option>
+                            </select>
+                            <label for="Branch" class="">Branch</label>
+                        </div>
+
+                        <!-- Sale Person Type -->
+                        <div class="relative col-start-1">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <select id="SalesPersonType" formControlName="SalesPersonType">
+                                <option value="">--Select-- </option>
+                                <option value="Direct">Direct </option>
+                                <option value="POSP">POSP </option>
+                                <option value="Team Reference">Team Reference</option>
+                            </select>
+                            <label for="Type" class="">Sale Person Type</label>
+                        </div>
+
+                        <!-- Sales Person Name -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" class="peer " placeholder=" " id="SalesPersonName"
+                                    [matAutocomplete]="SalesSearch" formControlName="SalesPersonName"
+                                    autocomplete="off" />
+                                <mat-autocomplete #SalesSearch="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'SalesPersonName')">
+                                    <mat-option *ngFor="let Sales of salesPerson$ | async" [value]="Sales">
+                                        {{Sales.FullName}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button"
+                                    (click)="openDiolog('User','Select Sales Person','SalesPersonName')">
+                                    <mat-icon class="-ml-2">search</mat-icon>
+                                </button>
+                                <button type="button" class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    *ngIf="policyRegisterForm.get('SalesPersonName').value"
+                                    (click)="clear('SalesPersonName', 'SalesPersonId')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="InsertTransactionNo" class="">Sales Person Name</label>
+                            </div>
+
+                        </div>
+
+                        <!-- Team Reference -->
+                        <div class="relative"
+                            *ngIf="policyRegisterForm.get('SalesPersonType').value == 'Team Reference'">
+                            <div class="icon">
+                                <mat-icon>person_pin</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" class="peer " formControlName="TeamReferenceName" placeholder=" "
+                                    id="TeamReferenceUser" autocomplete="off" [matAutocomplete]="TeamRefSearch" />
+                                <mat-autocomplete #TeamRefSearch="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'TeamRef')">
+                                    <mat-option *ngFor="let Team of teamRefUser$ | async" [value]="Team">
+                                        {{Team.FullName}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button"
+                                    (click)="openDiolog('User','Select Team Reference','TeamRef')">
+                                    <mat-icon class="-ml-2">search</mat-icon>
+                                </button>
+                                <button *ngIf="policyRegisterForm.get('TeamReferenceName').value " type="button"
+                                    class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    (click)="clear('TeamReferenceName', 'TeamReferenceId')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="InsertTransactionNo" class="">Team Reference</label>
+                            </div>
+
+                        </div>
+
+                        <!-- Group Head -->
+                        <div class="relative col-start-1">
+                            <div class="icon">
+                                <mat-icon>group</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" class="peer" formControlName="GroupHeadName" placeholder=" "
+                                    id="GroupHead" [matAutocomplete]="groupSearch" autocomplete="off" />
+                                <mat-autocomplete class="peer" #groupSearch="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'GroupHead')">
+                                    <mat-option *ngFor="let group of groupHeadName$ | async" [value]="group">
+                                        {{ group.Name }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button"
+                                    (click)="openDiolog('GroupHead','Select GroupHead','GroupHead')">
+                                    <mat-icon class="-ml-2">
+                                        search
+                                    </mat-icon>
+                                </button>
+                                <button *ngIf="policyRegisterForm.get('GroupHeadName').value" type="button"
+                                    class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    (click)="clear('GroupHeadName', 'GroupHeadId')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="InsertTransactionNo" class="">Group Head</label>
+                            </div>
+
+                        </div>
+
+                        <!-- Customer -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>badge</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" class="peer" placeholder=" " formControlName="CustomerName"
+                                    id="CustomerName" [matAutocomplete]="customerSearch" autocomplete="off" />
+                                <mat-autocomplete class="peer" #customerSearch="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'customer')">
+                                    <mat-option *ngFor="let customer of customerName$ | async" [value]="customer">
+                                        {{ customer.FullName }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button"
+                                    (click)="openDiolog('CustomerOfGroupHead','Select Customer','customer')">
+                                    <mat-icon class="-ml-2">
+                                        search
+                                    </mat-icon>
+                                </button>
+                                <button *ngIf="policyRegisterForm.get('CustomerName').value " type="button"
+                                    class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    (click)="clear('CustomerName', 'CustomerId')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="InsertTransactionNo" class="">Customer</label>
+                            </div>
+
+                        </div>
+
+                        <!-- BDO -->
+                        <div class="relative col-start-1">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" class="peer " placeholder=" " id="BDOName"
+                                    [matAutocomplete]="CRESearch" formControlName="BDOName" />
+                                <mat-autocomplete #CRESearch="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'BDOName')">
+                                    <mat-option *ngFor="let CRE of bdoList$ | async" [value]="CRE">
+                                        {{CRE.FullName}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button"
+                                    (click)="openDiolog('User','Select BDO Name','BDOName')"><mat-icon
+                                        class="-ml-2">search</mat-icon></button>
+                                <button type="button" class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    *ngIf="policyRegisterForm.get('BDOName').value "
+                                    (click)="clear('BDOName', 'BDOId')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="InsertTransactionNo" class="">BDO</label>
+                            </div>
+
+                        </div>
+
+                        <!-- BDM -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" class="peer " placeholder=" " formControlName="BDMName" id="BDMName"
+                                    [matAutocomplete]="CRMSearch" />
+                                <mat-autocomplete #CRMSearch="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'BDMName')">
+                                    <mat-option *ngFor="let crm of bdmList$ | async" [value]="crm">
+                                        {{crm.FullName}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button"
+                                    (click)="openDiolog('User','Select BDM Name','BDMName')"><mat-icon
+                                        class="-ml-2">search</mat-icon></button>
+                                <button type="button" class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    *ngIf="policyRegisterForm.get('BDMName').value" (click)="clear('BDMName', 'BDMId')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="InsertTransactionNo" class="">BDM</label>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="mt-3 flex flex-wrap gap-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white" type="button" mat-button matStepperPrevious>
+                            Back
+                        </button>
+                        <button class="bg-royal text-white" type="button" mat-button matStepperNext>
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
+
+                <!-- Category Details -->
+                <mat-step label="Category Details">
+
+                    <div class="grid lg:grid-cols-3 sm:grid-cols-2 gap-5 mt-4">
+
+                        <!-- Category -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <mat-icon>category</mat-icon>
+                            </div>
+                            <select class="peer bg-white" formControlName="CategoryCode">
+                                <option value="">--Select--</option>
+                                <option *ngFor="let cat of categoryList" [value]="cat.Code">
+                                    {{ cat.Name }}
+                                </option>
+                            </select>
+                            <label for="Type" class="">Category</label>
+                        </div>
+
+                        <!-- Sub-Category -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <mat-icon>compass_calibration</mat-icon>
+                            </div>
+                            <select class="peer bg-white" formControlName="SubCategoryCode">
+                                <option value="">--Select--</option>
+                                <option *ngFor="let option of subCategoryList" [value]="option.Code">
+                                    {{ option.Name }}
+                                </option>
+                            </select>
+                            <label for="Type" class="">Sub-Category</label>
+                        </div>
+
+                        <!-- VehicleNo -->
+                        <div class="relative" *ngIf="policyRegisterForm.get('CategoryCode').value == 'Motor'">
+                            <div class="icon">
+                                <mat-icon>directions_car</mat-icon>
+                            </div>
+                            <input type="text" id="VNumber" maxlength="14" formControlName="VehicleNo"
+                                placeholder="GJ-01-AA-1111" class="peer">
+                            <label for="VNumber">Vehicle Regn. No.</label>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3 flex flex-wrap gap-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white" type="button" mat-button matStepperPrevious>
+                            Back
+                        </button>
+                        <button class="bg-royal text-white" type="button" mat-button matStepperNext>
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
+
+                <!-- Premium Details -->
+                <mat-step label="Premium Details">
+
+                    <div class="grid grid-cols-2 gap-5 mt-4 item">
+                        <div class="relative">
+                            <span class="font-semibold text-base">Gross Premium Range</span>
+                        </div>
+
+                        <div class="relative">
+                            <span class="font-semibold text-base">Commissionable Premium Range</span>
+                        </div>
+                    </div>
+
+                    <div class="grid lg:grid-cols-4 sm:grid-cols-2 gap-5 mt-4">
+                        <!-- Gross Premium From -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <div class="icon rs">₹</div>
+                            </div>
+                            <input type="text" id="GPFrom" maxlength="14" Decimal formControlName="GrossPremiumFrom"
+                                placeholder="From" class="peer">
+                            <label for="GPFrom">From</label>
+                        </div>
+
+                        <!-- Gross Premium Till -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <div class="icon rs">₹</div>
+                            </div>
+                            <input type="text" id="GPTill" maxlength="14" Decimal formControlName="GrossPremiumTo"
+                                placeholder="Till" class="peer">
+                            <label for="GPTill">Till</label>
+                        </div>
+
+                        <!-- Commissionable Premium From -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <div class="icon rs">₹</div>
+                            </div>
+                            <input type="text" id="CPFrom" maxlength="14" Decimal formControlName="CommisionFrom"
+                                placeholder="From" class="peer">
+                            <label for="CPFrom">From</label>
+                        </div>
+
+                        <!-- Commissionable Premium Till -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <div class="icon rs">₹</div>
+                            </div>
+                            <input type="text" id="CPTill" maxlength="14" Decimal formControlName="CommisionTo"
+                                placeholder="Till" class="peer">
+                            <label for="CPTill">Till</label>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3 flex flex-wrap gap-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white" type="button" mat-button matStepperPrevious>
+                            Back
+                        </button>
+                        <button class="bg-royal text-white" type="button" mat-button matStepperNext>
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
+
+            </mat-stepper>
+        </div>
+        <!-- endregion body -->
+    </form>
+    <!-- endregion form -->
+
+</div>

@@ -1,0 +1,19 @@
+.kycsuccess {
+  color: #58bf58 !important;
+}
+
+span.mandatory {
+  @apply after:content-['*'] after:ml-1 after:text-red-500;
+}
+
+.mt-kycVerify {
+  margin-top: 1.5px !important;
+}
+
+.min-w-3rem {
+  min-width: 3rem !important;
+}
+
+.min-w-4rem {
+  min-width: 4rem !important;
+}

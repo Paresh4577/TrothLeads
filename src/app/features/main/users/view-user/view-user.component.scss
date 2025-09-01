@@ -1,0 +1,87 @@
+.user-profile-container {
+    padding: 20px;
+  
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+  
+    .loading, .error {
+      padding: 20px;
+      text-align: center;
+    }
+  
+    .error {
+      color: red;
+    }
+  
+    .user-details {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+      .detail-row {
+        display: flex;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+  
+        &:last-child {
+          border-bottom: none;
+          margin-bottom: 0;
+        }
+  
+        .detail-label {
+          font-weight: bold;
+          width: 120px;
+          color: #666;
+        }
+  
+        .detail-value {
+          color: #333;
+        }
+      }
+    }
+  
+    .toggle-buttons {
+      margin-top: 20px;
+      button {
+        padding: 10px;
+        margin-right: 10px;
+        background-color: transparent;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        cursor: pointer;
+        
+        &.active {
+          background-color: #007bff;
+          color: white;
+        }
+      }
+    }
+  
+    .claims-table, .vehicles-table , .family-members-table , .nominees-table{
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+  
+        th, td {
+          padding: 12px;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
+        }
+  
+        th {
+          background-color: #f5f5f5;
+          font-weight: bold;
+        }
+  
+        tr:hover {
+          background-color: #f9f9f9;
+        }
+      }
+    }
+  }
+  

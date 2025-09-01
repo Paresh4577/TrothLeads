@@ -1,0 +1,23 @@
+.mappingtable{
+    table {
+        width: 100% !important;
+       
+    } 
+    th, td {
+        border:1px solid black;
+    }
+    input {
+        padding: 5px !important;
+        height: auto !important;
+        min-width: 85px !important;
+        border: 0cap;
+    }
+}
+
+::ng-deep .year-picker .mat-calendar-period-button {
+    pointer-events: none;
+}
+
+.year-picker .mat-calendar-arrow {
+    display: none;
+}

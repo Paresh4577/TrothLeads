@@ -1,0 +1,30 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        {{ pagetitle }}
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3 items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" (click)="close()" title="Close">X</button>
+            <!-- <button mat-raised-button class="new-button" (click)="SubmitKYCData()">
+        Verify
+      </button> -->
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+
+    <div class="py-5">
+        <form >
+            <div class="flex flex-col gap-5 justify-center">
+
+                <button class="bg-royal text-white w-64" type="button" 
+                (click)="selectPolicyType('Endorsement-Financial')" mat-button>
+                Endorsement-Financial</button>
+
+                <button class="bg-royal text-white w-64" type="button" 
+                (click)="selectPolicyType('Endorsement-Non Financial')" mat-button> 
+                Endorsement-Non Financial</button>
+
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,114 @@
+<div class="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg pl-0">
+  <!-- Header Section -->
+  <div class="text-white p-2 rounded-t-lg flex justify-between items-center"
+    style="background-color:  var(--title-bg);">
+    <p class="m-2 text-base" style="font-weight: 500;">Banner Management</p>
+    <div class="flex items-center space-x-2">
+
+
+      <!-- Add New Banner Button -->
+      <button *appCanWrite="'master'"
+        style="padding: 6px 13px; border-radius: 25px; border: none; background-color: white; color: black; font-size: 15px; cursor: pointer;"
+        (click)="navigateToAddBanner()">
+        Add New
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="flex justify-center items-center mt-8">
+    <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mt-4">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Table Section -->
+  <div class="mt-2 relative overflow-x-auto" style="height: calc(100vh - 200px);">
+    <div class="absolute inset-0 overflow-x-auto">
+      <table class="min-w-full border-collapse shadow-md mb-2" style="background-color:  var(--tableNav-bg);">
+        <thead class="sticky top-0 z-10">
+          <tr class="text-white" style="background-color:  var(--tableNav-bg)">
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Banner Header Name</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">BannerFilter</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Order Number</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">WebUrl</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Product</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Active Status</th>
+            <th class="p-2 text-center whitespace-nowrap font-medium text-sm">Action</th>
+          </tr>
+          <tr style="background-color: var(--tableNav-bg)">
+            <td class="p-2 align-middle">
+              <input type="text" class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 text-sm"
+                [(ngModel)]="searchBannerHeaderName" (input)="searchBanners()">
+            </td>
+            <td class="p-2 align-middle">
+              <select class="text-black   rounded-md border bg-white" [(ngModel)]="selectedBannerType"
+                (change)="onBannerTypeChange()">
+                <option *ngFor="let type of bannerTypes" [value]="type">{{ type }}</option>
+              </select>
+
+
+            </td>
+            <td class="p-2 align-middle">
+              <input type="number" class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 text-sm"
+                [(ngModel)]="searchBannerOrderNo" (input)="searchBanners()">
+            </td>
+            <td class="p-2 align-middle">
+
+            </td>
+            <td class="p-2 align-middle"></td>
+            <td class="p-2 align-middle"></td>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let banner of paginatedBanners" class="border-b bg-white">
+            <td class="p-3 w-40">{{ banner.BannerHeaderName || '-' }}</td>
+            <td class="p-3 w-40">
+              <img [src]="banner.BannerFileName" alt="Banner Image"
+                class="h-16 w-32 object-cover rounded-lg shadow-md border" />
+            </td>
+            <td class="p-3 w-40">{{ banner.OrderNo || '-' }}</td>
+            <td class="p-3 w-40">{{ banner.WebUrl || '-' }}</td>
+             <td class="p-3 w-40">{{ banner.ProductName || '-' }}</td>
+            <td class="p-3 w-40">{{ banner.IsActive ? 'Yes' : 'No' }}</td>
+
+            <td class="p-3 w-40 text-center">
+              <i *appCanWrite="'master'" class="bx bx-edit-alt text-2xl m-1 cursor-pointer"
+                (click)="editBanner(banner.BannerId)"></i>
+              <i *appCanDelete="'master'" class="bx bx-trash-alt text-2xl m-1 cursor-pointer"
+                (click)="deleteBanner(banner.BannerId)"></i>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && paginatedBanners.length === 0"
+    class="mt-6 bg-gray-100 p-6 rounded-md text-center shadow-md">
+    <p class="text-gray-600">No records found.</p>
+  </div>
+
+  <!-- Pagination Info -->
+  <div class="flex justify-between items-center p-4 mt-6 border-t">
+    <div>
+      <label for="itemsPerPage" class="text-gray-700 mr-2">Items per page:</label>
+      <select id="itemsPerPage" class="border p-2 rounded-md text-gray-700 focus:ring-2"
+        (change)="onItemsPerPageChange($event)">
+        <option [value]="10" [selected]="itemsPerPage === 10">10</option>
+        <option [value]="20" [selected]="itemsPerPage === 20">20</option>
+        <option [value]="50" [selected]="itemsPerPage === 50">50</option>
+      </select>
+    </div>
+    <div class="text-gray-700">
+      Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to
+      {{ (currentPage - 1) * itemsPerPage + paginatedBanners.length }} of {{ totalItems }} results
+    </div>
+  </div>
+</div>

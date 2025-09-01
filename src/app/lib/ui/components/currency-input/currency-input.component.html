@@ -1,0 +1,12 @@
+<input 
+    type="text"
+    [class]="Class"
+    [placeholder]="Placeholder"
+    [maxLength]="MaxLength"
+    [readOnly]="isReadOnly"
+    [id]="id"
+    [(ngModel)]="inputValue"
+    (input)="onInputChange()"
+    (blur)="onBlurUpdate()"
+    onfocus="this.select()"
+>   

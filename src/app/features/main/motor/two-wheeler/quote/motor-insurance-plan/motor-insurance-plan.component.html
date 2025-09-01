@@ -1,0 +1,664 @@
+<div class="px-4 pb-4 max-h-none w-full">
+    <!-- region Main Heading -->
+    <div class="sm:sticky top-0 z-40 bg-default pt-4">
+        <h1 class="new-head text-lg px-4 py-2 mb-1.5 rounded flex justify-between items-center font-semibold">
+            {{ title }}
+
+            <div class="flex gap-x-3 items-center text-lg font-normal">
+                <button mat-raised-button class="button button-primary" (click)="back()">
+                    Close
+                </button>
+
+                <button *ngIf="showFreshQuotebutton" mat-raised-button (click)="ResetStepper(stepper)"
+                    class="new-button">
+                    Fresh Quote
+                </button>
+
+            </div>
+        </h1>
+
+    </div>
+    <!-- endregion Heading Controls -->
+
+    <!-- start of body -->
+
+    <div class="my-3">
+        <div class="">
+
+            <div class="rounded">
+                <mat-stepper orientation="vertical" linear #stepper>
+
+                    <!-- First stepper -->
+                    <mat-step [stepControl]="stepOneValidation()" label="Basic Details">
+                        <form>
+                            <div [formGroup]="motorQuickQuoteForm" class="pt-5 flex flex-wrap gap-5">
+
+                                <!-- Business Type -->
+                                <div class="relative  min-w-36 w-60">
+                                    <div class="icon">
+                                        <mat-icon>timelapse</mat-icon>
+                                    </div>
+                                    <select class="peer" formControlName="BusinessType" id="BusinessType">
+                                        <option value="">--Select--</option>
+                                        <option *ngFor="let item of dropdownMaster.BusinessTypeButtonOptions"
+                                            value="{{item.value}}"> {{item.name}} </option>
+                                    </select>
+
+                                    <label for="BusinessType" class="mandatory">Proposal Type</label>
+                                </div>
+
+                                <!-- Policy Type -->
+                                <div class="relative min-w-36 w-60">
+                                    <div class="icon">
+                                        <mat-icon>timelapse</mat-icon>
+                                    </div>
+                                    <select class="peer" formControlName="PolicyType" id="PolicyType">
+                                        <option value="">--Select--</option>
+                                        <option *ngFor="let item of policyTypeList" value="{{item.value}}">
+                                            {{item.name}} </option>
+                                    </select>
+
+                                    <label for="PolicyType" class="mandatory">Policy Type</label>
+                                </div>
+
+                                <!-- VehicleNo -->
+                                <div>
+                                    <div class="relative w-fit min-w-60">
+                                        <div class="icon">
+                                            <mat-icon>directions_car</mat-icon>
+                                        </div>
+                                        <input type="text" id="Cnumber" (blur)="rtoDetailsAPI($event)"
+                                            (keyup)="vehicleNoFormating($event)" maxlength="14"
+                                            [formControl]="vehicleNo" placeholder="GJ-01-AA-1111" class="peer">
+                                        <label for="Cnumber" class="mandatory">Registration No.</label>
+                                    </div>
+                                </div>
+
+                                <!-- RTO Code -->
+                                <div [formGroup]="vehicleForm" class="relative min-w-60 w-fit">
+                                    <div class="icon">
+                                        <mat-icon>code</mat-icon>
+                                    </div>
+                                    <mat-select class="peer bg-white" formControlName="RTOCode"
+                                        (closed)="CloseDropdownEven('RTO')">
+                                        <div class="flex sticky top-0 z-10">
+                                            <input type="text" maxlength="30" #RTOSearchCtrl
+                                                class=" searchBox ml-1 mr-1" placeholder="Search" matInput
+                                                (keyup)="searchInDropDown($event,'RTO')">
+                                            <mat-icon class="-ml-7 mt-3">search</mat-icon>
+                                        </div>
+                                        <mat-option *ngFor="let option of rTOList" [value]="option.Code">
+                                            {{ option.Code }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <label for="RTOCode" class="mandatory">RTO Code</label>
+                                </div>
+
+                            </div>
+
+                            <div [formGroup]="vehicleForm" class="pb-5 pt-5 flex flex-wrap gap-5">
+
+                                <!-- Brand Name -->
+                                <div class="relative min-w-60 w-fit">
+                                    <div class="icon">
+                                        <mat-icon>directions_car</mat-icon>
+                                    </div>
+                                    <mat-select class="peer bg-white" name="Brand" formControlName="BrandId"
+                                        (closed)="CloseDropdownEven('Brand')">
+                                        <div class="flex sticky top-0 z-10">
+                                            <input type="text" maxlength="30" class=" searchBox ml-1 mr-1"
+                                                #BrandSearchCtrl placeholder="Search"
+                                                (keyup)="searchInDropDown($event,'Brand')">
+                                            <mat-icon class="-ml-7 mt-1">
+                                                search
+                                            </mat-icon>
+                                        </div>
+                                        <mat-option *ngFor="let option of brandList" [value]="option.Id">
+                                            {{ option.Name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <label for="Brand" class="mandatory">
+                                        Brand
+                                    </label>
+                                </div>
+
+                                <!-- Model Name -->
+                                <div class="relative min-w-60 w-fit">
+                                    <div class="icon">
+                                        <mat-icon>directions_car</mat-icon>
+                                    </div>
+                                    <mat-select class="peer bg-white" name="Model" formControlName="ModelId"
+                                        (closed)="CloseDropdownEven('Model')">
+                                        <div class="flex sticky top-0 z-10">
+                                            <input type="text" maxlength="30" #ModelSearchCtrl
+                                                class=" searchBox ml-1 mr-1" placeholder="Search" matInput
+                                                (keyup)="searchInDropDown($event,'Model')">
+                                            <mat-icon class="-ml-7 mt-1">search</mat-icon>
+                                        </div>
+                                        <mat-option *ngFor="let option of modelList" [value]="option.Id">
+                                            {{ option.Name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <label for="Model" class="mandatory">Model</label>
+                                </div>
+
+                                <!-- Fuel -->
+                                <div class="relative min-w-60 w-fit">
+                                    <div class="icon">
+                                        <mat-icon>local_gas_station</mat-icon>
+                                    </div>
+                                    <select class="peer bg-white " name="Fuel" formControlName="Fuel">
+                                        <option value="">Select</option>
+                                        <option *ngFor="let option of dropdownMaster.TwoWheelerFuelTypeOptions"
+                                            [value]="option.name">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                    <label for="FuelType" class="mandatory">Fuel Type</label>
+                                </div>
+
+                                <!-- Sub Model Name -->
+                                <div class="relative min-w-60 w-fit">
+                                    <div class="icon">
+                                        <mat-icon>directions_car</mat-icon>
+                                    </div>
+                                    <mat-select class="peer bg-white" name="SubModel" formControlName="SubModelId"
+                                        (closed)="CloseDropdownEven('Sub')">
+                                        <div class="flex sticky top-0 z-10">
+                                            <input type="text" maxlength="30" #SubModelSearchCtrl
+                                                class=" searchBox ml-1 mr-1" placeholder="Search" matInput
+                                                (keyup)="searchInDropDown($event,'Sub')">
+                                            <mat-icon class="-ml-7 mt-1">search</mat-icon>
+                                        </div>
+                                        <mat-option *ngFor="let option of subList" [value]="option.Id">
+                                            {{ option.Name }} - {{option.CC}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <label for="Smodel" class="mandatory">Sub-Model</label>
+                                </div>
+
+                                <!-- Month & Year Of Mfg -->
+                                <div class="relative w-fit min-w-60">
+                                    <div class="flex">
+                                        <div class="icon">
+                                            <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                [for]="dp"></mat-datepicker-toggle>
+                                            <mat-datepicker #dp startView="multi-year"
+                                                (yearSelected)="chosenYearHandler($event)"
+                                                (monthSelected)="chosenMonthHandler($event, dp)"></mat-datepicker>
+                                        </div>
+
+                                        <input matInput type="text" id="ManufacturingDate"
+                                            formControlName="ManufacturingDate"
+                                            class="peer w-full rounded-md border border-accent-400"
+                                            placeholder="__/____" mmyyyy>
+                                        <label for="ManufacturingDate" class="mandatory">Month & Year Of Mfg</label>
+                                        <input formControlName="ManufacturingDate" [max]="currentDate"
+                                            class="invisible -ml-64 " [matDatepicker]="dp" />
+                                    </div>
+                                </div>
+
+                                <!-- Registration Date -->
+                                <div class="relative min-w-60 w-fit">
+                                    <div class="flex">
+                                        <div class="icon">
+                                            <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                [for]="dob"></mat-datepicker-toggle>
+                                            <mat-datepicker #dob></mat-datepicker>
+                                        </div>
+                                        <input matInput type="text" id="RegistrationDate" [min]="minRegDate"
+                                            [max]="currentDate" (blur)="checkMfgWithReg()"
+                                            formControlName="RegistrationDate" class="peer " placeholder="__/__/____"
+                                            datemask [matDatepicker]="dob" />
+                                        <label for="RegistrationDate" class="mandatory">Registration or Delivery
+                                            Date</label>
+                                    </div>
+                                </div>
+
+                                <!-- Two Wheeler Registered In Company Name? -->
+                                <div class="relative min-w-60 w-fit invisible ">
+                                    <div class="flex align-middle ">
+                                        <p class="font-semibold mr-2">Two Wheeler Registered In Company Name?</p>
+                                        <mat-slide-toggle
+                                            [checked]="this.motorQuickQuoteForm.get('CustomerDetail.CustomerType').value == MotorCustomerType.Corporate"
+                                            color="primary" class="relative pb-1"
+                                            (change)="changeInCustomerType($event)"> </mat-slide-toggle>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                        <div class="">
+                            <button class="bg-royal text-white mx-3" (click)="stepOneError()" mat-button matStepperNext>
+                                Next
+                            </button>
+                        </div>
+                    </mat-step>
+
+                    <!-- Second stepper -->
+                    <mat-step [stepControl]="stepTwoValidation()" label="Two Wheeler Detail">
+                        <form [formGroup]="motorQuickQuoteForm">
+
+                            <div class="py-5 flex flex-wrap gap-5">
+
+                                <!-- Proposal Date -->
+                                <div class="relative min-w-36 w-fit">
+                                    <div class="icon">
+                                        <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                            [for]="ProposalDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #ProposalDate></mat-datepicker>
+                                    </div>
+                                    <div class="flex">
+                                        <input matInput type="text" id="ProposalDate" formControlName="ProposalDate"
+                                            placeholder="__/__/____" datemask [matDatepicker]="ProposalDate"
+                                            [min]="currentDate" [max]="currentDate" class="peer mb-1" />
+                                        <label for="ProposalDate" class="mandatory">Proposal Date</label>
+                                    </div>
+                                </div>
+
+                                <!-- Policy Start Date -->
+                                <div class="relative min-w-36 w-fit">
+                                    <div class="icon">
+                                        <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                            [for]="PolicyStartDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #PolicyStartDate></mat-datepicker>
+                                    </div>
+                                    <div class="flex">
+                                        <input matInput type="text" id="PolicyStartDate" [min]="minPolicyStartDate"
+                                            [max]="maxPolicyStartDate" (blur)="checkPolicyStartDate()"
+                                            formControlName="PolicyStartDate" placeholder="__/__/____" datemask
+                                            [matDatepicker]="PolicyStartDate" class="peer mb-1" />
+                                        <label for="PolicyStartDate" class="mandatory">Policy Start Date</label>
+                                    </div>
+                                </div>
+
+                                <!-- DateofFirstRegistration -->
+                                <div formGroupName="TwoWheelerDetail" class="relative w-fit">
+                                    <div class="icon">
+                                        <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                            [for]="DateofFirstRegistration"></mat-datepicker-toggle>
+                                        <mat-datepicker #DateofFirstRegistration></mat-datepicker>
+                                    </div>
+                                    <div class="flex">
+                                        <input matInput type="text" id="DateofFirstRegistration"
+                                            formControlName="DateofFirstRegistration" placeholder="__/__/____" datemask
+                                            [matDatepicker]="DateofFirstRegistration" class="peer mb-1" />
+                                        <label for="DateofFirstRegistration" class="mandatory">Date of First
+                                            Registration</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Previous Policy Details -->
+                            <div *ngIf="motorQuickQuoteForm.get('BusinessType').value == MotorBusinessType['Roll Over']"
+                                formGroupName="PolicyDetail" class="py-5 grid lg:grid-cols-3 sm:grid-cols-2 gap-5">
+
+                                <div class="sm:col-span-2 lg:col-span-3 gap-5 flex flex-wrap">
+                                    <!-- Third Party policy details -->
+                                    <div class="sm:col-span-2 w-fit">
+                                        <p class="font-semibold mb-3">Previous Policy Details</p>
+
+                                        <div class="grid sm:grid-cols-3 gap-5">
+
+                                            <div class="relative">
+                                                <div class="icon">
+                                                    <mat-icon>timelapse</mat-icon>
+                                                </div>
+                                                <select class="peer" formControlName="PreviousPolicyType"
+                                                    id="PreviousPolicyType">
+                                                    <option value="">--Select--</option>
+                                                    <option *ngFor="let item of previousPolicyTypeList"
+                                                        value="{{item.value}}"> {{item.name}}
+                                                    </option>
+                                                </select>
+
+                                                <label for="PreviousPolicyType" class="mandatory">Policy Type</label>
+                                            </div>
+
+                                            <!-- Previous Policy Start Date -->
+                                            <div class="relative min-w-36 w-fit">
+                                                <div class="icon">
+                                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                        [for]="PreviousPolicyStartDate"></mat-datepicker-toggle>
+                                                    <mat-datepicker #PreviousPolicyStartDate></mat-datepicker>
+                                                </div>
+                                                <div class="flex">
+                                                    <input matInput type="text" id="PreviousPolicyStartDate"
+                                                        formControlName="PreviousPolicyStartDate"
+                                                        placeholder="__/__/____" datemask
+                                                        [matDatepicker]="PreviousPolicyStartDate" class="peer mb-1" />
+                                                    <label for="PreviousPolicyStartDate" class="mandatory">Start
+                                                        Date</label>
+                                                </div>
+                                            </div>
+
+                                            <!-- Previous Policy End Date -->
+                                            <div class="relative min-w-36 w-fit">
+                                                <div class="icon">
+                                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                        [for]="PreviousPolicyEndDate"></mat-datepicker-toggle>
+                                                    <mat-datepicker #PreviousPolicyEndDate></mat-datepicker>
+                                                </div>
+                                                <div class="flex">
+                                                    <input matInput type="text" id="PreviousPolicyEndDate"
+                                                        formControlName="PreviousPolicyEndDate"
+                                                        (blur)="checkPolicyStartDate()" placeholder="__/__/____"
+                                                        datemask [matDatepicker]="PreviousPolicyEndDate"
+                                                        class="peer mb-1" />
+                                                    <label for="PreviousPolicyEndDate" class="mandatory">End
+                                                        Date</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Third Party policy details -->
+                                    <div class="sm:col-span-2 w-fit"
+                                        *ngIf="motorQuickQuoteForm.get('PolicyType').value == 'OwnDamage'">
+                                        <p class="font-semibold mb-3">Third Party</p>
+
+                                        <div class="grid sm:grid-cols-2 gap-3">
+
+                                            <!-- PreviousPolicyTPStartDate -->
+                                            <div class="relative min-w-36 w-fit">
+                                                <div class="icon">
+                                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                        [for]="PreviousPolicyTPStartDate"></mat-datepicker-toggle>
+                                                    <mat-datepicker #PreviousPolicyTPStartDate></mat-datepicker>
+                                                </div>
+                                                <div class="flex">
+                                                    <input matInput type="text" id="PreviousPolicyTPStartDate"
+                                                        formControlName="PreviousPolicyTPStartDate"
+                                                        placeholder="__/__/____" datemask
+                                                        [matDatepicker]="PreviousPolicyTPStartDate" class="peer mb-1" />
+                                                    <label for="PreviousPolicyTPStartDate" class="mandatory">Start
+                                                        Date</label>
+                                                </div>
+                                            </div>
+
+                                            <!-- PreviousPolicyTPEndDate -->
+                                            <div class="relative min-w-36 w-fit">
+                                                <div class="icon">
+                                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                        [for]="PreviousPolicyTPEndDate"></mat-datepicker-toggle>
+                                                    <mat-datepicker #PreviousPolicyTPEndDate></mat-datepicker>
+                                                </div>
+                                                <div class="flex">
+                                                    <input matInput type="text" id="PreviousPolicyTPEndDate"
+                                                        formControlName="PreviousPolicyTPEndDate"
+                                                        placeholder="__/__/____" datemask
+                                                        [matDatepicker]="PreviousPolicyTPEndDate" class="peer mb-1" />
+                                                    <label for="PreviousPolicyTPEndDate" class="mandatory">End
+                                                        Date</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="sm:col-span-2 lg:col-span-3 flex flex-wrap gap-5"
+                                    *ngIf="motorQuickQuoteForm.get('PolicyDetail.PreviousPolicyType').value != 'ThirdPartyOnly'">
+
+                                    <!-- Previous Policy Claim -->
+                                    <div class="min-w-64">
+                                        <span class="font-bold">Claim In Previous Year</span>
+                                        <div class="relative flex gap-9 mt-2">
+                                            <div class="lableInputbox">
+                                                <input type="radio" id="Yes" class="peer"
+                                                    formControlName="PreviousPolicyClaim" [value]="true" />
+                                                <label class="pl-1 flex-shrink-0 font-normal" for="Yes">Yes</label>
+                                            </div>
+                                            <div class="lableInputbox">
+                                                <input type="radio" id="No" class="peer"
+                                                    formControlName="PreviousPolicyClaim" [value]="false" />
+                                                <label class="pl-1 flex-shrink-0 font-normal" for="No">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- PreviousPolicyNCBPercentage -->
+                                    <div *ngIf="motorQuickQuoteForm.get('PolicyDetail.PreviousPolicyClaim').value == false"
+                                        class="relative w-48 min-w-64">
+                                        <div class="icon">
+                                            <mat-icon>percent</mat-icon>
+                                        </div>
+                                        <select class="peer" formControlName="PreviousPolicyNCBPercentage"
+                                            id="PreviousPolicyNCBPercentage">
+                                            <option *ngFor="let item of ncbPercentageList" [ngValue]="item.Value">
+                                                {{item.Name}} </option>
+                                        </select>
+
+                                        <label for="PreviousPolicyNCBPercentage" class="mandatory">Previous Policy
+                                            NCB</label>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                        <form [formGroup]="vehicleForm">
+
+                            <p class="font-semibold">
+                                Two Wheeler Details
+                            </p>
+
+                            <div class="py-5 flex flex-wrap gap-5">
+
+                                <!-- EngineNo -->
+                                <div class="relative w-fit">
+                                    <div class="icon">
+                                        <mat-icon>explicit</mat-icon>
+                                    </div>
+                                    <input matInput maxlength="30" type="text" id="EngineNo" uppercase
+                                        formControlName="EngineNo" placeholder=" " class="peer" required />
+                                    <label for="EngineNo" class="mandatory">Engine No.</label>
+                                </div>
+
+                                <!-- ChassisNo -->
+                                <div class="relative w-fit">
+                                    <div class="icon">
+                                        <mat-icon>dehaze</mat-icon>
+                                    </div>
+                                    <input type="text" [minlength]="minChassisNo" [maxlength]="maxChassisNo" uppercase
+                                        type="text" id="ChassisNo" formControlName="ChassisNo" placeholder=" "
+                                        class="peer" required />
+                                    <label for="ChassisNo" class="mandatory">Chassis No.</label>
+                                </div>
+                            </div>
+
+                        </form>
+
+                        <div class="">
+                            <button class="bg-royal text-white" mat-button matStepperPrevious>
+                                Back
+                            </button>
+                            <button class="bg-royal text-white mx-3" (click)="stepTwoError()" mat-button matStepperNext>
+                                Next
+                            </button>
+                        </div>
+
+                    </mat-step>
+
+                    <!-- Third stepper -->
+                    <mat-step label="Add-On Details">
+
+                        <form [formGroup]="motorQuickQuoteForm">
+                            <div formGroupName="TwoWheelerDetail"
+                                class="py-5 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+
+                                <!-- Personal Accident -->
+                                <div class="min-w-36 p-1">
+                                    <div class="lableInputbox flex ">
+                                        <input type="checkbox" id="PersonalAccidentYes" class="peer mb-2"
+                                            formControlName="PersonalAccident" [value]="true" />
+                                        <label for="PersonalAccidentYes" class="font-bold min-w-40"
+                                            [ngClass]="chkPersonalAccident ? 'labelText' : '' ">Personal
+                                            Accident</label>
+                                        <div [ngClass]="chkPersonalAccident ? 'MandateByIRDAI' : '' "
+                                            class="ml-32 w-fit border pb-1 px-3 rounded-2xl text-white text-on-primary-80 bg-[#2896fd] "
+                                            [matMenuTriggerFor]="PACoverText" #matMenuTrigger="matMenuTrigger"
+                                            mat-button (mouseenter)="matMenuTrigger.openMenu()"
+                                            (mouseleave)="matMenuTrigger.closeMenu()">
+                                            <small>(Mandate by IRDAI)</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <mat-menu [hasBackdrop]="false" yPosition="below" #PACoverText="matMenu"
+                                    overlapTrigger="false" class="hover-display mt-2 px-4 py-3 gap-6 container mx-auto">
+                                    <span>
+                                        Personal Accident (PA) cover offers user or nominee Rs.15 Lakh in case of death
+                                        or disability due to accident.
+                                        <p><br></p>
+                                        <p>You can buy a plan without PA cover if:</p>
+                                        <p>1. The bike is registered in company's name.</p>
+                                        <p>2. You already have a PA cover of Rs. 15 Lakh or more.</p>
+                                        <p>3. Registered Owner does not have a valid driving license.</p>
+                                    </span>
+                                </mat-menu>
+
+                                <!-- Zero Depreciation -->
+                                <div class="min-w-36 p-1">
+                                    <div class="lableInputbox">
+                                        <input type="checkbox" id="ZeroDepreciation" class="peer mb-2"
+                                            formControlName="ZeroDepreciation" [value]="true" />
+                                        <label for="ZeroDepreciation" class="font-bold min-w-40"
+                                            [ngClass]="chkZeroDepreciation ? 'labelText' : '' ">Zero
+                                            Depreciation</label>
+                                    </div>
+                                </div>
+
+                                <!-- NCB Protection -->
+                                <div class="min-w-36 p-1">
+                                    <div class="lableInputbox">
+                                        <input type="checkbox" id="NCBProtection" class="peer mb-2"
+                                            formControlName="NCBProtection" [value]="true" />
+                                        <label for="NCBProtection" class="font-bold"
+                                            [ngClass]="chkNCBProtection ? 'labelText' : '' ">NCB Protection</label>
+                                    </div>
+                                </div>
+
+                                <!-- Invoice Cover -->
+                                <div class="min-w-36 p-1">
+                                    <div class="lableInputbox">
+                                        <input type="checkbox" id="InvoiceCover" class="peer mb-2"
+                                            formControlName="InvoiceCover" [value]="true" />
+                                        <label for="InvoiceCover" class="font-bold"
+                                            [ngClass]="chkInvoiceCover ? 'labelText' : '' ">Invoice Cover</label>
+                                    </div>
+                                </div>
+
+                                <!-- Road side Assistance -->
+                                <div class="min-w-36 p-1">
+                                    <div class="lableInputbox">
+                                        <input type="checkbox" id="RoadsideAssistance" class="peer mb-2"
+                                            formControlName="RoadsideAssistance" [value]="true" />
+                                        <label for="RoadsideAssistance" class="font-bold min-w-48"
+                                            [ngClass]="chkRoadAssistance ? 'labelText' : '' ">Road side
+                                            Assistance</label>
+                                    </div>
+                                </div>
+
+                                <!-- Engine Protector -->
+                                <div class="min-w-36 p-1">
+                                    <div class="lableInputbox">
+                                        <input type="checkbox" id="EngineProtector" class="peer mb-2"
+                                            formControlName="EngineProtector" [value]="true" />
+                                        <label for="EngineProtector" class="font-bold min-w-40"
+                                            [ngClass]="chkEngineProtector ? 'labelText' : '' ">Engine Protector</label>
+                                    </div>
+                                </div>
+
+                                <!-- Driver Cover -->
+                                <!-- [ngClass]="motorQuickQuoteForm.get('TwoWheelerDetail.DriverCover').value?'border-2 border-dashed p-3':'p-1'" -->
+                                <div class="grid h-fit gap-4 flex-wrap w-fit">
+                                    <div class="min-w-36">
+                                        <div class="lableInputbox">
+                                            <input type="checkbox" id="DriverCover" class="peer mb-2"
+                                                formControlName="DriverCover" [value]="true" />
+                                            <label for="DriverCover" class="font-bold"
+                                                [ngClass]="chkDriverCover ? 'labelText' : '' ">Driver Cover</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Driver Cover SumInsured -->
+
+                                    <!-- <div *ngIf="motorQuickQuoteForm.get('TwoWheelerDetail.DriverCover').value" class="relative w-fit">
+                                        <div class="relative min-w-36 w-fit">
+                                            <div class="icon rs">₹</div>
+                                            <select formControlName="DriverCoverSumInsured">
+                                                <option *ngFor="let sum of DriverCoverAmount" [value]="sum.value"> {{sum.name}} </option>
+                                            </select>
+                                            <label class="mandatory" for="DriverCoverSumInsured">Sum Insured</label>
+                                        </div>
+                                    </div> -->
+
+                                </div>
+
+                                <!-- Accessories -->
+                                <div [ngClass]="motorQuickQuoteForm.get('TwoWheelerDetail.Accessories').value?'border-2 p-3 border-dashed':'p-1'"
+                                    class="grid col-start-1  gap-4 h-fit w-fit flex-wrap">
+                                    <div class="min-w-36">
+                                        <div class="lableInputbox">
+                                            <input type="checkbox" id="Accessories" class="peer mb-2"
+                                                formControlName="Accessories" [value]="true" />
+                                            <label for="Accessories" class="font-bold"
+                                                [ngClass]="chkAccessories ? 'labelText' : '' ">Accessories</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Electrical Accessories -->
+                                    <div *ngIf="motorQuickQuoteForm.get('TwoWheelerDetail.Accessories').value"
+                                        class="w-fit">
+                                        <div class="relative ">
+                                            <div class="icon rs">₹</div>
+                                            <input matInput maxlength="10" type="text" id="ElectricalAccessories"
+                                                formControlName="ElectricalAccessories" Onlynumber placeholder=" "
+                                                class="peer" required />
+                                            <label for="ElectricalAccessories" class="mandatory">Electrical</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Non-Electrical Accessories -->
+                                    <div *ngIf="motorQuickQuoteForm.get('TwoWheelerDetail.Accessories').value"
+                                        class="w-fit">
+                                        <div class="relative ">
+                                            <div class="icon rs">₹</div>
+                                            <input matInput maxlength="10" type="text" id="NonElectricalAccessories"
+                                                formControlName="NonElectricalAccessories" Onlynumber placeholder=" "
+                                                class="peer" required />
+                                            <label for="NonElectricalAccessories"
+                                                class="mandatory">Non-Electrical</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+                        </form>
+
+                        <div>
+                            <button class="bg-royal text-white" mat-button matStepperPrevious>
+                                Back
+                            </button>
+                            <button class="bg-royal text-white mx-3" (click)="getQuickQuote()" mat-button>
+                                View Plans
+                            </button>
+                        </div>
+                    </mat-step>
+
+                </mat-stepper>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- End of Body -->
+
+</div>

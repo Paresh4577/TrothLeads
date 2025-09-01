@@ -1,0 +1,222 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" [disabled]="TpPremiumForm.invalid" (click)="submitform()"
+                *ngIf="mode == 'Create' || mode == 'Edit'">Save</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()"
+                *ngIf="mode == 'Edit' || mode == 'Create'">Cancel</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'View'">Back</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+        <form [formGroup]="TpPremiumForm">
+
+            <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-3 gap-2 mt-4">
+
+                <div class="lg:col-span-2">
+                    <!-- Category -->
+                    <div class="relative ">
+                        <div class="icon">
+                            <mat-icon>category</mat-icon>
+                        </div>
+                        <div class="flex">
+                            <input type="text" class="peer" maxlength="50" formControlName="CategoryName"
+                                [readOnly]="isReadonly" AlphabetOnly placeholder=" " id="CategoryName"
+                                [matAutocomplete]="CategorySearch" />
+                            <mat-autocomplete #CategorySearch="matAutocomplete"
+                                (optionSelected)="CategorySelected($event)">
+                                <mat-option *ngFor="let Category Of Category$ | async" [value]="Category">
+                                    {{Category.Name}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <button class="-m-5  z-10" type="button" *ngIf="editable" [disabled]="isReadonly"
+                                (click)="openDiolog('Category','Select Category')">
+                                <mat-icon class="-ml-2">
+                                    search
+                                </mat-icon>
+                            </button>
+                            <button *ngIf="TpPremiumForm.get('CategoryName').value && mode != 'View'" type="button"
+                                [disabled]="isReadonly" class="-m-8 z-10" aria-label="clear" matTooltip="Clear"
+                                (click)="clear('CategoryName', 'CategoryId')">
+                                <mat-icon>clear</mat-icon>
+                            </button>
+                            <label for="CategoryName" class="mandatory">Category Name</label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="">
+                    <!-- Owner Driver -->
+                    <div class="relative">
+                        <div class="icon rs">₹</div>
+                        <input type="text" class="peer" Onlynumber maxlength="9" formControlName="OwnerDriver"
+                            id="OwnerDriver" onfocus="this.select()" placeholder=" " />
+                        <label for="OwnerDriver" class="mandatory">Owner Driver</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-3 gap-2 mt-4">
+
+                <div class="lg:col-span-2">
+
+                    <!-- SubCatetory -->
+                    <div class="relative">
+                        <div class="icon">
+                            <mat-icon> compass_calibration</mat-icon>
+                        </div>
+                        <select class="peer bg-white" formControlName="SubCategoryName">
+                            <option value="">Select</option>
+                            <option *ngFor="let option of SubCategoryList" [value]="option.Name">
+                                {{ option.Name }}
+                            </option>
+                        </select>
+                        <label for="SubCategoryName" class="mandatory">Sub Category</label>
+                    </div>
+
+                </div>
+
+                <div class="">
+                    <!-- LL Driver -->
+                    <div class="relative">
+                        <div class="icon rs">₹</div>
+                        <input type="text" class="peer" Onlynumber maxlength="9" id="LLDriver"
+                            formControlName="LLDriver" onfocus="this.select()" placeholder=" " />
+                        <label for="LLDriver" class="mandatory">LL Driver</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-3 gap-2 mt-4">
+
+                <div class="lg:col-span-2">
+                    <!--  Paid Driver -->
+                    <div class="relative">
+                        <div class="icon rs">₹</div>
+                        <input type="text" formControlName="PaidDriver" Onlynumber maxlength="9" class="peer"
+                            id="PaidDrive" onfocus="this.select()" placeholder=" " />
+                        <label for="PaidDrive" class="mandatory">Paid Drive</label>
+                    </div>
+                </div>
+
+                <div class="">
+                    <!-- CNG -->
+                    <div class="relative" *ngIf="!cngEnable">
+                        <div class="icon rs">₹</div>
+                        <input type="text" class="peer" onfocus="this.select()" Onlynumber maxlength="9"
+                            formControlName="CNG" id="CNG" />
+                        <label for="CNG" class="mandatory">CNG</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div formArrayName="TPPremiumPADetails">
+                <div [formGroupName]="i" class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-3 gap-3 mt-4"
+                    *ngFor="let doc of passengerPA.controls;let i=index">
+
+                    <div class="col-span-1">
+                        <!-- Passenger PA - Sum Ins. -->
+                        <div class="relative">
+                            <div class="icon rs">₹</div>
+                            <!-- (change)="updatePassengerPA($event,i)"  -->
+                            <input type="text" class="peer" Onlynumber maxlength="9" onfocus="this.select()"
+                                formControlName="PassengerPA"
+                                id="{{ i == 0 ? 'Passenger PA-Sum Ins.' : 'Passenger PA-Sum Ins. '+ (i + 1) }}"
+                                placeholder=" " />
+                            <label for="{{ 'Passenger PA-Sum Ins. '+ (i + 1) }}" class="mandatory">
+                                {{ 'Passenger PA-Sum Ins. '+ (i + 1) }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-span-1">
+                        <!-- Passenger* PA - Premium -->
+                        <div class="relative">
+                            <div class="icon rs">₹</div>
+                            <!-- (change)="updatePassengerPAAmount($event,i)"  -->
+                            <input type="text" class="peer" Onlynumber maxlength="9" onfocus="this.select()"
+                                formControlName="PassengerPAAmount"
+                                id="{{ i == 0 ? 'Passenger PA-Premium' : 'Passenger PA-Premium '+ (i + 1) }}"
+                                placeholder=" " />
+                            <label for="{{ 'Passenger PA-Premium '+ (i + 1) }}" class="mandatory">
+                                {{ 'Passenger PA-Premium '+ (i + 1) }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-1 sm:justify-center">
+                        <div class="pt-3 relative" *ngIf="i > 0 && editable">
+                            <mat-icon (click)="RemovePassengerPAs(i)" class="hover:text-warn-500"
+                                matTooltip="Delete">delete</mat-icon>
+                        </div>
+                        <div class="pt-1 relative" *ngIf="i == 0 && editable">
+                            <button type="button" class="bg-royal text-white" matTooltip="Add more Passenger PA"
+                                (click)="addPassengerPAs()" mat-button>Add</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Status -->
+            <!-- Status -->
+            <div class="font-medium py-3 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+                <span for="Status" class="pr-2 py-1 font-medium ml-3">Status</span>
+                <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1"
+                    (change)="onChange($event,'Status')">
+                    <span class="flex font-medium text-xl ml-3 mt-1.5">
+                        {{
+                        f['Status'].value == 1
+                        ? "Active"
+                        : "InActive"
+                        }}
+                    </span>
+                </mat-slide-toggle>
+            </div>
+
+            <!-- History -->
+            <div *ngIf=" mode=='View' " class="grid lg:grid-cols-2 md:grid-cols-3 sm:grid-cols-3 gap-1 mt-4">
+                <div class="block tableStyling">
+                    <table class="newTable overflow-auto">
+                        <tr class="bg-primary">
+                            <th>
+                                Changeble
+                                Field </th>
+                            <th>
+                                Old Value
+                            </th>
+                            <th>
+                                New Value
+                            </th>
+                            <th>
+                                Date &
+                                Time (Auto fetch Edited Date & Time)</th>
+                            <th> User (Auto Fetch User - Editor ID - Name)</th>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="h-14 text-center">
+                                No Data Found
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <!-- endregion form -->
+</div>

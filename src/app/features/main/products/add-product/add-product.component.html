@@ -1,0 +1,83 @@
+<div class="w-full max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
+    <h2 class="text-xl font-bold mb-4">{{ isEditMode ? 'Edit Product' : 'Add New Product' }}</h2>
+    <form (ngSubmit)="submitProduct()">
+        <div class="row">
+           <!-- Priority Dropdown -->
+<div class="col-md-6 mb-3">
+    <select
+      id="priority"
+      [(ngModel)]="currentProduct.priority"
+      name="priority"
+      class="form-control"
+      required
+    >
+      <option [ngValue]="null" disabled>Select Priority</option>
+      <option *ngFor="let p of priorityList" [value]="p">{{ p }}</option>
+    </select>
+  </div>
+            <!-- Product Name -->
+            <div class="col-md-6 mb-3">
+                <input id="productName" type="text" [(ngModel)]="currentProduct.ProductName" name="productName"
+                    class="form-control" required autocomplete="off" placeholder="Product Name" />
+            </div>
+
+            <!-- Product Code -->
+            <div class="col-md-6 mb-3">
+                <input id="productCode" type="text" [(ngModel)]="currentProduct.ProductCode" name="productCode"
+                    class="form-control" placeholder="Product Code" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <input id="weburl" type="text" [(ngModel)]="currentProduct.weburl" name="weburl" class="form-control"
+                    placeholder="weburl" />
+            </div>
+
+            <!-- Product Header Dropdown -->
+            <div class="col-md-6 mb-3">
+                <select [(ngModel)]="currentProduct.ProductHeaderId" name="productHeaderId" class="form-control"
+                    required>
+                    <option [ngValue]="null" disabled>Select Product Header</option>
+                    <option *ngFor="let header of productHeaders" [ngValue]="header.ProductHeaderId">
+                        {{ header.ProductHeaderName }}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Product Image Upload -->
+            <!-- Product Image Upload -->
+            <div class="col-md-6 mb-3">
+                <div class="image-upload-container d-flex align-items-center justify-content-start" style="gap: 12px;">
+
+                    <small class="form-text text-muted m-0" style="font-size: 0.85rem; white-space: nowrap;">
+                        Select Product icon (JPG or PNG only)
+                    </small>
+
+                    <input type="file" id="productImage" [value]="currentProduct.productImage"
+                        (change)="onImageSelected($event)" accept="image/*" class="form-control"
+                        style="width: 250px;" />
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Product Description (Text Editor) -->
+            <div class="col-md-12 mb-3">
+                <div class="toolbar mb-2">
+                    <!-- Add toolbar buttons if needed -->
+                </div>
+                <div id="productDesc" name="productDesc" class="form-control border p-2" contenteditable="true"
+                    (input)="onEditorInput($event)" style="min-height: 150px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="row">
+            <div class="col-md-12 mb-3 d-flex justify-content-end gap-2">
+                <button type="submit" class="btn btn-success">{{ isEditMode ? 'Update' : 'Save' }}</button>
+                <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+            </div>
+        </div>
+    </form>
+</div>

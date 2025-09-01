@@ -1,0 +1,435 @@
+<div class="p-4 ">
+    <div class="pageheader">
+        <!-- region main heading -->
+        <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold"
+            [ngClass]="this.mode=='PopUpCreate' ? 'sticky top-0 z-40' : ''">
+            {{ title }}
+
+            <!-- region main heading controls-->
+            <div class="flex gap-x-3  items-center text-lg font-normal">
+                <button mat-raised-button class="new-button" [disabled]="GroupHeadForm.invalid" (click)="submitform()"
+                    *ngIf="mode == 'Create' || mode == 'Edit' || mode == 'PopUpCreate'">Save</button>
+
+                <button mat-raised-button class="new-button" (click)="backClicked()"
+                    *ngIf="mode == 'Edit' || mode == 'Create' || mode == 'PopUpCreate'">Cancel</button>
+
+                <button mat-raised-button class="new-button" (click)="backClicked()"
+                    *ngIf="mode == 'View'">Back</button>
+            </div>
+            <!-- endregion main heading controls-->
+        </h1>
+        <!-- endregion main heading -->
+    </div>
+    <div class="pagedetails" [style]="detailsstyle">
+        <!-- region form -->
+        <div class="px-4 py-7 rounded bg-white"
+            [ngClass]="{'showstep': this.mode=='View' || this.mode=='Edit' || this.mode=='Create' || this.mode=='PopUpCreate'}">
+            <form [formGroup]="GroupHeadForm">
+
+                <mat-stepper linear orientation="vertical" #stepper>
+                    <!-- first Step -->
+                    <mat-step label="Basic Details" [stepControl]="StepOneSubmit()">
+                        <div class="grid lg:grid-cols-3 md:grid-cols-2  gap-5 mt-4 grid-cols-1">
+
+                            <!-- Group Head Name -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>group</mat-icon>
+                                </div>
+                                <input type="text" class="peer" id=" GroupHeadName" formControlName="Name"
+                                    placeholder=" " />
+                                <label for=" GroupHeadName" class="mandatory">Group Head Name</label>
+                            </div>
+
+                            <!-- Group Head ID -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>receipt</mat-icon>
+                                </div>
+                                <input type="text" class="peer" id="GroupHeadID" placeholder="Auto"
+                                    formControlName="GroupHeadNumber" readonly />
+                                <label for="GroupHeadID">Group Head ID</label>
+                            </div>
+
+                            <!-- Date of Birth -->
+                            <div class="relative max-w-fit">
+                                <div class="icon">
+                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                        [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </div>
+
+                                <input matInput type="text" placeholder=" " placeholder="__/__/____" datemask
+                                    [max]="maxDate" [matDatepicker]="picker" formControlName="DateOfBirth" class="peer"
+                                    id="DateOfBirth" />
+
+                                <label for="DateOfBirth">Date of Birth</label>
+                            </div>
+
+                            <!-- Mobile Number -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>phone</mat-icon>
+                                </div>
+                                <input type="text" Onlynumber class="peer" formControlName="MobileNo" maxlength="10"
+                                    id="MobileNumber" placeholder=" " />
+                                <label for="MobileNumber" class="mandatory">Mobile Number</label>
+                            </div>
+
+                            <!--  PAN-->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>credit_card</mat-icon>
+                                </div>
+                                <input type="text" class="peer" formControlName="PANNumber" id="PANCardNumber"
+                                    placeholder=" " />
+                                <label for="PANCardNumber">PAN</label>
+                            </div>
+
+                            <!-- Aadhar -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>credit_card</mat-icon>
+                                </div>
+                                <input type="text" class="peer" formControlName="AadharNumber" id="AadharCardNumber"
+                                    placeholder=" " />
+                                <label for="AadharCardNumber">Aadhar</label>
+                            </div>
+
+                            <!-- Branch -->
+                            <div class="relative min-w-36">
+                                <div class="icon">
+                                    <mat-icon>place</mat-icon>
+                                </div>
+                                <select id="" formControlName="BranchId">
+                                    <option  value=0>--Select--</option>
+                                    <option  *ngFor="let Branch of Branchs" [value]="Branch.Id">
+                                        {{Branch.Name}}
+                                    </option>
+                                </select>
+                                <label for="Category" class="mandatory">Branch</label>
+                            </div>
+
+
+                            <!-- Police Type  -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>group_work</mat-icon>
+                                </div>
+                            
+                                <select id="" formControlName="SalesPersonType">
+                                    <option value="">--Select--</option>
+                                    <option [value]="'Direct'">Direct</option>
+                                    <option [value]="'POSP'">POSP</option>
+                                    <option [value]="'Team Reference'">Team Reference</option>
+                                </select>
+                                <label for="PolicyType" class="mandatory">Sales Person Type</label>
+                            </div>
+
+                            <!-- Select POSP (Sales Person) -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <div class="flex">
+                                    <input type="text" class="peer " formControlName="SalesPersonName" placeholder=" "
+                                      [readOnly]="!canEditableSalesPerson"  id="SalesPersonName" [matAutocomplete]="CRESearch" />
+                                    <mat-autocomplete #CRESearch="matAutocomplete"
+                                        (optionSelected)="SalesPersonelected($event)">
+                                        <mat-option *ngFor="let SalesPerson of POSPSalesPerson$ | async"
+                                            [value]="SalesPerson">
+                                            {{SalesPerson.FullName}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <button class="-m-5 z-10" type="button" *ngIf="editable && canEditableSalesPerson"
+                                        (click)="openDiolog('User','Select POSP (Sales Person)','SalesPersonName')"><mat-icon
+                                            class="-ml-2">search</mat-icon></button>
+                                    <button *ngIf="GroupHeadForm.get('SalesPersonName').value && mode != 'View' && canEditableSalesPerson"
+                                        type="button" class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                        (click)="clear('SalesPersonName', 'SalesPersonId')">
+                                        <mat-icon>clear</mat-icon>
+                                    </button>
+                                    <label for="SalesPersonName" class="mandatory">Select Sales Person</label>
+                                </div>
+                            </div>
+
+                            
+                            <!--  Select Team Reference User -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <div class="flex">
+                                    <input type="text" class="peer " formControlName="TeamReferenceUserName"
+                                        placeholder=" " id="TeamReferenceUserName" [matAutocomplete]="userSearch" />
+                                    <mat-autocomplete #userSearch="matAutocomplete"
+                                        (optionSelected)="TeamReferenceUserSelected($event)">
+                                        <mat-option *ngFor="let TeamRef of TeamReferenceList$ | async"
+                                            [value]="TeamRef">
+                                            {{TeamRef.FullName}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <button class="-m-5 z-10" type="button" *ngIf="editable"
+                                        (click)="openDiolog('User','Select Team Reference User','TeamReferenceUser')"><mat-icon
+                                            class="-ml-2">search</mat-icon></button>
+                                    <button *ngIf="GroupHeadForm.get('TeamReferenceUserName').value && mode != 'View'"
+                                        type="button" class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                        (click)="clear('TeamReferenceUserName', 'TeamReferenceUserId')">
+                                        <mat-icon>clear</mat-icon>
+                                    </button>
+                                    <label for="TeamReferenceUserName">Select Team Reference User</label>
+                                </div>
+                            </div>
+
+                            
+                            <!--  Anniversary Date -->
+                            <div class="relative max-w-fit">
+                                <div class="icon">
+                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                        [for]="AnniversaryDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #AnniversaryDate></mat-datepicker>
+                                </div>
+
+                                <input matInput type="text" placeholder=" " placeholder="__/__/____" datemask
+                                    [max]="maxDate" [matDatepicker]="AnniversaryDate" formControlName="AnniversaryDate"
+                                    class="peer" id="DateOfBirth" />
+
+                                <label for="DateOfBirth">Anniversary Date</label>
+                            </div>
+
+                            <!-- Email Address -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>email</mat-icon>
+                                </div>
+                                <input type="email" formControlName="Email" class="peer" id="EmailAddress"
+                                    placeholder=" " />
+                                <label for="EmailAddress" class="mandatory">Email Address</label>
+                            </div>
+
+                            <!--  Secondary Email Address -->
+                            <div class="relative max-h-11">
+                                <div class="icon">
+                                    <mat-icon>email</mat-icon>
+                                </div>
+                                <input type="email" formControlName="SecondaryEmail" class="peer"
+                                    id="SecondaryEmailAddress" placeholder=" " />
+                                <label for="SecondaryEmailAddress">Secondary Email Address</label>
+                            </div>
+
+                            <!--  Customer Reference -->
+                            <div class="relative max-h-11">
+                                <div class="icon">
+                                    <mat-icon>person_outline</mat-icon>
+                                </div>
+                                <input formControlName="CustomerReference" type="text" class="peer"
+                                    id="CustomerReference" placeholder=" " />
+                                <label for="CustomerReference">Customer Reference</label>
+                            </div>
+
+                            <!--  Mandate Obtained? -->
+                            <div class="min-w-56 px-2 pt-1 pb-2 rounded-lg border border-gray-300 z-20">
+                                <span class="font-bold">Mandate Obtained?</span>
+                                <div class="w-full flex gap-6 mt-2">
+                                    <div class="lableInputbox w-20 flex items-center">
+                                        <input type="radio" id="true" formControlName="MandateObtained" class="peer"
+                                            name="MandateObtained" [value]="true" />
+                                        <label for="true">Yes</label>
+                                    </div>
+                                    <div class="lableInputbox w-36 flex items-center">
+                                        <input type="radio" id="false" formControlName="MandateObtained" class="peer"
+                                            name="MandateObtained" [value]="false" />
+                                        <label for="false">No</label>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <!-- Attach Mandate Copy -->
+                            <div class="relative min-w-36 max-h-11" *ngIf="f['MandateObtained'].value">
+                                <div class="dummy-formField ">
+                                    <div class="icon">
+                                        <mat-icon>attach_file</mat-icon>
+                                    </div>
+                                    <input type="file" class="hidden" #AttachMandateCopy
+                                        (change)="selectedDocument($event)">
+                                    <p class="ml-10  cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                        [ngClass]="MandateDoc?.ImageUploadName ? 'font-bold' : 'font-medium underline' "
+                                        matTooltip="{{MandateDoc?.ImageUploadName}}"
+                                        (click)="editable ? AttachMandateCopy.click() : ''">
+                                        {{ MandateDoc?.ImageUploadName || 'click here' | excerpt:'max' }}</p>
+                                    <label for="AttachMandateCopy" class="mandatory">Attach Mandate Copy</label>
+                                    <div class="flex justify-end absolute right-2" *ngIf="MandateDoc?.ImageUploadPath"
+                                        matTooltip="View Mandate Copy">
+                                        <mat-icon
+                                            (click)="ViewQnDocument(MandateDoc?.ImageUploadPath)">visibility</mat-icon>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- Type -->
+                            <div class="min-w-56 px-2 pt-1 pb-2 rounded-lg border border-gray-300">
+                                <span class="font-bold">Type<span style="color: red;">*</span></span>
+                                <div class="w-full flex gap-6 mt-2">
+                                    <div class="lableInputbox w-20 flex items-center">
+                                        <input type="radio" id="Male" class="peer" name="Type" value="Male"
+                                            formControlName="Type" [value]="GroupHeadType.Male" />
+                                        <label for="Male">Male</label>
+                                    </div>
+                                    <div class="lableInputbox w-20 flex items-center">
+                                        <input type="radio" id="Female" class="peer" name="Type"
+                                            [value]="GroupHeadType.Female" formControlName="Type" />
+                                        <label for="Female">Female</label>
+                                    </div>
+                                    <div class="lableInputbox w-20 flex items-center">
+                                        <input type="radio" id="Company" class="peer" name="Type"
+                                            [value]="GroupHeadType.Company" formControlName="Type" />
+                                        <label for="Company">Company</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--  Correspondence Address -->
+                            <div class="min-w-64 px-2 pt-1 pb-2 rounded-lg border border-gray-300">
+                                <span class="font-bold">Correspondence Address <span style="color: red;">*</span></span>
+                                <!-- <label class="mandatory">Correspondence Address</label> -->
+                                <div class="w-full flex gap-6 mt-2">
+                                    <div class="lableInputbox w-20 flex items-center">
+                                        <input type="radio" id="Home" class="peer"
+                                            formControlName="CorrespondenceAddress" name="CorrespondenceAddress"
+                                            [value]="AddressType.Home" />
+                                        <label for="Home">Home</label>
+                                    </div>
+                                    <div class="lableInputbox w-36 flex items-center">
+                                        <input type="radio" id="Office" class="peer"
+                                            formControlName="CorrespondenceAddress" name="CorrespondenceAddress"
+                                            [value]="AddressType.Office" />
+                                        <label for="Office">Office</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="font-medium py-3 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+                                <span for="Status" class="pr-2 py-1 font-medium ml-3">Status</span>
+                                <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1"
+                                    (change)="onChange($event,'Status')">
+                                    <span class="flex font-medium text-xl ml-3 mt-1.5">
+                                        {{
+                                        f['Status'].value == 1
+                                        ? "Active"
+                                        : "InActive"
+                                        }}
+                                    </span>
+                                </mat-slide-toggle>
+                            </div>
+
+                        </div>
+                    </mat-step>
+
+
+                    <!-- first Step -->
+                    <mat-step label="Address Details">
+
+                        <div class="grid lg:grid-cols-3 md:grid-cols-2  gap-5 mt-4 grid-cols-1"
+                            formArrayName="GroupHeadAddress">
+
+                            <div *ngFor="let address of address.controls;let i=index">
+                                <div class="grid  gap-5 mt-4 grid-cols-1" [formGroupName]="i">
+                                    <div class="relative">
+
+                                        <span class="font-bold" *ngIf="address.value.AddressType == 'Home'"
+                                            [ngClass]="GroupHeadForm.get('CorrespondenceAddress').value == AddressType.Home ? 'mandatory' : ''">{{address.value.AddressType}}
+                                            Address</span>
+
+                                        <span class="font-bold" *ngIf="address.value.AddressType == 'Office'"
+                                            [ngClass]="GroupHeadForm.get('CorrespondenceAddress').value == AddressType.Office ? 'mandatory' : ''">{{address.value.AddressType}}
+                                            Address</span>
+
+                                    </div>
+                                    <!--  Home Address (Line 1)-->
+                                    <div class="relative">
+                                        <div class="icon">
+                                            <mat-icon>home</mat-icon>
+                                        </div>
+                                        <input type="text" class="peer" id="HomeAddressL1" placeholder=" "
+                                            formControlName="AddressLine1" />
+                                        <label for="HomeAddressL1">{{address.value.AddressType}} Address (Line
+                                            1)</label>
+                                    </div>
+
+                                    <!--  Home Address (Line 2) -->
+                                    <div class="relative">
+                                        <div class="icon">
+                                            <mat-icon>home</mat-icon>
+                                        </div>
+                                        <input type="text" class="peer" id="HomeAddressL2" placeholder=" "
+                                            formControlName="AddressLine2" />
+                                        <label for="HomeAddressL2">{{address.value.AddressType}} Address (Line
+                                            2)</label>
+                                    </div>
+
+                                    <!-- PIN Code -->
+
+                                    <div class="relative">
+                                        <div class="icon">
+                                            <mat-icon>pin_drop</mat-icon>
+                                        </div>
+                                        <div class="flex">
+                                            <input Onlynumber type="text" id="Pincode{{ i }}"
+                                                formControlName="PinCodeNumber" class="peer" matInput placeholder=" "
+                                                [matAutocomplete]="PinCodeSearch" maxlength="6"
+                                                (blur)="ClearPincode(i)" />
+                                            <mat-autocomplete #PinCodeSearch="matAutocomplete"
+                                                (optionSelected)="PinCodeSelected($event, i)">
+                                                <mat-option *ngFor="let pincode of PinCodeList$ | async"
+                                                    [value]="pincode">
+                                                    {{ pincode.PinCode }},{{ pincode.Area }} - {{ pincode.CityName }}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <button class="-m-5 z-10" type="button"
+                                                (click)="openDiolog('Pincode', 'Select PIN Code','Pincode',i)"
+                                                *ngIf="editable">
+                                                <mat-icon class="-ml-2">search</mat-icon>
+                                            </button>
+                                            <label for="Pincode{{ i }}">PIN Code ({{address.value.AddressType}})</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- City -->
+                                    <div class="relative">
+                                        <div class="icon">
+                                            <mat-icon>location_city</mat-icon>
+                                        </div>
+                                        <input type="text" class="peer" id="City" placeholder=" "
+                                            formControlName="CityName" readonly />
+                                        <label for=" City">City</label>
+                                    </div>
+
+
+                                    <!-- State -->
+                                    <div class="relative">
+                                        <div class="icon">
+                                            <mat-icon>domain</mat-icon>
+                                        </div>
+                                        <input type="text" class="peer" id="State" placeholder=" "
+                                            formControlName="StateName" readonly />
+                                        <label for="State">State</label>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </mat-step>
+
+
+                </mat-stepper>
+
+            </form>
+        </div>
+        <!-- endregion form -->
+    </div>
+
+</div>

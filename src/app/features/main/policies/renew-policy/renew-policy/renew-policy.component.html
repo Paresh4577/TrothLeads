@@ -1,0 +1,50 @@
+<div class="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg pl-0">
+  <!-- Header Section -->
+  <div class="text-white p-2 rounded-t-lg flex justify-between items-center"
+    style="background-color:  var(--title-bg);">
+    <p class="m-2 text-base" style="font-weight: 500;">Policy Renew Management</p>
+  </div>
+
+
+  <!-- Error Message -->
+
+
+  <!-- Form Section (Input Table) with Horizontal Scroll -->
+  <div class="mt-2 relative overflow-x-auto" style="height: calc(100vh - 200px);">
+    <div class="absolute inset-0 overflow-x-auto">
+      <table class="min-w-full border-collapse shadow-md mb-2" style="background-color:  var( --tableNav-bg);">
+        <thead class="sticky top-0 z-10">
+          <tr class="text-white" style="background-color: var( --tableNav-bg);">
+            <th class="ps-3 text-left whitespace-nowrap font-medium text-sm">Policy Number</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Customer Mobile Number</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Renewal Request Date</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Policy Start Date</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Policy End Date</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Action</th> 
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let policy of policies" class="border-b bg-white">
+            <td class="p-3 w-40">{{ policy.PolicyNo || '-' }}</td>
+            <td class="p-3 w-40">{{policy.Mobile}}</td>
+             <td class="p-3 w-40"> {{ policy.DateCreated ? (policy.DateCreated | date:'yyyy-MM-dd') : 'Date-Only' }}</td>
+            <td class="p-3 w-40"> {{ policy.PolicyStartDate ? (policy.PolicyStartDate | date:'yyyy-MM-dd') : 'Date-Only' }}</td>
+            <td class="p-3 w-40">{{ policy.PolicyEndDate ? (policy.PolicyEndDate | date:'yyyy-MM-dd') : 'Date-Only' }}</td>
+            <!-- <td class="p-3 w-40">
+              <button class="btn btn-primary rounded-full" (click)="viewPolicy(policy.PolicyNo)">
+                Renew
+              </button>
+            </td> -->
+            <td class="p-3 w-40">
+              <i *appCanWrite="'policies'" class="bx bx-show text-2xl" (click)="editPolicy(policy.PolicyId)"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+
+</div>

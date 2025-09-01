@@ -1,0 +1,242 @@
+<div class="px-4 pb-4 max-h-none w-full">
+
+<!-- region main heading -->
+<div class="pt-4 sticky z-30 headingBorder top-0 w-full">
+    <h1 class="new-head h-14 text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold">
+        Dashboard
+    </h1>
+</div>
+<!-- ending main heading -->
+
+<div class="flex flex-col sm:grid sm:grid-cols-1 lg:grid-cols-[minmax(400px,400px)_minmax(75px,1fr)] gap-5 bg-white mt-5" *ngIf="canDisplayQuotation">
+
+    <!-- region My Pending Request  -->
+    <div class="relative">
+        <h1 class="new-head text-lg px-4 py-1.5 mb-0 rounded flex justify-between items-center font-semibold">
+            Pending RFQ Request
+        </h1>
+        <div class="relative mt-0 text-gray-700  shadow-md bg-clip-border">
+            <nav class="p-2 text-blue-gray-700">
+                <div class="mb-2" *ngFor="let item of MyPendingRequest">
+                    <!-- <div class="leading-tight p-2 transition-all text-start text-primary-600" role="button"
+                                (click)="redirectPage(item.StageCode)">
+                                {{item.StageName}}
+                            </div>
+                            <div class="relative text-right">
+                                <div class="p-0.5">
+                                    <button class="bg-royal text-white" mat-button (click)="redirectPage(item.StageCode)">
+                                {{item.Count | indCurrencyWithoutSymbol}}
+                                    </button>
+                                    <span
+                                        class="px-3 py-1 font-bold text-gray-900 uppercase rounded-full select-none whitespace-nowrap bg-gray-900/10"
+                                        role="button" (click)="redirectPage(item.StageCode)">
+                                        {{item.Count}}
+                                    </span>
+                                </div>
+                            </div> -->
+        
+                    <div class="rounded flex h-8 items-center bg-[#e8f3fc] cursor-pointer"
+                        (click)="redirectPage(item.StageCode)">
+                        <div class="w-full leading-tight p-2 transition-all text-start text-primary-600">
+                            <span class="font-medium">{{item.StageName}}</span>
+                        </div>
+        
+                        <div class="rounded flex justify-center font-medium text-white  h-8 min-w-16 items-center" [ngClass]="{
+                                    'bg-[#807282]' : item.StageCode == 'TotalRaisedRFQ',
+                                    'bg-[#b8a767]' : item.StageCode == 'RFQRaised',
+                                    'bg-[#70b1c1]' : item.StageCode == 'RFQQNUW',
+                                    'bg-[#db979f]' : item.StageCode == 'RFQQNSelectionSP',
+                                    'bg-[#7c81ca]' : item.StageCode == 'RFQPaymentLinkUW',
+                                    'bg-[#8d8cb5]' : item.StageCode == 'RFQPaymentProofSP',
+                                    'bg-[#007693]' : item.StageCode == 'RFQProposalSubmissionUW',
+                                    'bg-[#9b7abb]' : item.StageCode == 'RFQCounterOffer',
+                                    'bg-[#6fa1a9]' : item.StageCode == 'RFQLoadingPaymentLinkUW',
+                                    'bg-[#2997c1ed]' : item.StageCode == 'RFQLoadingPaymentProofSP',
+                                    'bg-[#8fbf7a]' : item.StageCode == 'RFQPolicyIssueUW',
+                                    'bg-[#9e9d9d]' : item.StageCode == 'RFQTransactionEntry',
+                                    'bg-[#7dbda0f2]' : item.StageCode == 'RFQTransactionEntryDone',
+                                    'bg-[#b4727a]' : item.StageCode == 'RFQRejected'
+                                }"
+                                >
+                            <span>{{item.Count | indCurrencyWithoutSymbol}}</span>
+                        </div>
+                    </div>
+        
+                </div>
+            </nav>
+        </div>
+        
+    </div>
+    <!-- endregion My Pending Request -->
+    
+    <div class="px-2">
+        <div class="flex justify-end px-2 mt-4" *ngIf="!isSearchOpen">
+            <!-- <button class="bg-royal text-white" type="button" mat-button (click)="isSearchOpen = !isSearchOpen" >Filters</button> -->
+        </div>
+        <div class="border rounded-lg p-3 flex flex-col gap-y-2 mt-4" >
+            <div class="grid dashboard-filter-responsive sm:grid-cols-2 gap-5 mt-2" [formGroup]="filterForm">
+                
+                <!-- Branch -->
+                <div class="relative " *ngIf="canDisplayFilterFied">
+                    <div class="icon">
+                    <mat-icon>spa</mat-icon>
+                </div>
+                <select class="peer" id="Branch" formControlName="BranchId">
+                    <option value="">--Select--</option>
+                    <option  *ngFor="let Branch of branchs" [value]="Branch.Id">
+                        {{Branch.Name}}
+                    </option>
+                </select>
+        
+                <label for="Branch" class="">Branch</label>
+            </div>
+        
+            <!-- Policy Type -->
+            <div class="relative ">
+                <div class="icon">
+                    <mat-icon>timelapse</mat-icon>
+                </div>
+                <select class="peer" id="PolicyType" formControlName="PolicyType">
+                    <option value="">--Select--</option>
+                    <option *ngFor="let option of DisplayedDashboardPolicyType" [value]="option.value">
+                        {{option.name}}
+                    </option>
+                </select>
+                <label for="PolicyType" class="">Policy Type</label>
+            </div>
+
+            <!-- Categroy -->
+            <div class="relative ">
+                <div class="icon">
+                    <mat-icon>category</mat-icon>
+                </div>
+                <select class="peer" id="Categroy" formControlName="CategoryId">
+                    <option value="">--Select--</option>
+                    <option *ngFor="let category of categoryList" [value]="category.Id">
+                        {{category.Name}}
+                    </option>
+                </select>
+            
+                <label for="Categroy" class="">Categroy</label>
+            </div>
+        
+            <!-- Sub Categroy -->
+            <div class="relative ">
+                <div class="icon">
+                    <mat-icon>category</mat-icon>
+                </div>
+                <select class="peer" id="ProductSubCategroy" formControlName="SubCategoryId">
+                    <option value="">--Select--</option>
+                    <option *ngFor="let subCategory of subCategoryList" [value]="subCategory.Id">
+                        {{subCategory.Name}}
+                    </option>
+                </select>
+        
+                <label for="ProductSubCategroy" class="">Sub Categroy</label>
+            </div>
+        
+            <!-- Team Leader -->
+            <div class="relative " *ngIf="canDisplayFilterFied">
+                <div class="icon">
+                    <mat-icon>person</mat-icon>
+                </div>
+        
+                <div class="flex">
+                    <input type="text" class="peer " formControlName="TeamLeaderName" placeholder=" "
+                         id="teamLeaderSearch" [matAutocomplete]="teamLeaderSearch" autocomplete="off" />
+                             <mat-autocomplete #teamLeaderSearch="matAutocomplete"
+                                 (optionSelected)="autocompleteSelectedEvent($event,'TeamLeader')">
+                                 <mat-option *ngFor="let teamLeader of teamLeaderList$ | async" [value]="teamLeader">
+                                     {{teamLeader.FullName}}
+                                 </mat-option>
+                             </mat-autocomplete>
+                    <button class="-m-5 z-10" type="button" (click)="openDiolog('User','Select Team Leader','TeamLeader')">
+                        <mat-icon class="-ml-2">search</mat-icon>
+                    </button>
+                    <button type="button" class="-mx-7 z-10" matTooltip="Clear" 
+                    (click)="autocompleteCleardEvent('TeamLeader')"
+                    *ngIf="filterForm.get('TeamLeaderName').value"
+                    >
+                        <mat-icon>clear</mat-icon>
+                    </button>
+                    <label for="teamLeaderSearch" >Team Leader</label>
+                </div>
+        
+            </div>
+        
+            <!-- Sales Person -->
+            <div class="relative " *ngIf="canDisplayFilterFied">
+                <div class="icon">
+                    <mat-icon>person</mat-icon>
+                </div>
+        
+                <div class="flex">
+                    <input type="text" class="peer " formControlName="SalesPersonName" placeholder=" " id="SalesPerson"
+                        [matAutocomplete]="SalesSearch" autocomplete="off" />
+                    <mat-autocomplete #SalesSearch="matAutocomplete" (optionSelected)="autocompleteSelectedEvent($event,'Sales')">
+                        <mat-option *ngFor="let Sales of salesPersonList$ | async" [value]="Sales">
+                            {{Sales.FullName}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <button class="-m-5 z-10" type="button" (click)="openDiolog('User','Select Sales Person','Sales')">
+                        <mat-icon class="-ml-2">search</mat-icon>
+                    </button>
+                    <button type="button" class="-mx-7 z-10" matTooltip="Clear"
+                     (click)="autocompleteCleardEvent('Sales')"
+                     *ngIf="filterForm.get('SalesPersonName').value"
+                     >
+                        <mat-icon>clear</mat-icon>
+                    </button>
+                    <label for="SalesPerson">Sales Person</label>
+                </div>
+        
+            </div>
+        
+            <!-- From Date -->
+            <div class="relative">
+                <div class="icon">
+                    <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </div>
+                <div class="flex">
+                    <input matInput type="text" id="PolicyStartDate" placeholder="__/__/____" datemask [matDatepicker]="picker"
+                        class="peer" formControlName="FromDate" />
+                    <label for="PolicyStartDate" class="">From Date</label>
+                </div>
+            </div>
+        
+            <!-- To Date -->
+            <div class="relative">
+                <div class="icon">
+                    <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="icker"></mat-datepicker-toggle>
+                    <mat-datepicker #icker></mat-datepicker>
+                </div>
+                <div class="flex">
+                    <input matInput type="text" id="PolicyEndDate" placeholder="__/__/____" datemask [matDatepicker]="icker"
+                        class="peer" formControlName="ToDate" />
+                    <label for="PolicyEndDate" class="">To Date</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex gap-3 flex-wrap">
+            <button class="bg-royal text-white" type="button" mat-button (click)="searchFiltervalue()" >Apply filter</button>
+            <button class="bg-royal text-white" type="button" mat-button (click)="resetAllFilter()" >Refresh</button>
+            <!-- <button class="bg-royal text-white" type="button" mat-button (click)="isSearchOpen = !isSearchOpen">Cancel</button> -->
+        </div>
+        </div>
+
+    
+        <div class="chart-container mb-2 mt-5" >
+            <canvas baseChart class="chart min-h-90 max-h-100" [data]="barChartData" [options]="barChartOptions" [plugins]="barChartPlugins"
+                [type]="barChartType" [labels]="barChartLabels">
+            </canvas>
+        </div>
+    </div>
+
+
+</div>
+
+
+</div>
+

@@ -1,0 +1,81 @@
+<div class="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg pl-0">
+ <!-- Header Section -->
+ <div class="text-white p-2 rounded-t-lg flex justify-between items-center" style="background-color:  var(--title-bg);">
+  <p class="m-2 text-base" style="font-weight: 500;">User Management</p>
+</div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="flex justify-center items-center mt-8">
+    <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mt-4">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Form Section (Input Table) with Horizontal Scroll -->
+  <div class="mt-2 relative overflow-x-auto" style="height: calc(100vh - 200px);">
+    <div class="absolute inset-0 overflow-x-auto">
+      <table class="min-w-full border-collapse shadow-md mb-2" style="background-color:  var( --tableNav-bg);">
+        <thead class="sticky top-0 z-10">
+          <tr class="text-white" style="background-color: var( --tableNav-bg);">
+            <th class="ps-3 text-left whitespace-nowrap  font-medium text-sm ">User Name</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Full Name</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Email</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Mobile</th>
+            <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background-color: var( --tableNav-bg);">
+            <td class="p-1 align-middle ps-3 pb-2">
+              <input type="text"
+                class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                [(ngModel)]="searchUserName" (input)="searchUsers()">
+            </td>
+            <td class="p-1 align-middle pb-2">
+              <input type="text"
+                class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                [(ngModel)]="searchFullName"
+      (input)="searchUsers()"
+              >
+            </td>
+            <td class="p-1 align-middle">
+
+            </td>
+            <td class="p-1 align-middle">
+
+            </td>
+            <td class="p-1 align-middle"></td>
+          </tr>
+          <!-- Data Rows -->
+          <tr *ngFor="let user of paginatedUsers" class="border-b bg-white">
+            <td class="p-3 w-40">{{ user.UserName || '-' }}</td>
+            <td class="p-3 w-40">{{ user.FullName || '-' }}</td>
+            <td class="p-3 w-40">{{user.EmailAddress}}</td>
+            <td class="p-3 w-40">{{user.Mobile}}</td>
+            <td class="p-3 w-40">
+              <button class="btn" (click)="viewUser(user.UserId)">
+                <i class="bx bx-show text-2xl"></i>
+              </button>
+            </td>            
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && users.length === 0" class="mt-6 bg-gray-100 p-6 rounded-md text-center shadow-md">
+    <p class="text-gray-600">No Record found.</p>
+  </div>
+
+  <app-pagination [itemsPerPage]="itemsPerPage" [currentPage]="currentPage" [totalItems]="totalItems"
+    [currentPageItems]="paginatedUsers.length" [itemsPerPageOptions]="itemsPerPageOptions"
+    (itemsPerPageChange)="onItemsPerPageChange($event)">
+  </app-pagination>
+</div>
+
+
+

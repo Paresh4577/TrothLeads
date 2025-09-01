@@ -1,0 +1,61 @@
+<div class="gnx-alert-container" *ngIf="alert && (!alert.canDismiss || alert.canDismiss && !dismissed)"
+  [@fadeIn]="!dismissed" [@fadeOut]="!dismissed">
+
+  <!-- Border -->
+  <div class="gnx-alert-border" *ngIf="alert.appearance === 'border'"></div>
+
+  <!-- Icon -->
+  <div class="gnx-alert-icon" *ngIf="showIcon">
+
+    <!-- Custom icon -->
+    <!-- <div class="gnx-alert-custom-icon">
+            <ng-content select="[gnxAlertIcon]"></ng-content>
+        </div> -->
+
+    <!-- Default icons -->
+    <div class="gnx-alert-default-icon">
+      <mat-icon *ngIf="alert.type === 'primary'" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+
+      <mat-icon *ngIf="alert.type === 'accent'" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+
+      <mat-icon *ngIf="alert.type === 'warn'" [svgIcon]="'heroicons_solid:x-circle'"></mat-icon>
+
+      <mat-icon *ngIf="alert.type === 'basic'" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+
+      <mat-icon *ngIf="alert.type === 'info'" [svgIcon]="'heroicons_solid:information-circle'"></mat-icon>
+
+      <mat-icon *ngIf="alert.type === 'success'" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+
+      <mat-icon *ngIf="alert.type === 'warning'" [svgIcon]="'heroicons_solid:exclamation'"></mat-icon>
+
+      <mat-icon *ngIf="alert.type === 'error'" [svgIcon]="'heroicons_solid:x-circle'"></mat-icon>
+
+    </div>
+
+  </div>
+
+  <!-- Content -->
+  <div class="gnx-alert-content">
+
+    <!-- <div class="gnx-alert-title">
+            <ng-content select="[gnxAlertTitle]"></ng-content>
+        </div> -->
+    <div *ngIf="alert.title" class="gnx-alert-title">
+      {{alert.title}}
+    </div>
+
+    <!-- <div class="gnx-alert-message">
+      <ng-content></ng-content>
+    </div> -->
+    <div class="gnx-alert-message">
+      {{alert.message}}
+    </div>
+
+  </div>
+
+  <!-- Dismiss button -->
+  <button class="gnx-alert-dismiss-button" mat-icon-button (click)="dismiss()">
+    <mat-icon [svgIcon]="'heroicons_solid:x'"></mat-icon>
+  </button>
+
+</div>

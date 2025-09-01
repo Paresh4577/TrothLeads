@@ -1,0 +1,35 @@
+<!-- Wrapper -->
+<div
+  class="relative flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-transparent print:hidden">
+  <div class="flex items-center pr-2 space-x-2">
+
+    <!-- Navigation toggle button - visible only if sidenav is closed -->
+    <button mat-icon-button (click)="toggleSidenav()" matTooltip="Menu">
+      <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
+    </button>
+
+    <a routerLink="{{Routing.Basic.Home}}">
+      <div class="flex justify-center">
+        <!-- Brand logo -->
+        <img [src]="[LogoURL]" class="w-30 self-center" [ngClass]="{
+                    'w-30': LoginUser?.CompanyShortName == ApplicationType.Troth,
+                    'w-40': LoginUser?.CompanyShortName == ApplicationType.Growmore
+                }" />
+      </div>
+    </a>
+    <!-- Navigation appearance toggle button - will move to the sidebar later or settings for user-->
+  </div>
+
+  <!-- Toolbar Components -->
+  <div class="flex items-center pl-2 ml-auto space-x-0.5 sm:space-x-2">
+
+    <div class="grid grid-cols-1">
+      <span class="text-black text-md text-center font-medium" *ngIf="LoginUser.UserType == 'Agent'">Agent</span>
+      <span class="text-black text-md text-center font-medium" *ngIf="LoginUser.UserType == 'TeamReference'">Team
+        Reference</span>
+      <span class="text-black text-md font-semibold border-b-2 border-b-green-600">{{LoginUser.FullName}}</span>
+    </div>
+    <gnx-user></gnx-user>
+  </div>
+
+</div>

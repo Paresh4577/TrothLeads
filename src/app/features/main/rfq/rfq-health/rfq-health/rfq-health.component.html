@@ -1,0 +1,928 @@
+<div class="px-4 pb-4 max-h-none w-full">
+    <!-- region main heading -->
+    <div class="pt-4 sticky z-30 headingBorder top-0 w-full">
+        <!-- region main heading -->
+        <h1 class="new-head h-14 text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold">
+            {{ pagetitle }}
+            <div class="flex gap-x-3  items-center text-lg font-normal">
+                <button mat-raised-button class="new-button" (click)="BackToListPage()">Back</button>
+                <button mat-raised-button class="new-button" (click)="ExpandCollaps()" *ngIf="mode != 'view'">
+                    {{isExpand ? 'Collapse' : 'Expand All'}}
+                </button>
+            </div>
+        </h1>
+
+        <div class="">
+            <div class="px-4 py-4 rounded bg-white">
+                <mat-card class="bg-sky-100 px-4 py-3 gap-2 container mx-auto min-h-16">
+                    <div class="flex flex-wrap gap-5 justify-between px-4 sm:text-center">
+
+                        <!-- RFQ No -->
+                        <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                            <span class="text-center font-semibold">RFQ No</span>
+                            <span class="font-normal text-center">{{RFQHealthForm.get("RFQNo").value}}</span>
+                        </div>
+
+                        <!-- Customer name -->
+                        <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                            <span class="text-center font-semibold">Customer name</span>
+                            <span class="font-normal text-center">{{ProposerName}}</span>
+                        </div>
+
+                        <!-- Sub Category -->
+                        <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                            <span class="text-center font-semibold">Sub Category</span>
+                            <span class="font-normal text-center">{{RFQHealthForm.get("SubCategoryName").value}}</span>
+                        </div>
+
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+
+    <div class=" py-5 rounded">
+        <mat-stepper orientation="vertical" linear #stepper (selectionChange)="selectionChange($event)"
+            [ngClass]="isExpand ? 'showstep' : ''">
+
+            <!-- First stepper -->
+            <mat-step [stepControl]="BasicDetailsValidations()" label="Basic Details">
+
+                <form [formGroup]="RFQHealthForm">
+                    <div class="py-3">
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mt-4">
+
+                            <!-- Product Sub Category -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon> compass_calibration</mat-icon>
+                                </div>
+                                <select class="peer bg-white" formControlName="SubCategoryId">
+                                    <option value=0>--Select--</option>
+                                    <option *ngFor="let option of SubCategoryList" value="{{option.Id}}">
+                                        {{ option.Name }}
+                                    </option>
+                                </select>
+                                <label for="SubCategory" class="mandatory">Product Sub Category</label>
+                            </div>
+
+                            <!-- Policy Type -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>category</mat-icon>
+                                </div>
+                                <select id="" formControlName="PolicyType">
+                                    <option value="">--Select--</option>
+                                    <option *ngFor="let option of PolicyTypeList" [value]="option.key">
+                                        {{option.name}}
+                                    </option>
+                                </select>
+                                <label for="PolicyType" class="mandatory">Policy Type</label>
+                            </div>
+
+                            <!-- Category Type -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>category</mat-icon>
+                                </div>
+                                <select id="" formControlName="CategoryType">
+                                    <option value="">--Select--</option>
+                                    <option *ngFor="let option of CategoryTypeList" [value]="option.key">
+                                        {{option.name}}
+                                    </option>
+                                </select>
+                                <label for="CategoryType" class="mandatory">Category Type</label>
+                            </div>
+
+                            <!-- Policy Tenure -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>category</mat-icon>
+                                </div>
+                                <select id="" formControlName="PolicyPeriod">
+                                    <option *ngFor="let option of PolicyTenureList" [value]="option.key">
+                                        {{option.name}}
+                                    </option>
+                                </select>
+                                <label for="PolicyPeriod" class="mandatory">Policy Period</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+                <div class="" *ngIf="!isExpand">
+                    <button class="form-button mr-3" mat-button matStepperNext
+                        (click)="BasicDetailsError()">Next</button>
+                </div>
+            </mat-step>
+
+            <!-- Second stepper -->
+            <mat-step [stepControl]="ProductCategoryDetailsValidations()" label="Product Category Details">
+                <form [formGroup]="RFQHealthForm">
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mt-4 ">
+
+                        <!-- Sum Insured(Mediclaim) -->
+                        <div class="relative "
+                            *ngIf="RFQHealthForm.get('CategoryType').value != HealthCategoryType.MultiIndividual">
+                            <div class="icon rs">₹</div>
+                            <select class="" name="" id="" formControlName="SumInsured">
+                                <option value=0>--Select--</option>
+                                <option *ngFor="let sum of DropdownMaster.RFQSumInsuredButtonOptions"
+                                    [value]="sum.value">
+                                    {{sum.name}} </option>
+                            </select>
+                            <label for="SumInsured"
+                                *ngIf="RFQHealthForm.get('SubCategoryCode').value != SubCategoryCodeEnum.MediclaimTopUpPlan"
+                                [ngClass]="RFQHealthForm.get('CategoryType').value != HealthCategoryType.MultiIndividual ? 'mandatory' : ''">Sum
+                                Insured</label>
+                            <label for="SumInsured"
+                                *ngIf="RFQHealthForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan"
+                                [ngClass]="RFQHealthForm.get('CategoryType').value != HealthCategoryType.MultiIndividual ? 'mandatory' : ''">Sum
+                                Insured(Mediclaim)</label>
+                        </div>
+
+                        <!-- Sum Insured(TopUp) -->
+                        <div class="relative "
+                            *ngIf="RFQHealthForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan && RFQHealthForm.get('CategoryType').value != HealthCategoryType.MultiIndividual">
+                            <div class="icon rs">₹</div>
+                            <select class="" name="OtherSumInsured" id="OtherSumInsured"
+                                formControlName="OtherSumInsured">
+                                <option value=0>--Select--</option>
+                                <option *ngFor="let sum of DropdownMaster.RFQSumInsuredButtonOptions"
+                                    [value]="sum.value">
+                                    {{sum.name}} </option>
+                            </select>
+                            <label for="OtherSumInsured"
+                                [ngClass]="RFQHealthForm.get('CategoryType').value != HealthCategoryType.MultiIndividual ? 'mandatory' : ''">
+                                Sum Insured(Top-Up)</label>
+                        </div>
+
+                        <!-- Deductible -->
+                        <div class="relative"
+                            *ngIf="(RFQHealthForm.get('SubCategoryCode').value == SubCategoryCodeEnum.TopUpPlan || RFQHealthForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan) && RFQHealthForm.get('CategoryType').value != HealthCategoryType.MultiIndividual">
+                            <div class="icon rs">₹</div>
+                            <input matInput maxlength="10" type="text" id="Deductible" formControlName="Deductible"
+                                onfocus="this.select()" Onlynumber placeholder=" " class="peer" required />
+                            <label for="Deductible">Deductible</label>
+                        </div>
+
+                    </div>
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mt-4 ">
+                        <!-- PIN Code -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>pin_drop</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" Onlynumber maxlength="6" class="peer" matInput id="PinCode"
+                                    placeholder=" " required formControlName="Pincode" [matAutocomplete]="oppoSearch" />
+                                <mat-autocomplete #oppoSearch="matAutocomplete"
+                                    (optionSelected)="PinCodeSelected($event)">
+                                    <mat-option *ngFor="let pincode of pincodes$ | async" [value]="pincode">
+                                        {{ pincode.PinCode }} {{ pincode.CityName }}
+                                    </mat-option>
+                                </mat-autocomplete>
+
+                                <button class="-m-5 z-10" type="button" *ngIf="mode!='view'"
+                                    (click)="openDiologPincode('Pincode', 'Select PIN Code')">
+                                    <mat-icon class="-ml-2">search</mat-icon>
+                                </button>
+                                <button *ngIf="RFQHealthForm.get('Pincode').value && mode!='view'" type="button"
+                                    class="-m-7 z-10" aria-label="clear" matTooltip="Clear" (click)="clear('Pincode')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="PinCode" class="mandatory">PIN Code</label>
+                            </div>
+                        </div>
+
+                        <!-- Proposer Mobile No -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon class="-ml-2">smartphone</mat-icon>
+                            </div>
+                            <input matInput type="text" id="ProposerMobileNo" formControlName="ProposerMobileNo"
+                                Onlynumber onfocus="this.select()" placeholder=" " maxlength="10" class="peer"
+                                required />
+                            <label for="ProposerMobileNo" class="mandatory">Proposer Mobile No</label>
+                        </div>
+
+                        <!-- Proposer Mobile No -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon> email</mat-icon>
+                            </div>
+                            <input matInput type="text" id="ProposerEmail" formControlName="ProposerEmail"
+                                onfocus="this.select()" placeholder=" " class="peer" required />
+                            <label for="ProposerEmail" class="mandatory">Email ID</label>
+                        </div>
+                    </div>
+
+                    <p class="font-semibold text-base col-start-1 md:col-span-2 lg:col-span-3 pt-5">
+                        Details of Proposed Insured & Family (If Applicable)
+                    </p>
+                    <br />
+
+                    <h3>Select Proposer's Gender:</h3>
+                    <br />
+
+                    <mat-button-toggle-group #group="matButtonToggleGroup" [value]="SelfGender"
+                        (change)="SetSelfGender($event, group.value)" class="genderbtn" [disabled]="mode=='view'">
+                        <mat-button-toggle value="Male"> Male </mat-button-toggle>
+                        <mat-button-toggle value="Female"> Female </mat-button-toggle>
+                    </mat-button-toggle-group>
+                    <h3 class="mandatory mt-4">Who would you like to insure?</h3>
+
+                    <div class="flex flex-wrap">
+                        <div class="w-full">
+                            <div class="flex flex-wrap text-black">
+                                <div class="my-4 w-full lg:mt-3">
+                                    <div class="grid md:grid-cols-6 grid-cols-2 xl:grid-cols-12 gap-4">
+                                        <button *ngFor="let member of allMemberCard , let m = index"
+                                            [disabled]="mode=='view'" class="shadow-lg rounded-lg text-center mt-4"
+                                            [ngClass]=" RFQHealthForm.get(member.cover).value == true ? 'bg-sky-300' : 'bg-gray-100'"
+                                            (click)="SetCover(member.title)">
+                                            <div class="rounded-full w-fit mx-auto" [ngClass]="m==0 ?'self':''">
+                                                <div>
+                                                    <img src="{{member.member}}" alt="member.title" />
+                                                </div>
+                                            </div>
+                                            <p *ngIf="member.title=='Son' || member.title=='Daughter'"
+                                                class="text-sm mt-2 pb-4 font-semibold">
+                                                <span *ngIf="RFQHealthForm.get(member.cover).value == true">
+                                                    {{ RFQHealthForm.get("noOf"+member.title).value }}
+                                                </span>
+                                                {{member.title}}<span
+                                                    *ngIf="RFQHealthForm.get('noOf'+member.title).value > 1">s</span>
+                                            </p>
+                                            <p *ngIf="member.title!='Son' && member.title!='Daughter'"
+                                                class="text-sm mt-2 pb-2 font-semibold">
+                                                {{member.title}} <span *ngIf="member.title=='Self'"> <br>
+                                                    (Proposer)</span>
+                                            </p>
+                                        </button>
+                                    </div>
+                                    <div class="grid sm:grid-cols-1 md:grid-cols-2">
+                                        <div
+                                            class="grid grid-rows-1 grid-cols-1 md:grid-rows-1 md:grid-cols-2 md:col-span-2 xl:col-span-1 sm:grid-rows-2 sm:grid-cols-1">
+                                            <div class="shadow-lg rounded-lg text-center mt-4 py-4"
+                                                *ngIf="RFQHealthForm.controls['DaughterCoverRequired'].value == true">
+                                                <!-- noOfDaughter -->
+                                                <div>Number of Daughters to Insure</div>
+                                                <div>
+                                                    <div class="flex justify-evenly px-2 mt-2">
+                                                        <div class="px-2">
+                                                            <input type="radio"
+                                                                [checked]="RFQHealthForm.get('noOfDaughter').value == 1"
+                                                                name="noOfDaughter" value="1"
+                                                                (click)="onChildSelection('Daughter', 1)"
+                                                                [attr.disabled]="isDisabled(0, 1)" />
+                                                            <span for="" class="ml-2">1</span>
+                                                        </div>
+                                                        <div class="px-2">
+                                                            <input type="radio"
+                                                                [checked]="RFQHealthForm.get('noOfDaughter').value == 2"
+                                                                name="noOfDaughter" value="2"
+                                                                (click)="onChildSelection('Daughter', 2)"
+                                                                [disabled]="isDisabled(0, 2) || CanDisableMemberSelection" />
+                                                            <span for="" class="ml-2">2</span>
+                                                        </div>
+                                                        <div class="px-2">
+                                                            <input type="radio"
+                                                                [checked]="RFQHealthForm.get('noOfDaughter').value == 3"
+                                                                name="noOfDaughter" value="3"
+                                                                (click)="onChildSelection('Daughter', 3)"
+                                                                [disabled]="isDisabled(0, 3) || CanDisableMemberSelection" />
+                                                            <span for="" class="ml-2">3</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="shadow-lg rounded-lg text-center mt-4 py-4"
+                                                *ngIf="RFQHealthForm.controls['SonCoverRequired'].value == true">
+                                                <!-- noOfSon -->
+                                                <div>Number of Sons to Insure</div>
+                                                <div>
+                                                    <div class="flex justify-evenly px-2 mt-2">
+                                                        <div class="px-2">
+                                                            <input type="radio"
+                                                                [checked]="RFQHealthForm.get('noOfSon').value == 1"
+                                                                name="noOfSon" value="1"
+                                                                (click)="onChildSelection('Son', 1)"
+                                                                [attr.disabled]="isDisabled(1, 1)" />
+                                                            <span for="" class="ml-2">1</span>
+                                                        </div>
+                                                        <div class="px-2">
+                                                            <input type="radio"
+                                                                [checked]="RFQHealthForm.get('noOfSon').value == 2"
+                                                                name="noOfSon" value="2"
+                                                                (click)="onChildSelection('Son', 2)"
+                                                                [disabled]="isDisabled(1, 2) || CanDisableMemberSelection" />
+                                                            <span for="" class="ml-2">2</span>
+                                                        </div>
+                                                        <div class="px-2">
+                                                            <input type="radio"
+                                                                [checked]="RFQHealthForm.get('noOfSon').value == 3"
+                                                                name="noOfSon" value="3"
+                                                                (click)="onChildSelection('Son', 3)"
+                                                                [disabled]="isDisabled(1, 3) || CanDisableMemberSelection" />
+                                                            <span for="" class="ml-2">3</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="px-4 py-5 rounded">
+                        <div formArrayName="Members" class="text-md">
+                            <div *ngFor="let item of myMembers , let i = index"
+                                class="tablecontent mat-expansion-panel-body">
+                                <!-- self -->
+                                <div [formGroupName]="i"
+                                    class="md:grid grid-cols-[minmax(50px,90px)_minmax(300px,1fr)] gap-9 py-2">
+                                    <div class="self-center col-start-1">
+                                        <div class="w-fit h-fit">
+                                            <img src="{{item.member}}" alt="" />
+                                            <p class="text-center">{{item.title}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 self-center py-2">
+
+                                        <!-- Name -->
+                                        <div class="relative">
+                                            <div class="icon">
+                                                <mat-icon>person</mat-icon>
+                                            </div>
+                                            <input type="text" class="peer" id="Name{{i}} " AlphabetOnly maxlength="100"
+                                                formControlName="Name" placeholder=" " (blur)="fillCustomerName()" />
+                                            <label for="Name{{i}} " class="mandatory">Name</label>
+                                        </div>
+
+                                        <!-- Date Of Birth -->
+                                        <div class="relative">
+                                            <div class="icon">
+                                                <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                    [for]="icker"></mat-datepicker-toggle>
+                                                <mat-datepicker #icker></mat-datepicker>
+                                            </div>
+                                            <div class="flex">
+                                                <input matInput type="text" id="dob{{i}}" [max]="maxBirthDate"
+                                                    [min]="minBirthDate" placeholder="__/__/____" datemask
+                                                    [matDatepicker]="icker" class="peer mb-1" formControlName="DOB" />
+                                                <label for="dob{{i}}" class="mandatory">Date Of Birth</label>
+                                            </div>
+                                        </div>
+
+                                        <!-- Habit of Smoking/Tobacco? -->
+                                        <div class=" min-w-52">
+                                            <span
+                                                class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                                                for="">Habit of Smoking/Tobacco?</span>
+                                            <div class="grid grid-cols-4 w-full gap-5">
+                                                <div class="lableInputbox">
+                                                    <input type="radio" id="TobaccoYes{{i}}" value="true"
+                                                        [checked]="PolicyPersonsArray.at(i).get('SmokerTibco').value == true"
+                                                        (click)="SelectSmokingOrTobacco(i, true)"
+                                                        [disabled]="mode=='view'" />
+                                                    <label for="TobaccoYes{{i}}">Yes</label>
+                                                </div>
+                                                <div class="lableInputbox">
+                                                    <input type="radio" id="TobaccoNo{{i}}" value="false"
+                                                        [checked]="PolicyPersonsArray.at(i).get('SmokerTibco').value == false"
+                                                        (click)="SelectSmokingOrTobacco(i, false)"
+                                                        [disabled]="mode=='view'" />
+                                                    <label for="TobaccoNo{{i}}">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Any Existing Illness? -->
+                                        <div class="min-w-52">
+                                            <span
+                                                class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                                                for="">Any Existing Illness?</span>
+                                            <div class="grid grid-cols-4 w-full gap-5">
+                                                <div class="lableInputbox">
+                                                    <input type="radio" value="true" id="ExistingIllnessYes{{i}}"
+                                                        [checked]="PolicyPersonsArray.at(i).get('ExistingIllness').value == true"
+                                                        (click)="SelectExistingIllness(i, 'ExistingIllnessDetail',true, item.title+' Existing Illness Detail')"
+                                                        [disabled]="mode=='view'" />
+                                                    <label for="ExistingIllnessYes{{i}}">Yes</label>
+                                                </div>
+                                                <div class="lableInputbox">
+                                                    <input type="radio" id="ExistingIllnessNo{{i}}" value="false"
+                                                        [checked]="PolicyPersonsArray.at(i).get('ExistingIllness').value == false"
+                                                        (click)="SelectExistingIllness(i, 'ExistingIllnessDetail',false,'')"
+                                                        [disabled]="mode=='view'" />
+                                                    <label for="ExistingIllnessNo{{i}}">No</label>
+                                                </div>
+                                                <div
+                                                    *ngIf="PolicyPersonsArray.at(i).get('ExistingIllness').value == true">
+                                                    <button
+                                                        [disabled]="PolicyPersonsArray.at(i).get('ExistingIllness').value == false"
+                                                        (click)="openDiolog(i, 'ExistingIllnessDetail', item.title+' Existing Illness Detail')">
+                                                        <mat-icon>fact_check</mat-icon>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sum Insured -->
+                                        <div class="relative  "
+                                            *ngIf="RFQHealthForm.get('CategoryType').value == HealthCategoryType.MultiIndividual">
+                                            <div class="icon rs">₹</div>
+                                            <select class="" name="" id="" formControlName="SumInsured">
+                                                <option value=0>--Select--</option>
+                                                <option *ngFor="let sum of DropdownMaster.RFQSumInsuredButtonOptions"
+                                                    [value]="sum.value"> {{sum.name}} </option>
+                                            </select>
+                                            <label
+                                                *ngIf="RFQHealthForm.get('SubCategoryCode').value != SubCategoryCodeEnum.MediclaimTopUpPlan"
+                                                for="SumInsured" class="mandatory">Sum Insured</label>
+                                            <label
+                                                *ngIf="RFQHealthForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan"
+                                                for="SumInsured" class="mandatory">Sum Insured(Mediclaim)</label>
+                                        </div>
+
+                                        <!-- Sum Insured(Top-Up) -->
+                                        <div class="relative "
+                                            *ngIf="RFQHealthForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan && RFQHealthForm.get('CategoryType').value == HealthCategoryType.MultiIndividual">
+                                            <div class="icon rs">₹</div>
+                                            <select class="" name="" id="" formControlName="OtherSumInsured">
+                                                <option value=0>--Select--</option>
+                                                <option *ngFor="let sum of DropdownMaster.RFQSumInsuredButtonOptions"
+                                                    [value]="sum.value"> {{sum.name}} </option>
+                                            </select>
+                                            <label for="OtherSumInsured" class="mandatory">Sum Insured(Top-Up)</label>
+                                        </div>
+
+                                        <!-- Deductable(TopUp) -->
+                                        <div class="relative  "
+                                            *ngIf="(RFQHealthForm.get('SubCategoryCode').value == SubCategoryCodeEnum.TopUpPlan || RFQHealthForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan) && RFQHealthForm.get('CategoryType').value == HealthCategoryType.MultiIndividual">
+                                            <div class="icon rs">₹</div>
+                                            <input matInput maxlength="10" type="text" id="Deductible" Onlynumber
+                                                onfocus="this.select()" formControlName="Deductible" placeholder=" "
+                                                class="peer" required />
+                                            <label for="Deductible">Deductible</label>
+                                        </div>
+
+                                        <!-- Remarks -->
+                                        <div class="relative ">
+                                            <div class="icon">
+                                                <mat-icon>bubble_chart</mat-icon>
+                                            </div>
+                                            <input matInput type="text" placeholder=" " id="Remarks{{i}}" name="Remark"
+                                                formControlName="Remark" class="peer w-fit pad" onfocus="this.select()"
+                                                required maxlength="500" />
+                                            <label for="Remarks{{i}}"
+                                                [ngClass]="PolicyPersonsArray.at(i).get('ExistingIllnessDetail.OtherExistDisease').value == true ? 'mandatory' : ''">Remarks</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+                <div *ngIf="!isExpand">
+                    <button class="bg-royal text-white" mat-button matStepperPrevious>
+                        Back
+                    </button>
+                    <button class="bg-royal text-white mx-3" mat-button matStepperNext
+                        (click)="ProductCategoryDetailsError()">
+                        Next
+                    </button>
+                </div>
+            </mat-step>
+
+            <!-- Third stepper -->
+            <mat-step [stepControl]="PreviousPolicyDetailsValidations()" label="Previous Policy Details"
+                *ngIf="RFQHealthForm.get('PolicyType').value == HealthPolicyType.Rollover || RFQHealthForm.get('PolicyType').value == 'Renewal-Change Company' || RFQHealthForm.get('PolicyType').value == 'Renewal-Same Company'">
+                <form [formGroup]="RFQHealthForm">
+                    <div class="min-w-full rounded bg-white">
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-7 my-5">
+
+                            <!-- Insurance Company -->
+                            <div class="relative self-end min-w-36">
+                                <div class="icon">
+                                    <mat-icon>business</mat-icon>
+                                </div>
+                                <select class="peer" id="Company" formControlName="PrevPolicyInsurComp">
+                                    <option value="">--Select--</option>
+                                    <option *ngFor="let option of InsuranceCompany$ | async" [value]="option.Code">
+                                        {{option.ShortName}}</option>
+                                </select>
+
+                                <label for="Company" class="mandatory">Insurance Company</label>
+                            </div>
+
+                            <!-- Policy Type -->
+                            <div class="relative self-end min-w-36">
+                                <div class="icon">
+                                    <mat-icon>timelapse</mat-icon>
+                                </div>
+                                <select class="peer" id="PolicyType" formControlName="PrevPolicyType">
+                                    <option value="">--Select--</option>
+                                    <option *ngFor="let option of DropdownMaster.PolicyTypeRadioButtonOptions"
+                                        [value]="option.value">{{option.value}}</option>
+                                </select>
+
+                                <label for="PolicyType" class="mandatory">Policy Type</label>
+                            </div>
+
+                            <!-- Policy Start Date -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                        [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </div>
+                                <div class="flex">
+                                    <input matInput type="text" id="PolicyStartDate" [max]="maxDate"
+                                        formControlName="PreviousPolicyStartDate" placeholder="__/__/____" datemask
+                                        [matDatepicker]="picker" class="peer" />
+                                    <label for="PolicyStartDate" class="mandatory">Policy Start Date</label>
+                                </div>
+                            </div>
+
+                            <!-- Policy End Date -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                        [for]="icker"></mat-datepicker-toggle>
+                                    <mat-datepicker #icker></mat-datepicker>
+                                </div>
+                                <div class="flex">
+                                    <input matInput type="text" id="PolicyEndDate"
+                                        [min]="RFQHealthForm.get('PreviousPolicyStartDate').value"
+                                        formControlName="PreviousPolicyEndDate" placeholder="__/__/____" datemask
+                                        [matDatepicker]="icker" class="peer" />
+                                    <label for="PolicyEndDate" class="mandatory">Policy End Date</label>
+                                </div>
+                            </div>
+
+                            <!-- Claim In Previous Year -->
+                            <!-- <div class="min-w-36">
+                                <span class="mandatory">Claim In Previous Year</span>
+
+                                <div class="relative flex gap-9 mt-2">
+                                    <div class="lableInputbox">
+                                        <input type="radio" class="peer" name="ClaimInPreviousYear" id="Yes"
+                                            [checked]=" RFQHealthForm.get('ClaimInPreviousYear').value == true"
+                                            formControlName="ClaimInPreviousYear" [value]="true" />
+                                        <label class="pl-1 flex-shrink-0 font-normal" for="Yes">Yes</label>
+                                    </div>
+                                    <div class="lableInputbox">
+                                        <input type="radio" class="peer" name="ClaimInPreviousYear"
+                                            [checked]=" RFQHealthForm.get('ClaimInPreviousYear').value == false"
+                                            formControlName="ClaimInPreviousYear" id="No" [value]="false" />
+                                        <label class="pl-1 flex-shrink-0 font-normal" for="No">No</label>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <!-- Sum Insured -->
+                            <div class="relative">
+                                <div class="icon rs">₹</div>
+                                <select class="" name="" id="" formControlName="PrevPolicySumInsured">
+                                    <option value=0>--Select--</option>
+                                    <option *ngFor="let sum of DropdownMaster.RFQSumInsuredButtonOptions"
+                                        [value]="sum.value"> {{sum.name}} </option>
+                                </select>
+                                <label for="PrevPolicySumInsured" class="mandatory">Sum Insured</label>
+                            </div>
+
+                            <!-- Premium Amount -->
+                            <div class="relative ">
+                                <div class="icon rs">₹</div>
+                                <input type="text" class="peer" Onlynumber formControlName="PreviousPolicyPremium"
+                                    onfocus="this.select()" placeholder=" " maxlength="10" id="PreviousPolicyPremium" />
+                                <label for="PreviousPolicyPremium" class="">Premium Amount</label>
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <div class="relative  flex gap-2 items-center">
+                                <div class=" my-1">
+                                    <span class="mandatory">Have you taken any claim in the last 3 year?</span>
+                                </div>
+
+                                <div class="relative flex gap-2">
+                                    <div class="lableInputbox min-w-15 flex">
+                                        <input class="peer" type="radio" id="IsLifeAssuredyes" placeholder=""
+                                            formControlName="AnyClaiminLast3Year" [value]='true'>
+                                        <label for="IsLifeAssuredyes" class="">Yes</label>
+                                    </div>
+
+                                    <div class="lableInputbox min-w-15 flex">
+                                        <input class="peer" type="radio" id="IsLifeAssuredno"
+                                            formControlName="AnyClaiminLast3Year" placeholder="" [value]="false">
+                                        <label for="IsLifeAssuredno" class="">No</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+                <div class="" *ngIf="!isExpand">
+                    <button class="bg-royal text-white" mat-button matStepperPrevious>
+                        Back
+                    </button>
+                    <button class="bg-royal text-white mx-3" mat-button matStepperNext
+                        (click)="PreviousPolicyDetailsError()">
+                        Next
+                    </button>
+                </div>
+            </mat-step>
+
+            <!-- Fourth stepper -->
+            <mat-step [stepControl]="TeamDetailsValidations()" label="Team Details">
+                <form [formGroup]="RFQHealthForm">
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mt-6">
+
+                        <!-- Branch -->
+                        <div class="relative min-w-36">
+                            <div class="icon">
+                                <mat-icon>place</mat-icon>
+                            </div>
+                            <select id="" formControlName="BranchId">
+                                <option [disabled]="!CanEditableSalespersonTypeAndBranch" value=0>--Select--</option>
+                                <option [disabled]="!CanEditableSalespersonTypeAndBranch" *ngFor="let Branch of Branchs"
+                                    [value]="Branch.Id">
+                                    {{Branch.Name}}
+                                </option>
+                            </select>
+                            <label for="Category" class="mandatory">Branch</label>
+                        </div>
+
+                        <!-- Sales Person Type  -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>group_work</mat-icon>
+                            </div>
+
+                            <select id="" formControlName="SalesPersonType">
+                                <option [disabled]="!CanEditableSalespersonTypeAndBranch" [value]="'Direct'">Direct
+                                </option>
+                                <option [disabled]="!CanEditableSalespersonTypeAndBranch" [value]="'POSP'">POSP</option>
+                                <option [disabled]="!CanEditableSalespersonTypeAndBranch" [value]="'Team Reference'">
+                                    Team Reference</option>
+                            </select>
+                            <label for="SalesPersonType" class="mandatory ">Sales Person Type</label>
+                        </div>
+
+                        <!-- Sales Person -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+
+                            <div class="flex">
+                                <input type="text" class="peer " formControlName="SalesPersonName" placeholder=" "
+                                    [readOnly]="!canEditableSalesPerson" id="SalesPerson"
+                                    [matAutocomplete]="SalesSearch" autocomplete="off" />
+                                <mat-autocomplete #SalesSearch="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'Sales')">
+                                    <mat-option *ngFor="let Sales of salesPersonName$ | async" [value]="Sales">
+                                        {{Sales.FullName}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button" *ngIf="canEditableSalesPerson"
+                                    (click)="openDiologForMasterData('User','Select Sales Person','Sales')">
+                                    <mat-icon class="-ml-2">search</mat-icon>
+                                </button>
+                                <button *ngIf="RFQHealthForm.get('SalesPersonName').value && canEditableSalesPerson"
+                                    type="button" class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    (click)="clearControl('SalesPersonName', 'SalesPersonId')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="SalesPerson" class="mandatory">Sales Person</label>
+                            </div>
+
+                        </div>
+
+                        <!--  Team Reference -->
+                        <div class="relative" *ngIf="RFQHealthForm.get('SalesPersonType').value == 'Team Reference'">
+                            <div class="icon">
+                                <mat-icon> person_pin</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" class="peer " formControlName="TeamReferenceName" placeholder=" "
+                                    id="TeamReferenceUser" autocomplete="off" [matAutocomplete]="TeamRefSearch" />
+                                <mat-autocomplete #TeamRefSearch="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'TeamRef')">
+                                    <mat-option *ngFor="let Team of TeamRefUser$ | async" [value]="Team">
+                                        {{Team.FullName}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button"
+                                    (click)="openDiologForMasterData('User','Select Team Reference','TeamRef')">
+                                    <mat-icon class="-ml-2">search</mat-icon>
+                                </button>
+                                <button *ngIf="RFQHealthForm.get('TeamReferenceName').value" type="button"
+                                    class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    (click)="clearControl('TeamReferenceName', 'TeamReferenceId')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="TeamReferenceUser">Team Reference</label>
+                            </div>
+                        </div>
+
+
+                        <!-- BDM -->
+                        <div class="relative wd">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" class="peer " formControlName="BDMName" placeholder=" " id="BDMName"
+                                    [matAutocomplete]="CRMSearch" [readOnly]="!canEditableBdoBdm" />
+                                <mat-autocomplete #CRMSearch="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'BDMName')">
+                                    <mat-option *ngFor="let crm of BDMlist$ | async" [value]="crm">
+                                        {{crm.FullName}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button" *ngIf="canEditableBdoBdm"
+                                    (click)="openDiologForMasterData('User','Select BDM Name','BDMName')"><mat-icon
+                                        class="-ml-2">search</mat-icon></button>
+                                <button
+                                    *ngIf="RFQHealthForm.get('BDMName').value && canEditableBdoBdm && mode != 'View'"
+                                    type="button" class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    (click)="clearControl('BDMName', 'BDMId')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="BDMName" class="mandatory">BDM Name</label>
+
+                            </div>
+                        </div>
+
+                        <!-- BDO -->
+                        <div class="relative wd">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" class="peer " formControlName="BDOName" placeholder=" " id="BDOName"
+                                    [matAutocomplete]="CRESearch" [readOnly]="!canEditableBdoBdm" />
+                                <mat-autocomplete #CRESearch="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'BDOName')">
+                                    <mat-option *ngFor="let CRE of BDOlist$ | async" [value]="CRE">
+                                        {{CRE.FullName}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button" *ngIf="canEditableBdoBdm"
+                                    (click)="openDiologForMasterData('User','Select BDO Name','BDOName')"><mat-icon
+                                        class="-ml-2">search</mat-icon></button>
+                                <button
+                                    *ngIf="RFQHealthForm.get('BDOName').value && canEditableBdoBdm && mode != 'View'"
+                                    type="button" class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    (click)="clearControl('BDOName', 'BDOId')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="BDOName" class="mandatory">BDO Name</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+                <div class="my-3 flex gap-3 flex-wrap " *ngIf="!isExpand">
+                    <button class="bg-royal text-white" mat-button matStepperPrevious>
+                        Back
+                    </button>
+                    <button class="bg-royal text-white" mat-button matStepperNext (click)="TeamDetailsError()">
+                        Next
+                    </button>
+                </div>
+            </mat-step>
+
+            <!-- Five stepper -->
+            <mat-step [stepControl]="AttachmentDetailsValidations()" label="Attachment Details">
+                <form [formGroup]="RFQHealthForm">
+                    <div class="py-5 min-w-full rounded bg-white">
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mt-4">
+                            <div class="relative min-w-36">
+                                <div class="icon">
+                                    <mat-icon> compass_calibration</mat-icon>
+                                </div>
+                                <select class="peer bg-white" #DocumentDropdown [disabled]="mode=='view'"
+                                    (change)="onDocumentSelectionChange($event)">
+                                    <option value="">--Select--</option>
+                                    <option [value]="option.DocumentType" *ngFor="let option of PolicyDocumentList">
+                                        {{option.DocumentTypeName}}
+                                    </option>
+                                </select>
+                                <label for="">Document Dropdown</label>
+                            </div>
+
+
+
+                            <!-- Additional Information -->
+                            <div class="relative" [matTooltip]="RFQHealthForm.get('Additionalinformation').value">
+                                <div class="icon">
+                                    <mat-icon>border_color</mat-icon>
+                                </div>
+                                <input type="text" class="peer" id="AdditionalInformation" placeholder=" "
+                                    formControlName="Additionalinformation" />
+                                <label for="AdditionalInformation">Additional Information</label>
+                            </div>
+
+                            <!-- Reason for (Send Back/Reject)  -->
+                            <div class="relative" *ngIf="RFQHealthForm.value?.SendBackRejectDesc">
+                                <div class="icon">
+                                    <mat-icon>timelapse</mat-icon>
+                                </div>
+                                <input readonly type="text" class="peer" id="ReasonforSendBack" placeholder=" "
+                                    value="{{RFQHealthForm.value?.SendBackRejectDesc}}" />
+                                <label for="ReasonforSendBack">Reason for (Send Back/Reject)</label>
+                            </div>
+
+                        </div>
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mt-4">
+                            <ng-container formArrayName="Documents" *ngFor="let doc of document.controls;let i=index">
+                                <div [formGroupName]="i" *ngIf="canDisplayDocuments(doc.value.DocumentType)">
+
+                                    <div class="relative min-w-36">
+                                        <mat-icon
+                                            *ngIf="(doc.value.Stage == 'RFQRaised' && mode!='view') || (mode == 'RenewalRFQ')"
+                                            (click)="RemoveDocuments(i)"
+                                            class="absolute -right-2 -top-3 text-red-500 cursor-pointer">cancel</mat-icon>
+                                        <div class="dummy-formField ">
+                                            <div class="icon">
+                                                <mat-icon>attach_file</mat-icon>
+                                            </div>
+                                            <input type="file" class="hidden" accept=".doc,.docx,.pdf" #AttachDocument
+                                                (change)="SelectRFQDocument($event, i)">
+                                            <p class="ml-10 text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                                [ngClass]="doc.value.Stage == 'RFQRaised' && mode!='view' ? 'cursor-pointer text-primary-500 hover:text-primary-500' : 'pointer-events-none' "
+                                                matTooltip="{{doc.value.FileName}}" (click)="AttachDocument.click()">
+                                                {{doc.value.FileName || 'Choose File' | excerpt:'max' }}</p>
+                                            <label for="AttachDocument" class="mandatory">{{
+                                                doc.value.DocumentTypeName}}</label>
+                                            <div class="flex justify-end absolute right-2 bg-white"
+                                                matTooltip="View Document"
+                                                (click)="ViewQnDocument(doc.value?.StorageFilePath)">
+                                                <mat-icon *ngIf="doc.value?.StorageFilePath"
+                                                    class="cursor-pointer">visibility</mat-icon>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="relative min-w-36" *ngIf="doc.value.DocumentType == 'Other' ">
+                                        <div class="icon">
+                                            <mat-icon>bubble_chart</mat-icon>
+                                        </div>
+                                        <input matInput type="text" placeholder=" " id="Remarks" name="Remark"
+                                            class="peer w-fit pad" formControlName="Description" />
+                                        <label for="Remarks">Remarks</label>
+                                    </div>
+
+                                </div>
+
+                            </ng-container>
+                        </div>
+
+                        <!-- <div class="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 gap-5 gap-x-14 mt-4"
+                            *ngIf="mode == 'edit'">
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>bubble_chart</mat-icon>
+                                </div>
+                                <input matInput type="text" formControlName="SendBackRejectDesc" placeholder=" "
+                                    onfocus="this.select()" id="Remarks" class="peer w-fit pad" required />
+                                <label class="mandatory ">Remarks (for Send Back/Reject)</label>
+                            </div>
+                        </div> -->
+
+                    </div>
+
+
+                </form>
+                <div class="mb-2">
+                    <button class="bg-royal text-white" mat-button matStepperPrevious *ngIf="!isExpand">
+                        Back
+                    </button>
+                    <button class="bg-royal text-white mx-3" mat-button (click)="Submit()" *ngIf="mode != 'view'">
+                        Submit
+                    </button>
+                </div>
+            </mat-step>
+
+        </mat-stepper>
+    </div>
+    <!-- endregion form -->
+</div>

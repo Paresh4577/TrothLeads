@@ -1,0 +1,112 @@
+<div class="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg pl-0">
+  <!-- Header Section -->
+  <div class="text-white p-2 rounded-t-lg flex justify-between items-center" style="background-color: var(--title-bg);">
+    <p class="m-2 text-base" style="font-weight: 500;">Claim Assignment Management</p>
+    <div class="flex items-center space-x-2">
+      <button
+        style="padding: 6px 13px; border-radius: 25px; border: none; background-color: white; color: black; font-size: 15px; cursor: pointer;"
+        *appCanWrite="'master'" (click)="navigateToAddClaimAssignment()">
+        Assign Claim
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="flex justify-center items-center mt-8">
+    <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mt-4">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Form Section (Input Table) with Horizontal Scroll -->
+  <div class="mt-2 relative" style="height: calc(100vh - 200px);">
+    <div class="absolute inset-0 overflow-x-auto">
+      <table class="min-w-full border-collapse text-sm text-gray-800">
+        <thead class="sticky top-0 z-10 bg-gray-50">
+          <tr>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Policy Number</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Claim Number</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Claim User</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Phone Number</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Email</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Claim Status</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Claim Type</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">IDV</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Insurer Name</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Payment Amount</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Policy Status</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Policy Type</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Registration No</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Submission Method</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Transaction No</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Insurance Company</th>
+            <th class="p-3 text-left whitespace-nowrap font-medium">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let claim of claims">
+
+            <tr *ngIf="claim.EmpId != null && claim.EmpId != undefined && claim.EmpId != ''" class="bg-white border-b border-gray-100 hover:bg-blue-50 transition-colors duration-200">
+              <td class="p-3">{{ claim.PolicyNo || '-' }}</td>
+              <td class="p-3">{{ claim.ClaimIdNumber || '-' }}</td>
+              <td class="p-3">{{ claim.CreatedByUserName || '-' }}</td>
+              <td class="p-3">{{ claim.PhoneNumber || '-' }}</td>
+              <td class="p-3">{{ claim.Email || '-' }}</td>
+              <td class="p-3">
+                <span class="inline-block px-2 py-1 text-xs font-medium rounded-full shadow-sm" [ngClass]="{
+                        'bg-green-100 text-green-800': claim.ClaimStatus === 'Approved',
+                        'bg-red-100 text-red-800': claim.ClaimStatus === 'Rejected',
+                        'bg-yellow-100 text-yellow-800': claim.ClaimStatus === 'Pending',
+                        'bg-blue-100 text-blue-800': claim.ClaimStatus === 'Processing',
+                        'bg-gray-100 text-gray-800': !claim.ClaimStatus || 
+                                                    (claim.ClaimStatus !== 'Approved' && 
+                                                     claim.ClaimStatus !== 'Rejected' && 
+                                                     claim.ClaimStatus !== 'Pending' &&
+                                                     claim.ClaimStatus !== 'Processing')
+                      }">
+                  {{ claim.ClaimStatus || '-' }}
+                </span>
+              </td>
+              <td class="p-3">{{ claim.ProductName || '-' }}</td>
+              <td class="p-3">{{ claim.approvedAmount || '-' }}</td>
+              <td class="p-3">{{ claim.InsurerName || '-' }}</td>
+              <td class="p-3">{{ claim.claimAmount || '-' }}</td>
+              <td class="p-3">{{ claim.PolicyStatus || '-' }}</td>
+              <td class="p-3">{{ claim.PolicyType || '-' }}</td>
+              <td class="p-3">{{ claim.RegistrationNo || '-' }}</td>
+              <td class="p-3">{{ claim.submissionMethod || '-' }}</td>
+              <td class="p-3">{{ claim.TransactionNo || '-' }}</td>
+              <td class="p-3">{{ claim.CompanyName || '-' }}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && claims.length === 0"
+    class="mt-6 bg-gray-100 p-6 rounded-md text-center shadow-md">
+    <p class="text-gray-600">{{ noRecordMessage }}</p>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-between items-center p-4 mt-6 border-t">
+    <div>
+      <label for="itemsPerPage" class="text-gray-700 mr-2">Items per page:</label>
+      <select id="itemsPerPage" class="border p-2 rounded-md text-gray-700 focus:ring-2 focus:ring-cyan-500"
+        (change)="onItemsPerPageChange($event)">
+        <option [value]="10" [selected]="itemsPerPage === 10">10</option>
+        <option [value]="20" [selected]="itemsPerPage === 20">20</option>
+        <option [value]="50" [selected]="itemsPerPage === 50">50</option>
+      </select>
+    </div>
+    <div class="text-gray-700">
+      Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ (currentPage - 1) * itemsPerPage +
+      paginatedClaimAssignments.length }} of {{ totalItems }} results
+    </div>
+  </div>
+</div>

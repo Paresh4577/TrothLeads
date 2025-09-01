@@ -1,0 +1,109 @@
+<div class="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg pl-0">
+  <!-- Header Section -->
+  <div class="text-white p-2 rounded-t-lg flex justify-between items-center" style="background-color: #2563eb;">
+    <p class="m-2 text-base" style="font-weight: 500;">Add New Lead</p>
+    <div>
+      <button class="btn btn-secondary" (click)="goBack()">
+        Back
+      </button>
+    </div>
+  </div>
+
+
+
+  <!-- Form Section -->
+  <div class="p-6">
+    <form [formGroup]="leadForm" (ngSubmit)="submitLead()">
+      <!-- Personal Information Section -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-blue-700 mb-4 border-b border-blue-200 pb-2">Personal Information</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-blue-600 mb-2">Full Name</label>
+            <input type="text" formControlName="Name" placeholder="Enter full name"
+              class="w-full p-3 border border-blue-200 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" />
+            <div *ngIf="leadForm.get('Name')?.invalid && (leadForm.get('Name')?.touched || leadForm.get('Name')?.dirty)"
+              class="text-red-600 text-xs mt-1">
+              <span *ngIf="leadForm.get('Name')?.errors?.['required']">This field is required</span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-blue-600 mb-2">Phone Number</label>
+            <input type="text" formControlName="Phone" placeholder="Enter phone number"
+              class="w-full p-3 border border-blue-200 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" />
+            <div
+              *ngIf="leadForm.get('Phone')?.invalid && (leadForm.get('Phone')?.touched || leadForm.get('Phone')?.dirty)"
+              class="text-red-600 text-xs mt-1">
+              <span *ngIf="leadForm.get('Phone')?.errors?.['required']">This field is required</span>
+              <span *ngIf="leadForm.get('Phone')?.errors?.['pattern']">Invalid phone number</span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-blue-600 mb-2">Email Address</label>
+            <input type="email" formControlName="Email" placeholder="Enter email address"
+              class="w-full p-3 border border-blue-200 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" />
+            <div
+              *ngIf="leadForm.get('Email')?.invalid && (leadForm.get('Email')?.touched || leadForm.get('Email')?.dirty)"
+              class="text-red-600 text-xs mt-1">
+              <span *ngIf="leadForm.get('Email')?.errors?.['required']">This field is required</span>
+              <span *ngIf="leadForm.get('Email')?.errors?.['email']">Invalid email</span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-blue-600 mb-2">Message</label>
+            <input type="text" formControlName="Message" placeholder="Enter message"
+              class="w-full p-3 border border-blue-200 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Lead Details Section -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-blue-700 mb-4 border-b border-blue-200 pb-2">Lead Details</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label for="source" class="block text-sm font-medium text-blue-600 mb-2">Source</label>
+            <select id="source" formControlName="Source"
+              class="w-full p-3 border border-blue-200 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+              <option value="">-- Select Source --</option>
+              <option *ngFor="let src of sources" [value]="src">{{ src }}</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-blue-600 mb-2">Category</label>
+            <select formControlName="CategoryId"
+              class="w-full p-3 border border-blue-200 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+              <option value="0">-- Select Category --</option>
+              <option *ngFor="let cat of categories" [value]="cat.CategoryId">{{ cat.CategoryName }}</option>
+            </select>
+          </div>
+
+          <div *ngIf="isAdmin">
+            <label class="block text-sm font-medium text-blue-600 mb-2">Assign To</label>
+            <select formControlName="AssignedToUserId"
+              class="w-full p-3 border border-blue-200 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+              <option value="0">-- Select Employee --</option>
+              <option *ngFor="let user of users" [value]="user.UserAdminId">
+                {{ user.Name }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="flex justify-end pt-4 border-t border-blue-200">
+        <button type="submit"
+          class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition-all duration-200 font-medium shadow-md hover:shadow-lg">
+          <span class="flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Submit Lead
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

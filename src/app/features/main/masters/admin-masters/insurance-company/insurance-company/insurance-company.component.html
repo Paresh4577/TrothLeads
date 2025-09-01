@@ -1,0 +1,290 @@
+<div class="px-4 pb-4 max-h-none w-full">
+
+    <!-- region main heading -->
+    <div class="pt-4 sticky z-30 headingBorder top-0 w-full">
+        <!-- region main heading -->
+        <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+            {{ title }}
+
+            <!-- region main heading controls-->
+            <div class="flex gap-x-3  items-center text-lg font-normal">
+                <button mat-raised-button class="new-button" [disabled]="InsuranceCompanyForm.invalid"
+                    (click)="submitform()" *ngIf="mode == 'Create' || mode == 'Edit'">Save</button>
+
+                <button mat-raised-button class="new-button" (click)="backClicked()"
+                    *ngIf="mode == 'Edit' || mode == 'Create'">Cancel</button>
+
+                <button mat-raised-button class="new-button" (click)="backClicked()"
+                    *ngIf="mode == 'View'">Back</button>
+            </div>
+            <!-- endregion main heading controls-->
+        </h1>
+        <!-- endregion main heading -->
+
+        <!-- Start of Body -->
+        <div class="">
+            <form [formGroup]="InsuranceCompanyForm">
+                <!-- Region Form -->
+                <div class="py-5 rounded">
+                    <mat-stepper orientation="vertical" #stepper [ngClass]="true ? 'showstep' : ''">
+
+                        <!-- First stepper -->
+                        <mat-step label="Basic Details">
+
+                            <div class="grid lg:grid-cols-[minmax(286px,490px)_minmax(30%,1fr)] gap-6 mt-5 ">
+                                <div class="grid  gap-4 sm:w-120">
+
+                                    <!-- Company Name  -->
+                                    <div class="relative">
+                                        <div class="icon">
+                                            <mat-icon>account_balance</mat-icon>
+                                        </div>
+                                        <input type="text" class="peer" AlphabetOnly maxlength="256"
+                                            formControlName="Name" id="Name" placeholder=" " [readonly]="readOnly" />
+                                        <label for="Name" class="mandatory">Insurance Company Name</label>
+                                    </div>
+
+                                    <!-- Company Name  -->
+                                    <div class="relative">
+                                        <div class="icon">
+                                            <mat-icon>account_balance</mat-icon>
+                                        </div>
+                                        <input type="text" class="peer" AlphabetOnly maxlength="256"
+                                            formControlName="ShortName" id="ShortName" placeholder=" " />
+                                        <label for="ShortName" class="mandatory">Insurance Company ShortName</label>
+                                    </div>
+
+                                    <!-- Company Code  -->
+                                    <div class="relative">
+                                        <div class="icon">
+                                            <mat-icon>poll</mat-icon>
+                                        </div>
+                                        <input type="text" class="peer" formControlName="Code" id="Code" maxlength="50"
+                                            placeholder=" " [readonly]="readOnly" />
+                                        <label for="Code" class="mandatory">Insurance Company Code</label>
+                                    </div>
+
+                                    <!-- Company SortOrder  -->
+                                    <div class="relative">
+                                        <div class="icon">
+                                            <mat-icon>sort</mat-icon>
+                                        </div>
+                                        <input type="text" class="peer" formControlName="SortOrder" id="SortOrder"
+                                            placeholder=" " Onlynumber autocomplete="off" />
+                                        <label for="SortOrder" class="mandatory">SortOrder</label>
+                                    </div>
+
+                                    <div class="relative">
+                                        <div class="icon">
+                                            <mat-icon>home</mat-icon>
+                                        </div>
+                                        <textarea type="text" class="peer" placeholder=" " id="Address" maxlength="1024"
+                                            formControlName="Address"></textarea>
+                                        <label for="Address" class="">Address</label>
+                                    </div>
+
+                                </div>
+
+                                <div class="">
+                                    <div class="relative">
+                                        <p class="font-semibold text-base ">
+                                            Health
+                                        </p>
+                                    </div>
+
+                                    <div class="font-medium flex-wrap flex gap-15 ">
+
+                                        <div>
+                                            <!-- Health Mediclaim Integrated -->
+                                            <span for="HealthMediclaimIntegrated"
+                                                class="pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 ">Mediclaim</span>
+                                            <mat-slide-toggle color="primary"
+                                                formControlName="HealthMediclaimIntegrated" class="relative mt-1"
+                                                (change)="onChange($event,'HealthMediclaimIntegrated')">
+                                                <span class="flex font-medium text-xl ml-3 mt-1.5">
+                                                    {{
+                                                    InsuranceCompanyForm.controls['HealthMediclaimIntegrated'].value ==
+                                                    true ? "Yes" : "No"
+                                                    }}
+                                                </span>
+                                            </mat-slide-toggle>
+                                        </div>
+
+                                        <div>
+                                            <!-- Health TopUp Integrated -->
+                                            <span for="HealthTopupIntegrated"
+                                                class="pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 ">Top
+                                                Up</span>
+                                            <mat-slide-toggle color="primary" formControlName="HealthTopupIntegrated"
+                                                class="relative mt-1"
+                                                (change)="onChange($event,'HealthTopupIntegrated')">
+                                                <span class="flex font-medium text-xl ml-3 mt-1.5">
+                                                    {{
+                                                    InsuranceCompanyForm.controls['HealthTopupIntegrated'].value == true
+                                                    ? "Yes" : "No"
+                                                    }}
+                                                </span>
+                                            </mat-slide-toggle>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="relative">
+                                        <p class="font-semibold text-base pt-3">
+                                            Motor
+                                        </p>
+                                    </div>
+
+                                    <div class="font-medium flex flex-wrap gap-15">
+
+                                        <div>
+                                            <!-- Motor Private Car Integrated -->
+                                            <span for="MotorPrivateCarIntegrated"
+                                            class="pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 ">Private
+                                            Car</span>
+                                            <mat-slide-toggle color="primary" formControlName="MotorPrivateCarIntegrated"
+                                            class="relative mt-1"
+                                            (change)="onChange($event,'MotorPrivateCarIntegrated')">
+                                            <span class="flex font-medium text-xl ml-3 mt-1.5">
+                                                {{
+                                                    InsuranceCompanyForm.controls['MotorPrivateCarIntegrated'].value == true
+                                                    ? "Yes" : "No"
+                                                }}
+                                            </span>
+                                        </mat-slide-toggle>
+                                    </div>
+                                        
+                                    <div>
+                                        <!-- Motor Two Wheeler Integrated -->
+                                        <span for="MotorTwoWheelerIntegrated"
+                                            class="pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 ">Two
+                                            Wheeler</span>
+                                        <mat-slide-toggle color="primary" formControlName="MotorTwoWheelerIntegrated"
+                                            class="relative mt-1"
+                                            (change)="onChange($event,'MotorTwoWheelerIntegrated')">
+                                            <span class="flex font-medium text-xl ml-3 mt-1.5">
+                                                {{
+                                                InsuranceCompanyForm.controls['MotorTwoWheelerIntegrated'].value == true
+                                                ? "Yes" : "No"
+                                                }}
+                                            </span>
+                                        </mat-slide-toggle>
+                                    </div>
+
+                                    </div>
+
+                                    <!-- Status  -->
+                                    <div
+                                        class="font-medium py-5 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+                                        <span for="Status"
+                                            class="pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 ">Status</span>
+                                        <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1"
+                                            (change)="onChange($event,'Status')">
+                                            <span class="flex font-medium text-xl ml-3 mt-1.5">
+                                                {{
+                                                InsuranceCompanyForm.controls['Status'].value == 1
+                                                ? "Active"
+                                                : "InActive"
+                                                }}
+                                            </span>
+                                        </mat-slide-toggle>
+                                    </div>
+
+                                </div>
+
+
+
+
+                            </div>
+
+                        </mat-step>
+
+
+
+                        <!-- Five stepper -->
+                        <mat-step label="Contact Details">
+
+                            <div class="flex justify-between pt-5">
+                                <div *ngIf="mode != 'view'">
+                                    <button class="bg-royal text-white" mat-button (click)="addContactDetails()">
+                                        + Add
+                                    </button>
+                                </div>
+
+                            </div>
+
+                            <div class="mappingtable overflow-x-scroll overflow-y-hidden">
+                                <table formArrayName="InsCompanyContactDetails" class="bg-white mt-5">
+                                    <tr class="bg-[#0284c7] text-white">
+                                        <th class="text-left p-2">Department</th>
+                                        <th class="text-left p-2">Contact Person Name</th>
+                                        <th class="text-left p-2">Designation</th>
+                                        <th class="text-left p-2 max-w-26 min-w-26">Contact No</th>
+                                        <th class="text-left p-2">Email ID</th>
+                                        <th class="text-left p-2" *ngIf="mode != 'View'">Action</th>
+                                    </tr>
+
+                                    <tr *ngFor="let element of InsCompanyContactDetails.controls,let i=index">
+
+                                        <td [formGroupName]="i">
+                                            <div class="p-2">
+                                                <select class="select" id="" formControlName="DepartmentName">
+                                                    <option value="">--Select--</option>
+                                                    <option *ngFor="let option of DisplayedDepartment"
+                                                        [value]="option.value">
+                                                        {{option.name}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td [formGroupName]="i">
+                                            <div class="p-2">
+                                                <input type="text" formControlName="ContactPersonName">
+                                            </div>
+                                        </td>
+                                        <td [formGroupName]="i">
+                                            <div class="p-2">
+                                                <input type="text" Decimal formControlName="Designation">
+                                            </div>
+                                        </td>
+                                        <td [formGroupName]="i" class="max-w-26 min-w-26">
+                                            <div class="p-2">
+                                                <input type="text" formControlName="ContactNumber" Onlynumber
+                                                    maxlength="10" />
+                                            </div>
+                                        </td>
+                                        <td [formGroupName]="i">
+                                            <div class="p-2">
+                                                <input type="text" formControlName="EmailId">
+                                            </div>
+                                        </td>
+                                        <td [formGroupName]="i" *ngIf="mode != 'View'">
+                                            <div>
+                                                <button mat-icon-button type="button" matTooltip="Remove"
+                                                    (click)="removeContactDetails(i)">
+                                                    <mat-icon color="warn">delete</mat-icon>
+                                                </button>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    <tr *ngIf="InsCompanyContactDetails.controls?.length == 0">
+                                        <td colspan="99" class="h-10 p-2 font-medium">No Records</td>
+                                    </tr>
+
+                                </table>
+                            </div>
+
+                        </mat-step>
+
+
+
+                    </mat-stepper>
+                </div>
+                <!-- Region Form End -->
+            </form>
+        </div>
+        <!-- End of Body -->
+
+
+    </div>

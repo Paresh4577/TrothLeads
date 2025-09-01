@@ -1,0 +1,293 @@
+<div class="px-4 pb-4 w-full max-h-none sm:overflow-y-auto">
+  <div class="sm:sticky top-0 z-40 bg-default pt-4">
+    <h1 class="new-head text-lg px-4 py-1.5 mb-4 rounded flex justify-between items-center font-semibold">
+      {{ pagetitle }}
+
+      <!-- region Heading Controls -->
+      <div class="flex gap-x-3 items-center text-md font-normal">
+        <button (click)="backClick()" mat-raised-button class="new-button">
+          Back
+        </button>
+      </div>
+    </h1>
+
+    <gnx-info-header [Icon]="Policies.IconURL" [InsuredPeople]="InsuredPeople" [member]="member"
+      [ReqSumInsured]="Policies?.SumInsured" [PolicyType]="PolicyType" [PolicyPeriod]="Policies?.PolicyPeriodName"
+      [TotalPremium]="Policies?.TotalPremium" [LSInsurer]="Policies?.Insurer">
+    </gnx-info-header>
+    <!-- <div class="px-4 py-7 rounded bg-white">
+        <mat-card class="bg-sky-100 px-4 py-3 gap-2 container mx-auto">
+          <div
+            class="grid lg:grid-cols-[minmax(140px,170px)_minmax(200px,1fr)_1fr_1fr_1fr_1fr] md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-6">
+
+            <div class="w-48 h-24 pr-6 py-6 flex justify-center">
+              <img class="w-auto h-auto" src="{{ Policies.IconURL }}" alt="logo" />
+            </div>
+      
+            <div class="sm:grid-cols-1 grid grid-cols-[minmax(100px,250px)_minmax(250px,500px)] self-center">
+              <div class="flex gap-3">
+                <small><span class="font-bold"> {{ InsuredPeople }}</span> Person<span *ngIf="InsuredPeople > 1">s</span>
+                  Insured</small>
+              </div>
+      
+              <div class="grid grid-cols-7 w-fit">
+                <div *ngFor="let item of member" class="h-min">
+                  <img src="{{ item.member }}" alt="" class="h-7 w-7" />
+                </div>
+              </div>
+            </div>
+            <div class="sm:grid-cols-1 grid grid-cols-2 self-center">
+              <small>Sum Insured</small>
+              <span class="font-bold text-black">
+                {{ Policies?.SumInsured | indCurrency }}
+              </span>
+            </div>
+            <div class="sm:grid-cols-1 grid grid-cols-2 self-center">
+              <small>Policy Type</small>
+              <span class="font-bold text-black"> {{ PolicyType }}</span>
+            </div>
+            <div class="sm:grid-cols-1 grid grid-cols-2 self-center">
+              <small>Policy Period</small>
+              <span class="font-bold text-black">
+                {{ Policies?.PolicyPeriodName }}</span>
+            </div>
+            <div class="sm:grid-cols-1 grid grid-cols-2 self-center">
+              <small>Gross Premium</small>
+              <span class="font-bold text-black">
+                {{ Policies?.TotalPremium | indCurrency }}
+              </span>
+              <small>Inclusive of Taxes</small>
+            </div>
+          </div>
+        </mat-card>
+      </div> -->
+  </div>
+
+  <div class="my-3 mb-36 md:mb-0 px-2 py-3 Add">
+    <div class="sm:grid gap-6 md:grid-cols-[1fr_minmax(200px,300px)] lg:grid-cols-[1fr_minmax(300px,400px)]">
+      <div class="md:col-span-1 md:border-r-2 border-dashed sm:overflow-y-auto scrollHeight">
+        <!-- list of addOns -->
+        <div *ngFor="let list of addOnList, let i = index" class="sm:mr-6 sm:ml-3 mb-3">
+          <mat-card class="px-4 py-5 rounded-lg my-3 shadow-md shadow-blue-200 grid grid-cols-2 md:grid-cols-5">
+            <div class="lg:col-span-4 md:col-span-3">
+              <div class="text-base font-bold my-2 lg:my-0">
+                <p class="inline">{{list.AddOn}}</p>
+                <!-- AddOns where user input is required. There is dropdown & input field to get data from user -->
+                <div *ngIf="list.Dropdown" class="sm:inline-block sm:mx-3 my-2 lg:my-0" [formGroup]="submit">
+
+                  <!-- if list.OptionArray Has only One option This selested By deafult -->
+
+                  <div class="relative">
+                    <ng-container [ngSwitch]="list.Icon">
+                      <div *ngSwitchCase="'₹'" [ngClass]="list.Icon == '₹' ? 'icon rs' :''">{{list.Icon}}</div>
+                      <div *ngSwitchCase="'perm_contact_calendar'" class="icon"><mat-icon>{{list.Icon}}</mat-icon></div>
+                    </ng-container>
+
+                    <select *ngIf="list.OptionArray" [disabled]="!requestInProcessFlag || submit.get(list.Value).value"
+                      formControlName="{{list.DropdownName}}" (change)="dropDownChangeEvent($event,i,list.Function)"
+                      (change)="ChangeDropDownValue(list.Function,list.Value,!submit.get(list.Value).value,list.AddOn)">
+                      <option [selected]="list.OptionArray?.length == 1 ? list.OptionArray[0].value : ''"
+                        [disabled]="CanDisableDrpListOption(list.Value)" *ngFor="let newOptions of list.OptionArray"
+                        value="{{newOptions.value}}">{{newOptions.name}}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="w-28">
+                    <input *ngIf="!list.OptionArray" formControlName="{{list.DropdownName}}"
+                      [disabled]="!requestInProcessFlag || submit.get(list.Value).value"
+                      (keyup)="dropDownChangeEvent($event,i,list.Function)" Onlynumber maxlength="2" type="text">
+                  </div>
+
+                </div>
+              </div>
+              <div class="">
+                <div [innerHTML]="list.Description"> </div>
+              </div>
+
+              <div class="grid sm:grid-cols-1 lg:grid-cols-2 gap-2 mt-3 sm:inline-block my-2 lg:my-0"
+                *ngIf="list.InputType == 'input' && list.AddOn == 'Critical Illness' && list.Plan == PlanNameEnum.icici_HAE_ApexPlus">
+                <div class="grid gap-2">
+
+                  <div class="relative mt-3">
+                    <div class="flex">
+                      <div class="icon">
+                        <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="ProposalDOB"></mat-datepicker-toggle>
+                        <mat-datepicker #ProposalDOB></mat-datepicker>
+                      </div>
+                      <input matInput type="text" id="ProposalDOB"
+                        (dateChange)="bindInputValueInSubmitForm('ProposalDOB', $event)" class="peer"
+                        placeholder="__/__/____" datemask [matDatepicker]="ProposalDOB">
+                      <label for="ProposalDOB" class="mandatory">Proposal DOB</label>
+                    </div>
+                  </div>
+
+                  <div class="relative mt-3">
+                    <div class="icon rs">₹</div>
+                    <input type="text" class="peer " (change)="bindInputValueInSubmitForm('ProposalIncome', $event)"
+                      Decimal maxlength="15" id="ProposalIncome" placeholder=" " />
+                    <label for="ProposalIncome" class="mandatory">Proposal Income</label>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="grid sm:grid-cols-1 lg:grid-cols-2 gap-2 mt-3 sm:inline-block my-2 lg:my-0"
+                *ngIf="list.InputType == 'input' && list.AddOn == 'Customer has any other iffco-tokio  policy' && list.Plan == PlanNameEnum.IffcoTokio_Health_Protection_Individual">
+                <div class="grid grid-cols-3 gap-2">
+
+                  <div class="relative mt-3">
+                    <div class="icon">
+                      <mat-icon>tonality</mat-icon>
+                    </div>
+                    <input type="text" class="peer " (change)="bindInputValueInSubmitForm('IffcoTokioPolicyNo', $event)"
+                      maxlength="50" id="IffcoTokioPolicyNo" placeholder=" " [readonly]="IsReadOnlyIffcoTokioPolicy"
+                      [value]="PolicyNo" />
+                    <label for="IffcoTokioPolicyNo" class="mandatory">Policy No</label>
+                  </div>
+
+                  <div class="relative mt-3">
+                    <div class="icon">
+                      <mat-icon>person</mat-icon>
+                    </div>
+                    <input type="text" class="peer " [readonly]="IsReadOnlyIffcoTokioPolicy"
+                      (change)="bindInputValueInSubmitForm('IffcoTokioFirstName', $event)" maxlength="100"
+                      id="FirstName" placeholder=" " [value]="FName" />
+                    <label for="FirstName" class="mandatory">First Name</label>
+                  </div>
+
+                  <div class="relative mt-3">
+                    <div class="icon">
+                      <mat-icon>person</mat-icon>
+                    </div>
+                    <input type="text" class="peer " [readonly]="IsReadOnlyIffcoTokioPolicy"
+                      (change)="bindInputValueInSubmitForm('IffcoTokioLastName', $event)" maxlength="100" id="LastName"
+                      placeholder=" " [value]="LName" />
+                    <label for="LastName" class="mandatory">Last Name</label>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- this button is to add & remove AddOn -->
+            <div class="flex justify-center self-center md:col-span-2 lg:col-span-1">
+              <button *ngIf="!AllMandatoryAddOn.includes(list.Value)"
+                [disabled]="!requestInProcessFlag || list.Dependable"
+                class="text-black w-30 flex justify-between font-bold"
+                (click)="AddOns(list.Function,list.Value,!submit.get(list.Value).value,list.AddOn)" mat-raised-button
+                [ngClass]="!list.Answer ? 'bg-green-500' : 'bg-red-500'">
+                <mat-icon [ngClass]="list.Answer ? 'rotate-45 duration-1000':'duration-1000'">add</mat-icon>
+                <span *ngIf="!list.Answer" class="duration-1000 ease-in-out">Add</span>
+                <span *ngIf="list.Answer" class="duration-1000 ease-in-out">Remove</span>
+              </button>
+
+            </div>
+
+          </mat-card>
+        </div>
+
+      </div>
+      <!-- Summary of the added AddOns. -->
+      <div class="py-3 md:block hidden">
+        <mat-card class="px-4 py-3 gap-2 shadow-md shadow-blue-200 rounded-lg">
+          <div class="text-left font-bold text-2xl">
+            Summary
+          </div>
+          <mat-divider class="-mx-4 border-t-sky-600"></mat-divider>
+          <div>
+            <p class="font-bold text-center">
+              {{ PlanName }}
+            </p>
+          </div>
+          <div class="grid grid-cols-2">
+            <span for="">Base Premium</span>
+            <span class="font-bold text-base text-right">{{ Policies?.TotalPremium | indCurrency }}</span>
+          </div>
+
+          <div class="grid grid-cols-[minmax(60px,60px)_1fr] gap-3">
+            <span>Add-Ons</span>
+            <div>
+              <div class="col-start-2 grid grid-cols-[1fr_minmax(70px,80px)]"
+                *ngFor="let add of displayAddOn, let k=index">
+                <span class="font-bold text-base">{{add.name}}</span>
+                <span class="font-bold text-base text-right"><span *ngIf="add.amount>0">+</span> {{add.amount |
+                  indCurrency}} </span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="grid grid-cols-2 bg-green-300 -mx-4 py-1">
+            <span class="mx-4 font-bold">Total Premium</span>
+            <span class="font-bold text-base text-right pr-4">
+              {{TotalPremium | indCurrency}}
+            </span>
+          </div>
+
+          <div class="flex justify-center">
+            <button [disabled]="!requestInProcessFlag" (click)="buyNow(Policies)" mat-raised-button
+              class="bg-royal text-on-primary-800">
+              <mat-icon>navigate_next</mat-icon>
+              <span class="hidden sm:block">Proceed To Proposal</span>
+            </button>
+          </div>
+
+        </mat-card>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- It will be visible for screen smaller than 960px. Summary of the AddOns -->
+<div class=" summaryHeight ">
+  <mat-card class="px-4 py-3 gap-2 rounded-lg flex w-full justify-between h-36">
+
+    <div>
+      <p class="font-bold">
+        Summary
+      </p>
+    </div>
+    <mat-divider class="-mx-4 border-t-sky-600"></mat-divider>
+    <div>
+      <p class="font-bold text-center">
+        {{ PlanName }}
+      </p>
+    </div>
+    <div class="grid grid-cols-3 md:grid-cols-8">
+      <div class="grid grid-rows-2 w-fit">
+        <span for="">Base Premium</span>
+        <span class="font-bold text-base text-right">
+          {{ Policies?.TotalPremium | indCurrency }}
+        </span>
+      </div>
+
+      <div class="md:grid grid-rows-2 hidden md:col-start-2">
+        <span for="">Add-Ons</span>
+        <span class="font-bold text-base">
+        </span>
+      </div>
+      <div class="grid grid-rows-2 bg-green-300 rounded-md w-fit px-6 md:col-start-5">
+        <span class="">Total Premium</span>
+        <span class="font-bold text-base text-right">
+          {{TotalPremium | indCurrency}}
+        </span>
+      </div>
+
+      <div class="flex justify-between md:col-start-7">
+        <button mat-raised-button *ngIf="displayAddOn.length>0" matTooltip="Details" (click)="AddOnDetailsPopUp()"
+          class="bg-royal text-on-primary-800">
+          <mat-icon>receipt</mat-icon>
+        </button>
+        <button [disabled]="!requestInProcessFlag" (click)="buyNow(Policies)" matTooltip="Next" mat-raised-button
+          class="bg-royal text-on-primary-800">
+          <mat-icon>navigate_next</mat-icon>
+        </button>
+      </div>
+    </div>
+
+  </mat-card>
+
+</div>

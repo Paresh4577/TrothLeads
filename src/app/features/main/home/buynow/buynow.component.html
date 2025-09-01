@@ -1,0 +1,85 @@
+<div class="p-2 w-full h-full theme-default light overflow-scroll">
+  <div class="flex flex-wrap items-center">
+    <div class="w-full flex justify-center px-4 mr-auto ml-auto">
+      <div class="justify-center flex flex-wrap relative">
+        <div
+          class="my-4 w-full gap-5 lg:mt-8 md:grid grid-cols-[minmax(100px,300px)_minmax(100px,300px)] xl:grid-cols-3 px-4"
+        >
+         <!-- Motor -->
+         <a routerLink="{{Routing.Basic.Motor}}" *ngIf="canDisplayMotor">
+          <div class="bg-[#3CBBDA] w-72 shadow-lg rounded-lg text-center p-10 mt-8">
+            <div class="shadow-md rounded-full max-w-full w-20 mx-auto bg-white h-20 p-2 boxlogo">
+              <img alt="Motor" src="../../../../../assets/icons/bi/images.png "/>
+            </div>
+            <p class="text-lg text-white mt-4 font-semibold">Motor</p>
+          </div>
+        </a>
+
+          <!-- <form action="{{motorRoute}}" method="post">
+            <input type="hidden" name="token" id="token" [value]="token" />
+            <button>
+              <div class="bg-[#3CBBDA] shadow-lg w-72 rounded-lg text-center p-10 mt-8">
+                <div class="shadow-md rounded-full max-w-full w-20 mx-auto bg-white h-20 p-2 boxlogo">
+                  <img alt="Motor" src="../../../../../assets/icons/bi/images.png "/>
+                </div>
+                <p class="text-lg text-white mt-4 font-semibold">Motor</p>
+              </div>
+            </button>
+          </form> -->
+
+          <!-- Health -->
+          <a routerLink="{{Routing.Basic.Health}}" *ngIf="canDisplayHealth">
+            <div class="bg-[#4FDC95] w-72 shadow-lg rounded-lg text-center p-10 mt-8">
+              <div class="shadow-md rounded-full max-w-full w-20 mx-auto bg-white h-20 p-2 boxlogo">
+                <img alt="Health" src="../../../../../assets/icons/bi/6. HEALTH.png"/>
+              </div>
+              <p class="text-lg text-white mt-4 font-semibold">Health</p>
+            </div>
+          </a>
+
+          <!-- Life -->
+          <a routerLink="{{Routing.Basic.Life}}">
+            <div class="bg-[#7080FA] w-72 shadow-lg rounded-lg text-center p-10 mt-8">
+              <div class="shadow-md rounded-full max-w-full w-20 mx-auto bg-white h-20 p-2 boxlogo">
+                <img alt="Life" src="../../../../../assets/icons/bi/8. LIFE_INVESTMENT.png"/>
+              </div>
+              <p class="text-lg text-white mt-4 font-semibold">Life</p>
+            </div>
+          </a>
+
+          <!-- Travel -->
+          <a routerLink="{{Routing.Basic.Travel}}">
+            <div class="bg-[#fa914c] w-72 shadow-lg rounded-lg text-center p-10 mt-8">
+              <div class="shadow-md rounded-full max-w-full w-20 mx-auto bg-white h-20 p-2 boxlogo">
+                <img alt="Travel" src="../../../../../assets/icons/bi/10. TRAVEL.png"/>
+              </div>
+              <p class="text-lg text-white mt-4 font-semibold">Travel</p>
+              <!-- <p class="text-lg text-white mt-4 font-semibold">Motor Testing</p> -->
+            </div>
+          </a>
+
+          <!-- Personal Accident -->
+          <a routerLink="{{Routing.Basic.PersonalAccident}}">
+            <div class="bg-[#2896fd] w-72 shadow-lg rounded-lg text-center p-10 mt-8">
+              <div class="shadow-md rounded-full max-w-full w-20 mx-auto bg-white h-20 p-2 boxlogo">
+                <img alt="Personal Accident" src="../../../../../assets/icons/bi/14. PERSONAL ACCIDENT.png"/>
+              </div>
+              <p class="text-lg text-white mt-4 font-semibold">Personal Accident</p>
+              <!-- <p class="text-lg text-white mt-4 font-semibold">Health Testing</p> -->
+            </div>
+          </a>
+
+          <!-- Home -->
+          <a routerLink="{{Routing.Basic.Home}}">
+            <div class="bg-[#FF9898] w-72 shadow-lg rounded-lg text-center p-10 mt-8">
+              <div class="shadow-md rounded-full max-w-full w-20 mx-auto bg-white h-20 p-2 boxlogo">
+                <img alt="Home" src="../../../../../assets/icons/bi/9. HOME.png"/>
+              </div>
+              <p class="text-lg text-white mt-4 font-semibold">Home</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

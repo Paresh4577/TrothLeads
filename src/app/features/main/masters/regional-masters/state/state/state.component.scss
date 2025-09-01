@@ -1,0 +1,28 @@
+// Override Border style of input on FormField invalidation
+input.ng-invalid {
+    &.ng-touched {
+      @apply border-warn-400/80 placeholder:text-warn-400/70 #{!important};
+    }
+}
+
+// Override Border style of input on FormField invalidation
+select.ng-invalid {
+    &.ng-touched {
+      @apply border-warn-400/80 placeholder:text-warn-400/70 #{!important};
+    }
+}
+
+// Override Border style of textarea on FormField invalidation
+textarea.ng-invalid {
+    &.ng-touched {
+      @apply border-warn-400/80 placeholder:text-warn-400/70 #{!important};
+    }
+}
+
+input, select, textarea {
+  @apply bg-white;
+}
+
+.mandatory {
+  @apply after:content-['*'] after:ml-1 after:text-red-500;
+}

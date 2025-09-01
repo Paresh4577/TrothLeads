@@ -1,0 +1,180 @@
+<div class="mt-1 px-2 w-full">
+    <!-- region Main Heading -->
+    <h1 class="new-head text-lg px-4 py-2 mb-1.5 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <div class="flex gap-x-3 items-center text-lg font-normal">
+            <button mat-raised-button class="button button-primary" (click)="save()">
+                Save
+            </button>
+            <button mat-raised-button class="button button-primary" (click)="cancle()">
+                Close
+            </button>
+
+        </div>
+    </h1>
+    <!-- endregion Heading Controls -->
+
+    <!-- start of body -->
+
+    <div class="my-3">
+        <mat-card class="px-4 pt-7 pb-5 gap-2 container mx-auto">
+            <form [formGroup]="addOnForm" class="py-5 grid md:grid-cols-2 gap-5">
+
+                <!-- Personal Accident -->
+                <div class="min-w-36 p-1">
+                    <div class="lableInputbox flex">
+                        <input type="checkbox" id="PersonalAccidentYes" class="peer mb-2"
+                            formControlName="PersonalAccident" [value]="true" />
+                        <label for="PersonalAccidentYes" class="font-bold min-w-40"
+                            [ngClass]="chkPersonalAccident ? 'labelText' : '' ">Personal Accident</label>
+                        <div [ngClass]="chkPersonalAccident ? 'MandateByIRDAI' : '' "
+                            class="ml-32 w-fit border pb-1 px-3 rounded-2xl text-white text-on-primary-80 bg-[#2896fd]"
+                            [matMenuTriggerFor]="PACoverText" #matMenuTrigger="matMenuTrigger" mat-button
+                            (mouseenter)="matMenuTrigger.openMenu()" (mouseleave)="matMenuTrigger.closeMenu()">
+                            <small>(Mandate by IRDAI)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <mat-menu [hasBackdrop]="false" yPosition="below" #PACoverText="matMenu" overlapTrigger="false"
+                    class="hover-display mt-2 px-4 py-3 gap-6 container mx-auto">
+                    <span>
+                        <div class="flex space-x-3">
+                            <span class="font-bold text-base">Personal Accident (PA) Cover</span>
+                        </div>
+                        <div class="flex space-x-3">
+                            <span>
+                                Personal Accident (PA) cover offers user or nominee Rs.15 Lakh in case of death or
+                                disability due to accident.
+                                <p><br></p>
+                                <p>You can buy a plan without PA cover if:</p>
+                                <p>1. The bike is registered in company's name.</p>
+                                <p>2. You already have a PA cover of Rs. 15 Lakh or more.</p>
+                                <p>3. Registered Owner does not have a valid driving license.</p>
+                            </span>
+                        </div>
+                    </span>
+                </mat-menu>
+
+                <!-- Zero Depreciation -->
+                <div class="min-w-36 p-1">
+                    <div class="lableInputbox">
+                        <input type="checkbox" id="ZeroDepreciation" class="peer mb-2"
+                            formControlName="ZeroDepreciation" [value]="true" />
+                        <label for="ZeroDepreciation" class="font-bold min-w-40"
+                            [ngClass]="chkZeroDepreciation ? 'labelText' : '' ">Zero Depreciation</label>
+                    </div>
+                </div>
+
+                <!-- NCB Protection -->
+                <div class="min-w-36 p-1">
+                    <div class="lableInputbox">
+                        <input type="checkbox" id="NCBProtection" class="peer mb-2" formControlName="NCBProtection"
+                            [value]="true" />
+                        <label for="NCBProtection" class="font-bold"
+                            [ngClass]="chkNCBProtection ? 'labelText' : '' ">NCB Protection</label>
+                    </div>
+                </div>
+
+                <!-- Invoice Cover -->
+                <div class="min-w-36 p-1">
+                    <div class="lableInputbox">
+                        <input type="checkbox" id="InvoiceCover" class="peer mb-2" formControlName="InvoiceCover"
+                            [value]="true" />
+                        <label for="InvoiceCover" class="font-bold"
+                            [ngClass]="chkInvoiceCover ? 'labelText' : '' ">Invoice Cover</label>
+                    </div>
+                </div>
+
+                <!-- Road side Assistance -->
+                <div class="min-w-36 p-1">
+                    <div class="lableInputbox">
+                        <input type="checkbox" id="RoadsideAssistance" class="peer mb-2"
+                            formControlName="RoadsideAssistance" [value]="true" />
+                        <label for="RoadsideAssistance" class="font-bold  min-w-48"
+                            [ngClass]="chkRoadAssistance ? 'labelText' : '' ">Road side Assistance</label>
+                    </div>
+                </div>
+
+                <!-- Engine Protector -->
+                <div class="min-w-36 p-1">
+                    <div class="lableInputbox">
+                        <input type="checkbox" id="EngineProtector" class="peer mb-2" formControlName="EngineProtector"
+                            [value]="true" />
+                        <label for="EngineProtector" class="font-bold min-w-40"
+                            [ngClass]="chkEngineProtector ? 'labelText' : '' ">Engine Protector</label>
+                    </div>
+                </div>
+
+                <div class="min-w-36">
+                    <div class="lableInputbox">
+                        <input type="checkbox" id="DriverCover" class="peer mb-2" formControlName="DriverCover"
+                            [value]="true" />
+                        <label for="DriverCover" class="font-bold" [ngClass]="chkDriverCover ? 'labelText' : '' ">Driver
+                            Cover</label>
+                    </div>
+                </div>
+
+                <!-- Accessories -->
+                <div [ngClass]="addOnForm.get('Accessories').value?'border-2 border-dashed p-3':''"
+                    class="grid col-start-1 p-1 gap-4 w-fit h-fit flex-wrap">
+                    <div class="min-w-36">
+                        <div class="lableInputbox">
+                            <input type="checkbox" id="Accessories" class="peer mb-2" formControlName="Accessories"
+                                [value]="true" />
+                            <label for="Accessories" class="font-bold"
+                                [ngClass]="chkAccessories ? 'labelText' : '' ">Accessories</label>
+                        </div>
+                    </div>
+
+                    <!-- Electrical Accessories -->
+                    <div *ngIf="addOnForm.get('Accessories').value" class="w-fit">
+                        <div class="relative ">
+                            <div class="icon rs">₹</div>
+                            <input matInput maxlength="10" type="text" id="ElectricalAccessories"
+                                formControlName="ElectricalAccessories" Onlynumber placeholder=" " class="peer"
+                                required />
+                            <label for="ElectricalAccessories" class="mandatory">Electrical</label>
+                        </div>
+                    </div>
+
+                    <!-- Non-Electrical Accessories -->
+                    <div *ngIf="addOnForm.get('Accessories').value" class="w-fit">
+                        <div class="relative ">
+                            <div class="icon rs">₹</div>
+                            <input matInput maxlength="10" type="text" id="NonElectricalAccessories"
+                                formControlName="NonElectricalAccessories" Onlynumber placeholder=" " class="peer"
+                                required />
+                            <label for="NonElectricalAccessories" class="mandatory">Non-Electrical</label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Driver Cover -->
+                <!-- [ngClass]="addOnForm.get('DriverCover').value?'border-2 border-dashed p-3':''" -->
+                <div class="grid p-1 h-fit gap-4 w-fit flex-wrap">
+
+
+                    <!-- Driver Cover SumInsured -->
+
+                    <!-- <div *ngIf="addOnForm.get('DriverCover').value" class="relative w-fit"> -->
+                    <!-- <div class="icon rs">₹</div>
+                        <input matInput maxlength="10" type="text" id="DriverCoverSumInsured" formControlName="DriverCoverSumInsured" Onlynumber placeholder=" " class="peer" required />
+                        <label for="DriverCoverSumInsured" class="mandatory">Driver Cover Sum Insured</label> -->
+                    <!-- <div class="relative min-w-36 w-fit">
+                          <div class="icon rs">₹</div>
+                          <select formControlName="DriverCoverSumInsured">
+                            <option *ngFor="let sum of DriverCoverAmount" [value]="sum.value"> {{sum.name}} </option>
+                          </select>
+                          <label class="mandatory" for="DriverCoverSumInsured">Sum Insured</label>
+                        </div>
+                    </div> -->
+
+                </div>
+
+            </form>
+        </mat-card>
+    </div>
+</div>

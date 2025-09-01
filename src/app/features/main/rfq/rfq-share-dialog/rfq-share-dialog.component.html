@@ -1,0 +1,72 @@
+<div class="mt-1 px-2 w-full">
+    <!-- region Main Heading -->
+    <h1 class="new-head text-lg px-4 py-2 mb-1.5 rounded flex justify-between items-center font-semibold">
+        {{title}}
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="button button-primary" (click)="Cancel()">
+                Close
+            </button>
+        </div>
+    </h1>
+    <!-- endregion Heading Controls -->
+    <div>
+        <mat-card class="px-4 py-3 gap-2 container mx-auto">
+
+            <form>
+                <mat-tab-group>
+
+                    <!-- email -->
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            <mat-icon>email</mat-icon>
+                        </ng-template>
+                        <div class="sm:flex">
+                            <div class="relative w-3/4 my-2">
+                                <div class="icon">
+                                    <mat-icon>email</mat-icon>
+                                </div>
+                                <input type="text" id="Email" placeholder=" " autocomplete="off" maxlength="60" 
+                                  [formControl]="emailId"  class="peer" />
+                                <label for="Email" class="mandatory">Email</label>
+                            </div>
+                            <div class="my-2 ">
+                                <button mat-raised-button type="button" class="mx-3 form-button" (click)="shareData('email')">
+                                    Send
+                                    <mat-icon>send</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+
+                    </mat-tab>
+
+                    <!-- mobile Number -->
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            <mat-icon [svgIcon]="'heroicons_outline:whats-app'"></mat-icon>
+                        </ng-template>
+                        <div class="sm:flex">
+                            <div class="relative w-3/4 my-2">
+                                <div class="icon">
+                                    <mat-icon>smartphone</mat-icon>
+                                </div>
+                                <input type="text" id="MobileNo" maxlength="10" Onlynumber
+                                  autocomplete="off" [formControl]="whatsAppNo" placeholder=" " class="peer" />
+                                <label for="MobileNo" class="mandatory">Whatsapp No.</label>
+
+                            </div>
+                            <div class="my-2 ">
+                                <button mat-raised-button type="button" class="mx-3 form-button" (click)="shareData('whatsapp')">
+                                    Send
+                                    <mat-icon>send</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+
+                    </mat-tab>
+
+                </mat-tab-group>
+            </form>
+
+        </mat-card>
+    </div>
+</div>

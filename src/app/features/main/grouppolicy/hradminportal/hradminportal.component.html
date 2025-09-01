@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Team Contact List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+         
+           
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th {
+            padding: 20px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 18px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+
+        tr:hover td {
+            background-color: #f8f9ff;
+            transform: scale(1.01);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .hr-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .hr-email {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .hr-email:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .hr-contact {
+            color: #555;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+
+        .status-active {
+            background: #e8f5e8;
+            color: #2d5a2d;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+        }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            th, td {
+                padding: 12px 10px;
+                font-size: 0.9rem;
+            }
+        
+
+        .add-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <nav style="background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 50%, #1e293b 100%); color: white; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); position: sticky; top: 0; z-index: 10; height: 70px;">
+        <div style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; height: 100%;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);">
+              <i class="fas fa-shield-alt" style="color: white; font-size: 18px;"></i>
+            </div>
+            <span style="font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">Admin Dashboard</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 8px; backdrop-filter: blur(10px);">
+              <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-user" style="color: white; font-size: 14px;"></i>
+              </div>
+              <span style="font-size: 14px; font-weight: 500;">Admin</span>
+            </div>
+            <div (click)="navigateToHrPortal()" style="display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 8px; backdrop-filter: blur(10px);">
+              <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-user" style="color: white; font-size: 14px;"></i>
+              </div>
+              <span style="font-size: 14px; font-weight: 500;">Hr Portal</span>
+            </div>
+            <div (click)="navigateToManageEmployee()" style="display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 8px; backdrop-filter: blur(10px);">
+              <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-user" style="color: white; font-size: 14px;"></i>
+              </div>
+              <span style="font-size: 14px; font-weight: 500;">Employee Portal</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+    <div class="container mt-5">
+        <h1>HR Team Contact List</h1>
+        
+        <button class="add-btn" (click)="addNewHR()">+ Add New HR</button>
+        
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>HR Name</th>
+                      
+                        <th>HR Contact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="hr && hr.length === 0">
+                        <td colspan="3" class="no-data">No HR employees found</td>
+                    </tr>
+                    <tr *ngFor="let hrEmployee of hr">
+                        <td class="py-3 px-4">
+                            <div class="font-bold text-gray-900 cursor-pointer hover:text-blue-600 hover:underline"
+                                 (click)="viewHrCompany(hrEmployee.CompanyId)"
+                                 title="View HR Details">
+                                {{ hrEmployee.FirstName }}
+                            </div>
+                        </td>
+                        <td class="hr-contact">{{ hrEmployee.contact || hrEmployee.phone || hrEmployee.Mobile || 'N/A' }}</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,660 @@
+<div class="app-container">
+  <div class="card">
+    <div class="card-header">
+      <h2>Create New Role</h2>
+    </div>
+
+    <div class="card-body">
+      <div class="form-group">
+        <label for="roleName">Role Name</label>
+        <input type="text" id="roleName" class="form-control" placeholder="Enter role name" [(ngModel)]="roleName">
+      </div>
+
+      <div class="permissions-container">
+        <div class="permissions-header">
+          <h3>Role Permissions</h3>
+        </div>
+
+        <div class="permissions-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Module</th>
+                <th>Permissions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Master -->
+              <tr>
+                <td>
+                  <div class="module-name">
+                    <i class="icon-roles"></i>
+                    Master
+                  </div>
+                </td>
+                <td>
+                  <div class="permission-controls">
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('master', 'read', $event)"
+                          [checked]="modulePermissions.master.read">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Read</span>
+                    </div>
+
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('master', 'create', $event)"
+                          [checked]="modulePermissions.master.create">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Write</span>
+                    </div>
+
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('master', 'delete', $event)"
+                          [checked]="modulePermissions.master.delete">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Delete</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Product -->
+              <tr>
+                <td>
+                  <div class="module-name">
+                    <i class="icon-roles"></i>
+                    Product
+                  </div>
+                </td>
+                <td>
+                  <div class="permission-controls">
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('product', 'read', $event)"
+                          [checked]="modulePermissions.product.read">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Read</span>
+                    </div>
+
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('product', 'create', $event)"
+                          [checked]="modulePermissions.product.create">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Write</span>
+                    </div>
+
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('product', 'delete', $event)"
+                          [checked]="modulePermissions.product.delete">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Delete</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Policies -->
+              <tr>
+                <td>
+                  <div class="module-name">
+                    <i class="icon-roles"></i>
+                    Policies
+                  </div>
+                </td>
+                <td>
+                  <div class="permission-controls">
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('policies', 'read', $event)"
+                          [checked]="modulePermissions.policies.read">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Read</span>
+                    </div>
+
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('policies', 'create', $event)"
+                          [checked]="modulePermissions.policies.create">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Write</span>
+                    </div>
+
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('policies', 'delete', $event)"
+                          [checked]="modulePermissions.policies.delete">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Delete</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Claims -->
+              <tr>
+                <td>
+                  <div class="module-name">
+                    <i class="icon-roles"></i>
+                    Claims
+                  </div>
+                </td>
+                <td>
+                  <div class="permission-controls">
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('claims', 'read', $event)"
+                          [checked]="modulePermissions.claims.read">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Read</span>
+                    </div>
+
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('claims', 'create', $event)"
+                          [checked]="modulePermissions.claims.create">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Write</span>
+                    </div>
+
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('claims', 'delete', $event)"
+                          [checked]="modulePermissions.claims.delete">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Delete</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Reports -->
+              <tr>
+                <td>
+                  <div class="module-name">
+                    <i class="icon-roles"></i>
+                    Reports
+                  </div>
+                </td>
+                <td>
+                  <div class="permission-controls">
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('reports', 'read', $event)"
+                          [checked]="modulePermissions.reports.read">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Read</span>
+                    </div>
+
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('reports', 'create', $event)"
+                          [checked]="modulePermissions.reports.create">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Write</span>
+                    </div>
+
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('reports', 'delete', $event)"
+                          [checked]="modulePermissions.reports.delete">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Delete</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- User Access -->
+              <tr>
+                <td>
+                  <div class="module-name">
+                    <i class="icon-roles"></i>
+                    UserAccess
+                  </div>
+                </td>
+                <td>
+                  <div class="permission-controls">
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('userAccess', 'read', $event)"
+                          [checked]="modulePermissions.userAccess.read">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Read</span>
+                    </div>
+
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('userAccess', 'create', $event)"
+                          [checked]="modulePermissions.userAccess.create">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Write</span>
+                    </div>
+
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('userAccess', 'delete', $event)"
+                          [checked]="modulePermissions.userAccess.delete">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Delete</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <!--grouppolicy-->
+              <tr>
+                <td>
+                  <div class="module-name">
+                    <i class="icon-roles"></i>
+                    GroupPolicy
+                  </div>
+                </td>
+                <td>
+                  <div class="permission-controls">
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('grouppolicy', 'read', $event)"
+                          [checked]="modulePermissions.grouppolicy.read">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Read</span>
+                    </div>
+
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('grouppolicy', 'create', $event)"
+                          [checked]="modulePermissions.grouppolicy.create">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Write</span>
+                    </div>
+
+                    <div class="permission-control">
+                      <label class="toggle-switch small">
+                        <input type="checkbox" (change)="onCheckboxChange('grouppolicy', 'delete', $event)"
+                          [checked]="modulePermissions.grouppolicy.delete">
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span>Delete</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <button class="btn btn-secondary" (click)="back()">Cancel</button>
+      <button class="btn btn-primary" (click)="saveRole()">Save Role</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f5f7fa;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    line-height: 1.5;
+  }
+
+  .app-container {
+    max-width: 1200px;
+    /* Increased from 1000px */
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .card {
+    background-color: #fff;
+    border-radius: 12px;
+    /* Increased from 8px */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    /* Increased shadow */
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .card-header {
+    padding: 28px 32px;
+    /* Increased from 20px 24px */
+    border-bottom: 1px solid #eaedf3;
+    background-color: #fff;
+  }
+
+  .card-header h2 {
+    margin: 0;
+    font-size: 24px;
+    /* Increased from 18px */
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .card-body {
+    padding: 36px;
+    /* Increased from 24px */
+  }
+
+  .card-footer {
+    padding: 24px 32px;
+    /* Increased from 16px 24px */
+    background-color: #f9fafc;
+    border-top: 1px solid #eaedf3;
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    /* Increased from 12px */
+  }
+
+  .form-group {
+    margin-bottom: 32px;
+    /* Increased from 24px */
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 12px;
+    /* Increased from 8px */
+    font-weight: 500;
+    color: #4a5568;
+    font-size: 16px;
+    /* Increased from 14px */
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 14px 18px;
+    /* Increased from 10px 14px */
+    border: 1px solid #dae1e7;
+    border-radius: 8px;
+    /* Increased from 6px */
+    font-size: 16px;
+    /* Increased from 14px */
+    transition: all 0.2s ease;
+    color: #2d3748;
+    background-color: #fff;
+    max-width: 600px;
+    /* Increased from 400px */
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.15);
+    /* Increased from 3px */
+  }
+
+  .form-control::placeholder {
+    color: #a0aec0;
+  }
+
+  .permissions-container {
+    margin-top: 36px;
+    /* Increased from 24px */
+  }
+
+  .permissions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    /* Increased from 16px */
+  }
+
+  .permissions-header h3 {
+    margin: 0;
+    font-size: 20px;
+    /* Increased from 16px */
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .master-toggle {
+    display: flex;
+    align-items: center;
+  }
+
+  .toggle-label {
+    margin-left: 12px;
+    /* Increased from 8px */
+    font-size: 16px;
+    /* Increased from 14px */
+    font-weight: 500;
+    color: #4a5568;
+  }
+
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    /* Increased from 48px */
+    height: 30px;
+    /* Increased from 24px */
+  }
+
+  .toggle-switch.small {
+    width: 50px;
+    /* Increased from 40px */
+    height: 26px;
+    /* Increased from 20px */
+  }
+
+  .toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e2e8f0;
+    transition: .4s;
+    border-radius: 34px;
+  }
+
+  .toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    /* Increased from 18px */
+    width: 22px;
+    /* Increased from 18px */
+    left: 4px;
+    /* Adjusted from 3px */
+    bottom: 4px;
+    /* Adjusted from 3px */
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+
+  .toggle-switch.small .toggle-slider:before {
+    height: 18px;
+    /* Increased from 14px */
+    width: 18px;
+    /* Increased from 14px */
+    left: 4px;
+    /* Adjusted from 3px */
+    bottom: 4px;
+    /* Adjusted from 3px */
+  }
+
+  input:checked+.toggle-slider {
+    background-color: #4299e1;
+  }
+
+  input:checked+.toggle-slider:before {
+    transform: translateX(30px);
+    /* Increased from 24px */
+  }
+
+  .toggle-switch.small input:checked+.toggle-slider:before {
+    transform: translateX(24px);
+    /* Increased from 20px */
+  }
+
+  .permissions-table {
+    border: 1px solid #eaedf3;
+    border-radius: 10px;
+    /* Increased from 8px */
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    background-color: #f7fafc;
+    font-weight: 600;
+    font-size: 15px;
+    /* Increased from 13px */
+    color: #4a5568;
+    text-align: left;
+    padding: 16px 20px;
+    /* Increased from 12px 16px */
+  }
+
+  td {
+    padding: 20px 24px;
+    /* Increased from 14px 16px */
+    border-top: 1px solid #eaedf3;
+    font-size: 16px;
+    /* Increased from 14px */
+    color: #2d3748;
+  }
+
+  tr:first-child td {
+    border-top: none;
+  }
+
+  .module-name {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    font-size: 16px;
+    /* Added font size */
+  }
+
+  .icon-roles {
+    margin-right: 14px;
+    /* Increased from 10px */
+    width: 28px;
+    /* Increased from 20px */
+    height: 28px;
+    /* Increased from 20px */
+    background-color: #edf2f7;
+    border-radius: 6px;
+    /* Increased from 4px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .icon-roles:before {
+    content: "R";
+    font-size: 16px;
+    /* Increased from 12px */
+    font-weight: 700;
+    color: #4a90e2;
+  }
+
+  .permission-controls {
+    display: flex;
+    gap: 30px;
+    /* Increased from 20px */
+    align-items: center;
+  }
+
+  .permission-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    /* Increased from 8px */
+  }
+
+  .permission-control span {
+    font-size: 15px;
+    /* Increased from 13px */
+    color: #64748b;
+  }
+
+  .btn {
+    padding: 14px 24px;
+    /* Increased from 10px 16px */
+    border-radius: 8px;
+    /* Increased from 6px */
+    font-size: 16px;
+    /* Increased from 14px */
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    /* Added min-width */
+  }
+
+  .btn-primary {
+    background-color: #4a90e2;
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background-color: #3a7bc8;
+    box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+    /* Increased shadow */
+  }
+
+  .btn-secondary {
+    background-color: #f1f5f9;
+    color: #64748b;
+  }
+
+  .btn-secondary:hover {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+</style>

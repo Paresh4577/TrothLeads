@@ -1,0 +1,12 @@
+<!-- region Main Heading -->
+<h1 class="new-head text-lg px-4 py-1.5 mb-4 rounded flex justify-between items-center font-semibold min-h-13">
+    {{'Matrix Management'}}
+</h1>
+<!-- main heading -->
+    <div class="">
+        <ng-container *ngFor="let MatrixManagement of MatrixManagementMenu; index as i">
+            <gnx-accordion [title]="MatrixManagement.title" [ListData]="MatrixManagement.items" [AccordionIndex]="i"
+                [ActiveAccordionIndex]="currentActiveAccordionIndex"
+                (onActive)="setActiveAccordionIndex($event)"></gnx-accordion>
+        </ng-container>
+    </div>

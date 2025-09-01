@@ -1,0 +1,16 @@
+.headingBorder {
+    background-color: rgb(241, 245, 249) !important;
+}
+
+
+@media screen and (min-width: 1280px) {
+    .dashboard-filter-responsive {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+}
+
+@media screen and (min-width: 1470px) {
+    .dashboard-filter-responsive {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    }
+}

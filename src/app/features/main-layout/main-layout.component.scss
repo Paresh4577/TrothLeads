@@ -1,0 +1,342 @@
+/* Mobile Navigation Styles */
+@media (max-width: 768px) {
+  .nav {
+    position: fixed;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    display: flex !important;
+  }
+  /* navbar.component.css */
+
+/* Navigation Items */
+.nav-item {
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+  position: relative;
+}
+
+.nav-item:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Hover Dropdown Container */
+.dropdown-hover {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Arrow Animation */
+.dropdown-arrow {
+  transition: transform 0.2s ease-in-out;
+}
+
+.dropdown-hover:hover .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+/* Settings Button Hover State */
+.dropdown-hover:hover .nav-item {
+  background-color: #f3f4f6;
+}
+
+/* Dropdown Content - Hidden by default */
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+              0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+  padding: 8px 0;
+  z-index: 1000;
+  
+  /* Hidden state */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  
+  /* Smooth transition */
+  transition: all 0.15s ease-out;
+  
+  /* Prevent gap issues */
+  margin-top: 2px;
+}
+
+/* Show dropdown on hover */
+.dropdown-hover:hover .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Dropdown Links */
+.dropdown-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 14px;
+  color: #374151;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.1s ease-in-out;
+  border: none;
+  background: none;
+  text-align: left;
+}
+
+.dropdown-link:hover {
+  background-color: #f9fafb;
+  color: #1f2937;
+}
+
+.dropdown-link:active {
+  background-color: #f3f4f6;
+}
+
+/* Dropdown Icons */
+.dropdown-icon {
+  margin-right: 10px;
+  font-size: 16px;
+  width: 18px;
+  display: inline-block;
+}
+
+/* Dropdown Separator */
+.dropdown-separator {
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 6px 0;
+}
+
+/* Enhanced hover area to prevent flickering */
+.dropdown-hover::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: transparent;
+  z-index: 999;
+}
+
+/* Ultra-fast hover - instant response */
+.dropdown-content {
+  transition: all 0.05s ease-out;
+}
+
+.dropdown-hover:hover .dropdown-content {
+  animation: none;
+  transition: none;
+}
+
+/* Mobile Navigation - Disable hover */
+@media (max-width: 768px) {
+  .dropdown-hover:hover .dropdown-content {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+  }
+  
+  /* Convert to click-based on mobile */
+  .dropdown-hover {
+    position: static;
+  }
+  
+  .dropdown-content {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+    margin-top: 0;
+    background: transparent;
+  }
+  
+  .dropdown-link {
+    padding: 12px 24px;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  
+  .dropdown-link:last-child {
+    border-bottom: none;
+  }
+  
+  .dropdown-separator {
+    display: none;
+  }
+}
+
+/* Ensure smooth transitions */
+* {
+  box-sizing: border-box;
+}
+
+/* Additional hover refinements */
+.dropdown-hover:hover .dropdown-content {
+  animation: dropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Prevent dropdown from disappearing when moving mouse */
+.dropdown-content::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: transparent;
+}
+
+/* Focus states for accessibility */
+.dropdown-hover:focus-within .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-link:focus {
+  background-color: #f3f4f6;
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dropdown-menu {
+    left: auto;
+    right: 0;
+    min-width: 200px;
+  }
+}
+
+/* Focus Management */
+.dropdown-container:focus-within .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Hover Enhancement (Optional) */
+.dropdown-container:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Active State for Settings Button */
+.dropdown-container .nav-item.active {
+  background-color: #f3f4f6;
+}
+
+/* Animation for smooth transitions */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOutUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.dropdown-menu.show {
+  animation: fadeInDown 0.2s ease-out;
+}
+
+/* Custom Scrollbar for long dropdown lists */
+.dropdown-content {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.dropdown-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dropdown-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.dropdown-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.dropdown-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+  .nav.mobile-nav-open {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .nav-item {
+    width: 100%;
+    text-align: left;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .nav-item:last-child {
+    border-bottom: none;
+  }
+
+  .mobile-toggle {
+    display: flex;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-toggle {
+    display: none;
+  }
+}
+

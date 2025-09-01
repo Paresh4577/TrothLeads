@@ -1,0 +1,24 @@
+<div id="page-header" fxLayout="column" fxFlex class="mb-4">
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxFlex>
+    <div id="page-title" fxLayout="column" fxFlex>
+      <div fxLayout="row" fxFlex>
+        <div class="title">
+          <h2>{{ title }}&nbsp;</h2>
+        </div>
+
+        <div class="description" *ngIf="description">
+          <h2>- {{ description }}</h2>
+        </div>
+      </div>
+
+      <h4 *ngIf="subtitle">
+        {{ subtitle }}
+      </h4>
+    </div>
+    <div id="page-actions" fxLayout="row" fxFlex fxLayoutAlign="end center" fxLayoutGap="6px">
+      <button *ngFor="let item of pageActions" mat-raised-button [id]="item.name" (click)="actionClick($event)" [class]="item.class">
+        {{ item.caption }}
+      </button>
+    </div>
+  </div>
+</div>

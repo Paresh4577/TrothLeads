@@ -1,0 +1,26 @@
+<div class="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-lg p-6">
+    <h2 class="text-xl font-bold mb-4">{{ isEditMode ? 'Edit Product Header' : 'Add New Product Header' }}</h2>
+    <form (ngSubmit)="submitProductHeader()">
+      <div class="row">
+        <!-- Product Header Name -->
+        <div class="col-md-12 mb-3">
+          <input
+            type="text"
+            [(ngModel)]="currentHeader.ProductHeaderName"
+            name="productHeaderName"
+            class="form-control"
+            placeholder="Product Header Name"
+            required
+          />
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-md-12 mb-3 d-flex justify-content-end gap-2">
+          <button type="submit" class="btn btn-success">{{ isEditMode ? 'Update' : 'Save' }}</button>
+          <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  

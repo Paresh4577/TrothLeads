@@ -1,0 +1,102 @@
+<!-- region Main Heading -->
+
+<h1 class="new-head text-lg px-4 py-1.5 mb-4 rounded flex justify-between items-center font-semibold min-h-13">
+  {{title}}
+  <!-- region Heading Controls -->
+  <div id="page-actions" fxLayout="row" fxFlex fxLayoutAlign="end center" fxLayoutGap="6px">
+    <!-- <mat-icon>manage_search</mat-icon> -->
+    <button mat-raised-button *ngIf="!generated" (click)="generateReport()">
+      Generate
+    </button>&nbsp;
+    <!-- <i class="material-icons">arrow_back</i> -->
+    <button mat-raised-button *ngIf="!generated" type="button" [routerLink]="['/app/reports']">
+      Cancel
+    </button>
+    <!-- <mat-icon>download</mat-icon> -->
+    <button mat-raised-button *ngIf="generated" type="button" (click)="exportToExcel()">
+      Export to Excel
+    </button> &nbsp;
+    <!-- <i class="material-icons">arrow_back</i> -->
+    <button mat-raised-button *ngIf="generated" type="button" (click)="backToReport()">
+      Back
+    </button>
+  </div>
+</h1>
+<!-- endregion Heading Controls -->
+<!-- region dynamic list table component  -->
+<gnx-table *ngIf="generated" [headArray]="columnDef" [listDataObservable]="ReportData$" [masterName]="'Policy'"
+  (onSort)="sortColumn($event)" (onSearch)="searchColumn($event)" (onNext)="nextPage()" (onPrev)="previousPage()"
+  (onLimitChange)="setLimit($event)">
+</gnx-table>
+
+<form [formGroup]="MISReportForm">
+
+
+  <div *ngIf="!generated">
+    <div class="px-4 py-7 rounded bg-white">
+      <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5  mt-4">
+        
+        <!-- Branch -->
+        <div class="relative ">
+          <div class="icon">
+            <mat-icon>spa</mat-icon>
+          </div>
+          <select id="" formControlName="BranchId">
+            <option value="" *ngIf="Branchs.length > 1">--Select--</option>
+            <option *ngFor="let Branch of Branchs" [value]="Branch.Id">
+              {{Branch.Name}}
+            </option>
+          </select>
+          <label for="Branch" class="">Branch</label>
+        </div>
+
+        <!-- Policy Period -->
+        <div class="relative col-start-1">
+          <div class="icon">
+            <mat-icon>pending_actions</mat-icon>
+          </div>
+          <select class="peer" id="PolicyPeriod" formControlName="PolicyPeriod">
+            <option value="">--Select--</option>
+            <option *ngFor="let option of displayedPolicyPeriod" [value]="option.value">
+              {{option.name}}
+            </option>
+          </select>
+          <label for="Type" class="mandatory">Policy Period</label>
+        </div>
+        
+        
+        <!-- From Date -->
+        <div class="relative col-start-1" *ngIf="MISReportForm.get('PolicyPeriod').value == 'DateRange'">
+          <div class="icon">
+            <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="FromDate"></mat-datepicker-toggle>
+            <mat-datepicker #FromDate></mat-datepicker>
+          </div>
+          <div class="flex">
+            <input matInput type="text" id="FromDate" placeholder="__/__/____" datemask formControlName="FromDate"
+              [matDatepicker]="FromDate" class="peer" />
+            <label for="FromDate" class="mandatory">From Date</label>
+          </div>
+        </div>
+        
+        <!-- To Date -->
+        <div class="relative col-start-1" *ngIf="MISReportForm.get('PolicyPeriod').value == 'DateRange'">
+          <div class="icon">
+            <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="ToDate"></mat-datepicker-toggle>
+            <mat-datepicker #ToDate></mat-datepicker>
+          </div>
+          <div class="flex">
+            <input matInput type="text" id="ToDate" placeholder="__/__/____" datemask formControlName="ToDate"
+              [min]="MISReportForm.get('FromDate').value" [matDatepicker]="ToDate" class="peer" />
+            <label for="ToDate" class="mandatory">To Date</label>
+          </div>
+        </div>
+
+      </div>
+ 
+    </div>
+
+  </div>
+  <!-- region dynamic list table component  -->
+
+  <!-- endregion dynamic list table component  -->
+</form>

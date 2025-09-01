@@ -1,0 +1,15 @@
+.headingBorder {
+    background-color: rgb(241, 245, 249) !important;
+}
+
+.borderCommonColor {
+    border-color: #cbd5e1 !important;
+}
+
+::ng-deep.CustomBox {
+    padding-bottom: 0.50rem !important;
+    padding-top: 0.50rem !important;
+    font-size: 0.9rem !important;
+    padding-left: 8px !important;
+    width: 100% !important;
+}

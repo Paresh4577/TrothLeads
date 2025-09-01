@@ -1,0 +1,82 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1
+        class="new-head text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+        <button mat-raised-button class="new-button" [disabled]="SubSourceForm.invalid" (click)="submitform()"
+            *ngIf="mode == 'Create' || mode == 'Edit'">Save</button>
+
+        <button mat-raised-button class="new-button" (click)="backClicked()"
+            *ngIf="mode == 'Edit' || mode == 'Create'">Cancel</button>
+
+        <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'View'">Back</button>
+        </div>
+    </h1>
+    <!-- endregion main heading -->
+  
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+      <form [formGroup]="SubSourceForm" class="sm:w-120 text-md">
+
+        <div class="grid gap-6">
+
+  <!-- Sub Source Name  -->
+        <div class="relative">
+          <div class="icon">
+            <mat-icon> person_pin_circle</mat-icon>
+          </div>
+          <input type="text" #firstElement id="Name" AlphabetOnly class="peer" placeholder=" " minlength="1" maxlength="120" formControlName="Name" />
+          <label for="Name" class="mandatory">Sub Source Name</label>
+        </div>
+        <!-- Source Name -->
+        <div class="relative ">
+          <div class="icon">
+              <mat-icon> person_pin</mat-icon>
+            </div>
+          <div class="flex">
+              <input type="text" class="peer" formControlName="SourceName"
+                  placeholder=" " id="SourceName" AlphabetOnly [matAutocomplete]="SourceSearch" />
+                  <mat-autocomplete #SourceSearch="matAutocomplete" (optionSelected)="SourceSelected($event)" >
+                      <mat-option *ngFor="let Source Of Sources$ | async" [value]="Source">
+                          {{Source.Name}}
+                      </mat-option>
+                  </mat-autocomplete>
+              <button class="-m-5 z-10" type="button" *ngIf="editable"
+              (click)="openDiolog('Source','Select Source')"><mat-icon
+                      class="-ml-2">search</mat-icon></button>
+                      <button
+                      *ngIf="SubSourceForm.get('SourceName').value && mode != 'View'"
+                      type="button"
+                      class="-m-7 z-10"
+                      aria-label="clear"
+                      matTooltip="Clear"
+                      (click)="clear('SourceName', 'SourceId')"
+                    >
+                      <mat-icon>clear</mat-icon>
+                    </button>
+          <label for="SourceName" class="mandatory">Source Name</label>
+      </div>
+      </div>
+
+
+          <!-- Status  -->
+          <div class="font-medium py-3 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+            <span for="Status" class="pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 ml-3">Status</span>
+        <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1" (change)="onChange($event,'Status')">
+          <span class="flex font-medium text-xl ml-3 mt-1.5">
+            {{
+              SubSourceForm.controls['Status'].value == 1
+            ? "Active"
+            : "InActive"
+            }}
+          </span>
+          </mat-slide-toggle>
+        </div>
+
+        </div>
+      </form>
+    </div>
+    <!-- endregion form -->
+  </div>

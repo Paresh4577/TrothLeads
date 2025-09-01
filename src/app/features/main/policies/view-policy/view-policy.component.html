@@ -1,0 +1,326 @@
+<div class="min-h-screen bg-gray-50 py-2 px-2 sm:px-6 lg:px-8">
+  <div class="max-w-full mx-auto">
+    <!-- Header -->
+
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="bg-white shadow-sm rounded-lg p-6 text-center">
+      <div
+        class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent">
+      </div>
+      <p class="mt-2 text-sm text-gray-600">Loading policies...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="errorMessage && !isLoading" class="bg-white shadow-sm rounded-lg p-6 text-center">
+      <i class="fas fa-exclamation-triangle text-primary text-2xl mb-2"></i>
+      <p class="text-sm text-gray-600">{{ errorMessage }}</p>
+    </div>
+
+    <!-- Policies Section -->
+    <div *ngIf="!isLoading && !errorMessage" class="bg-white shadow-sm rounded-lg">
+      <div>
+
+
+        <!-- Policy Cards Grid -->
+        <div class="grid grid-cols-1 gap-6" *ngIf="policyDetails.length > 0">
+          <div class="bg-white shadow-sm rounded-lg overflow-hidden flex flex-col"
+            *ngFor="let policy of policyDetails; let i = index">
+          <!-- Card Header -->
+<div class="text-white rounded-t-lg flex justify-between items-center" style="background-color: rgb(4, 100, 164);">
+  <div class="flex items-center">
+    <p class="m-2 text-sm font-medium" style="padding-left: 4px;">{{ policy.CustomerFullName }}</p>
+  </div>
+ <button 
+  style="padding: 4px 10px; border-radius: 20px; border: none; background-color: white; color: rgb(4, 100, 164); font-size: 12px; font-weight: 500; cursor: pointer; margin: 8px; transition: background-color 0.2s;"
+  onmouseover="this.style.backgroundColor='#f3f4f6'" 
+  onmouseout="this.style.backgroundColor='white'"
+  routerLink="/Policies">
+  <i class="fas fa-arrow-left" style="margin-right: 4px;"></i> Back
+</button>
+</div>
+
+            <!-- Card Body with Scrollable Content -->
+            <div class="px-5 py-4 min-h-[400px] max-h-[600px] overflow-y-auto flex-grow">
+              <!-- Customer Section -->
+              <div class="mb-6">
+                <h4 class="text-md font-medium text-gray-700 flex items-center mb-3">
+                  <i class="fas fa-user mr-2 text-primary"></i>
+                  Customer Information
+                </h4>
+                <div class="grid grid-cols-1 gap-3">
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-user-tag mr-1 text-primary"></i> Name
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.CustomerFullName }}</p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-id-badge mr-1 text-primary"></i> Customer No
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.CustomerNo }}</p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-mobile-alt mr-1 text-primary"></i> Mobile
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.CustomerMobile || 'N/A' }}</p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-envelope mr-1 text-primary"></i> Email
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.GroupHeadEmail || 'N/A' }}</p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-circle mr-1 text-primary"></i> Status
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">
+                      <i class="fas fa-circle text-[8px] mr-1"
+                        [ngClass]="policy.PolicyIsActive ? 'text-green-400' : 'text-red-400'"></i>
+                      {{ policy.PolicyIsActive ? 'Active' : 'Inactive' }}
+                    </p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-file-alt mr-1 text-primary"></i> Policy Type
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.PolicyType }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Vehicle Section -->
+              <div class="mb-6">
+                <h4 class="text-md font-medium text-gray-700 flex items-center mb-3">
+                  <i class="fas fa-car mr-2 text-primary"></i>
+                  Vehicle Details
+                </h4>
+                <div class="grid grid-cols-1 gap-3">
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-car-alt mr-1 text-primary"></i> Vehicle No
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.PolicyVehicleNumber?.toUpperCase() ||
+                      'N/A' }}</p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-car-side mr-1 text-primary"></i> Brand & Model
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.PolicyVehicleBrand }} {{
+                      policy.PolicyVehicleModel }}</p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-cogs mr-1 text-primary"></i> Sub Model
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.PolicyVehicleSubModel || 'N/A' }}</p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-calendar-day mr-1 text-primary"></i> Year
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.ManufacturingYear || 'N/A' }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Insurance Company Section -->
+              <div class="mb-6">
+                <h4 class="text-md font-medium text-gray-700 flex items-center mb-3">
+                  <i class="fas fa-building mr-2 text-primary"></i>
+                  Insurance Details
+                </h4>
+                <div class="grid grid-cols-1 gap-3">
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-shield-alt mr-1 text-primary"></i> Company
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.InsuranceCompanyShortName || 'N/A' }}
+                    </p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-tag mr-1 text-primary"></i> Category
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.SubCategoryName || 'N/A' }}</p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-user-tie mr-1 text-primary"></i> Sales Person
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.SalesPersonName || 'N/A' }}</p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-money-check-alt mr-1 text-primary"></i> Payment Mode
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.PaymentMode || 'N/A' }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Premium Section -->
+              <div class="mb-6">
+                <h4 class="text-md font-medium text-gray-700 flex items-center mb-3">
+                  <i class="fas fa-money-bill-wave mr-2 text-primary"></i>
+                  Premium & Coverage
+                </h4>
+                <div class="grid grid-cols-1 gap-3">
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-wallet mr-1 text-primary"></i> Sum Insured
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">₹{{ policy.SumInsured | number:'1.0-0' }}</p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-money-bill mr-1 text-primary"></i> Net Premium
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">₹{{ policy.NetPremium | number:'1.2-2' }}</p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-file-invoice-dollar mr-1 text-primary"></i> GST Amount
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">₹{{ policy.GSTAmount | number:'1.2-2' }}</p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-hand-holding-usd mr-1 text-primary"></i> Total Premium
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">₹{{ policy.TotalPremium | number:'1.2-2' }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dates Section -->
+              <div class="mb-6">
+                <h4 class="text-md font-medium text-gray-700 flex items-center mb-3">
+                  <i class="fas fa-calendar-alt mr-2 text-primary"></i>
+                  Important Dates
+                </h4>
+                <div class="grid grid-cols-1 gap-3">
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-calendar-check mr-1 text-primary"></i> Issue Date
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.PolicyIssueDate | date:'dd MMM yyyy'
+                      }}</p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-calendar-day mr-1 text-primary"></i> Start Date
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.PolicyStartDate | date:'dd MMM yyyy'
+                      }}</p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-calendar-times mr-1 text-primary"></i> End Date
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.PolicyEndDate | date:'dd MMM yyyy' }}
+                    </p>
+                  </div>
+                  <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                    <p class="text-xs font-medium text-primary-dark flex items-center">
+                      <i class="fas fa-paper-plane mr-1 text-primary"></i> Submission Date
+                    </p>
+                    <p class="mt-1 text-sm font-semibold text-gray-800">{{ policy.ProposalSubmissionDate | date:'dd MMM
+                      yyyy' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="policyDetails.length === 0"
+          class="text-center py-8 bg-primary-lighter rounded-lg border border-primary-lightest">
+          <i class="fas fa-file-contract text-3xl text-primary-light mb-3"></i>
+          <h3 class="text-sm font-medium text-gray-700">No Policy Found</h3>
+          <p class="mt-1 text-xs text-gray-600">The requested policy could not be found.</p>
+          <button
+            class="mt-4 inline-flex items-center px-3 py-1.5 rounded text-xs font-medium bg-primary text-white hover:bg-primary-dark transition-colors">
+            <i class="fas fa-arrow-left mr-1"></i>
+            Back to Policies
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Custom color definitions */
+  .bg-primary {
+    background-color: rgb(4, 100, 164);
+  }
+
+  .text-primary {
+    color: rgb(4, 100, 164);
+  }
+
+  .border-primary {
+    border-color: rgb(4, 100, 164);
+  }
+
+  .bg-primary-light {
+    background-color: rgba(4, 100, 164, 0.3);
+  }
+
+  .text-primary-light {
+    color: rgba(4, 100, 164, 0.7);
+  }
+
+  .bg-primary-lighter {
+    background-color: rgba(4, 100, 164, 0.1);
+  }
+
+  .bg-primary-badge {
+    background-color: rgba(4, 100, 164, 0.2);
+  }
+
+  .text-primary-dark {
+    color: rgb(3, 80, 131);
+  }
+
+  .border-primary-lightest {
+    border-color: rgba(4, 100, 164, 0.2);
+  }
+
+  .bg-primary-dark {
+    background-color: rgb(3, 80, 131);
+  }
+
+  /* Ensure scrollable content is visible */
+  .min-h-\[400px\] {
+    min-height: 400px;
+  }
+
+  .max-h-\[600px\] {
+    max-height: 600px;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+</style>

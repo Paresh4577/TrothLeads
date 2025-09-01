@@ -1,0 +1,135 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold"
+    [ngClass]="this.mode=='PopUpCreate' ? 'sticky top-0 z-40' : ''">
+        {{ title }}
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" (click)="submitForm()" [disabled]="ProductPlanForm.invalid" *ngIf="mode == 'Create' || mode == 'PopUpCreate' || mode == 'Edit'">
+                Save
+            </button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'Edit' || mode == 'Create' || mode == 'PopUpCreate'">
+                Cancel
+            </button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'View'">
+                Back
+            </button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+        <form [formGroup]="ProductPlanForm">
+            <div class="grid gap-6 sm:w-120">
+
+                <!-- Product Code -->
+                <div class="relative ">
+                    <div class="icon">
+                        <mat-icon>tonality</mat-icon>
+                    </div>
+                    <input type="text" class="peer " maxlength="120" id="Code"  readonly formControlName="ProductCode" placeholder=" " />
+                    <label for="Code" class="mandatory">Code</label>
+                </div>
+
+                <!-- Product/Plan Name -->
+                <div class="relative ">
+                    <div class="icon">
+                        <mat-icon>tonality</mat-icon>
+                    </div>
+                    <input type="text" class="peer " maxlength="120" id="Name" formControlName="Name" placeholder=" " />
+                    <label for="Name" class="mandatory">Product/Plan Name</label>
+                </div>
+
+
+                <!-- SubCatetory -->
+                <div class="relative ">
+                    <div class="icon">
+                        <mat-icon> compass_calibration</mat-icon>
+                    </div>
+                    <div class="flex">
+                        <input type="text" class="peer" [readonly]="mode == 'PopUpCreate'" formControlName="SubCategoryName" maxlength="120" AlphabetOnly placeholder=" " id="SubCatetory" [matAutocomplete]="SubCatetorySearch">
+                        <mat-autocomplete #SubCatetorySearch="matAutocomplete" (optionSelected)="SubCategorySelected($event)">
+                            <mat-option *ngFor="let SubCategory Of SubCategory$ | async" [value]="SubCategory">
+                                {{SubCategory.Name}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <button class="-m-5 z-10" type="button" *ngIf="editable && mode != 'PopUpCreate'" (click)="openDiolog('SubCategory','Select Sub-Category Name')">
+                            <mat-icon class="-ml-2">
+                                search
+                            </mat-icon></button>
+                        <button *ngIf="ProductPlanForm.get('SubCategoryName').value && mode != 'View' && mode != 'PopUpCreate'" type="button" class="-m-7 z-10" aria-label="clear" matTooltip="Clear" (click)="clear('SubCategoryName', 'SubCategoryId')">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                        <label for="SubCatetory" class="mandatory">Insurance Sub Catetory</label>
+                    </div>
+                    
+                </div>
+
+
+                <!-- Category -->
+                <div class="relative ">
+                    <div class="icon">
+                        <mat-icon>category</mat-icon>
+                    </div>
+                    <input type="text" class="peer " maxlength="120" id="Category" formControlName="CategoryName" readonly placeholder=" " />
+                    <label for="Category" class="mandatory">Insurance Category</label>
+                </div>
+
+                <!-- Insurance Company -->
+                <div class="relative ">
+                    <div class="icon">
+                        <mat-icon>tonality</mat-icon>
+                    </div>
+                    <div class="flex">
+                        <input type="text" class="peer" maxlength="120" id="InsurerCode"  [readonly]="mode != 'Create'" formControlName="InsurerName" AlphabetOnly placeholder=" " [matAutocomplete]="InsuranceCompanyNameSearch">
+                        <mat-autocomplete #InsuranceCompanyNameSearch="matAutocomplete" (optionSelected)="InsuranceCompanyNameSelected($event)">
+                            <mat-option *ngFor="let Company Of InsuranceCompany$ | async" [value]="Company">
+                                {{Company.Name}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <button class="-m-5 z-10" type="button" *ngIf="mode == 'Create'" (click)="openDiolog('Insurance','Select Insurance Company')">
+                            <mat-icon class="-ml-2">
+                                search
+                            </mat-icon></button>
+                        <button *ngIf="ProductPlanForm.get('InsurerCode').value && (mode == 'Create')" type="button" class="-m-7 z-10" aria-label="clear" matTooltip="Clear" (click)="clear('InsurerName','InsurerCode')">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                        <label for="InsurerCode" class="mandatory">Insurance Company</label>
+                    </div>
+                    
+                </div>
+
+
+                <!-- SalesPersonType -->
+                <div class="relative ">
+                    <div class="icon">
+                        <mat-icon>work</mat-icon>
+                    </div>
+                    <select id="SalesPersonType" name="SalesPersonType" class="peer" formControlName="SalesPersonType" placeholder=" ">
+                        <option value="">-- Select --</option>
+                        <option *ngFor="let item of DropdownMaster.TransactionSalesPersonTypeButtonOptions" [value]="item.value"> {{item.value}} </option>
+                    </select>
+                    <label for="SalesPersonType" class="">Sales Person Type</label>
+                </div>
+
+                <!-- Status  -->
+                <div class="font-medium py-1 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+                    <span for="Status" class="pr-2 py-1 font-medium ml-3">Status</span>
+                    <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1" (change)="onChange($event,'Status')">
+                      <span class="flex font-medium text-xl ml-3 mt-1.5">
+                        {{ ProductPlanForm.get('Status').value==1 ? "Active" : "InActive" }}
+                      </span>
+                    </mat-slide-toggle>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+
+</div>

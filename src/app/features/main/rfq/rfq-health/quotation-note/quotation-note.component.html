@@ -1,0 +1,941 @@
+<div class="px-4 pb-4 max-h-none w-full">
+    <!-- region main heading -->
+
+    <!-- region main heading -->
+    <div class="pt-4 sticky z-30 headingBorder top-0 w-full">
+        <!-- region main heading -->
+        <h1 class="new-head h-14 text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold">
+            {{ pagetitle }}
+            <div class="flex gap-x-3  items-center text-lg font-normal">
+                <button mat-raised-button class="new-button" *ngIf="displayValuesOfForm?.AssignId" (click)="rfqUWassign('unassign')">Un Assign
+                    UW</button>
+                <button mat-raised-button class="new-button" *ngIf="displayValuesOfForm?.AssignId" (click)="rfqUWassign('reassign')">Re-Assign
+                    UW</button>
+                <button mat-raised-button class="new-button" (click)="BackToListPage()">Back</button>
+                <button mat-raised-button class="new-button" (click)="ExpandCollaps()">
+                    {{isExpand ? 'Collapse' : 'Expand All'}}
+                </button>
+            </div>
+        </h1>
+
+        <div class="">
+            <div class="px-4 py-4 rounded bg-white">
+                <mat-card class="bg-sky-100 px-4 py-3 gap-2 container mx-auto min-h-16">
+                    <div class="flex flex-wrap gap-5 justify-between px-4 sm:text-center">
+
+                        <!-- RFQ No -->
+                        <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                            <span class="text-center font-semibold">RFQ No</span>
+                            <span class="font-normal text-center">{{HealthQuateForm.get("RFQNo").value}}</span>
+                        </div>
+
+                        <!-- Customer name -->
+                        <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                            <span class="text-center font-semibold">Customer name</span>
+                            <span class="font-normal text-center">{{ProposerName}}</span>
+                        </div>
+
+                        <!-- Sub Category -->
+                        <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                            <span class="text-center font-semibold">Sub Category</span>
+                            <span
+                                class="font-normal text-center">{{HealthQuateForm.get("SubCategoryName").value}}</span>
+                        </div>
+
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class=" py-5 rounded">
+        <mat-stepper orientation="vertical" #stepper linear [ngClass]="isExpand ? 'showstep' : ''">
+
+            <!-- First stepper -->
+            <mat-step label="RFQ No & Date">
+
+                <form [formGroup]="HealthQuateForm">
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3  mt-4">
+                            <!-- RFQ No. -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <input matInput type="text" placeholder=" " class="peer w-fit" formControlName="RFQNo"
+                                    required readonly />
+                                <label for="Name" class="mandatory">RFQ No.</label>
+                            </div>
+
+                            <!-- RFQ Date -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-datepicker-toggle class="-ml-2  pointer-events-none" matIconSuffix
+                                        [for]="RFQDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #RFQDate></mat-datepicker>
+                                </div>
+                                <div class="flex">
+                                    <input matInput type="text" id="RFQDate" [max]="maxBirthDate"
+                                        formControlName="RFQDate" placeholder="__/__/____" datemask
+                                        [matDatepicker]="RFQDate" class="peer mb-1" readonly />
+                                    <label for="RFQDate" class="mandatory">RFQ Date</label>
+                                </div>
+                            </div>
+                        </div>
+                </form>
+                <div class="" *ngIf="!isExpand">
+                    <button class="bg-royal text-white mx-3" mat-button matStepperNext>
+                        Next
+                    </button>
+                </div>
+            </mat-step>
+
+            <!-- Second stepper -->
+            <mat-step label="Basic Details">
+                <form [formGroup]="HealthQuateForm">
+                    <div class="py-5">
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-4">
+
+                            <!-- Product Sub Category -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon> compass_calibration</mat-icon>
+                                </div>
+                                <select class="peer bg-white" formControlName="SubCategoryId">
+                                    <option disabled value=0>--Select--</option>
+                                    <option disabled *ngFor="let option of SubCategoryList" value="{{option.Id}}">
+                                        {{ option.Name }}
+                                    </option>
+                                </select>
+                                <label for="SubCategory" class="mandatory">Product Sub Category</label>
+                            </div>
+
+                            <!-- Policy Type -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>category</mat-icon>
+                                </div>
+                                <input matInput type="text" id="PolicyType" [value]="displayValuesOfForm.PolicyType"
+                                    placeholder=" " class="peer" readonly />
+                                <label for="PolicyType" class="mandatory">Policy Type</label>
+                            </div>
+
+                            <!-- Category Type -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>category</mat-icon>
+                                </div>
+                                <select id="" formControlName="CategoryType">
+                                    <option disabled value="">--Select--</option>
+                                    <option disabled *ngFor="let option of CategoryTypeList" [value]="option.key">
+                                        {{option.name}}
+                                    </option>
+                                </select>
+                                <label for="CategoryType" class="mandatory">Category Type</label>
+                            </div>
+
+                            <!-- Policy Period -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>category</mat-icon>
+                                </div>
+                                <select id="" formControlName="PolicyPeriod">
+                                    <option disabled *ngFor="let option of PolicyTenureList" [value]="option.key">
+                                        {{option.name}}
+                                    </option>
+                                </select>
+                                <label for="PolicyPeriod" class="mandatory">Policy Period</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+                <div *ngIf="!isExpand">
+                    <button class="bg-royal text-white" mat-button matStepperPrevious>
+                        Back
+                    </button>
+                    <button class="bg-royal text-white mx-3" mat-button matStepperNext>
+                        Next
+                    </button>
+                </div>
+            </mat-step>
+
+            <!-- third stepper -->
+            <mat-step label="Product Category Details">
+                <form [formGroup]="HealthQuateForm">
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-5 mt-4">
+
+                        <!-- Sum Insured(Mediclaim) -->
+                        <div class="relative "
+                            *ngIf="HealthQuateForm.get('CategoryType').value != HealthCategoryType.MultiIndividual">
+                            <div class="icon rs">₹</div>
+                            <select class="" name="" id="" formControlName="SumInsured">
+                                <option disabled *ngFor="let sum of DropdownMaster.RFQSumInsuredButtonOptions"
+                                    [value]="sum.value">
+                                    {{sum.name}} </option>
+                            </select>
+                            <label for="SumInsured"
+                                *ngIf="HealthQuateForm.get('SubCategoryCode').value != SubCategoryCodeEnum.MediclaimTopUpPlan">Sum
+                                Insured</label>
+                            <label for="SumInsured"
+                                *ngIf="HealthQuateForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan">Sum
+                                Insured(Mediclaim)</label>
+                        </div>
+
+                        <!-- Sum Insured(TopUp) -->
+                        <div class="relative "
+                            *ngIf="HealthQuateForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan && HealthQuateForm.get('CategoryType').value != HealthCategoryType.MultiIndividual">
+                            <div class="icon rs">₹</div>
+                            <select class="" name="OtherSumInsured" id="OtherSumInsured"
+                                formControlName="OtherSumInsured">
+                                <option value=0>--Select--</option>
+                                <option disabled *ngFor="let sum of DropdownMaster.RFQSumInsuredButtonOptions"
+                                    [value]="sum.value">
+                                    {{sum.name}} </option>
+                            </select>
+                            <label for="OtherSumInsured">Sum Insured(Top-Up)</label>
+                        </div>
+
+                        <!-- Deductible -->
+                        <div class="relative"
+                            *ngIf="(HealthQuateForm.get('SubCategoryCode').value == SubCategoryCodeEnum.TopUpPlan || HealthQuateForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan) && HealthQuateForm.get('CategoryType').value != HealthCategoryType.MultiIndividual">
+                            <div class="icon rs">₹</div>
+                            <input matInput maxlength="7" type="text" id="Deductible" formControlName="Deductible"
+                                readonly placeholder=" " class="peer" required />
+                            <label for="Deductible">Deductible</label>
+                        </div>
+
+                    </div>
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-5 mt-4">
+
+                        <!-- PIN Code -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>pin_drop</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" Onlynumber maxlength="6" class="peer" matInput readonly
+                                    formControlName="Pincode" id="PinCode" placeholder=" " required />
+                                <label for="PinCode" class="mandatory">PIN Code</label>
+                            </div>
+                        </div>
+
+                        <!-- Proposer Mobile No -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon class="-ml-2">smartphone</mat-icon>
+                            </div>
+                            <input matInput type="text" readonly id="ProposerMobileNo"
+                                formControlName="ProposerMobileNo" readonly placeholder=" " class="peer" required />
+                            <label for="ProposerMobileNo" class="mandatory">Proposer Mobile No</label>
+                        </div>
+
+                        <!-- Proposer Mobile No -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon class="-ml-2">smartphone</mat-icon>
+                            </div>
+                            <input matInput type="text" readonly id="ProposerEmail" formControlName="ProposerEmail"
+                                readonly placeholder=" " class="peer" required />
+                            <label for="ProposerEmail" class="mandatory">Email ID</label>
+                        </div>
+
+                    </div>
+
+                    <p class="font-semibold text-base col-start-1 md:col-span-2 lg:col-span-3 pt-5">
+                        Details of Proposed Insured & Family (If Applicable)
+                    </p>
+                    <br />
+                    <h3>Select Proposer's Gender:</h3>
+                    <br />
+
+                    <mat-button-toggle-group #group="matButtonToggleGroup" disabled [value]="SelfGender"
+                        class="genderbtn">
+                        <mat-button-toggle value="Male"> Male </mat-button-toggle>
+                        <mat-button-toggle value="Female"> Female </mat-button-toggle>
+                    </mat-button-toggle-group>
+                    <h3 class="mandatory mt-4">Who would you like to insure?</h3>
+
+                    <div class="flex flex-wrap">
+                        <div class="w-full">
+                            <div class="flex flex-wrap text-black">
+                                <div class="my-4 w-full lg:mt-3">
+                                    <div class="grid md:grid-cols-6 grid-cols-2 xl:grid-cols-12 gap-x-4">
+                                        <button *ngFor="let member of allMemberCard , let m = index"
+                                            class="shadow-lg rounded-lg text-center mt-4"
+                                            [ngClass]=" HealthQuateForm.get(member.cover).value == true ? 'bg-sky-300' : 'bg-gray-100'">
+                                            <div class="rounded-full w-fit py-2 px-5 mx-auto"
+                                                [ngClass]="m==0 ?'self':''">
+                                                <div>
+                                                    <img src="{{member.member}}" alt="member.title" />
+                                                </div>
+                                            </div>
+                                            <p *ngIf="member.title=='Son' || member.title=='Daughter'"
+                                                class="text-sm mt-2 pb-4 font-semibold">
+                                                <span *ngIf="HealthQuateForm.get(member.cover).value == true"
+                                                    class="font-bold">
+                                                    {{ HealthQuateForm.get("noOf"+member.title).value }}
+                                                </span>
+                                                {{member.title}}<span
+                                                    *ngIf="HealthQuateForm.get('noOf'+member.title).value > 1"
+                                                    class="font-bold">s</span>
+                                            </p>
+                                            <p *ngIf="member.title!='Son' && member.title!='Daughter'"
+                                                class="text-sm mt-2 pb-4 font-semibold">
+                                                {{member.title}} <span *ngIf="member.title=='Self'" class="font-bold">
+                                                    <br> (Proposer)</span>
+                                            </p>
+                                        </button>
+                                    </div>
+                                    <div class="grid sm:grid-cols-1 md:grid-cols-2">
+                                        <div
+                                            class="grid grid-rows-1 grid-cols-1 md:grid-rows-1 md:grid-cols-2 md:col-span-2 xl:col-span-1 sm:grid-rows-2 sm:grid-cols-1">
+                                            <div class="shadow-lg rounded-lg text-center mt-4 py-4"
+                                                *ngIf="HealthQuateForm.controls['DaughterCoverRequired'].value == true">
+                                                <!-- noOfDaughter -->
+                                                <div>Number of Daughters to Insure</div>
+                                                <div>
+                                                    <div class="flex justify-evenly px-2 mt-2">
+                                                        <div class="px-2">
+                                                            <input type="radio"
+                                                                [checked]="HealthQuateForm.get('noOfDaughter').value == 1"
+                                                                name="noOfDaughter" value="1" disabled />
+                                                            <span for="" class="ml-2 font-bold">1</span>
+                                                        </div>
+                                                        <div class="px-2">
+                                                            <input type="radio"
+                                                                [checked]="HealthQuateForm.get('noOfDaughter').value == 2"
+                                                                name="noOfDaughter" value="2" disabled />
+                                                            <span for="" class="ml-2 font-bold">2</span>
+                                                        </div>
+                                                        <div class="px-2">
+                                                            <input type="radio"
+                                                                [checked]="HealthQuateForm.get('noOfDaughter').value == 3"
+                                                                name="noOfDaughter" value="3" disabled />
+                                                            <span for="" class="ml-2 font-bold">3</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="shadow-lg rounded-lg text-center mt-4 py-4"
+                                                *ngIf="HealthQuateForm.controls['SonCoverRequired'].value == true">
+                                                <!-- noOfSon -->
+                                                <div>Number of Sons to Insure</div>
+                                                <div>
+                                                    <div class="flex justify-evenly px-2 mt-2">
+                                                        <div class="px-2">
+                                                            <input type="radio"
+                                                                [checked]="HealthQuateForm.get('noOfSon').value == 1"
+                                                                name="noOfSon" value="1" disabled />
+                                                            <span for="" class="ml-2">1</span>
+                                                        </div>
+                                                        <div class="px-2">
+                                                            <input type="radio"
+                                                                [checked]="HealthQuateForm.get('noOfSon').value == 2"
+                                                                name="noOfSon" value="2" disabled />
+                                                            <span for="" class="ml-2">2</span>
+                                                        </div>
+                                                        <div class="px-2">
+                                                            <input type="radio"
+                                                                [checked]="HealthQuateForm.get('noOfSon').value == 3"
+                                                                name="noOfSon" value="3" disabled />
+                                                            <span for="" class="ml-2">3</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="px-4 py-5 rounded">
+                        <div formArrayName="Members" class="text-md">
+                            <div *ngFor="let item of myMembers , let i = index"
+                                class="tablecontent mat-expansion-panel-body">
+                                <!-- myMember Array -->
+                                <div [formGroupName]="i"
+                                    class="md:grid grid-cols-[minmax(50px,90px)_minmax(300px,1fr)] gap-9 py-2">
+
+                                    <div class="self-center col-start-1">
+                                        <div class="w-fit h-fit">
+                                            <img src="{{item.member}}" alt="" />
+                                            <p class="text-center">{{item.title}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 self-center py-2">
+
+                                        <!-- Name -->
+                                        <div class="relative">
+                                            <div class="icon">
+                                                <mat-icon>person</mat-icon>
+                                            </div>
+                                            <input type="text" class="peer" id="Name{{i}}" formControlName="Name"
+                                                AlphabetOnly placeholder=" " readonly />
+                                            <label for="Name{{i}} " class="mandatory">Name</label>
+                                        </div>
+
+                                        <!-- Date Of Birth -->
+                                        <div class="relative">
+                                            <div class="icon ">
+                                                <mat-datepicker-toggle class="-ml-2 pointer-events-none" matIconSuffix
+                                                    [for]="icker"></mat-datepicker-toggle>
+                                                <mat-datepicker #icker></mat-datepicker>
+                                            </div>
+                                            <div class="flex">
+                                                <input matInput type="text" id="dob{{i}}" formControlName="DOB"
+                                                    [max]="maxBirthDate" readonly placeholder="__/__/____" datemask
+                                                    [matDatepicker]="icker" class="peer mb-1" />
+                                                <label for="dob{{i}}" class="mandatory">Date Of Birth</label>
+                                            </div>
+                                        </div>
+
+                                        <!-- Habit of Smoking/Tobacco? -->
+                                        <div class="min-w-52">
+                                            <span
+                                                class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                                                for="">Habit of Smoking/Tobacco?</span>
+                                            <div class="grid grid-cols-4 w-full gap-5">
+                                                <div class="lableInputbox">
+                                                    <input type="radio" id="TobaccoYes{{i}}" disabled
+                                                        [checked]=" PolicyPersonsArray.at(i).get('SmokerTibco').value == true"
+                                                        [value]="true" />
+                                                    <label for="TobaccoYes{{i}}">Yes</label>
+                                                </div>
+                                                <div class="lableInputbox">
+                                                    <input type="radio" id="TobaccoNo{{i}}" disabled
+                                                        [checked]="PolicyPersonsArray.at(i).get('SmokerTibco').value == false"
+                                                        [value]="false" />
+                                                    <label for="TobaccoNo{{i}}">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Any Existing Illness? -->
+                                        <div class="min-w-52">
+                                            <span
+                                                class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                                                for="">Any Existing Illness?</span>
+                                            <div class="grid grid-cols-4 w-full gap-5">
+                                                <div class="lableInputbox">
+                                                    <input type="radio" [value]="true" disabled
+                                                        [checked]="PolicyPersonsArray.at(i).get('ExistingIllness').value == true"
+                                                        id="ExistingIllnessYes{{i}}" />
+                                                    <label for="ExistingIllnessYes{{i}}">Yes</label>
+                                                </div>
+                                                <div class="lableInputbox">
+                                                    <input type="radio" id="ExistingIllnessNo{{i}}" disabled
+                                                        [checked]="PolicyPersonsArray.at(i).get('ExistingIllness').value == false"
+                                                        [value]="false" />
+                                                    <label for="ExistingIllnessNo{{i}}">No</label>
+                                                </div>
+                                                <div>
+                                                    <button
+                                                        *ngIf="PolicyPersonsArray.at(i).get('ExistingIllness').value == true">
+                                                        <button
+                                                            [disabled]="PolicyPersonsArray.at(i).get('ExistingIllness').value == false"
+                                                            (click)="openDiolog(i, 'ExistingIllnessDetail', item.title+' Existing Illness Detail')">
+                                                            <mat-icon>fact_check</mat-icon>
+                                                        </button>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sum Insured -->
+                                        <div class="relative "
+                                            *ngIf="HealthQuateForm.get('CategoryType').value == HealthCategoryType.MultiIndividual">
+                                            <div class="icon rs">₹</div>
+                                            <select class="" name="" id="" formControlName="SumInsured">
+                                                <option disabled
+                                                    *ngFor="let sum of DropdownMaster.RFQSumInsuredButtonOptions"
+                                                    [value]="sum.value"> {{sum.name}} </option>
+                                            </select>
+                                            <label
+                                                *ngIf="HealthQuateForm.get('SubCategoryCode').value != SubCategoryCodeEnum.MediclaimTopUpPlan"
+                                                for="SumInsured" class="mandatory">Sum Insured</label>
+                                            <label
+                                                *ngIf="HealthQuateForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan"
+                                                for="SumInsured" class="mandatory">Sum Insured(Mediclaim)</label>
+                                        </div>
+
+                                        <!-- Sum Insured(Top-Up) -->
+                                        <div class="relative   "
+                                            *ngIf="HealthQuateForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan && HealthQuateForm.get('CategoryType').value == HealthCategoryType.MultiIndividual">
+                                            <div class="icon rs">₹</div>
+                                            <select class="" name="" id="" formControlName="OtherSumInsured">
+                                                <option disabled
+                                                    *ngFor="let sum of DropdownMaster.RFQSumInsuredButtonOptions"
+                                                    [value]="sum.value"> {{sum.name}} </option>
+                                            </select>
+                                            <label for="OtherSumInsured" class="mandatory">Sum Insured(Top-Up)</label>
+                                        </div>
+
+                                        <!-- Deductable(TopUp) -->
+                                        <div class="relative "
+                                            *ngIf="(HealthQuateForm.get('SubCategoryCode').value == SubCategoryCodeEnum.TopUpPlan || HealthQuateForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan) && HealthQuateForm.get('CategoryType').value == HealthCategoryType.MultiIndividual">
+                                            <div class="icon rs">₹</div>
+                                            <input matInput maxlength="10" type="text" id="Deductible" Onlynumber
+                                                onfocus="this.select()" formControlName="Deductible" placeholder=" "
+                                                class="peer" required />
+                                            <label for="Deductible">Deductible</label>
+                                        </div>
+
+                                        <!-- Remarks -->
+                                        <div class="relative  ">
+                                            <div class="icon">
+                                                <mat-icon>bubble_chart</mat-icon>
+                                            </div>
+                                            <input matInput type="text" placeholder=" " id="Remarks"
+                                                formControlName="Remark" class="peer w-fit pad" readonly required />
+                                            <label for="Remarks"
+                                                [ngClass]="PolicyPersonsArray.at(i).get('ExistingIllness').value == true ? 'mandatory' : ''">Remarks</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+                <div *ngIf="!isExpand">
+                    <button class="bg-royal text-white" mat-button matStepperPrevious>
+                        Back
+                    </button>
+                    <button class="bg-royal text-white mx-3" mat-button matStepperNext>
+                        Next
+                    </button>
+                </div>
+            </mat-step>
+
+            <!-- fourth stepper -->
+            <mat-step label="Previous Policy Details"
+                *ngIf="HealthQuateForm.get('PolicyType').value == HealthPolicyType.Rollover || HealthQuateForm.get('PolicyType').value == 'Renewal-Change Company' || HealthQuateForm.get('PolicyType').value == 'Renewal-Same Company'">
+                <form [formGroup]="HealthQuateForm">
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-5 mt-4 pb-5 ">
+
+                        <!-- Insurance Company -->
+                        <div class="relative self-end min-w-36">
+                            <div class="icon">
+                                <mat-icon>business</mat-icon>
+                            </div>
+                            <select class="peer" id="Company" formControlName="PrevPolicyInsurComp">
+                                <option disabled value="">--Select--</option>
+                                <option disabled *ngFor="let option of InsuranceCompany$ | async" [value]="option.Code">
+                                    {{option.ShortName}}</option>
+                            </select>
+
+                            <label for="Company" class="mandatory">Insurance Company</label>
+                        </div>
+
+                        <!-- Policy Type -->
+                        <div class="relative self-end min-w-36">
+                            <div class="icon">
+                                <mat-icon>timelapse</mat-icon>
+                            </div>
+                            <select class="peer" id="PolicyType" formControlName="PrevPolicyType">
+                                <!-- <option value="">--Select--</option> -->
+                                <option *ngFor="let option of DropdownMaster.PolicyTypeRadioButtonOptions" disabled
+                                    [value]="option.value">{{option.value}}</option>
+                            </select>
+
+                            <label for="PolicyType">Policy Type</label>
+                        </div>
+
+                        <!-- Policy StartDate -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-datepicker-toggle class="-ml-2 pointer-events-none" matIconSuffix
+                                    [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </div>
+                            <div class="flex">
+                                <input matInput type="text" id="PolicyStartDate" [max]="maxBirthDate"
+                                    formControlName="PreviousPolicyStartDate" readonly placeholder="__/__/____" datemask
+                                    [matDatepicker]="picker" class="peer" />
+                                <label for="PolicyStartDate">Policy StartDate</label>
+                            </div>
+                        </div>
+
+                        <!-- Policy EndDate -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-datepicker-toggle class="-ml-2 pointer-events-none" matIconSuffix
+                                    [for]="icker"></mat-datepicker-toggle>
+                                <mat-datepicker #icker></mat-datepicker>
+                            </div>
+                            <div class="flex">
+                                <input matInput type="text" id="PolicyEndDate" [max]="maxBirthDate" readonly
+                                    formControlName="PreviousPolicyEndDate" placeholder="__/__/____" datemask
+                                    [matDatepicker]="icker" class="peer" />
+                                <label for="PolicyEndDate">Policy EndDate</label>
+                            </div>
+                        </div>
+
+                        <!-- Claim In Previous Year -->
+                        <!-- <div class="min-w-36">
+                            <span class="">Claim In Previous Year</span>
+                            <div class="relative flex gap-9 mt-2">
+                                <div class="lableInputbox">
+                                    <input type="radio" id="Yes" class="peer" disabled
+                                        [checked]=" HealthQuateForm.get('ClaimInPreviousYear').value == true"
+                                        name="ClaimInPreviousYear" [value]="true" />
+                                    <label class="pl-1 flex-shrink-0 font-normal" for="Yes">Yes</label>
+                                </div>
+                                <div class="lableInputbox">
+                                    <input type="radio" id="No" class="peer" disabled
+                                        [checked]=" HealthQuateForm.get('ClaimInPreviousYear').value == false"
+                                        name="ClaimInPreviousYear" [value]="false" />
+                                    <label class="pl-1 flex-shrink-0 font-normal" for="No">No</label>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <!-- Sum Insured -->
+                        <div class="relative ">
+                            <div class="icon rs">₹</div>
+                            <input type="text" class="peer" readonly formControlName="PrevPolicySumInsured"
+                                placeholder=" " id="PrevPolicySumInsured" />
+                            <label for="PrevPolicySumInsured" class="mandatory">Sum Insured</label>
+                        </div>
+
+                        <!-- Premioum Amount -->
+                        <div class="relative ">
+                            <div class="icon rs">₹</div>
+                            <input type="text" class="peer" readonly formControlName="PreviousPolicyPremium"
+                                placeholder=" " id="PreviousPolicyPremium" />
+                            <label for="PreviousPolicyPremium" class="mandatory">Premioum Amount</label>
+                        </div>
+
+                    </div>
+
+                    <div>
+                        <div class="flex gap-2 items-center">
+                            <div class=" my-1">
+                                <span class="mandatory">Have you taken any claim in the last 3 year?</span>
+                                =>
+                                <span class="font-bold">
+                                    {{displayValuesOfForm.AnyClaiminLast3Year ? 'Yes' : 'No'}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+                <div *ngIf="!isExpand">
+                    <button class="bg-royal text-white" mat-button matStepperPrevious>
+                        Back
+                    </button>
+                    <button class="bg-royal text-white mx-3" mat-button matStepperNext>
+                        Next
+                    </button>
+                </div>
+            </mat-step>
+
+            <!-- Five stepper -->
+            <mat-step label="Teams Details">
+                <form [formGroup]="HealthQuateForm">
+                    <div class="min-w-full rounded bg-white">
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-7 my-5">
+
+                            <!-- Branch -->
+                            <div class="relative min-w-36">
+                                <div class="icon">
+                                    <mat-icon>place</mat-icon>
+                                </div>
+
+                                <select id="Branch" formControlName="BranchId">
+                                    <option disabled value=0>--Select--</option>
+                                    <option disabled *ngFor="let Branch of Branchs" [value]="Branch.Id">
+                                        {{Branch.Name}}
+                                    </option>
+                                </select>
+                                <label for="Branch" class="mandatory">Branch</label>
+                            </div>
+
+                            <!-- Police Type  -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>group_work</mat-icon>
+                                </div>
+
+                                <select id="" formControlName="SalesPersonType">
+                                    <option disabled value="">--Select--</option>
+                                    <option disabled [value]="'Direct'">Direct</option>
+                                    <option disabled [value]="'POSP'">POSP</option>
+                                    <option disabled [value]="'Team Reference'">Team Reference</option>
+                                </select>
+                                <label for="SalesPersonType">Sales Person Type</label>
+                            </div>
+
+                            <!-- Sales Person -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <input matInput type="text" placeholder=" " maxlength="100" readonly
+                                    formControlName="SalesPersonName" id="Name" class="peer w-fit " required />
+                                <label for="Name" class="mandatory">Sales Person</label>
+                            </div>
+
+                            <!--  Team Reference -->
+                            <div class="relative "
+                                *ngIf="HealthQuateForm.get('SalesPersonType').value == 'Team Reference'">
+                                <div class="icon">
+                                    <mat-icon> person_pin</mat-icon>
+                                </div>
+                                <div class="flex">
+                                    <input type="text" readonly class="peer " formControlName="TeamReferenceName"
+                                        readonly placeholder=" " id="TeamReferenceName" />
+                                    <label for="TeamReferenceName">Team Reference</label>
+                                </div>
+                            </div>
+
+                            <!--  BDO -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>person_pin</mat-icon>
+                                </div>
+                                <input type="text" class="peer " formControlName="BDOName" readonly placeholder=" "
+                                    id="BDOName" />
+                                <label for="BDOName" class="mandatory ">BDO</label>
+                            </div>
+
+                            <!-- BDM -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>person_pin</mat-icon>
+                                </div>
+                                <input type="text" class="peer " formControlName="BDMName" readonly placeholder=" "
+                                    id="BDMName" />
+                                <label for="BDMName" class="mandatory ">BDM</label>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </form>
+                <div *ngIf="!isExpand">
+                    <button class="bg-royal text-white" mat-button matStepperPrevious>
+                        Back
+                    </button>
+                    <button class="bg-royal text-white mx-3" mat-button matStepperNext>
+                        Next
+                    </button>
+                </div>
+            </mat-step>
+
+            <!-- Six stepper -->
+            <mat-step [stepControl]="QuotationDetailsVAlidation()" label="Quotation Details">
+
+                <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mt-4" [formGroup]="QuotationNoteForm">
+                    <ng-container formArrayName="QNDocuments" *ngFor="let doc of QNDocuments.controls; let i=index">
+                        <ng-container [formGroupName]="i">
+
+                            <!-- Attachment QNDocuments -->
+                            <div class="relative">
+                                <div class="dummy-formField">
+                                    <mat-icon class="absolute -right-2 -top-3 text-red-500 cursor-pointer"
+                                        (click)="deleteDocument(i)">cancel</mat-icon>
+                                    <div class="icon">
+                                        <mat-icon>attach_file</mat-icon>
+                                    </div>
+                                    <input type="file" class="hidden" id="AttachDocument" #File
+                                        (change)="UploadQNPDF($event,i)" placeholder="" accept=".doc,.docx,.pdf">
+                                    <p class="ml-10 text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                        matTooltip="{{doc.get('FileName').value}}" (click)="File.click()">
+                                        {{ doc.value.FileName || 'Choose File' | excerpt:'max' }}
+                                    </p>
+                                    <label for="document{{i}}" class="mandatory">Attach QN PDF <b>{{i+1}}</b></label>
+                                    <div class="flex justify-end absolute right-2 bg-white" matTooltip="View Document"
+                                        (click)="ViewQnDocument(doc.value?.StorageFilePath)"
+                                        *ngIf="doc.value?.StorageFilePath">
+                                        <mat-icon class="cursor-pointer">visibility</mat-icon>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </ng-container>
+                    </ng-container>
+
+                    <div class="relative">
+                        <button class="bg-royal text-white" mat-button (click)="addQNDocuments()">
+                            <mat-icon class="text-white">add</mat-icon> {{ QNDocuments.length == 0 ? 'Add QN Document' :
+                            'Add More' }}
+                        </button>
+                    </div>
+                </div>
+
+
+                <div *ngIf="displayValuesOfForm.RFQQnDocList?.length > 0" class="mt-7">
+                    <p class="text-left font-semibold my-2">Previous Attached Quotation Details</p>
+                </div>
+
+                <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mt-4"
+                    *ngIf="displayValuesOfForm.RFQQnDocList?.length > 0">
+
+
+                    <ng-container *ngFor="let prevQNDoc of displayValuesOfForm.RFQQnDocList;let i =index;">
+
+                        <!--  Previous Qn-Doc  -->
+                        <div class="relative">
+                            <div class="dummy-formField ">
+                                <div class="icon">
+                                    <mat-icon>attach_file</mat-icon>
+                                </div>
+                                <p class="ml-10 text-primary-500  hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                    matTooltip="{{prevQNDoc.FileName}}">
+                                    {{prevQNDoc.FileName || 'Choose File' | excerpt:'max' }}</p>
+                                <label for="document{{i}}" class="mandatory">Attach QN PDF <b>{{i+1}}</b></label>
+                                <div class="flex justify-end absolute right-2 bg-white" matTooltip="View Document"
+                                    (click)="ViewQnDocument(prevQNDoc.StorageFilePath)">
+                                    <mat-icon *ngIf="prevQNDoc.StorageFilePath"
+                                        class="cursor-pointer">visibility</mat-icon>
+                                </div>
+                            </div>
+                        </div>
+
+                    </ng-container>
+
+                </div>
+
+
+                <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mt-4" [formGroup]="QuotationNoteForm">
+
+                    <!-- Additional Information -->
+                    <div class="relative" [matTooltip]="QuotationNoteForm.get('Additionalinformation').value">
+                        <div class="icon">
+                            <mat-icon>border_color</mat-icon>
+                        </div>
+                        <input type="text" class="peer" id="AdditionalInformation" placeholder=" "
+                            formControlName="Additionalinformation" />
+                        <label for="AdditionalInformation">Additional Information</label>
+                    </div>
+
+
+                    <!-- Reason (Send Back / Reject) -->
+                    <div class="relative md:col-span-2">
+                        <div class="icon">
+                            <mat-icon>timelapse</mat-icon>
+                        </div>
+                        <input matInput type="text" id="Remarks" formControlName="SendBackRejectDesc" placeholder=" "
+                            class="peer" required />
+                        <label for="Remarks" class="mandatory">Reason (For Send Back/Reject)</label>
+                    </div>
+                </div>
+
+                <div class="mt-5 flex gap-3 flex-wrap">
+                    <button *ngIf="!isExpand" class="bg-royal text-white" mat-button matStepperPrevious>
+                        Back
+                    </button>
+                    <button *ngIf="!isExpand" class="bg-royal text-white" mat-button matStepperNext
+                        (click)="QuotationDetailsError()">
+                        Next
+                    </button>
+                    <button class="bg-royal text-white" type="submit" mat-button (click)="RejectQNForm()">
+                        Reject
+                    </button>
+                    <button class="bg-royal text-white" type="submit" mat-button (click)="SendBackQNForm()">
+                        Send Back
+                    </button>
+                </div>
+            </mat-step>
+
+            <!-- Seven stepper -->
+            <mat-step label="Attachment details">
+
+                <div class="py-7 min-w-full rounded bg-white">
+
+                    <form>
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-5 mt-4">
+
+                            <!-- Select Document -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon> compass_calibration</mat-icon>
+                                </div>
+                                <select class="peer bg-white" #DocumentDropdown [disabled]="mode=='view'"
+                                    (change)="onDocumentSelectionChange($event)">
+                                    <option value="">--Select--</option>
+                                    <option [value]="option.DocumentType" *ngFor="let option of PolicyDocumentList">
+                                        {{option.DocumentTypeName}}
+                                    </option>
+                                </select>
+                                <label for="">Select Document</label>
+                            </div>
+
+                        </div>
+
+                        <div [formGroup]="QuotationNoteForm">
+
+                            <div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-5 mt-4">
+                                <ng-container formArrayName="Documents"
+                                    *ngFor="let doc of PolicyDocumentAttachment;let i=index">
+                                    <div [formGroupName]="i">
+
+
+                                        <div class="relative">
+                                            <mat-icon
+                                                *ngIf="doc.value.Stage == displayValuesOfForm.Stage && mode != 'view'"
+                                                (click)="RemoveDocuments(i)"
+                                                class="absolute -right-2 -top-3 text-red-500 cursor-pointer">cancel</mat-icon>
+                                            <div class="dummy-formField ">
+                                                <div class="icon">
+                                                    <mat-icon>attach_file</mat-icon>
+                                                </div>
+                                                <input type="file" class="hidden" accept=".doc,.docx,.pdf"
+                                                    #AttachDocument (change)="SelectRFQDocument($event,i)">
+                                                <p class="ml-10 text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                                    [ngClass]="doc.value.Stage == displayValuesOfForm.Stage ? 'cursor-pointer text-primary-500 hover:text-primary-500' : 'pointer-events-none' "
+                                                    matTooltip="{{doc.value.FileName}}"
+                                                    (click)="AttachDocument.click()">
+                                                    {{doc.value.FileName || 'Choose File' | excerpt:'max' }}</p>
+                                                <label for="" class="mandatory">{{
+                                                    doc.value.DocumentTypeName}}</label>
+                                                <div class="flex justify-end absolute right-2 bg-white"
+                                                    matTooltip="View Document"
+                                                    (click)="ViewQnDocument(doc.value?.StorageFilePath)">
+                                                    <mat-icon *ngIf="doc.value?.StorageFilePath"
+                                                        class="cursor-pointer">visibility</mat-icon>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </ng-container>
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+                <div class="pb-4">
+                    <button class="bg-royal text-white mr-3" mat-button matStepperPrevious *ngIf="!isExpand">
+                        Back
+                    </button>
+                    <button *ngIf="mode!='view'" class="bg-royal text-white mx-3" mat-button matStepperNext
+                        (click)="SubmitQNForm()">
+                        Submit
+                    </button>
+                </div>
+            </mat-step>
+
+        </mat-stepper>
+    </div>
+    <!-- endregion form -->
+</div>

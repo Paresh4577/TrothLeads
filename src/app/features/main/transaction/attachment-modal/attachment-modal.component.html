@@ -1,0 +1,65 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        Attachments
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <!-- <button mat-raised-button class="new-button" (click)="SubmitData()">Save</button> -->
+            <button mat-raised-button class="new-button" (click)="close()">Close</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- region main heading ends-->
+
+    <div class="mt-4 text-center font-bold " *ngIf=" data.Documents.length == 0">
+        <h2 class="">No Data Found!!</h2>
+    </div>
+
+    <div class="block tableStyling mt-4" *ngIf="data.Documents.length > 0" >
+        <table class="newTable overflow-auto ">
+            <thead>
+                <tr>
+                    <th>
+                        Sr. No.
+                    </th>
+                    <th >
+                        Document Type
+                    </th>
+                    <th>
+                        File Name
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of data.Documents; let i = index">
+                    <td>
+                        <div class="flex items-center justify-center p-2">
+                            {{i+1}}
+                        </div>
+                    </td>
+                    <td>
+                        <div  class="flex items-center justify-left p-2">
+                            {{item.DocumentTypeName}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex items-center justify-left p-2">
+                            {{item.FileName}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex items-center justify-center p-2">
+                            <button (click)="downloadAttachment(item)">
+                                <i class="fa-solid fa-download"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

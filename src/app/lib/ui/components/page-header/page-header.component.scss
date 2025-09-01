@@ -1,0 +1,48 @@
+#page-header {
+    @apply bg-accent-300 text-on-accent-300 h-14 px-3.5 rounded;
+    #page-title {
+      padding: auto 16px;
+      h2 {
+        @apply text-xl font-semibold;
+        margin: auto 0;
+        margin-top: 0;
+      }
+      h4 {
+        @apply text-md;
+        margin-top: 0;
+      }
+    }
+  }
+  
+  #page-actions {
+    margin: 0;
+    justify-content: center;
+    align-content: center;
+    gap: 8px;
+  }
+  
+  @media (max-width: 1230px) {
+    #page-header {
+      height: 40px !important;
+    }
+  }
+  
+  @media (min-width: 300px) {
+    .description {
+      display: none;
+    }
+  }
+  @media (min-width: 700px) {
+    .description {
+      display: block;
+    }
+  }
+  
+  .bookmark {
+    cursor: pointer;
+    color: #efefef;
+  }
+  .active {
+    color: gold;
+  }
+  

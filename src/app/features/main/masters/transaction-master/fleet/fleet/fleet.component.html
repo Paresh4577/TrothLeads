@@ -1,0 +1,218 @@
+<div class="p-4 h-full w-full " [ngClass]="content">
+    <!-- <div class="p-4 h-full w-full overflow-auto" content cssProp > -->
+
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold"
+    [ngClass]="this.mode=='PopUpCreate' ? 'sticky top-0 z-40' : ''">
+        {{ title }}
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" [disabled]="FleetForm.invalid" (click)="submitform()"
+                *ngIf="mode == 'Create' || mode == 'Edit' || mode == 'PopUpCreate'  ">Save</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()"
+                *ngIf="mode == 'Edit' || mode == 'Create' || mode == 'PopUpCreate'  ">Cancel</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'View'">Back</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white "
+        [ngClass]="{'showstep': this.mode=='View' || this.mode=='Edit' || this.mode=='Create'}">
+        <form [formGroup]="FleetForm">
+            <h4>Customer Details</h4>
+            <div class="grid lg:grid-cols-3 md:grid-cols-2  gap-5 mt-4 grid-cols-1">
+                <!-- Group Head Name -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>group</mat-icon>
+                    </div>
+                    <input type="text" class="peer" id="Name" formControlName="Name" placeholder=" " />
+                    <label for="Name" class="mandatory">Customer Name</label>
+                </div>
+
+                <!-- Mobile Number -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>phone</mat-icon>
+                    </div>
+                    <input type="text" Onlynumber class="peer" formControlName="Mobile" maxlength="10" id="Mobile"
+                        placeholder=" " />
+                    <label for="Mobile" class="mandatory">Mobile Number</label>
+                </div>
+
+                <!-- Email Address -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>email</mat-icon>
+                    </div>
+                    <input type="email" formControlName="Email" class="peer" id="Email" placeholder=" " />
+                    <label for="Email" class="mandatory">Email Address</label>
+                </div>
+
+
+            </div>
+
+            <div class="grid  lg:grid-cols-3 mt-4 gap-5">
+                <div class="col-start-1">
+                    <h4>Customer Address</h4>
+                    <div class="grid gap-5 mt-4 ">
+
+                        <!--  Home Address (Line 1)-->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>home</mat-icon>
+                            </div>
+                            <input type="text" class="peer" formControlName="Address" id="Address" placeholder=" " />
+                            <label for="Address">Home Address (Line 1)
+                            </label>
+                        </div>
+
+                        <!--  Home Address (Line 2) -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>home</mat-icon>
+                            </div>
+                            <input type="text" class="peer" formControlName="Address1" id="Address1" placeholder=" " />
+                            <label for="Address1">Home Address (Line 2)
+                            </label>
+                        </div>
+
+                        <!-- PIN Code -->
+
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>pin_drop</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input Onlynumber type="text" id="Pincode" formControlName="PinCodeNumber" class="peer"
+                                    matInput placeholder=" " [matAutocomplete]="PinCodeSearch" maxlength="6"
+                                    (blur)="ClearPincode()" />
+                                <mat-autocomplete #PinCodeSearch="matAutocomplete"
+                                    (optionSelected)="PinCodeSelected($event)">
+                                    <mat-option *ngFor="let pincode of PinCodeList$ | async" [value]="pincode">
+                                        {{ pincode.PinCode }},{{ pincode.Area }} - {{ pincode.CityName
+                                        }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button"
+                                    (click)="openDiolog('Pincode', 'Select PIN Code','Pincode')" *ngIf="editable">
+                                    <mat-icon class="-ml-2">search</mat-icon>
+                                </button>
+                                <label for="Pincode">PIN Code (Home)
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- City -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>location_city</mat-icon>
+                            </div>
+                            <input type="text" class="peer" formControlName="CityName" id="CityName" placeholder=" " />
+                            <label for=" CityName">City</label>
+                        </div>
+
+
+                        <!-- State -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>domain</mat-icon>
+                            </div>
+                            <input type="text" class="peer" formControlName="StateName" id="StateName"
+                                placeholder=" " />
+                            <label for="State">State</label>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-span-2">
+                    <h4>Fleet Details</h4>
+                    <div class="grid  gap-5  ">
+                        <div class="grid lg:grid-cols-2 lg:col-starts-2 gap-4 items-center mt-4">
+                            <!-- Fleet -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>receipt</mat-icon>
+                                </div>
+                                <input type="text" class="peer" placeholder="Auto" id="FleetNo"
+                                    formControlName="FleetNo" readonly />
+                                <label for="Fleetno">Fleet Code (Auto)</label>
+                            </div>
+                        </div>
+
+                        <div formArrayName="FleetBusinessVehicleDetails" class="-mt-5">
+                            <div *ngFor="let control of FleetBusinessVehicleDetails.controls; let i=index">
+                                <div class="grid sm:grid-cols-2 gap-5 pt-5" [formGroupName]="i">
+                                   
+                                    <div class="relative">
+                                        <div class="icon">
+                                            <mat-icon>category</mat-icon>
+                                        </div>
+                                        
+                                        <select class="peer bg-white" formControlName="SubCategoryName" (change)="onDropdownChange($event, i)">
+                                            <option value="">Select</option>
+                                            <option *ngFor="let value of dropdownOptions; let ind = index" 
+                                                [disabled]="checkValue(value.SubCategoryName)" [value]="value.SubCategoryName">
+                                                {{ value.SubCategoryName }} 
+                                            </option>
+                                        </select>
+                                        <label for="SubCategoryName" class="mandatory"> 
+                                            Select Vehicle Category -{{i+1}}
+                                        </label>
+                                    </div>
+
+                                    <div class="relative">
+                                        <div class="icon">
+                                            <mat-icon>email</mat-icon>
+                                        </div>
+                                        <input type="number" class="peer" formControlName="NoOfVehicle"
+                                            placeholder=" " #noOfVehicles (focus)="noOfVehicles.select()" (change)="totalVehicles(i)" />
+                                        <label for="NoOfVehicle" class="mandatory">
+                                            No of Vehicle
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-4 items-center">
+                            <!-- Total No of Vehicles -->
+                            <div class="relative  lg:grid-cols-2 ">
+                                <div class="icon">
+                                    <mat-icon>category</mat-icon>
+                                </div>
+                                <input type="text" class="peer"  readonly placeholder="Total No Of Vehicles" [value]="selectedValues.length"/>
+
+                                <label for="CategoryName" class="mandatory">Total No of Vehicles</label>
+
+                            </div>
+                            <!--  Sum of All Above* -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>email</mat-icon>
+                                </div>
+                                <input type="number" class="peer" readonly id="NoOfVehicle" placeholder="Sum of All Above" [value]="sumNoOfVehicles"/>
+                                <label for="NoOfVehicle" class="mandatory"> Sum of All Above</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="flex gap-x-3  items-center text-lg font-normal p-4">
+                    <button mat-raised-button class="form-button " (click)="submitform()"
+                        *ngIf="mode == 'Create' || mode == 'Edit' || mode == 'PopUpCreate'  ">Save</button>
+
+                    <button mat-raised-button class="form-button " (click)="backClicked()"
+                        *ngIf="mode == 'Edit' || mode == 'Create' || mode == 'PopUpCreate'  ">Cancel</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <!-- endregion form -->
+</div>

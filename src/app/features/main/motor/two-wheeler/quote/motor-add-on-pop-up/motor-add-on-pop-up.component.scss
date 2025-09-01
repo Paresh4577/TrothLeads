@@ -1,0 +1,32 @@
+::ng-deep.mat-mdc-menu-panel.mat-mdc-menu-panel {
+    max-width: 600px !important;
+    background-color: #E0F2FE !important;
+}
+
+::ng-deep label.labelText{
+    color: #B7BABD !important;
+    font-weight: 400 !important;
+}
+  
+::ng-deep div .MandateByIRDAI{
+    background-color: #B7BABD !important;
+    // font-weight: 400 !important;
+    color: black !important;
+}
+
+::ng-deep.selectAddOn {
+    padding-bottom: 0.2rem !important;
+    padding-top: 0.2rem !important;
+    font-size: 0.7rem !important;
+  }
+  
+  ::ng-deep.AddOnicon {
+    pointer-events: none;
+    position: absolute;
+    top: 5px;
+    bottom: 0.25rem;
+    left: -5px;
+    display: flex;
+    align-items: center;
+    padding-left: 0.75rem;
+  }

@@ -1,0 +1,34 @@
+<div class="mt-1 px-2 w-full">
+    <!-- region Main Heading -->
+    <h1 class="new-head text-lg px-4 py-2 mb-1.5 rounded flex justify-between items-center font-semibold">
+      {{ title }}
+  
+      <div class="flex gap-x-3  items-center text-lg font-normal">
+        <button
+          mat-raised-button
+          class="button button-primary"
+          (click)="cancle()"
+        >
+          Close
+        </button>
+      </div>
+    </h1>
+    <div>
+        <mat-card class="px-4 py-3 gap-2 container mx-auto">
+          <div class="grid grid-cols-2">
+            <span class="font-bold text-base">Base Premium</span>
+            <span class="font-bold text-base text-right"> {{BasePremium | indCurrency}} </span>
+          </div>
+          <div *ngFor="let item of AddOnDetails" class="col-start-2 grid grid-cols-[1fr_minmax(70px,80px)]">
+            <span class="font-bold text-base">{{item.name}}</span>
+            <span class="font-bold text-base text-right"><span *ngIf="item.amount>0">+</span> {{item.amount | indCurrency}} </span>
+
+          </div>
+          <mat-divider></mat-divider>
+          <div class="grid grid-cols-2">
+            <span class="font-bold text-base">Total Premium</span>
+            <span class="font-bold text-base text-right"> {{TotalPremium | indCurrency}} </span>
+          </div>
+        </mat-card>
+    </div>
+</div>

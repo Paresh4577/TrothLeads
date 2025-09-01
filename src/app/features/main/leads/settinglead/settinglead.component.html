@@ -1,0 +1,22 @@
+<div class="max-w-xl mx-auto p-6 bg-white shadow-md rounded">
+  <!-- Heading row -->
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-semibold">Set Team Lead</h2>
+    <button class="btn btn-secondary" (click)="goBack()" type="button" style="border-radius: 25px;"> <i class="fa-solid fa-arrow-left"></i> Back</button>
+  </div>
+
+  <form [formGroup]="teamForm" (ngSubmit)="save()">
+    <label class="block mb-2 font-medium">Select User</label>
+    <select formControlName="AssignedToUserId" class="w-full border p-2 rounded mb-4">
+      <option [value]="null">-- Select TeamLeader --</option>
+      <option *ngFor="let user of users" [value]="user.UserAdminId">
+        {{ user.Name }}
+      </option>
+    </select>
+
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      [disabled]="teamForm.invalid">
+      Set as Team Lead
+    </button>
+  </form>
+</div>

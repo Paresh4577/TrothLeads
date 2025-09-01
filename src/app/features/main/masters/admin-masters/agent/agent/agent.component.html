@@ -1,0 +1,1265 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button (click)="StepEightError()" mat-raised-button class="new-button" [disabled]="AgentForm.invalid"
+                (click)="submitform()" *ngIf="mode == 'Create' || mode == 'Edit' || mode == 'ConvertAgent'">Save</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()"
+                *ngIf="mode == 'Edit' || mode == 'Create'">Cancel</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'View'">Back</button>
+        </div>
+    </h1>
+    <!-- endregion main heading -->
+    <div class="px-4 py-5 rounded bg-white" [ngClass]="{'showstep': this.mode=='View' || this.mode=='Edit' || this.mode=='Create' || this.mode=='ConvertAgent'}">
+        <form action="" class="w-full text-md">
+            <!-- Form -->
+            <mat-stepper linear orientation="vertical" #stepper>
+                <!-- first box -->
+                <mat-step [stepControl]="StepOneSubmit()" label="Basic Details">
+                    <form [formGroup]="AgentForm">
+                        <div class="py-5 px-5 flex flex-col">
+                            <!-- basic details  -->
+                            <div class="md:grid grid-cols-[minmax(100px,130px)_minmax(400px,1fr)] gap-x-9">
+                                <!-- Photo -->
+                                <div class="mt-4 mb-9 relative ">
+                                    <span class="font-medium text-lg">Photo</span>
+                                    <div class="flex -mb-2 justify-end" *ngIf="editable">
+                                        <button mat-icon-button type="button" matTooltip="Remove" *ngIf="file"
+                                          (click)="deletePhoto()">
+                                          <mat-icon color="warn" class="border">clear</mat-icon>
+                                        </button>
+                                      </div>
+                                    <div>
+                                        <input type="file" class="hidden peer justify-end " #img
+                                            (change)="imgPreiview(img.files)" accept="image/*" /><br>
+                                        <img [src]="imgsrc"
+                                            class=" shadow-md shadow-sky-500 md:h-fit md:w-fit h-1/4 w-1/4"
+                                            *ngIf="editable" (click)="img.click()" alt="">
+
+                                        <img [src]="imgsrc"
+                                            class=" shadow-md shadow-sky-500 md:h-fit md:w-fit h-1/4 w-1/4 "
+                                            *ngIf="!editable" alt="">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <!-- titles -->
+                                    <div class="relative my-6">
+                                        <div class="icon">
+                                            <mat-icon>title</mat-icon>
+                                        </div>
+                                        <select class="peer w-36" formControlName="Title">
+                                            <!-- <option value="">Select</option> -->
+                                            <option *ngFor="let option of DropdownMaster.FormalTitlesOptions"
+                                            [value]="option.value">{{
+                                                option.name }}</option>
+                                        </select>
+                                        <label for="Title" class="mandatory">Title</label>
+                                    </div>
+                                    <!-- First name -->
+                                    <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-6 ">
+
+                                        <div class="relative">
+                                            <div class="icon">
+                                                <mat-icon>person</mat-icon>
+                                            </div>
+                                            <input type="text" placeholder=" " class="peer" formControlName="FirstName" maxlength="120" id="FirstName" />
+                                            <label for="FirstName" class="mandatory">First Name</label>
+                                        </div>
+                                        <!-- Last name -->
+                                        <div class="relative">
+                                            <div class="icon">
+                                                <mat-icon>person</mat-icon>
+                                            </div>
+                                            <input type="text" class="peer" formControlName="LastName" placeholder=" "maxlength="120" id="LastName" />
+                                            <label for="LastName" class="mandatory">Last Name</label>
+                                        </div>
+                                        <!-- source -->
+                                        <div class="relative ">
+                                            <div class="icon">
+                                                <mat-icon> person_pin</mat-icon>
+                                            </div>
+                                            <div class="flex">
+                                                <input type="text" AlphabetOnly class="peer" formControlName="SourceName" maxlength="120" placeholder=" " id="SourceName" [matAutocomplete]="SourceSearch" />
+                                                <mat-autocomplete #SourceSearch="matAutocomplete"
+                                                    (optionSelected)="SourceSelected($event)">
+                                                    <mat-option *ngFor="let Source Of Sources$ | async"
+                                                        [value]="Source">
+                                                        {{Source.Name}}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                                <button class="-m-5  z-10" type="button" *ngIf="editable"
+                                                    (click)="openDiolog('Source','Select Source')"><mat-icon
+                                                        class="-ml-2">search</mat-icon></button>
+                                                <button *ngIf="AgentForm.get('SourceName').value && mode != 'View'"
+                                                    type="button" class="-m-7 z-10" aria-label="clear"
+                                                    matTooltip="Clear" (click)="clear('SourceName', 'SourceId')">
+                                                    <mat-icon>clear</mat-icon>
+                                                </button>
+                                                <label for="SourceName">Source Name</label>
+                                            </div>
+                                        </div>
+                                        <!-- sub source -->
+                                        <div class="relative">
+                                            <div class="icon">
+                                                <mat-icon> person_pin_circle</mat-icon>
+                                            </div>
+                                            <div class=" flex ">
+                                                <input type="text" AlphabetOnly class="peer" formControlName="SubSourceName" maxlength="120"
+                                                    placeholder=" " id="SubSourceName"
+                                                    [matAutocomplete]="SubSourceSearch" />
+                                                <mat-autocomplete #SubSourceSearch="matAutocomplete"
+                                                    (optionSelected)="SubSourceSelected($event)">
+                                                    <mat-option *ngFor="let SubSource of SubSources$ | async"
+                                                        [value]="SubSource">
+                                                        {{SubSource.Name}}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                                <button class="-m-5  z-10" type="button" *ngIf="editable"
+                                                    (click)="openDiolog('SubSource','Select SubSource')"><mat-icon
+                                                        class="-ml-2">search</mat-icon></button>
+                                                <button *ngIf="AgentForm.get('SubSourceName').value && mode != 'View'"
+                                                    type="button" class="-m-7 z-10" aria-label="clear"
+                                                    matTooltip="Clear" (click)="clear('SubSourceName', 'SubSourceId')">
+                                                    <mat-icon>clear</mat-icon>
+                                                </button>
+                                                <label for="SubSourceName">Sub Source Name</label>
+                                            </div>
+                                        </div>
+                                        <!-- gender -->
+                                        <div class="relative">
+                                            <div class="icon">
+                                                <mat-icon>person_outline</mat-icon>
+                                            </div>
+                                            <select id="Gender" name="Gender" class="peer" formControlName="Gender">
+                                                <option value="">Select</option>
+                                                <option class="example-radio-button" *ngFor="let option of GenderList"
+                                                    [value]="option.Name">{{
+                                                    option.Name }}</option>
+                                            </select>
+                                            <label for="Gender" class="mandatory">Gender</label>
+                                        </div>
+                                        <!-- language -->
+                                        <div class="relative wd">
+                                            <div class="icon">
+                                                <mat-icon>language</mat-icon>
+                                            </div>
+                                            <select id="PreferredLanguage" name="PreferredLanguage" class="peer"
+                                                formControlName="PreferredLanguage" #Language>
+                                                <option value="">Select</option>
+                                                <option value="{{Language.Id}}" *ngFor="let Language of LanguageList ">
+                                                    {{Language.Name}}
+                                                </option>
+                                            </select>
+                                            <label for="PreferredLanguage" class="mandatory">Preferred
+                                                Language</label>
+                                        </div>
+
+                                        <!-- DOB -->
+                                        <div class="relative">
+                                            <div class="icon">
+                                                <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                    [for]="picker"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker></mat-datepicker>
+                                            </div>
+
+                                            <input matInput type="text" placeholder=" " placeholder="__/__/____"
+                                                datemask [matDatepicker]="picker" [max]="maxBirthDate"
+                                                formControlName="DateOfBirth" class="peer" id="DateOfBirth" />
+
+                                            <label for="DateOfBirth" class="mandatory">Date of
+                                                Birth</label>
+                                        </div>
+
+                                        <!-- Reg Date -->
+                                        <div class="relative">
+                                            <div class="icon">
+                                                <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                    [for]="reg"></mat-datepicker-toggle>
+                                                <mat-datepicker #reg></mat-datepicker>
+                                            </div>
+
+                                            <input matInput type="text" placeholder=" " placeholder="__/__/____"
+                                                datemask [matDatepicker]="reg" formControlName="RegistrationDate" [min]="AgentForm.controls['DateOfBirth'].value"
+                                                [max]="maxBirthDate" class="peer" id="RegistrationDate" />
+                                            <label for="RegistrationDate" class="mandatory">Registration
+                                                Date</label>
+                                        </div>
+                                        
+                                        <!-- Phone No. -->
+                                        <div class="relative">
+                                            <div class="icon">
+                                                <mat-icon> phone</mat-icon>
+                                            </div>
+                                            <input type="text" Onlynumber class="peer" placeholder=" " id="MobileNo" formControlName="MobileNo" maxlength="10" />
+                                            <label for="MobileNo" class="mandatory">Phone
+                                                No.</label>
+                                        </div>
+
+                                        <!-- Whatsapp No -->
+                                        <div class="relative">
+                                            <div class="icon">
+                                                <mat-icon [svgIcon]="'heroicons_outline:whats-app'"></mat-icon>
+                                            </div>
+                                            <input type="text" Onlynumber class="peer" placeholder=" " id="WhatsAppNo" formControlName="WhatsAppNo"
+                                                maxlength="10" />
+                                            <label for="WhatsAppNo" class="mandatory">Whatsapp No.</label>
+                                        </div>
+
+                                        <!-- email -->
+                                        <div class="relative max-h-11">
+                                            <div class="icon">
+                                                <mat-icon>email</mat-icon>
+                                            </div>
+                                            <input type="email" class="peer" formControlName="EmailId" placeholder=" " maxlength="60" id="EmailId" />
+                                            <label for="EmailId" class="mandatory">Email</label>
+                                        </div>
+
+
+                                        <!--Permissible Commision Criteria -->
+
+                                        <div class="font-medium mt-2 gap-2 grid grid-cols-[minmax(100px,235px)_minmax(60px,69px)] ">
+                                            <span class="py-1 pr-2 font-medium text-xl" class="" for="contactper">
+                                                Permissible Commision Criteria
+                                            </span>
+                                            <mat-slide-toggle color="primary" formControlName="DefalutCP" class="relative" >
+                                                <span class="flex font-medium text-xl ml-3 mt-1.5">
+                                                    {{
+                                                    AgentForm.controls['DefalutCP'].value == true
+                                                    ? "Yes"
+                                                    : "No"
+                                                    }}
+                                                </span>
+                                            </mat-slide-toggle>
+                                        </div>
+
+
+
+                                        <div class="flex items-center flex-wrap gap-3 col-span-2 lg:col-span-1 col-start-1 lg:col-start-auto"
+                                        *ngIf="!AgentForm.controls['DefalutCP'].value">
+
+                                                <!-- TP -->
+                                                 <div>
+                                                     <div class="lableInputCheckbox">
+                                                         <input type="checkbox" id="TP" formControlName="TP" class="peer" name="TP" />
+                                                         <label for="TP">TP</label>
+                                                     </div>
+                                                 </div>
+                                                <!-- OD -->
+                                                 <div>
+                                                     <div class="lableInputCheckbox">
+                                                         <input type="checkbox" id="ODNet" formControlName="ODNet" class="peer" name="ODNet" />
+                                                         <label for="ODNet">OD</label>
+                                                     </div>
+                                                    </div>
+                                                <!-- Terrorism -->
+                                                 <div>
+                                                <div class="lableInputCheckbox">
+                                                    <input type="checkbox" id="Terrorism" formControlName="Terrorism" class="peer"
+                                                        name="Terrorism" />
+                                                    <label for="Terrorism">Terrorism</label>
+                                                </div>
+                                                </div>
+                                                <!-- Stemp Duty -->
+                                                 <div>
+                                                <div class="lableInputCheckbox">
+                                                    <input type="checkbox" id="StampDuty" formControlName="StampDuty" class="peer"
+                                                        name="StampDuty" />
+                                                    <label for="StampDuty">Stamp Duty</label>
+                                                </div>
+                                                </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button (click)="StepOneError()" class="form-button mx-3 mt-3" mat-button
+                                    matStepperNext>Next</button>
+                            </div>
+                        </div>
+                    </form>
+                </mat-step>
+                <!-- second box -->
+                <mat-step [stepControl]="StepTwoSubmit()" label="Contact Person">
+                    <form [formGroup]="AgentForm">
+                        <div class="py-7 px-5 ">
+
+                            <div class="">
+
+                                <!-- contact person -->
+                                <div class="col-start-1 font-medium py-5 ml-2 grid grid-cols-[minmax(220px,260px)_minmax(220px,260px)] ">
+                                    <span class="py-1 pr-2 font-medium text-xl" class="" for="contactper">Is
+                                        the
+                                        Contact Person same as
+                                        POSP?
+                                    </span>
+                                        <mat-slide-toggle color="primary" formControlName="IsContactPersonPOSP"
+                                            class="relative" (change)="setValue()"
+                                            (change)="onPOSP($event,'IsContactPersonPOSP')">
+                                            <span class="flex font-medium text-xl ml-3 mt-1.5">
+                                                {{
+                                                AgentForm.controls['IsContactPersonPOSP'].value == true
+                                                ? "Yes"
+                                                : "No"
+                                                }}
+                                            </span>
+                                        </mat-slide-toggle>
+                                </div>
+                            </div>
+
+                            <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-6 ">
+
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>title</mat-icon>
+                                    </div>
+                                    <select *ngIf="f['IsContactPersonPOSP'].value==false" class="peer"
+                                        formControlName="TitleOfContactPerson" id="1">
+                                        <option value="">Select</option>
+                                        <option *ngFor="let option of DropdownMaster.FormalTitlesOptions"
+                                            [value]="option.value">{{
+                                            option.name }}</option>
+                                    </select>
+                                    <span *ngIf="f['IsContactPersonPOSP'].value==true"
+                                        class="tl peer select">{{f['TitleOfContactPerson'].value}}</span>
+                                    <label for="title">Title </label>
+                                </div>
+
+
+                                <!-- First name -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>person</mat-icon>
+                                    </div>
+                                    <input [readOnly]="AgentForm.controls['IsContactPersonPOSP'].value" type="text"
+                                        class="peer " formControlName="FirstNameOfContactPerson" placeholder=" " maxlength="120"
+                                        id="FirstNameOfContactPerson" />
+                                    <label for="FirstNameOfContactPerson">First
+                                        Name </label>
+                                </div>
+
+
+                                <!-- Last name -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>person</mat-icon>
+                                    </div>
+                                    <input [readOnly]="AgentForm.controls['IsContactPersonPOSP'].value" type="text" class="peer " formControlName="LastNameOfContactPerson" placeholder=" " maxlength="120"
+                                        id="LastNameOfContactPerson" />
+                                    <label for="LastNameOfContactPerson">Last Name</label>
+                                </div>
+
+
+                                <!-- Phone Number -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>phone</mat-icon>
+                                    </div>
+                                    <input [readOnly]="AgentForm.controls['IsContactPersonPOSP'].value" type="text"
+                                        Onlynumber class="peer" formControlName="PhoneNumberOfContactPerson"
+                                        placeholder=" " id="PhoneNumberOfContactPerson" maxlength="10"/>
+                                    <label for="PhoneNumberOfContactPerson">Phone
+                                        Number
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <button class="form-button mx-3 mt-3" mat-button matStepperPrevious>Back</button>
+                                <button class="form-button mx-3 mt-3" mat-button matStepperNext>Next</button>
+                            </div>
+                        </div>
+                    </form>
+                </mat-step>
+                <!-- third box -->
+                <mat-step [stepControl]="StepThreeSubmit()" label="Address">
+                    <form [formGroup]="AgentForm">
+                        <div class="px-5">
+
+                            <div class="relative col-span-2 my-9">
+                                <div class="icon">
+                                    <mat-icon>home</mat-icon>
+                                </div>
+                                <textarea type="text" class="peer" placeholder=" " id="Address" maxlength="1024" formControlName="Address"></textarea>
+                                <label for="Address" class="mandatory">Address</label>
+                            </div>
+
+
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <!-- PIN Code  -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>pin_drop</mat-icon>
+                                    </div>
+                                    <div class="flex">
+                                        <input type="text" Onlynumber maxlength="6" class="peer"
+                                            formControlName="PinCodeNumber" placeholder=" " id="PincodeNumber"
+                                            [matAutocomplete]="oppoSearch" />
+                                        <mat-autocomplete class="peer" #oppoSearch="matAutocomplete"
+                                           (optionSelected)="PinCodeSelected($event)">
+                                            <mat-option *ngFor="let pincode of pincodes$ | async" [value]="pincode">
+                                                {{ pincode.PinCode }} {{ pincode.CityName }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <button class="-m-5 z-10" type="button" *ngIf="editable"
+                                            (click)="openDiolog('Pincode','Select Pincode')"><mat-icon
+                                                class="-ml-2">search</mat-icon></button>
+                                        <button *ngIf="AgentForm.get('PinCodeNumber').value && mode != 'View'"
+                                            type="button" class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                                            (click)="clear('PinCodeNumber', 'PinCodeId')">
+                                            <mat-icon>clear</mat-icon>
+                                        </button>
+                                        <label for="PinCodeNumber" class="mandatory">PIN Code</label>
+                                    </div>
+                                </div>
+
+                                <!-- City Name  -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>location_city</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" AlphabetOnly readOnly formControlName="CityName" placeholder=" "
+                                        id="CityName" />
+                                    <label for="CityName" class="mandatory">City Name</label>
+                                </div>
+                                <!-- State Name   -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>domain</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" AlphabetOnly readOnly formControlName="StateName"
+                                        placeholder=" " id="StateName">
+                                    <label for="StateName" class="mandatory">State Name</label>
+                                </div>
+                                <!-- Country  -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>flag</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" AlphabetOnly readOnly formControlName="CountryName"
+                                        placeholder=" " id="CountryName" />
+                                    <label for="CountryName" class="mandatory">Country Name</label>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="form-button mx-3 mt-3" mat-button matStepperPrevious>Back</button>
+                                <button (click)="StepThreeError()" class="form-button mx-3 mt-3" mat-button
+                                    matStepperNext>Next</button>
+                            </div>
+                        </div>
+                    </form>
+                </mat-step>
+
+                <!-- forth box -->
+                <mat-step [stepControl]="StepFourSubmit()" label="KYC Details">
+                    <form [formGroup]="AgentForm">
+                        <div class="py-7 px-5">
+                            <!-- KYC Details -->
+                            <div class="grid md:grid-cols-2   gap-6">
+
+                                <!-- pan -->
+
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>credit_card</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" maxlength="10" formControlName="PANNumber"
+                                        placeholder=" " id="PANNumber" />
+                                    <label for="PANNumber" class="mandatory">PAN</label>
+                                </div>
+
+                                <!-- aadhar -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>credit_card</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" Onlynumber maxlength="12"
+                                        formControlName="AadharNumber" placeholder=" " id="AadharNumber" />
+                                    <label for="AadharNumber">Aadhar</label>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="form-button mx-3 mt-3" mat-button matStepperPrevious>Back</button>
+                                <button (click)="StepFourError()" class="form-button mx-3 mt-3" mat-button
+                                    matStepperNext>Next</button>
+                            </div>
+                        </div>
+                    </form>
+                </mat-step>
+                <!-- fifth box -->
+                <mat-step [stepControl]="StepFiveSubmit()" label="Bank Details">
+                    <form [formGroup]="AgentForm">
+                        <div class="px-5 py-7">
+                            <!-- Bank Details -->
+                            <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-6 ">
+
+                                <!-- name as per bank -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>person</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" AlphabetOnly formControlName="NameAsPerBank" placeholder=" " maxlength="120" id="NameAsPerBank">
+                                    <label for="NameAsPerBank" class="mandatory flex-shrink-0 w-max">Name as per
+                                        Bank
+                                    </label>
+                                </div>
+
+                                <!-- bank Name -->
+
+
+
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>account_balance</mat-icon>
+                                    </div>
+                                    <div class="flex">
+                                        <input type="text" AlphabetOnly class="peer" formControlName="BankName" placeholder=" "
+                                            id="BankName" [matAutocomplete]="BankSearch">
+                                        <mat-autocomplete #BankSearch="matAutocomplete"
+                                            (optionSelected)="BankSelected($event)">
+                                            <mat-option *ngFor="let Bank of Banks$ | async" [value]="Bank">
+                                                {{Bank.Name}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <button class="-m-5 z-10" type="button" *ngIf="editable"
+                                            (click)="openDiolog('Bank','Select Bank')"><mat-icon
+                                                class="-ml-2">search</mat-icon></button>
+                                        <button *ngIf="AgentForm.get('BankName').value && mode != 'View'" type="button"
+                                            class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                                            (click)="clear('BankName', 'BankId')">
+                                            <mat-icon>clear</mat-icon>
+                                        </button>
+                                        <label for="BankName" class="mandatory">Bank Name</label>
+                                    </div>
+                                </div>
+
+                                <!-- Account No. -->
+
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>account_box</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" Onlynumber formControlName="AccountNumber" maxlength="20" placeholder=" " id="AccountNumber" />
+                                    <label for="AccountNumber" class="mandatory">Account No.</label>
+                                </div>
+                                <!-- IFSC Code -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>poll</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" formControlName="IFSCCode" placeholder=" " maxlength="20" id="IFSCCode" />
+                                    <label for="IFSCCode" class="mandatory">IFSC Code</label>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="form-button mx-3 mt-3" mat-button matStepperPrevious>Back</button>
+                                <button (click)="StepFiveError()" class="form-button mx-3 mt-3" mat-button
+                                    matStepperNext>Next</button>
+                            </div>
+                        </div>
+                    </form>
+                </mat-step>
+                <!-- sixth box -->
+                <mat-step [stepControl]="StepSixSubmit()" label="Other Details">
+                    <form [formGroup]="AgentForm">
+                        <div class="px-5 py-7">
+                            <!-- Other details -->
+                            <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
+
+                                <!-- Branch -->
+                                <div class="relative wd">
+                                    <div class="icon">
+                                        <mat-icon>spa</mat-icon>
+                                    </div>
+                                    <select class="peer" id="Branch" formControlName="BranchId">
+                                        <option value="">--Select--</option>
+                                        <option *ngFor="let Branch of branchs" [value]="Branch.Id">
+                                            {{Branch.Name}}
+                                        </option>
+                                    </select>
+                                    <label for="Branch" class="mandatory">Branch</label>
+                                </div>
+
+
+                                <!-- referance_name -->
+                                <div class="relative wd">
+                                    <div class="icon">
+                                        <mat-icon>person</mat-icon>
+                                    </div>
+                                    <div class="flex">
+                                        <input type="text" class="peer " formControlName="ReferenceName" placeholder=" "
+                                            id="ReferenceName" [matAutocomplete]="ReferenceSearch" />
+                                        <mat-autocomplete #ReferenceSearch="matAutocomplete"
+                                            (optionSelected)="ReferenceSelected($event)">
+                                            <mat-option *ngFor="let Reference of References$ | async"
+                                                [value]="Reference">
+                                                {{Reference.FullName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <button class="-m-5 z-10" type="button" *ngIf="editable"
+                                            (click)="openDiolog('ReferenceName','Select ReferenceName')"><mat-icon
+                                                class="-ml-2">search</mat-icon></button>
+                                        <button *ngIf="AgentForm.get('ReferenceName').value && mode != 'View'"
+                                            type="button" class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                                            (click)="clear('ReferenceName', 'ReferenceId')">
+                                            <mat-icon>clear</mat-icon>
+                                        </button>
+                                        <label for="ReferenceName">Reference Name</label>
+                                    </div>
+                                </div>
+
+                                <!-- CRE -->
+
+                                <div class="relative wd">
+                                    <div class="icon">
+                                        <mat-icon>person</mat-icon>
+                                    </div>
+                                    <div class="flex">
+                                        <input type="text" class="peer " formControlName="BDOName" placeholder=" "
+                                            id="BDOName" [matAutocomplete]="CRESearch" />
+                                        <mat-autocomplete #CRESearch="matAutocomplete"
+                                            (optionSelected)="CRESelected($event)">
+                                            <mat-option *ngFor="let CRE of CREs$ | async" [value]="CRE">
+                                                {{CRE.FullName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <button class="-m-5 z-10" type="button" *ngIf="editable"
+                                            (click)="openDiolog('BDOName','Select BDOName')"><mat-icon
+                                                class="-ml-2">search</mat-icon></button>
+                                        <button *ngIf="AgentForm.get('BDOName').value && mode != 'View'" type="button"
+                                            class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                                            (click)="autocompleteCleardEvent('BDO')">
+                                            <mat-icon>clear</mat-icon>
+                                        </button>
+                                        <label for="BDOName" class="mandatory">BDO</label>
+                                    </div>
+                                </div>
+                                <!-- CRM -->
+
+                                <div class="relative wd">
+                                    <div class="icon">
+                                        <mat-icon>person</mat-icon>
+                                    </div>
+                                    <div class="flex">
+                                        <input type="text" class="peer " formControlName="BDMName" placeholder=" "
+                                            id="BDMName" readonly />
+                                        <!-- <input type="text" class="peer " formControlName="BDMName" placeholder=" "
+                                            id="BDMName" [matAutocomplete]="CRMSearch" />
+                                        <mat-autocomplete #CRMSearch="matAutocomplete"
+                                            (optionSelected)="CRMSelected($event)">
+                                            <mat-option *ngFor="let crm of CRMs$ | async" [value]="crm">
+                                                {{crm.FullName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <button class="-m-5 z-10" type="button" *ngIf="editable"
+                                            (click)="openDiolog('BDMName','Select BDMName')"><mat-icon
+                                                class="-ml-2">search</mat-icon></button>
+                                        <button *ngIf="AgentForm.get('BDMName').value && mode != 'View'" type="button"
+                                            class="-m-7 z-10" aria-label="clear" matTooltip="Clear" (click)="clear('BDMName', 'BDMId')">
+                                            <mat-icon>clear</mat-icon>
+                                        </button> -->
+                                        <label for="BDMName" class="mandatory">BDM Name</label>
+
+                                    </div>
+                                </div>
+
+                                <!-- vertical_head -->
+
+                                <div class="relative wd">
+                                    <div class="icon">
+                                        <mat-icon>person</mat-icon>
+                                    </div>
+                                    <div class="flex">
+                                        <input type="text" class="peer " formControlName="VerticalHeadName"
+                                            placeholder=" " id="VerticalHeadName" readonly />
+                                        <!-- <input type="text" class="peer " formControlName="VerticalHeadName"
+                                            placeholder=" " id="VerticalHeadName"
+                                            [matAutocomplete]="VerticalHeadSearch" />
+                                        <mat-autocomplete #VerticalHeadSearch="matAutocomplete"
+                                            (optionSelected)="VerticalHeadSelected($event)">
+                                            <mat-option *ngFor="let VerticalHead of VerticalHeads$ | async"
+                                                [value]="VerticalHead">
+                                                {{VerticalHead.FullName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <button class="-m-5 z-10" type="button" *ngIf="editable"
+                                            (click)="openDiolog('VerticalHeadName','Select VerticalHeadName')"><mat-icon
+                                                class="-ml-2">search</mat-icon></button>
+                                        <button *ngIf="AgentForm.get('VerticalHeadName').value && mode != 'View'"
+                                            type="button" class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                                            (click)="clear('VerticalHeadName', 'VerticalHeadId')">
+                                            <mat-icon>clear</mat-icon>
+                                        </button> -->
+                                        <label for="VerticalHeadName" class="mandatory">Vertical Head</label>
+                                    </div>
+                                </div>
+                                <!-- recruiting person -->
+
+                                <div class="relative wd">
+                                    <div class="icon">
+                                        <mat-icon>person</mat-icon>
+                                    </div>
+                                    <div class="flex">
+                                        <input type="text" class="peer " formControlName="RecruitingPersonName"
+                                            placeholder=" " id="RecruitingPersonName"
+                                            [matAutocomplete]="RecruitingPersonSearch" />
+                                        <mat-autocomplete #RecruitingPersonSearch="matAutocomplete"
+                                            (optionSelected)="RecruitingPersonSelected($event)">
+                                            <mat-option *ngFor="let RecruitingPerson of RecruitingPersons$ | async"
+                                                [value]="RecruitingPerson">
+                                                {{RecruitingPerson.FullName}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <button class="-m-5 z-10" type="button" *ngIf="editable"
+                                            (click)="openDiolog('RecruitingPerson','Select RecruitingPerson')"><mat-icon
+                                                class="-ml-2">search</mat-icon></button>
+                                        <button *ngIf="AgentForm.get('RecruitingPersonName').value && mode != 'View'"
+                                            type="button" class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                                            (click)="clear('RecruitingPersonName', 'RecruitingPersonId')">
+                                            <mat-icon>clear</mat-icon>
+                                        </button>
+                                        <label for="RecruitingPersonName" class="mandatory">Recruiting
+                                            Person</label>
+                                    </div>
+                                </div>
+
+
+                                <!-- Role of Recruting Person -->
+                                <div class="relative">
+                                    <div class="col-span-2">
+                                        <span
+                                            class="text-md text-gray-500 dark:text-gray-400  shrink-0 font-medium peer">Role
+                                            of Recruting Person</span>
+                                    </div>
+                                    <div class="lg:grid grid-cols-4 md:grid-cols-2 gap-4 ">
+                                        <mat-chip class="mx-1 mt-5" *ngFor="let role of Roles">
+                                            {{ role }}
+                                        </mat-chip>
+                                    </div>
+                                </div>
+
+                                <!-- Reference Contact No -->
+                                
+                                <div class="relative max-h-11">
+                                    <div class="icon">
+                                        <mat-icon>call</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" Onlynumber formControlName="ReferenceContactNo" maxlength="10" placeholder=" "
+                                        id="ReferenceContactNo" />
+                                    <label for="ReferenceContactNo" class="">Reference Contact No</label>
+                                </div>
+
+                            </div>
+                            <div class="mt-10">
+                                <button class="form-button mx-3 mt-3" mat-button matStepperPrevious>Back</button>
+                                <button (click)="StepSixError()" class="form-button mx-3 mt-3" mat-button
+                                    matStepperNext>Next</button>
+                            </div>
+                        </div>
+                    </form>
+                </mat-step>
+                <!-- seventh box -->
+                <mat-step [stepControl]="StepSevenSubmit()" label="Login Details">
+                    <form [formGroup]="AgentForm">
+                        <div class="py-7 px-5">
+                            <!-- Login Details -->
+                            <div class="grid md:grid-cols-2   gap-6">
+
+                                <!-- Username -->
+
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>person</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer flex-shrink-0" formControlName="UserName" maxlength="30" placeholder=" " id="UserName" />
+                                    <label for="UserName" class="mandatory">PRN(User Name)
+                                    </label>
+
+                                </div>
+
+                                <!-- Password -->
+                                <div *ngIf="mode == 'Create' || mode == 'ConvertAgent' ||(isAdmin && mode == 'Edit')" class="relative flex justify-end items-center">
+                                    <div class="icon">
+                                        <mat-icon>lock</mat-icon>
+                                    </div>
+                                    <input [type]="hide ? 'password' : 'text'" name="password" type="Password" maxlength="20" class="peer" formControlName="Password" placeholder=" " id="Password" />
+                                    <label for="Password" class="mandatory">Password</label>
+                                    <button type="button" class="absolute mr-2" mat-icon-button matSuffix
+                                        (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                                        [attr.aria-pressed]="hide">
+                                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button>
+                                </div>
+
+                                <!-- Status -->
+                                <div class="font-medium mb-2 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+                                    <span for="Status"
+                                        class="pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 ml-3">Status</span>
+                                    <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1"
+                                        (change)="onStatus($event,'Status')">
+                                        <span class="flex font-medium text-xl ml-3 mt-2.5">
+                                            {{
+                                            AgentForm.controls['Status'].value == 1
+                                            ? "Active"
+                                            : "InActive"
+                                            }}
+                                        </span>
+                                    </mat-slide-toggle>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="form-button mx-3 mt-3" mat-button matStepperPrevious>Back</button>
+                                <button (click)="StepSevenError()" class="form-button mx-3 mt-3" mat-button
+                                    matStepperNext>Next</button>
+                            </div>
+                        </div>
+                    </form>
+                </mat-step>
+
+
+                <mat-step [stepControl]="StepEightSubmit()" label="Training Details">
+                    <form [formGroup]="AgentForm">
+                        <!-- eigth box -->
+                        <div class="py-7 px-5">
+                            <!-- Training Details -->
+                            <div class="grid lg:grid-cols-2 md:grid-cols-2 gap-6">
+
+
+                                <!-- Life -->
+                                <div class="py-3 grid gap-6">
+                                    <p class="flex justify-start font-medium text-2xl">Life</p>
+
+                                    <!-- Training Start Time & Date -->
+                                    <div class="grid gap-3 lg:gap-0 lg:grid-cols-[minmax(270px,270px)_minmax(200px,200px)]">
+                                        <div class="relative w-fit">
+
+                                            <div class="icon">
+                                                <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                    [for]="Ltsd"></mat-datepicker-toggle>
+                                                <mat-datepicker #Ltsd></mat-datepicker>
+                                            </div>
+
+                                            <input type="text" matInput id="LifeStartDate" class="peer" placeholder=" " [max]="maxBirthDate" [min]="AgentForm.controls['DateOfBirth'].value"
+                                                formControlName="LifeStartDate" placeholder="__/__/____" datemask
+                                                [matDatepicker]="Ltsd">
+
+                                            <label for="LifeStartDate" >Training Start Time
+                                                &
+                                                Date</label>
+                                        </div>
+
+                                        <div>
+                                            <div class="p-1 w-30 bg-white border rounded-md min-h-10">
+                                                <div class="flex aaptimepicker">
+                                                    <select name="hours" [formControl]="LifeStartHours"
+                                                        class="bg-transparent text-xl appearance-none outline-none">
+                                                        <option [disabled]="!editable" *ngFor="let option of hourList"
+                                                            [value]="option">{{
+                                                            option }}</option>
+                                                    </select>
+                                                    <span class="text-xl mr-1">:</span>
+                                                    <select name="minutes" [formControl]="LifeStartMinutes"
+                                                        class="bg-transparent text-xl appearance-none outline-none mr-2">
+                                                        <option [disabled]="!editable" *ngFor="let option of minuteList"
+                                                            [value]="option">
+                                                            {{ option }}</option>
+                                                    </select>
+                                                    <select name="LifeStartampm" [formControl]="LifeStartAMPM"
+                                                        class="bg-transparent text-xl appearance-none outline-none">
+                                                        <option [disabled]="!editable" value="am">AM</option>
+                                                        <option [disabled]="!editable" value="pm">PM</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- Training end Time & Date -->
+
+                                    <div class="grid gap-3 lg:gap-0 lg:grid-cols-[minmax(270px,270px)_minmax(200px,200px)]">
+                                        <div class="relative w-fit">
+
+                                            <div class="icon">
+                                                <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                    [for]="Lted"></mat-datepicker-toggle>
+                                                <mat-datepicker #Lted></mat-datepicker>
+                                            </div>
+
+                                            <input matInput [min]="AgentForm.controls['LifeStartDate'].value" [max]="maxBirthDate"
+                                                placeholder=" " type="text" id="LifeEndDate" class="peer"
+                                                placeholder=" " formControlName="LifeEndDate" placeholder="__/__/____"
+                                                datemask [matDatepicker]="Lted">
+
+                                            <label for="LifeEndDate" >Training end Time &
+                                                Date</label>
+                                        </div>
+
+                                        <div>
+                                            <div class="p-1 w-30 bg-white border min-h-10 rounded-md">
+                                                <div class="flex aaptimepicker">
+                                                    <select name="hours" [formControl]="LifeEndHours"
+                                                        class="bg-transparent text-xl appearance-none outline-none">
+                                                        <option [disabled]="!editable" *ngFor="let option of hourList"
+                                                            [value]="option">
+                                                            {{ option }}</option>
+                                                    </select>
+                                                    <span class="text-xl mr-1">:</span>
+                                                    <select name="minutes" [formControl]="LifeEndMinutes"
+                                                        class="bg-transparent text-xl appearance-none outline-none mr-2">
+                                                        <option [disabled]="!editable" *ngFor="let option of minuteList"
+                                                            [value]="option">
+                                                            {{ option }}</option>
+                                                    </select>
+                                                    <select name="LifeEndampm" [formControl]="LifeEndAMPM"
+                                                        class="bg-transparent text-xl appearance-none outline-none">
+                                                        <option [disabled]="!editable" value="am">AM</option>
+                                                        <option [disabled]="!editable" value="pm">PM</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Training Hours -->
+
+                                    <div class="relative w-fit">
+                                        <div class="icon">
+                                            <mat-icon>access_time</mat-icon>
+                                        </div>
+                                        <div>
+                                            <input matInput type="text" id="LifeTrainingHours" class="peer"
+                                                placeholder=" " formControlName="LifeTrainingHours" [readonly]="true">
+                                            <label for="LifeTrainingHours" >Training Hours
+                                                (Life)</label>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- General -->
+                                <div class="py-3 grid gap-6">
+                                    <p class="flex justify-start font-medium text-2xl">General</p>
+
+
+                                    <!-- Training Start Time & Date -->
+
+                                    <div class="grid gap-3 lg:gap-0 lg:grid-cols-[minmax(270px,270px)_minmax(200px,200px)]">
+                                        <div class="relative w-fit">
+                                            <div class="icon">
+                                                <mat-datepicker-toggle matIconSuffix class="-ml-2"
+                                                    [for]="est"></mat-datepicker-toggle>
+                                                <mat-datepicker #est></mat-datepicker>
+                                            </div>
+                                            <input matInput type="text" class="peer wd" placeholder=" " [max]="maxBirthDate" [min]="AgentForm.controls['DateOfBirth'].value"
+                                                id="NonLifeStartDate" formControlName="NonLifeStartDate"
+                                                placeholder="__/__/____" datemask [matDatepicker]="est">
+
+                                            <label for="NonLifeStartDate" >Training
+                                                Start
+                                                Time
+                                                &
+                                                Date
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <div class="p-1 w-30 bg-white border min-h-10 rounded-md">
+                                                <div class="flex aaptimepicker">
+                                                    <select name="hours" [formControl]="NonLifeStartHours"
+                                                        class="bg-transparent text-xl appearance-none outline-none">
+                                                        <option [disabled]="!editable" *ngFor="let option of hourList"
+                                                            [value]="option">{{
+                                                            option }}</option>
+                                                    </select>
+                                                    <span class="text-xl mr-1">:</span>
+                                                    <select name="minutes" [formControl]="NonLifeStartMinutes"
+                                                        class="bg-transparent text-xl appearance-none outline-none mr-2">
+                                                        <option [disabled]="!editable" *ngFor="let option of minuteList"
+                                                            [value]="option">
+                                                            {{
+                                                            option }}</option>
+                                                    </select>
+                                                    <select name="NonStartampm" [formControl]="NonLifeStartAMPM"
+                                                        class="bg-transparent text-xl appearance-none outline-none">
+                                                        <option [disabled]="!editable" value="am">AM</option>
+                                                        <option [disabled]="!editable" value="pm">PM</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Training end Time & Date -->
+
+                                    <div class="grid gap-3 lg:gap-0 lg:grid-cols-[minmax(270px,270px)_minmax(200px,200px)]">
+                                        <div class="relative w-fit">
+
+                                            <div class="icon">
+                                                <mat-datepicker-toggle matIconSuffix class="-ml-2"
+                                                    [for]="net"></mat-datepicker-toggle>
+                                                <mat-datepicker #net></mat-datepicker>
+                                            </div>
+
+                                            <input matInput type="text" placeholder=" " id="NonLifeTrainingEndDate"
+                                                [min]="AgentForm.controls['NonLifeStartDate'].value" [max]="maxBirthDate" class="peer wd"
+                                                formControlName="NonLifeEndDate" placeholder="__/__/____" datemask
+                                                [matDatepicker]="net">
+
+                                            <label for="NonLifeTrainingEndDate" >Training
+                                                end Time & Date
+                                            </label>
+                                        </div>
+
+                                        <div>
+                                            <div class="p-1 w-30 bg-white border min-h-10 rounded-md">
+                                                <div class="flex aaptimepicker">
+                                                    <select name="hours" [formControl]="NonLifeEndHours"
+                                                        class="bg-transparent text-xl appearance-none outline-none">
+                                                        <option [disabled]="!editable" *ngFor="let option of hourList"
+                                                            [value]="option">{{
+                                                            option }}</option>
+                                                    </select>
+                                                    <span class="text-xl mr-1">:</span>
+                                                    <select name="minutes" [formControl]="NonLifeEndMinutes"
+                                                        class="bg-transparent text-xl appearance-none outline-none mr-2">
+                                                        <option [disabled]="!editable" *ngFor="let option of minuteList"
+                                                            [value]="option">
+                                                            {{
+                                                            option }}</option>
+                                                    </select>
+                                                    <select name="NonEndampm" [formControl]="NonLifeEndAMPM"
+                                                        class="bg-transparent text-xl appearance-none outline-none">
+                                                        <option [disabled]="!editable" value="am">AM</option>
+                                                        <option [disabled]="!editable" value="pm">PM</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Training Hours -->
+
+                                    <div class="relative w-fit">
+                                        <div class="icon">
+                                            <mat-icon>access_time</mat-icon>
+                                        </div>
+                                        <div class="flex">
+                                            <input matInput type="text" class="peer wd" placeholder=" "
+                                                id="NonLifeTrainingHours" formControlName="NonLifeTrainingHours"
+                                                [readonly]="true">
+                                            <label for="NonLifeTrainingHours" >Training
+                                                Hours (General)
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <!-- ninth box -->
+                            <!-- Total Training Hours -->
+                            <div class="mt-8 border border-dashed"></div>
+                            <div class="mt-8 grid gap-4">
+                                <div class="relative w-fit">
+                                    <div class="icon">
+                                        <mat-icon>access_time</mat-icon>
+                                    </div>
+                                    <div>
+                                        <input readonly matInput type="text" class="peer wd" placeholder=" "
+                                            id="TotalTrainingHours" [formControl]="TotalTrainingHours">
+                                        <label for="TotalTrainingHours" >Total Training Hours
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Exam Date -->
+
+                                <div class="relative w-fit">
+                                    <div class="icon">
+                                        <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="ExD"></mat-datepicker-toggle>
+                                        <mat-datepicker #ExD></mat-datepicker>
+                                    </div>
+
+                                    <input matInput type="text" class="peer wd" id="ExamDate" formControlName="ExamDate" [max]="maxBirthDate" [min]="AgentForm.controls['DateOfBirth'].value"
+                                        placeholder=" " placeholder="__/__/____" datemask [matDatepicker]="ExD">
+
+                                    <label for="ExamDate">Exam
+                                        Date
+                                    </label>
+                                </div>
+
+                                <!-- Certificate -->
+                                <div class="relative">
+                                    <div class="">
+                                        <span
+                                            class="pr-2 py-1 font-medium"
+                                            for="Certificate">Certificate Issued? </span>
+                                        <mat-slide-toggle color="primary" formControlName="IsCertificateIssued"
+                                            class="relative mt-1" (change)="onChange($event,'IsCertificateIssued')">
+                                            <span class="flex font-medium text-xl ml-3 mt-2.5">
+                                                {{
+                                                AgentForm.controls['IsCertificateIssued'].value == true
+                                                ? "Yes"
+                                                : "No"
+                                                }}
+                                            </span>
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+
+                                <!-- Issue Date -->
+
+                                <div class="relative w-fit">
+                                    <div class="icon">
+                                        <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                            [for]="CID"></mat-datepicker-toggle>
+                                        <mat-datepicker #CID></mat-datepicker>
+                                    </div>
+
+                                    <input matInput [disabled]="!AgentForm.controls['IsCertificateIssued'].value"
+                                        placeholder=" " id="CertificateIssuedDate" type="text" class="peer wd"
+                                        formControlName="CertificateIssuedDate" placeholder="__/__/____" datemask
+                                        [matDatepicker]="CID">
+
+                                    <label for="CertificateIssuedDate" >Issue
+                                        Date
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="form-button mx-3 mt-3" mat-button matStepperPrevious>Back</button>
+                                <button class="form-button mx-3 mt-3" mat-button matStepperNext>Next</button>
+                            </div>
+                        </div>
+                    </form>
+                </mat-step>
+
+                <mat-step  label="Experiance and Attachment Details">
+                    <form [formGroup]="AgentForm">
+                        <div class="py-7 px-5">
+                            <!-- Login Details -->
+                            <div class="grid lg:grid-cols-[minmax(333px,1fr)_minmax(200px,1fr)_minmax(200px,1fr)]  gap-6">
+                
+                                <!-- Previous Experiance in Insurance Company? -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>domain</mat-icon>
+                                    </div>
+                                        <select id="IsExperianced" formControlName="IsExperianced">
+                                            <option [value]="true">Yes</option>
+                                            <option [value]="false">No</option>
+                                        </select>
+                                    <label for="IsExperianced" class="mandatory">Previous Experiance in Insurance Company?</label>
+                                </div>
+                                
+                                <!-- Insurance Company -->
+                                <div class="relative" *ngIf="f['IsExperianced'].value == true || f['IsExperianced'].value == 'true'">
+                                    <div class="icon">
+                                        <mat-icon>domain</mat-icon>
+                                    </div>
+                                        <select id="InsCompanyCode" formControlName="InsCompanyCode">
+                                            <option value="">--Select--</option>
+                                            <option [value]="cmp.Code" *ngFor="let cmp of InsuranceCompanyList">{{cmp.ShortName}}</option>
+                                        </select>
+                                    <label for="InsCompanyCode" class="mandatory">Insurance Company</label>
+                                </div>
+                                
+                                <!-- YearOfExperiance -->
+                                <div class="relative" *ngIf="f['IsExperianced'].value == true || f['IsExperianced'].value == 'true'">
+                                    <div class="icon">
+                                        <mat-icon>work</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer flex-shrink-0" formControlName="YearOfExperiance" maxlength="30"
+                                      Decimal  placeholder=" " id="YearOfExperiance" />
+                                    <label for="YearOfExperiance" class="">Years of Experiance</label>
+                                </div>
+                
+                
+                            </div>
+                            
+                            <div class="grid lg:grid-cols-3  gap-6 mt-5">
+                            
+                                <!-- Attachment Dropdown -->
+                                    <div class="relative min-w-32 ">
+                                        <div class="icon">
+                                            <mat-icon> compass_calibration</mat-icon>
+                                        </div>
+                                        <select class="peer bg-white" #DocumentDropdown (change)="onDocumentSelectionChange($event)"
+                                            [disabled]="!editable">
+                                            <option value="">--Select--</option>
+                                            <!-- [disabled]="checkValue(option.DocumentType)" -->
+                                            <option [value]="option.DocumentType" *ngFor="let option of AgentPolicyDocumentTypeList">
+                                                {{option.DocumentTypeName}}
+                                            </option>
+                                        </select>
+                                        <label for="">Attachment Dropdown</label>
+                                    </div>
+    
+    
+                                </div>
+
+                                <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-3 mt-4">
+                                    <ng-container formArrayName="Documents" *ngFor="let doc of documents.controls;let i=index">
+                                        <ng-container [formGroupName]="i" >
+                                
+                                            <div class="relative min-w-36">
+                                                <mat-icon *ngIf="editable"
+                                                    (click)="removeDocuments(i)"
+                                                    class="absolute -right-2 -top-3 text-red-500 cursor-pointer">cancel</mat-icon>
+                                                <div class="dummy-formField ">
+                                                    <div class="icon">
+                                                        <mat-icon>attach_file</mat-icon>
+                                                    </div>
+                                                    <input type="file" class="hidden"  #AttachDocument
+                                                        (change)="selectDocuments($event, i)">
+                                                    <p class="ml-10 text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                                        [ngClass]=" mode!='View' ? 'cursor-pointer text-primary-500 hover:text-primary-500' : 'pointer-events-none' "
+                                                        matTooltip="{{doc.value.FileName}}" (click)="AttachDocument.click()">
+                                                        {{doc.value.FileName || 'Choose File' | excerpt:'max' }}</p>
+                                                    <label for="AttachDocument" class="mandatory">{{
+                                                        doc.value.DocumentTypeName}}</label>
+                                                    <div class="flex justify-end absolute right-2 bg-white" matTooltip="View Document"
+                                                    (click)="viewDocuments(doc.value?.StorageFilePath)">
+                                                        <mat-icon *ngIf="doc.value?.StorageFilePath" class="cursor-pointer">visibility</mat-icon>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="relative min-w-36" *ngIf="doc.value.DocumentType == 'Other' ">
+                                                <div class="icon">
+                                                    <mat-icon>bubble_chart</mat-icon>
+                                                </div>
+                                                <input matInput type="text" placeholder=" " formControlName="Remarks" id="Remarks" name="Remark" class="peer w-fit pad"  />
+                                                <label for="Remarks">Remarks</label>
+                                            </div>
+                                        </ng-container>
+                                
+                                
+                                    </ng-container>
+                                </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button class="form-button mx-3" mat-button matStepperPrevious>Back</button>
+                            <button (click)="submitform()" [disabled]="AgentForm.invalid" class="form-button bg mx-3" mat-button
+                                *ngIf="mode == 'Create' || mode == 'Edit' || mode == 'ConvertAgent'">Submit</button>
+                        
+                        </div>
+                    </form>
+                </mat-step>
+            </mat-stepper>
+
+
+        </form>
+    </div>
+</div>

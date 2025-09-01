@@ -1,0 +1,27 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1
+        class="new-head text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold">
+        {{ Title }}
+
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" [disabled]="SubmitDisabled" (click)="submit()"
+                *ngIf="Mode == 'Create' || Mode == 'Edit'">Save</button>
+
+            <button mat-raised-button class="new-button" *ngIf="Mode == 'Edit' || Mode == 'Create'"
+                (click)="backClicked()">Cancel</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="Mode == 'View'"
+                (click)="backClicked()">Back</button>
+        </div>
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region content -->
+    <div class="px-4 py-5 rounded">
+
+        <ng-content></ng-content>
+        
+    </div>
+    <!-- endregion content -->
+</div>

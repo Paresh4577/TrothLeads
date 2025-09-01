@@ -1,0 +1,26 @@
+.newTable {
+    table {
+        width: 100% !important;
+        // border: 5px solid green !important;
+    }
+
+    th,
+    td {
+        border: 1px solid black !important;
+        min-width: 200px;
+    }
+
+    th {
+        background-color: rgb(4 100 164 / var(--tw-bg-opacity)) !important;
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+        color: white !important;
+    }
+}
+
+.tableStyling {
+    table {
+        border: 1.5px solid black !important;
+        border-radius: 25px 20px 15px 25px !important;
+    }
+}

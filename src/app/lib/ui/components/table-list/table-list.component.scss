@@ -1,0 +1,48 @@
+table {
+    // for table wrapper
+    @apply w-full bg-white rounded;
+
+    // for table head
+    thead {
+      @apply bg-primary text-on-primary;
+
+      tr:first-child{
+
+        th{
+          @apply first:rounded-tl last:rounded-tr;
+        }
+      }
+    }
+
+    // for table body
+    tbody {
+      @apply divide-y-2 divide-accent-200/80;
+
+      // tr {
+      //   @apply hover:text-primary font-medium;
+      // }
+    }
+
+    // for table footer
+    tfoot{
+        @apply border-t-2 border-t-accent-200/80;
+    }
+
+    // for each table cell
+    th,
+    td {
+      @apply py-3 pl-5 mx-5 text-start;
+    }
+  }
+.padding{
+    @apply px-2 py-2 #{!important};
+}
+
+.iconColor {
+  color: rgb(14, 165, 233);
+  // color: #248cd1;
+}
+
+::ng-deep.mat-mdc-radio-button .mdc-radio, .mat-mdc-checkbox-button .mdc-checkbox{
+  padding: 0px !important;
+}

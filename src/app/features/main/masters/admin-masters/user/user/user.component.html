@@ -1,0 +1,676 @@
+<div class="p-4 h-full w-full">
+  <!-- region main heading -->
+  <h1 class="new-head text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold">
+    {{ title }}
+
+    <div class="flex gap-x-3  items-center text-lg font-normal">
+      <button mat-raised-button class="new-button" [disabled]="UserForm.invalid" (click)="submitform()"
+        *ngIf="mode == 'Create' || mode == 'Edit'">Save</button>
+
+      <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'Edit' || mode == 'Create'">Cancel</button>
+
+      <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'View'">Back</button>
+    </div>
+  </h1>
+
+  <div class="px-4 py-5 rounded bg-white" [ngClass]="{'showstep': this.mode=='View' || this.mode=='Edit' || this.mode=='Create'}">
+    <form action="" class="w-full text-md">
+
+      <mat-stepper linear orientation="vertical" #stepper>
+
+        <!-- first stepper -->
+
+        <mat-step [stepControl]="StepOneSubmit()" label="Basic Details">
+          <form [formGroup]="UserForm">
+            <div class="py-5 px-5 flex flex-col">
+
+              <div class="md:grid lg:grid-cols-[minmax(100px,130px)_minmax(400px,1fr)] gap-x-9">
+                <!-- Photo -->
+
+                <div class="mt-4 mb-9 relative ">
+                  <span class="font-medium text-lg">Photo</span>
+                  <div class="flex -mb-2 justify-end" *ngIf="editable">
+                      <button mat-icon-button type="button" matTooltip="Remove" *ngIf="file"
+                        (click)="deletePhoto()">
+                        <mat-icon color="warn" class="border">clear</mat-icon>
+                      </button>
+                    </div>
+                  <div>
+                    <input type="file" class="hidden" #img (change)="imgPreiview(img.files)"  accept="image/*" /><br>
+                    <img [src]="imgsrc" class=" shadow-md shadow-sky-500 md:h-fit md:w-fit h-1/4 w-1/4" *ngIf="editable"
+                      (click)="img.click()" alt="">
+
+                    <img [src]="imgsrc" class=" shadow-md shadow-sky-500 md:h-fit md:w-fit h-1/4 w-1/4 "
+                      *ngIf="!editable" alt="">
+                  </div>
+                </div>
+
+
+                <div>
+                  <!-- Salutation -->
+                  <div class="relative my-6">
+                    <div class="icon">
+                      <mat-icon>title</mat-icon>
+                    </div>
+                    <select class="peer w-36" formControlName="Title">
+                      <option value="">Select</option>
+                      <option *ngFor="let option of DropdownMaster.FormalTitlesOptions" [value]="option.value">{{
+                        option.name }}</option>
+                    </select>
+                    <label for="Title" class="mandatory">Title</label>
+                  </div>
+
+                  <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-6 ">
+                    <!-- First name -->
+                    <div class="relative">
+                      <div class="icon">
+                        <mat-icon>person</mat-icon>
+                      </div>
+                      <input type="text" class="peer" formControlName="FirstName" maxlength="120" placeholder=" " id="FirstName" />
+                      <label for="FirstName" class="mandatory">First Name</label>
+                    </div>
+
+
+                    <!-- Last name -->
+                    <div class="relative">
+                      <div class="icon">
+                        <mat-icon>person</mat-icon>
+                      </div>
+                      <input type="text" class="peer" formControlName="LastName" maxlength="120" placeholder=" " id="LastName">
+                      <label for="LastName" class="mandatory">Last Name</label>
+                    </div>
+
+                    <!-- gender -->
+                    <div class="relative">
+                      <div class="icon">
+                        <mat-icon>person_outline</mat-icon>
+                      </div>
+                      <select id="Gender" name="Gender" class="peer" formControlName="Gender">
+                        <option value="0">Select</option>
+                        <option class="example-radio-button" *ngFor="let option of GenderList" [value]="option.Name">{{ option.Name }}</option>
+                      </select>
+                      <label for="Gender" class="mandatory">Gender</label>
+                    </div>
+
+
+                    <!-- employee code -->
+                    <div class="relative">
+                      <div class="icon">
+                        <mat-icon>poll</mat-icon>
+                      </div>
+                      <input type="text" class="peer" formControlName="EmployeeCode" placeholder=" " maxlength="15" id="EmployeeCode" />
+                      <label for="EmployeeCode" class="mandatory">Employee Code</label>
+                    </div>
+
+                    <!--Designation-->
+                    <div class="relative">
+                      <div class="icon">
+                        <mat-icon>layers</mat-icon>
+                      </div>
+                      <div class=" flex ">
+                        <input type="text" class="peer" AlphabetOnly maxlength="60" formControlName="DesignationName" placeholder=" " id="DesignationName" [matAutocomplete]="DesignationSearch" />
+                        <mat-autocomplete #DesignationSearch="matAutocomplete"
+                          (optionSelected)="DesignationSelected($event)">
+                          <mat-option *ngFor="let Designation of Designations$ | async" [value]="Designation">
+                            {{ Designation.Name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                        <button class="-m-5 z-10" type="button" *ngIf="editable" (click)="openDiolog('Designation','Select Designation')">
+                          <mat-icon class="-ml-2">search</mat-icon>
+                        </button>
+                        <button *ngIf="addUserForm.get('DesignationName').value && mode != 'View'" type="button" class="-m-7 z-10" aria-label="clear" matTooltip="Clear" (click)="clear('DesignationName', 'DesignationId')">
+                          <mat-icon>clear</mat-icon>
+                        </button>
+                        <label for="DesignationName" class="mandatory">Designation Name</label>
+                      </div>
+
+                    </div>
+
+                    <!-- DOB -->
+                    <div class="relative">
+                      <div class="icon">
+                        <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </div>
+                      <div class="flex">
+                        <input matInput type="text" placeholder="__/__/____" datemask [matDatepicker]="picker" [max]="maxBirthDate" formControlName="DateOfBirth" class="peer" id="DateOfBirth" />
+                        <label for="DateOfBirth" class="mandatory">Date of Birth</label>
+                      </div>
+
+                    </div>
+
+
+                    <!-- DOJ -->
+                    <div class="relative">
+                      <div class="icon">
+                        <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="doj"></mat-datepicker-toggle>
+                        <mat-datepicker #doj></mat-datepicker>
+                      </div>
+                      <div class="flex ">
+                        <input matInput type="text" placeholder="__/__/____" datemask [matDatepicker]="doj" [min]="UserForm.controls['DateOfBirth'].value" [max]="maxBirthDate" formControlName="DateOfJoining" class="peer" id="DateOfJoining" />
+                        <label for="DateOfJoining" class="mandatory">Date of Joining</label>
+                      </div>
+                    </div>
+
+                    <!-- Effective Date -->
+                    <div class="relative">
+                      <div class="icon">
+                        <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="ED"></mat-datepicker-toggle>
+                        <mat-datepicker #ED></mat-datepicker>
+                      </div>
+                      <div class="flex">
+                        <input matInput type="text" placeholder="__/__/____" datemask [matDatepicker]="ED" [min]="UserForm.controls['DateOfBirth'].value" [max]="UserForm.controls['DateOfJoining'].value" formControlName="EffectiveDate" aria-label="With input" class="peer" id="EffectiveDate" />
+                        <label for="EffectiveDate" class="mandatory">Effective Date</label>
+                      </div>
+                    </div>
+
+                    <!--User Name-->
+                    <div class="relative">
+                      <div class="icon">
+                        <mat-icon>person</mat-icon>
+                      </div>
+                      <input type="text" class="peer" formControlName="UserName" maxlength="60" placeholder=" " id="UserName" />
+                      <label for="UserName" class="mandatory">User Name</label>
+                    </div>
+
+                    <!--Password-->
+                    <div *ngIf="mode == 'Create' || (isAdmin && mode == 'Edit')" class="relative flex justify-end items-center">
+                      <div class="icon">
+                        <mat-icon>lock</mat-icon>
+                      </div>
+                      <input [type]="hide ? 'password' : 'text'" name="password" type="password" class="peer" maxlength="20" placeholder=" " id="Password" formControlName="Password" />
+                      <label for="Password" class="mandatory">Password</label>
+                      <button type="button" class="absolute mr-2" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                      </button>
+                    </div>
+
+                    <!-- Branch -->
+                    <div class="relative ">
+                      <div class="icon">
+                        <mat-icon>spa</mat-icon>
+                      </div>
+                    
+                      <select id="" formControlName="BranchId">
+                        <option value="">--Select--</option>
+                        <option *ngFor="let Branch of BranchList" [value]="Branch.Id">
+                          {{Branch.Name}}
+                        </option>
+                      </select>
+                      <label for="Category" class="mandatory">Branch</label>
+                    </div>
+
+                    <!--ReportingManagerName-->
+                    <div class="relative">
+                      <div class="icon">
+                        <mat-icon>person_add</mat-icon>
+                      </div>
+                      <div class=" flex ">
+                        <input type="text" class="peer" formControlName="ReportingManagerName" placeholder=" "
+                          AlphabetOnly id="ReportingManagerName" [matAutocomplete]="ReportingManagerSearch" />
+                        <mat-autocomplete #ReportingManagerSearch="matAutocomplete"
+                         (optionSelected)="ReportingManagerSelected($event)">
+                          <mat-option *ngFor="let ReportingManager of ReportingManagers$ | async"
+                            [value]="ReportingManager">
+                            {{ ReportingManager.FullName}}
+                          </mat-option>
+                        </mat-autocomplete>
+                        <button class="-m-5 z-10" type="button" *ngIf="editable"
+                          (click)="openDiologForMasterData('User','Select Reporting Manager','ReportingManager')"><mat-icon
+                            class="-ml-2">search</mat-icon></button>
+                        <button *ngIf="addUserForm.get('ReportingManagerName').value && mode != 'View'" type="button"
+                          class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                          (click)="clear('ReportingManagerName', 'ReportingManagerId')">
+                          <mat-icon>clear</mat-icon>
+                        </button>
+                        <label for="ReportingManagerName">Reporting
+                          Manager</label>
+                      </div>
+                    </div>
+
+                    
+
+                    
+
+                  </div>
+
+                
+
+                  <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
+
+                    <!-- status -->
+                    <div class="font-medium py-5  grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)] ">
+                      <span for="Status"
+                        class="pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 ml-3">Status</span>
+                      <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1"
+                        (change)="onChange($event,'Status')">
+                        <span class="flex font-medium text-xl ml-3 mt-2.5">
+                          {{
+                          UserForm.controls['Status'].value == 1
+                          ? "Active"
+                          : "InActive"
+                          }}
+                        </span>
+                      </mat-slide-toggle>
+                    </div>
+
+                    <!-- IsAdmin -->
+                    <div class="font-medium py-5 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)] ">
+                      <span for="IsAdmin"
+                        class="pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 ml-3">IsAdmin</span>
+                      <mat-slide-toggle color="primary" formControlName="IsAdmin" class="relative mt-1"
+                        (change)="onChange($event,'IsAdmin')">
+                        <span class="flex font-medium text-xl ml-3 mt-2.5">
+                          {{
+                          UserForm.controls['IsAdmin'].value == true
+                          ? "Yes"
+                          : "No"
+                          }}
+                        </span>
+                      </mat-slide-toggle>
+                    </div>
+
+                    <!--Is Underwriter -->
+                    <div class="font-medium py-5 grid grid-cols-[minmax(80px,150px)_minmax(60px,100px)] ">
+                      <span for="IsAdmin"
+                        class="pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 ml-3">Is Underwriter</span>
+                      <mat-slide-toggle color="primary" formControlName="IsUnderWriter" class="relative mt-1"
+                        (change)="onChange($event,'IsUnderWriter')">
+                        <span class="flex font-medium text-xl ml-3 mt-2.5">
+                          {{
+                          UserForm.controls['IsUnderWriter'].value == true
+                          ? "Yes"
+                          : "No"
+                          }}
+                        </span>
+                      </mat-slide-toggle>
+                    </div>
+
+
+                  </div>
+
+                  <div class="grid lg:grid-cols-3  gap-6">
+
+                    <div>
+
+                      <!--Role-->
+                      <div>
+                        <div class="relative">
+                          <div class="icon">
+                            <mat-icon>people</mat-icon>
+                          </div>
+                          <div class="flex">
+                            <input type="text" readonly [disabled]="mode == 'View'" class="peer" placeholder=" " AlphabetOnly id="Roles"
+                              (click)="openDiolog('Role','Select Role')" />
+                            <button class="z-15 -m-5" type="button" *ngIf="editable" (click)="openDiolog('Role','Select Role')"><mat-icon
+                                class="-ml-2">search</mat-icon></button>
+                            <label for="Roles" class="mandatory">Role</label>
+                          </div>
+                        </div>
+                      </div>
+
+                        <div class="relative my-5">
+                          <div class="col-span-1">
+                            <label class="text-xl font-medium peer flex-shrink-0 w-max">Selected Role</label>
+                          </div>
+                          <div class="lg:grid grid-cols-4 wd md:grid-cols-2 gap-2">
+                            <!-- <div class="flex"> -->
+                            <mat-chip class="mx-1 mt-5" *ngFor="let topping of infg.value;let i = index" [removable]="true"
+                              (removed)="onToppingRemoved(i)">
+                              {{ topping.RoleName }}
+                              <mat-icon *ngIf="editable" matChipRemove>cancel</mat-icon>
+                            </mat-chip>
+                            <!-- </div> -->
+                          </div>
+                        </div>
+
+                    </div>
+
+                    <!--Additional Branches-->
+                    <div>
+                    
+                      <div>
+                        <div class="relative">
+                          <div class="icon">
+                            <mat-icon>spa</mat-icon>
+                          </div>
+                          <div class="flex">
+                            <input type="text" readonly [disabled]="mode == 'View'" class="peer" placeholder=" " AlphabetOnly id="MultiBranch"
+                              (click)="openDiolog('MultiBranch','Select Branch')" />
+                            <button class="z-15 -m-5" type="button" *ngIf="editable" (click)="openDiolog('MultiBranch','Select Branch')"><mat-icon
+                                class="-ml-2">search</mat-icon></button>
+                            <label for="MultiBranch">Additional Branch</label>
+                          </div>
+                        </div>
+                      </div>
+                    
+                      <div class="relative my-5">
+                        <div class="col-span-1">
+                          <label class="text-xl font-medium peer flex-shrink-0 w-max">Selected Branches</label>
+                        </div>
+                        <!-- <div class="lg:grid grid-cols-4 wd md:grid-cols-2 gap-2"> -->
+                          <div class="flex flex-wrap">
+                          <mat-chip class="mx-1 mt-5" *ngFor="let topping of AdditionalBranchFormArray.value;let i = index" [removable]="true"
+                            (removed)="RemoveAdditionalBranch(i)">
+                            {{ topping.BranchName }}
+                            <mat-icon *ngIf="editable" matChipRemove>cancel</mat-icon>
+                          </mat-chip>
+                          <!-- </div> -->
+                        </div>
+                      </div>
+                    
+                    </div>
+                    
+
+                    <!--Permissible Products-->
+                    <div *ngIf="UserForm.controls['IsUnderWriter'].value == true">
+                      <div>
+                        <div class="relative">
+                          <div class="icon">
+                            <mat-icon>category</mat-icon>
+                          </div>
+                          <div class="flex">
+                            <input type="text" readonly [disabled]="mode == 'View'" class="peer" placeholder=" " AlphabetOnly id="MultiCategory"
+                              (click)="openDiolog('MultiCategory','Select Product')" />
+                            <button class="z-15 -m-5" type="button" *ngIf="editable" (click)="openDiolog('MultiCategory','Select Product')"><mat-icon
+                                class="-ml-2">search</mat-icon></button>
+                            <label for="MultiCategory" [ngClass]="UserForm.controls['IsUnderWriter'].value == true  ? 'mandatory' : ''" class="">Permissible Products</label>
+                          </div>
+                        </div>
+                      </div>
+                    
+                      <div class="relative my-5">
+                        <div class="col-span-1">
+                          <label class="text-xl font-medium peer flex-shrink-0 w-max">Selected Permissible Products</label>
+                        </div>
+                        <!-- <div class="lg:grid grid-cols-4 wd md:grid-cols-2 gap-2"> -->
+                          <div class="flex flex-wrap">
+                          <mat-chip class="mx-1 mt-5" *ngFor="let topping of PermissibleProductsFormArray.value;let i = index" [removable]="true"
+                            (removed)="RemoveProduct(i)">
+                            {{ topping.CategoryName }}
+                            <mat-icon *ngIf="editable" matChipRemove>cancel</mat-icon>
+                          </mat-chip>
+                          <!-- </div> -->
+                        </div>
+                      </div>
+                    
+                    </div>
+                    
+                  
+                  </div>
+                </div>
+
+
+
+              </div>
+              <div>
+                <button (click)="StepOneError()" class="bg" mat-button matStepperNext>Next</button>
+              </div>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- second stepper -->
+
+        <mat-step [stepControl]="StepTwoSubmit()" label="Address Details">
+          <form [formGroup]="UserForm">
+            <div class="grid md:grid-cols-2 py-7 gap-6">
+
+              <!-- Address Line 1 -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon>home</mat-icon>
+                </div>
+                <input type="text" class="peer px-2 py-1 " maxlength="1024" formControlName="AddressLine1" placeholder=" "
+                  id="AddressLine1" />
+                <label for="AddressLine1">Address Line
+                  1</label>
+              </div>
+              <!-- Address Line 2 -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon>home</mat-icon>
+                </div>
+                <input type="text" class="peer px-2 py-1 " maxlength="1024" formControlName="AddressLine2" placeholder=" "
+                  id="AddressLine2" />
+                <label for="AddressLine2">Address Line
+                  2</label>
+              </div>
+
+              <!-- PIN Code  -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon>pin_drop</mat-icon>
+                </div>
+
+                <div class="flex">
+                  <input type="text" Onlynumber maxlength="6" class="peer" formControlName="PinCodeNumber"
+                    placeholder=" " id="PinCodeNumber" [matAutocomplete]="PinCodeSearch" maxlength="6" />
+                  <mat-autocomplete class="peer" #PinCodeSearch="matAutocomplete"
+                    (optionSelected)="PinCodeSelected($event)">
+                    <mat-option *ngFor="let pincode of pincodes$ | async" [value]="pincode">
+                      {{ pincode.PinCode }} {{ pincode.CityName }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <button class="-m-5 z-10" type="button" *ngIf="editable"
+                    (click)="openDiolog('Pincode','Select Pincode')"><mat-icon class="-ml-2">search</mat-icon></button>
+                  <button *ngIf="UserForm.get('PinCodeNumber').value && mode != 'View'" type="button" class="-m-7 z-10"
+                    aria-label="clear" matTooltip="Clear" (click)="clear('PinCodeNumber', 'PinCodeId')">
+                    <mat-icon>clear</mat-icon>
+                  </button>
+                  <label for="PinCodeNumber" class="mandatory">PIN Code</label>
+                </div>
+              </div>
+
+              <!-- City Name -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon>location_city</mat-icon>
+                </div>
+                <input type="text" class="peer" formControlName="CityName" placeholder=" " id="CityName" />
+                <label for="CityName" class="mandatory">City
+                  Name</label>
+              </div>
+              <!-- State -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon>domain</mat-icon>
+                </div>
+                <input type="text" class="peer" formControlName="StateName" placeholder=" " id="StateName" />
+                <label for="StateName" class="mandatory">State
+                  Name</label>
+              </div>
+              <!-- Country -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon>flag</mat-icon>
+                </div>
+                <input type="text" class="peer" formControlName="CountryName" placeholder=" " id="CountryName" />
+                <label for="CountryName" class="mandatory">Country</label>
+              </div>
+              <!-- Email -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon> email</mat-icon>
+                </div>
+                <input type="email" class="peer" placeholder=" " maxlength="60" id="EmailId" formControlName="EmailId" />
+                <label for="EmailId" class="mandatory">Email</label>
+              </div>
+              <!-- Phone No. -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon> phone</mat-icon>
+                </div>
+                <input type="text" Onlynumber maxlength="10" class="peer" placeholder=" " id="MobileNo"
+                  formControlName="MobileNo" maxlength="10" />
+                <label for="MobileNo" class="mandatory">Phone
+                  No.</label>
+              </div>
+
+
+            </div>
+            <button class="bg" mat-button matStepperPrevious>Back</button>
+            <button (click)="StepTwoError()" class="bg mx-3" mat-button matStepperNext>Next</button>
+          </form>
+        </mat-step>
+
+        <!-- third stepper -->
+
+
+        <mat-step label="Family Details">
+          <div class="container mt-5 ">
+            <mat-sidenav-container fxFlex="0 1 auto">
+              <mat-sidenav-content>
+
+                <!-- Add button  -->
+                <div class="p-3 justify-end bg-white flex">
+                  <button mat-raised-button *ngIf="editable" class="bg text-white" (click)="addUserFamilyDetails()">
+                    <!-- <mat-icon>add</mat-icon> -->
+                    Add</button>
+                </div>
+
+                <table mat-table #table [dataSource]="FamilyDataSource"
+                  class="w-280 py-5 block md:table rounded-lg  sm:shadow ">
+                  <thead class="block  md:table-header-group ">
+                    <tr class="flex border">
+
+                      <!-- Name -->
+
+                      <ng-container matColumnDef="Name">
+
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="(inf.value.length != 0 )? 'req' : ''"
+                          class=" text-left block md:table-cell text-white new-head">Name
+                        </th>
+
+                        <td class="md:table-cell border " *matCellDef="let element;let i= index" [formGroup]="element">
+
+                          <div class="h-18 ">
+                            <span class="w-36 md:hidden font-bold">Name *</span>
+                            <input formControlName="Name" maxlength="120" AlphabetOnly class="peer w-36 py-1 padding" type="text" />
+                          </div>
+                        </td>
+                      </ng-container>
+
+                      <!-- Relation  -->
+                      <ng-container matColumnDef="Relation">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="(inf.value.length != 0 )? 'req' : ''"
+                          class="  text-left block md:table-cell    text-white new-head">
+                          Relation</th>
+
+                        <td class="md:table-cell border mt-6" *matCellDef="let element" [formGroup]="element">
+                          <div class="h-18">
+                            <span class="w-36 md:hidden font-bold">Relation *</span>
+                            <div class="">
+                              <select id="Relation" name="Relation" class="peer w-48" formControlName="Relation">
+                                <option value="">Select</option>
+                                <option *ngFor="let option of DropdownMaster.FamilyRelationship" [value]="option.value">
+                                  {{
+                                  option.name }}</option>
+                              </select>
+                            </div>
+                          </div>
+                        </td>
+                      </ng-container>
+
+                      <!-- Blood Group  -->
+                      <ng-container matColumnDef="Blood Group">
+                        <th mat-header-cell *matHeaderCellDef
+                          class=" text-left block md:table-cell  text-white  new-head">Blood
+                          Group</th>
+
+                        <td class="md:table-cell  border" *matCellDef="let element" [formGroup]="element">
+
+                          <div class="h-18">
+                            <span class="w-36 md:hidden font-bold">Blood Group</span>
+                            <div>
+                              <select id="BloodGroup" name="BloodGroup" class="peer w-48" formControlName="BloodGroup">
+                                <option value="">Select</option>
+                                <option *ngFor="let option of DropdownMaster.BloodGroup" [value]="option.value">{{
+                                  option.name }}</option>
+                              </select>
+                            </div>
+                          </div>
+                        </td>
+                      </ng-container>
+
+                      <!-- Phone No  -->
+                      <ng-container matColumnDef="Phone No">
+                        <th mat-header-cell *matHeaderCellDef
+                          class=" text-left block md:table-cell   text-white  new-head">Phone
+                          No</th>
+                        <td class="md:table-cell border" *matCellDef="let element" [formGroup]="element">
+                          <div class="h-18">
+                            <span class="w-30 md:hidden font-bold">Phone No</span>
+                            <input formControlName="MobileNo" Onlynumber maxlength="10"
+                              class="peer w-30 px-2 py-1 padding" type="text" maxlength="10" />
+                          </div>
+                        </td>
+                      </ng-container>
+
+
+
+                      <!-- Email    -->
+                      <ng-container matColumnDef="Email">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="(inf.value.length != 0 )? 'req' : ''"
+                          class="text-left block md:table-cell text-white  new-head">Email
+                        </th>
+
+                        <td class="md:table-cell border" *matCellDef="let element" [formGroup]="element">
+
+                          <div class="h-18">
+                            <span class="w-36 md:hidden font-bold">Email *</span>
+                            <input formControlName="EmailId" class="peer w-36 px-2 py-1 padding" maxlength="60" type="email" />
+                          </div>
+
+                        </td>
+                      </ng-container>
+                      <!-- Action  -->
+                      <ng-container matColumnDef="Action">
+                        <th mat-header-cell *matHeaderCellDef
+                          class="text-left block md:table-cell   text-white  new-head">Action
+                        </th>
+
+                        <td class="md:table-cell border" *matCellDef="let element;let i = index" [formGroup]="element">
+                          <div class="h-18" *ngIf="editable">
+                            <span class=" md:hidden font-bold">Action</span>
+                            <button mat-icon-button type="button" matTooltip="Remove"
+                              (click)="deleteUserFamilyDetails(i)">
+                              <mat-icon color="warn">delete</mat-icon>
+                            </button>
+                          </div>
+                        </td>
+                      </ng-container>
+                    </tr>
+                  </thead>
+
+                  <!-- Header & body  -->
+                  <tr class="max-md:hidden" mat-header-row *matHeaderRowDef="incentiveDisplayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row;let i=index; columns: incentiveDisplayedColumns"></tr>
+                  <tr *matNoDataRow>
+
+                    <td colspan="9999">No data to display</td>
+
+
+                  </tr>
+
+
+                </table>
+              </mat-sidenav-content>
+            </mat-sidenav-container>
+          </div>
+
+
+
+          <!-- Back & Reset  -->
+          <div class="py-4">
+            <button class="bg" mat-button matStepperPrevious>Back</button>
+            <button (click)="submitform()" class="bg mx-3" mat-button [disabled]="UserForm.invalid"
+              *ngIf="mode == 'Create' || mode == 'Edit'">Submit</button>
+          </div>
+
+        </mat-step>
+      </mat-stepper>
+
+    </form>
+  </div>
+</div>

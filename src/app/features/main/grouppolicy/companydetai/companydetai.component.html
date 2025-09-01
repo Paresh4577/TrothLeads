@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Details</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href='https://unpkg.com/boxicons2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <style>
+    :root {
+      --title-bg: #3B82F6;
+      --tableNav-bg: #3B82F6;
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <div class="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg pl-0">
+    <!-- Header Section -->
+    <div class="text-white p-2 rounded-t-lg flex justify-between items-center" style="background-color: var(--title-bg);">
+      <div class="flex items-center space-x-3">
+        <button 
+          class="text-white hover:text-gray-200 cursor-pointer"
+          (click)="goBack()"
+          title="Go Back">
+          <i class="fas fa-arrow-left text-lg"></i>
+        </button>
+        <p class="m-2 text-base" style="font-weight: 500;">Customer Details</p>
+      </div>
+      <div class="flex items-center space-x-2">
+       
+      </div>
+    </div>
+
+   
+    <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded m-4">
+      <strong class="font-bold">Error!</strong>
+      <span class="block sm:inline">{{ errorMessage }}</span>
+    </div>
+
+    <!-- Company Details Content -->
+    <div  class="mt-2 relative">
+      <div class="p-6">
+        <!-- Company Profile Section -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow-md mb-6">
+          <div class="text-white p-3 rounded-t-lg" style="background-color: var(--tableNav-bg);">
+            <h3 class="text-lg font-medium">Company Information</h3>
+          </div>
+          <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Company ID</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ companyDetails.CompanyId || '-' }}</p>
+              </div> -->
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Company Name</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ companyDetails.CompanyName || '-' }}</p>
+              </div>
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Contact Email</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ companyDetails.ContactEmail || '-' }}</p>
+              </div>
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Contact Phone</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ companyDetails.ContactPhone || '-' }}</p>
+              </div>
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Address</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ companyDetails.CompanyAddress || '-' }}</p>
+              </div>
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">City</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ companyDetails.city || '-' }}</p>
+              </div>
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Pincode</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ companyDetails.pincode || '-' }}</p>
+              </div>
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Contact Person</label>
+                <p class="text-base text-gray-900 bg-gray-50 p-2 rounded border">{{ companyDetails.contactperson || '-' }}</p>
+              </div>
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-gray-600">Status</label>
+                <div class="bg-gray-50 p-2 rounded border">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" 
+                        [ngClass]="getStatusClass(companyDetails.IsActive)">
+                    <i class="fas fa-check-circle mr-1"></i>
+                    {{ getStatusText(companyDetails.IsActive) }}
+                  </span>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+
+        <!-- HR List Section -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow-md mb-6">
+          <div class="text-white p-3 rounded-t-lg" style="background-color: var(--tableNav-bg);">
+            <h3 class="text-lg font-medium">HR Users</h3>
+          </div>
+          <div class="p-6">
+            <div *ngIf="hrList.length === 0" class="text-center text-gray-500 py-4">
+              No HR records found for this company.
+            </div>
+            <table *ngIf="hrList.length > 0" class="min-w-full border-collapse shadow-md mb-2">
+              <thead class="sticky top-0 z-10">
+                <tr class="text-white" style="background-color: var(--tableNav-bg)">
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">HR Name</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Email</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Mobile</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let hr of hrList" class="border-b bg-white">
+                  <td class="p-3">{{ hr.HrName || hr.FirstName || '-' }}</td>
+                  <td class="p-3">{{ hr.HrEmail || hr.Email || '-' }}</td>
+                  <td class="p-3">{{ hr.HrMobile || hr.ContactPhone || '-' }}</td>
+                  <td class="p-3">
+                    <span class="text-green-600" *ngIf="hr.IsActive !== false">
+                      <i class="fas fa-check-circle"></i>
+                    </span>
+                    <span class="text-red-600" *ngIf="hr.IsActive === false">
+                      <i class="fas fa-times-circle"></i>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Policy List Section -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow-md mb-6">
+          <div class="text-white p-3 rounded-t-lg" style="background-color: var(--tableNav-bg);">
+            <h3 class="text-lg font-medium">Policy List</h3>
+          </div>
+          <div class="p-6">
+            <div *ngIf="policyList.length === 0" class="text-center text-gray-500 py-4">
+              No policies found for this company.
+            </div>
+            <table *ngIf="policyList.length > 0" class="min-w-full border-collapse shadow-md mb-2">
+              <thead class="sticky top-0 z-10">
+                <tr class="text-white" style="background-color: var(--tableNav-bg)">
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Policy No</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Policy Name</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Sum Insured</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Start Date</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">End Date</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let policy of policyList" class="border-b bg-white">
+                  <td class="p-3">{{ policy.PolicyNo || policy.PolicyNumber || '-' }}</td>
+                  <td class="p-3">{{ policy.PolicyName || policy.ProductName || '-' }}</td>
+                  <td class="p-3">{{ policy.SumInsured ?   policy.SumInsured.toLocaleString() : '-' }}</td>
+                  <td class="p-3">{{ formatDate(policy.PolicyStartDate) }}</td>
+                  <td class="p-3">{{ formatDate(policy.PolicyEndDate) }}</td>
+                  <td class="p-3">
+                    <span class="text-green-600" *ngIf="policy.IsActive !== false">
+                      <i class="fas fa-check-circle"></i>
+                    </span>
+                    <span class="text-red-600" *ngIf="policy.IsActive === false">
+                      <i class="fas fa-times-circle"></i>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Employee List Section -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow-md mb-6">
+          <div class="text-white p-3 rounded-t-lg" style="background-color: var(--tableNav-bg);">
+            <h3 class="text-lg font-medium">Employee List</h3>
+          </div>
+          <div class="p-6">
+            <div *ngIf="employeeList.length === 0" class="text-center text-gray-500 py-4">
+              No employees found for this company.
+            </div>
+            <table *ngIf="employeeList.length > 0" class="min-w-full border-collapse shadow-md mb-2">
+              <thead class="sticky top-0 z-10">
+                <tr class="text-white" style="background-color: var(--tableNav-bg)">
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Employee Code</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Name</th>
+                 
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Mobile</th>
+                  <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let employee of employeeList" class="border-b bg-white">
+                  <td class="p-3">{{ employee.Employeecode || employee.EmpCode || '-' }}</td>
+                  <td class="p-3">
+                    <a
+                    class="text-blue-600 hover:underline cursor-pointer"
+                    (click)="goToEmployeeDetail(employee.EmployeeId || employee.EmpId)"
+                    *ngIf="employee.EmployeeId || employee.EmpId"
+                  >
+                    {{ (employee.FirstName || '') + ' ' + (employee.LastName || '') || employee.FullName || '-' }}
+                  </a>
+                  
+                    <span *ngIf="!(employee.EmployeeId || employee.EmpId)">
+                      {{ (employee.FirstName || '') + ' ' + (employee.LastName || '') || employee.FullName || '-' }}
+                    </span>
+                  </td>
+                
+                  <td class="p-3">{{ employee.Mobile || employee.ContactPhone || '-' }}</td>
+                  <td class="p-3">
+                    <span class="text-green-600" *ngIf="employee.IsActive !== false">
+                      <i class="fas fa-check-circle"></i>
+                    </span>
+                    <span class="text-red-600" *ngIf="employee.IsActive === false">
+                      <i class="fas fa-times-circle"></i>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Action Buttons Section -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow-md">
+          <div class="text-white p-3 rounded-t-lg" style="background-color: var(--tableNav-bg);">
+            <h3 class="text-lg font-medium">Actions</h3>
+          </div>
+          <div class="p-6">
+            <div class="flex flex-wrap gap-4">
+             
+              
+              <button
+                class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                (click)="goBack()">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back to List
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

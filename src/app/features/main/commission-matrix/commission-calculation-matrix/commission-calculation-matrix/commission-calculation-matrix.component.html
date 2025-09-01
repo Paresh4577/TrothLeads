@@ -1,0 +1,89 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button (click)="downLoadSampleCommissionMatrix()" class="new-button">Download
+                Sample</button>
+            <button mat-raised-button (click)="submitform()" class="new-button">Upload</button>
+            <button mat-raised-button class="new-button" (click)="backClicked()">Cancel</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+        <form [formGroup]="commissionMatrixForm">
+            <div class="grid gap-6 sm:w-120">
+
+                <!--Categroy -->
+                <div class="relative ">
+                    <div class="icon">
+                        <mat-icon>category</mat-icon>
+                    </div>
+                    <select class="peer" id="Categroy" formControlName="CategoryId">
+                        <option value="0">--Select--</option>
+                        <option *ngFor="let option of categoryList" value="{{option.Id}}">
+                            {{ option.Name }}
+                        </option>
+                    </select>
+
+                    <label for="Categroy" class="mandatory">Categroy</label>
+                </div>
+
+                <!-- Effective Date -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </div>
+                    <div class="flex">
+                        <input type="text" id="EffectiveDate" formControlName="EffectiveDate" placeholder="__/__/____"
+                            datemask [matDatepicker]="picker" class="peer" />
+                        <label for="EffectiveDate" class="mandatory">Effective Date</label>
+                    </div>
+                </div>
+
+                <!-- Upload valid excel file -->
+                <div class="flex gap-2 items-center">
+
+                    <div class="relative w-full">
+                        <div class="dummy-formField justify-start">
+                            <div class="icon">
+                                <mat-icon>attach_file</mat-icon>
+                            </div>
+                            <input type="file" class="hidden" accept=".xlsx,.xls" #excelAttachDocument
+                                (change)="SelectExcelFile($event)">
+                            <p class="text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                matTooltip="{{commissionMatrixForm.value?.FileName}}"
+                                (click)="excelAttachDocument.click()">
+                                {{commissionMatrixForm.value?.FileName || 'Choose File' | excerpt:'max' }}</p>
+                            <label for="AttachDocument" class="mandatory">Upload valid excel file</label>
+                        </div>
+                    </div>
+
+                    <button mat-mini-fab class="shadow-none" (click)="verifyCommissionMatrix()"
+                        [ngClass]="isVerifyDocument ? 'bg-green-700' : 'bg-royal'" matTooltip="Verify Document">
+                        <mat-icon>{{isVerifyDocument ? 'verified_user' : 'shield'}}</mat-icon>
+                    </button>
+                </div>
+
+                <!-- Remarks -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>edit_document</mat-icon>
+                    </div>
+                    <textarea type="text" class="peer max-h-30 min-h-20" id="Description" placeholder=" "
+                        formControlName="Description" autocomplete="off"></textarea>
+                    <label for="Description" class="">Remarks</label>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+
+</div>

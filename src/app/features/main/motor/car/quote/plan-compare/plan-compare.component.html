@@ -1,0 +1,214 @@
+<div class="px-4 pb-4 h-full w-full">
+    <!-- region main heading -->
+    <div class="sticky top-0 pt-4 z-40 bg-default">
+        <h1 class="new-head text-lg px-4 py-1.5 mb-4 rounded flex justify-between items-center font-semibold">
+            {{ pagetitle }}
+
+            <!-- region Heading Controls -->
+            <div class="flex gap-x-3  items-center text-md font-normal">
+                <button disabled mat-raised-button class="new-button">
+                    <mat-icon>share</mat-icon><span class="hidden sm:block"> Share </span> </button>
+                <button  mat-raised-button class="new-button" (click)="backClick()">
+                    Back
+                </button>
+            </div>
+        </h1>
+    </div>
+    <!-- header region end -->
+
+    <!-- body region start -->
+
+    <div class="grid md:grid-cols-{{CompareListLength}} text-sm">
+        <!-- Column with labels -->
+        <section class="md:contents [&>div:first-child]:pt-10 [&>div:last-child]:pb-10" *ngIf="CompareListLength>0">
+            <!-- Pricing toggle -->
+            <div class="sticky top-10 bg-white dark:bg-slate-900 px-6 flex flex-col justify-end pt-3">
+                <div class="pb-5 md:border-b border-slate-200 dark:border-slate-700">
+                    <div class="py-2 text-base font-normal text-slate-900 mt-4 max-md:hidden">Features</div>
+                </div>
+            </div>
+
+            <!-- Premium -->
+            <div class="bg-white dark:bg-slate-900 px-6 flex flex-col justify-end max-md:hidden md:order-1">
+                <div class="py-2 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
+                    Premium</div>
+            </div>
+            <!-- Service Tax -->
+            <div class="bg-white dark:bg-slate-900 px-6 flex flex-col justify-end max-md:hidden md:order-2">
+                <div class="py-2 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">Service Tax</div>
+            </div>
+            <!-- Net Premium -->
+            <div class="bg-white dark:bg-slate-900 px-6 flex flex-col justify-end max-md:hidden md:order-3">
+                <div class="py-2 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
+                    Net Premium</div>
+            </div>
+            <!-- Calculate Premium(IDV) -->
+            <div class="bg-white dark:bg-slate-900 px-6 flex flex-col justify-end max-md:hidden md:order-4">
+                <div class="py-2 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
+                    Calculate Premium(IDV)</div>
+            </div>
+            <!-- Calculate Premium(IDV) Name -->
+            <div class="bg-white dark:bg-slate-900 px-6 flex flex-col justify-end max-md:hidden md:order-5">
+                <div class="py-2 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
+                    Calculate Premium(IDV) Name</div>
+            </div>
+            <!-- Policy Type -->
+            <div class="bg-white dark:bg-slate-900 px-6 flex flex-col justify-end max-md:hidden md:order-6">
+                <div class="py-2 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
+                    Policy Type</div>
+            </div>
+            <!-- Policy Period -->
+            <div class="bg-white dark:bg-slate-900 px-6 flex flex-col justify-end max-md:hidden md:order-7">
+                <div class="py-2 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
+                    Policy Period</div>
+            </div>
+            <!-- Insurance Co. -->
+            <div class="bg-white dark:bg-slate-900 px-6 flex flex-col justify-end max-md:hidden md:order-8">
+                <div class="py-2 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
+                    Insurance Co.</div>
+            </div>
+            <!-- Min IDV Amount -->
+            <div class="bg-white dark:bg-slate-900 px-6 flex flex-col justify-end max-md:hidden md:order-9">
+                <div class="py-2 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
+                    Min IDV Amount</div>
+            </div>
+            <!-- Max IDV Amount -->
+            <div class="bg-white dark:bg-slate-900 px-6 flex flex-col justify-end max-md:hidden md:order-10">
+                <div class="py-2 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
+                    Max IDV Amount</div>
+            </div>
+            <!-- Cal IDV Amount -->
+            <div class="bg-white dark:bg-slate-900 px-6 flex flex-col justify-end max-md:hidden md:order-11">
+                <div class="py-2 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
+                    Cal IDV Amount</div>
+            </div>
+            <!-- NCB -->
+            <div class="bg-white dark:bg-slate-900 px-6 flex flex-col justify-end max-md:hidden md:order-12">
+                <div class="py-2 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
+                    NCB</div>
+            </div>
+            <!-- Show Room Price -->
+            <div class="bg-white dark:bg-slate-900 px-6 flex flex-col justify-end max-md:hidden md:order-[13]">
+                <div class="py-2 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
+                    Show Room Price</div>
+            </div>
+
+
+
+
+        </section>
+        <!-- End: Column with labels -->
+        <!-- Essential table -->
+        <section class="md:contents [&>div:first-child]:pt-10 [&>div:last-child]:pb-10" *ngFor="let element of CompareList;let i = index">
+            <div class=" bg-white dark:bg-slate-900 px-4 lg:px-6 flex flex-col justify-end sticky top-10 pt-3">
+                <div class="justify-center md:justify-start grow grid grid-rows-[minmax(60px,1fr)_minmax(40px,30px)_minmax(40px,30px)]">
+                    <div class="font-semibold text-slate-900 dark:text-slate-200 min-h-22 mb-0.5">
+                        <div class="border-2 rounded-2xl w-48 h-26 p-6 flex justify-center">
+                            <img src="{{  element.IconURL }}" alt="" class="w-auto h-auto" />
+                        </div>
+                    </div>
+                    <div class="mb-1">
+                        <span class="text-3xl font-bold text-slate-900 dark:text-slate-200"> 
+                            {{ element.TotalPremium | indCurrency }}
+                        </span>
+                        <span class="text-slate-500 font-medium">
+                            /{{element.PolicyPeriod}}
+                        </span>
+                    </div>
+                    <!-- <div class="text-sm text-slate-500">{{element.ProductName}}</div> -->
+                </div>
+                <div class="justify-center md:justify-start flex pb-4 border-b border-slate-200 dark:border-slate-700">
+                    <button (click)="buyNow(element)"  mat-raised-button class="bg-royal text-on-primary-800 lg:w-48 md:w-fit sm:w-fit">
+                        <mat-icon>shopping_cart</mat-icon><span class="hidden sm:block">Buy Now </span>
+                    </button>
+                </div>
+            </div>
+            <!-- Premium -->
+            <div class="bg-white dark:bg-slate-900 px-4 lg:px-6 flex flex-col justify-end md:order-1">
+                <div class="flex items-center h-full border-b border-slate-200 dark:border-slate-700 py-2 text-slate-600 dark:text-slate-400">
+                    <svg class="shrink-0 fill-emerald-500 mr-3" xmlns="http://www.w3.org/2000/svg" width="12" height="9">
+                        <path d="M10.28.28 3.989 6.575 1.695 4.28A1 1 0 0 0 .28 5.695l3 3a1 1 0 0 0 1.414 0l7-7A1 1 0 0 0 10.28.28Z"/>
+                    </svg>
+                    <span><span class="md:sr-only">Premium</span> {{ element.TotalPremium | indCurrency }} </span>
+                </div>
+            </div>
+
+            <!-- Service Tax -->
+            <div class="bg-white dark:bg-slate-900 px-4 lg:px-6 flex flex-col justify-end md:order-2">
+                <div class="flex items-center h-full border-b border-slate-200 dark:border-slate-700 py-2 text-slate-600 dark:text-slate-400">
+                    <span><span class="md:sr-only">Service Tax</span> {{ element.ServiceTax | indCurrency }}</span>
+                </div>
+            </div>
+            <!-- Net Premium -->
+            <div class="bg-white dark:bg-slate-900 px-4 lg:px-6 flex flex-col justify-end md:order-3">
+                <div class="flex items-center h-full border-b border-slate-200 dark:border-slate-700 py-2 text-slate-600 dark:text-slate-400">
+                    <span><span class="md:sr-only">Net Premium</span> {{ element.NetPremium | indCurrency }}</span>
+                </div>
+            </div>
+            <!-- Calculate Premium(IDV) -->
+            <div class="bg-white dark:bg-slate-900 px-4 lg:px-6 flex flex-col justify-end md:order-4">
+                <div class="flex items-center h-full border-b border-slate-200 dark:border-slate-700 py-2 text-slate-600 dark:text-slate-400">
+                    <span><span class="md:sr-only">Calculate Premium(IDV)</span> {{ element.CalcPremium?.BasePremium[0].Premium | indCurrency }} </span>
+                </div>
+            </div>
+            <!-- Calculate Premium(IDV) Name -->
+            <div class="bg-white dark:bg-slate-900 px-4 lg:px-6 flex flex-col justify-end md:order-5">
+                <div class="flex items-center h-full border-b border-slate-200 dark:border-slate-700 py-2 text-slate-600 dark:text-slate-400">
+                    <span><span class="md:sr-only">Calculate Premium(IDV) Name</span> {{ element.CalcPremium?.BasePremium[0].Name }} </span>
+                </div>
+            </div>
+            <!-- Policy Type -->
+            <div class="bg-white dark:bg-slate-900 px-4 lg:px-6 flex flex-col justify-end md:order-6">
+                <div class="flex items-center h-full border-b border-slate-200 dark:border-slate-700 py-2 text-slate-600 dark:text-slate-400">
+                    <span><span class="md:sr-only">Policy Type</span> {{ element.PolicyType }} </span>
+                </div>
+            </div>
+            <!-- Policy Period  -->
+            <div class="bg-white dark:bg-slate-900 px-4 lg:px-6 flex flex-col justify-end md:order-7">
+                <div class="flex items-center h-full border-b border-slate-200 dark:border-slate-700 py-2 text-slate-600 dark:text-slate-400">
+                    <span><span class="md:sr-only">Policy Period</span> {{ element.PolicyPeriod }} </span>
+                </div>
+            </div>
+            <!-- Insurance Co. -->
+            <div class="bg-white dark:bg-slate-900 px-4 lg:px-6 flex flex-col justify-end md:order-8">
+                <div class="flex items-center h-full border-b border-slate-200 dark:border-slate-700 py-2 text-slate-600 dark:text-slate-400">
+                    <span><span class="md:sr-only">Insurance Co.</span> {{ element.InsurerName }} </span>
+                </div>
+            </div>
+            <!-- Min IDV Amount -->
+            <div class="bg-white dark:bg-slate-900 px-4 lg:px-6 flex flex-col justify-end md:order-9">
+                <div class="flex items-center h-full border-b border-slate-200 dark:border-slate-700 py-2 text-slate-600 dark:text-slate-400">
+                    <span><span class="md:sr-only">Min IDV Amount</span> {{ element.MinIDVAmount | indCurrency }} </span>
+                </div>
+            </div>
+            <!-- Max IDV Amount -->
+            <div class="bg-white dark:bg-slate-900 px-4 lg:px-6 flex flex-col justify-end md:order-10">
+                <div class="flex items-center h-full border-b border-slate-200 dark:border-slate-700 py-2 text-slate-600 dark:text-slate-400">
+                    <span><span class="md:sr-only">Max IDV Amount</span> {{ element.MaxIDVAmount | indCurrency }}</span>
+                </div>
+            </div>
+            <!-- Cal IDV Amount -->
+            <div class="bg-white dark:bg-slate-900 px-4 lg:px-6 flex flex-col justify-end md:order-11">
+                <div class="flex items-center border-b border-slate-200 dark:border-slate-700 py-2 text-slate-600 max-md:sr-only">
+                    <span><span class="md:sr-only">Cal IDV Amount</span> {{ element.CalIDVAmount | indCurrency }}</span>
+                </div>
+            </div>
+
+            <!-- NCB -->
+            <div class="bg-white dark:bg-slate-900 px-4 lg:px-6 flex flex-col justify-end md:order-12">
+                <div class="flex items-center border-b border-slate-200 dark:border-slate-700 py-2 text-slate-600 max-md:sr-only">
+                    <span><span class="md:sr-only">NCB</span> {{ element.NCB }}</span>
+                </div>
+            </div>
+            <!-- Show Room Price -->
+            <div class="bg-white dark:bg-slate-900 px-4 lg:px-6 flex flex-col justify-end md:order-[13]">
+                <div class="flex items-center border-b border-slate-200 dark:border-slate-700 py-2 text-slate-600 max-md:sr-only">
+                    <span><span class="md:sr-only">Show Room Price</span> {{element.ShowRoomPrice | indCurrency }}</span>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+</div>

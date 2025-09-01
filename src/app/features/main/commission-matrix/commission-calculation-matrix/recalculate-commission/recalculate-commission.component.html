@@ -1,0 +1,74 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button (click)="recalculateCommission()" class="new-button">Go</button>
+            <button mat-raised-button class="new-button" (click)="backClicked()">Cancel</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+        <form [formGroup]="commissionMatrixForm">
+            <div class="grid gap-6 sm:w-120">
+
+                <!--Categroy -->
+                <div class="relative ">
+                    <div class="icon">
+                        <mat-icon>category</mat-icon>
+                    </div>
+                    <select class="peer" id="Categroy" formControlName="CategoryId">
+                        <option value="0">--Select--</option>
+                        <option *ngFor="let option of categoryList" value="{{option.Id}}">
+                            {{ option.Name }}
+                        </option>
+                    </select>
+
+                    <label for="Categroy" class="mandatory">Categroy</label>
+                </div>
+
+                <!-- POSP -->
+
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>person</mat-icon>
+                    </div>
+                    <div class="flex">
+                        <input type="text" class="peer" id="UserName" formControlName="User"
+                            placeholder=" " [matAutocomplete]="UserName" (blur)="onPospBlur()" autocomplete="off">
+                        <mat-autocomplete #UserName="matAutocomplete" autoActiveFirstOption="true"
+                            [displayWith]="displayPospDataFn">
+                            <mat-option *ngFor="let User of userList$ | async" [value]="User">
+                                <span *ngIf="User.EmployeeCode">{{User.EmployeeCode}}-</span>{{User.FullName}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <label for="UserName" class="">POSP</label>
+                    </div>
+                
+                </div>
+
+                <!-- Effective Date -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </div>
+                    <div class="flex">
+                        <input type="text" id="EffectiveDate" formControlName="EffectiveDate" placeholder="__/__/____"
+                            datemask [matDatepicker]="picker" class="peer" />
+                        <label for="EffectiveDate" class="mandatory">Effective Date</label>
+                    </div>
+                </div>
+
+
+            </div>
+        </form>
+
+    </div>
+
+</div>

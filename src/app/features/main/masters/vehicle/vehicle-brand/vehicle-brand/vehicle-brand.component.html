@@ -1,0 +1,54 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" [disabled]="VehicleBrandForm.invalid" (click)="submitform()"
+                *ngIf="mode == 'Create' || mode == 'Edit'">Save</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()"
+                *ngIf="mode == 'Edit' || mode == 'Create'">Cancel</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'View'">Back</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+        <form [formGroup]="VehicleBrandForm" class="sm:w-120 text-md">
+
+            <div class="grid gap-4">
+
+                <!-- Vehicle Brand  -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>local_taxi</mat-icon>
+                    </div>
+                    <input type="text" class="peer" formControlName="Name" maxlength="120" id="Name" placeholder=" " required />
+                    <label for="Name" class="mandatory">Vehicle Brand Name</label>
+                </div>
+
+
+                <!-- Status  -->
+                <div class="font-medium py-5 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+                    <span for="Status" class="pr-2 py-1 font-medium ml-3">Status</span>
+                    <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1"
+                        (change)="onChange($event,'Status')">
+                        <span class="flex font-medium text-xl ml-3 mt-1.5">
+                            {{
+                            VehicleBrandForm.controls['Status'].value == 1
+                            ? "Active"
+                            : "InActive"
+                            }}
+                        </span>
+                    </mat-slide-toggle>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>

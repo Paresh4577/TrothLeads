@@ -1,0 +1,242 @@
+<div class="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg pl-0">
+  <!-- Header Section -->
+  <div class="text-white p-2 rounded-t-lg flex justify-between items-center"
+    style="background-color: var(--title-bg);">
+    <p class="m-2 text-base" style="font-weight: 500;">Garage Management</p>
+    <div class="flex items-center space-x-2">
+      <button
+        style="padding: 6px 13px; border-radius: 25px; border: none; background-color: white; color: black; font-size: 15px; cursor: pointer;"
+        *appCanWrite="'master'"
+        (click)="navigateToAddGarage()">
+        Add Garage
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="flex justify-center items-center mt-8">
+    <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage"
+    class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-md mt-4 text-center">
+    {{ successMessage }}
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mt-4">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Form Section with Fixed Height and Scroll -->
+  <div class="mt-2 relative overflow-x-auto" style="height: calc(100vh - 200px);">
+    <div class="absolute inset-0 overflow-x-auto">
+      <div class="h-full overflow-y-auto">
+        <table class="min-w-full border-collapse shadow-md mb-2" style="background-color: var(--tableNav-bg)">
+          <thead class="sticky top-0 z-10">
+            <tr class="text-white" style="background-color: var(--tableNav-bg)">
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-3">Company Filter</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">ABSCode</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">ABS Code CreateDate</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Location Preference</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Workshop Name</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Workshop Address</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Pincode</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Lat</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Long</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Workshop Type</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Bodyshop Incharge</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">BodyShopManager EmailId</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">BodyshopManager ContactNo</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">PAN</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">GSTN</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">MSME</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">MSME Certificate Number</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Documents Available</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Coordinator</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Network Non Network</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Is Cashless</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">State Name</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">City Name</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Maker Name</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Wheel Type</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Zone</th>
+              <th class="p-1 text-left whitespace-nowrap font-medium text-sm pt-2 ps-2">Action</th>
+            </tr>
+            <tr style="background-color: var(--tableNav-bg)">
+              <td class="p-1 align-middle ps-3 pb-2">
+                <select [(ngModel)]="selectedCompanyId" (ngModelChange)="onCompanyFilterChange()"
+                  class="p-1 w-37 h-8 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg">
+                  <option [ngValue]="null" class="text-gray-500">All Companies</option>
+                  <option *ngFor="let company of companies" [ngValue]="company.CompanyId">{{ company.CompanyName }}</option>
+                </select>
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  [(ngModel)]="searchGarageCode" (input)="searchGarages()">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  [(ngModel)]="searchGarageName" (input)="searchGarages()">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  [(ngModel)]="searchAddress" (input)="searchGarages()">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  [(ngModel)]="searchPincode" (input)="searchGarages()">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  [(ngModel)]="searchContactPerson" (input)="searchGarages()">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="email"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  [(ngModel)]="searchEmail" (input)="searchGarages()">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  [(ngModel)]="searchContact" (input)="searchGarages()">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  [(ngModel)]="searchState" (input)="searchGarages()">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  [(ngModel)]="searchCity" (input)="searchGarages()">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle pb-2">
+                <input type="text"
+                  class="p-1 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+              </td>
+              <td class="p-1 align-middle">
+                <!-- Empty cell for Action -->
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let garage of paginatedGarages" class="border-b bg-white">
+              <td class="p-3 w-40">{{ garage.CompanyName || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.ABSCode || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.ABSCodeCreateDate || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.LocationPreference || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.WorkshopName || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.WorkshopAddress || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.Pincode || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.Lat || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.Long || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.WorkshopType || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.BodyshopInchargeName || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.BodyShopManagerEmailId || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.BodyshopManagerContactNo || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.PAN || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.GSTN || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.MSME || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.MSMECertificateNumber || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.DocumentsAvailable || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.Coordinator || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.NetworkNonNetwork || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.IsCashless ? 'Yes' : 'No' }}</td>
+              <td class="p-3 w-40">{{ garage.StateName || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.CityName || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.MakerCompanyName || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.WheelType || '-' }}</td>
+              <td class="p-3 w-40">{{ garage.ZoneName || '-' }}</td>
+              <td class="p-3 w-40">
+                <i *appCanWrite="'master'" class='bx bx-edit-alt text-2xl' (click)="editGarage(garage.GarageId)"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && paginatedGarages.length === 0" class="mt-6 bg-gray-100 p-6 rounded-md text-center shadow-md">
+    <p class="text-gray-600">{{ noRecord }}</p>
+  </div>
+
+  <!-- Pagination -->
+  <app-pagination
+    [itemsPerPage]="itemsPerPage"
+    [currentPage]="currentPage"
+    [totalItems]="totalItems"
+    [currentPageItems]="paginatedGarages.length"
+    [itemsPerPageOptions]="itemsPerPageOptions"
+    (itemsPerPageChange)="onItemsPerPageChange($event)"
+  >
+  </app-pagination>
+</div>

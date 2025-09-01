@@ -1,0 +1,78 @@
+<div class="mt-1 px-2 w-full">
+  <!-- region Main Heading -->
+  <h1
+    class="new-head text-lg px-4 py-2 mb-1.5 rounded flex justify-between items-center font-semibold"
+  >
+    {{ title }}
+
+    <div class="flex gap-x-3  items-center text-lg font-normal">
+      <button
+        mat-raised-button
+        class="button button-primary"
+        (click)="cancle()"
+      >
+        Close
+      </button>
+    </div>
+  </h1>
+  <!-- endregion Heading Controls -->
+  <div>
+    <div class=" py-2 rounded bg-white" *ngIf="title == 'View Premium'">
+      <mat-card class="px-4 py-3 gap-2 container mx-auto">
+        <div class="grid grid-cols-2">
+          <span class="pl-2" for="">Premium</span>
+          <span class="font-bold text-base text-right">
+            {{ Policy.BasePremium | indCurrency }}
+          </span>
+        </div>
+        
+        <div class="grid grid-cols-2">
+          <span for=""><span>+</span>Tax</span>
+          <span class="font-bold text-base text-right">
+            {{Policy.Tax | indCurrency}}
+          </span>
+        </div>
+        
+        <div *ngIf="Policy.Discount" class="grid grid-cols-2">
+          <span for=""><span>-</span> Discount</span>
+          <span class="font-bold text-base text-right">
+            {{ Policy.Discount | indCurrency}}
+          </span>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="grid grid-cols-2">
+          <span class="pl-2" for="">Total Premium</span>
+          <span class="font-bold text-base text-right">
+            {{ Policy.TotalPremium | indCurrency }}
+          </span>
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="px-4 py-2 rounded bg-white" *ngIf="title == 'View Details'">
+      <mat-card class="px-4 py-3 gap-2 container mx-auto">
+        <div class="grid grid-cols-2">
+          <span for="">Insurer Name</span>
+          <span class="font-bold text-base text-right">{{
+            Policy.InsurerName
+          }}</span>
+        </div>
+
+        <div class="grid grid-cols-2">
+          <span for="">IconURL</span>
+          <span class="font-bold text-base text-right">
+            <img src="{{Policy.IconURL}}" alt="" class="h-7 w-7">
+          </span>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="grid grid-cols-2">
+          <span for="">Total Premium</span>
+          <span class="font-bold text-base text-right">{{
+            Policy.TotalPremium | indCurrency
+          }}</span>
+        </div>
+
+      </mat-card>
+    </div>
+  </div>
+</div>

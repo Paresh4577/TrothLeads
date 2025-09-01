@@ -1,0 +1,12 @@
+.headingBorder {
+    background-color: rgb(241, 245, 249) !important;
+}
+
+.custom-checkbox-label{
+    display: flex !important;
+    gap: 5px !important;    
+    label{
+        position: unset !important;
+        font-size: small !important;
+    }
+}

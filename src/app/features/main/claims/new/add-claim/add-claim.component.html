@@ -1,0 +1,535 @@
+<div class="min-h-screen bg-gray-50 py-0 px-0 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+      <!-- Compact Card Header -->
+      <div class="px-4 py-2" style="background-color:  var(--title-bg);">
+        <div class="flex items-center justify-between">
+          <h5 class="text-base font-semibold text-white flex items-center">
+
+            Claim Registration
+          </h5>
+
+        </div>
+      </div>
+      <!-- Card Body -->
+      <div class="px-0 py-2">
+        <!-- Policy Details Section -->
+        <div class="mb-2 bg-gray-100">
+          <h5 class=" text-sm font-medium flex items-center mb-3 section-header">
+            <i class="fas fa-shield-alt text-primary mr-2" style="color:  var(--title-bg);"></i> Policy Details
+          </h5>
+          <form [formGroup]="claimForm" *ngIf="currentSection === 'policy'">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 m-3">
+              <!-- Policy Dropdown -->
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-id-card mr-1 text-primary"></i> Policy
+                </p>
+                <select id="policyId" formControlName="policyId"
+                  class="form-control form-select bg-white mt-1 w-full text-sm text-gray-800" required="">
+                  <option [ngValue]="null" disabled>Select Policy</option>
+                  <option *ngFor="let policy of policies" [ngValue]="policy.PolicyId">{{ policy.PolicyNo }}</option>
+                </select>
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('policyId')?.touched && claimForm.get('policyId')?.invalid">
+                  Policy is required.
+                </div>
+              </div>
+
+              <!-- Claim Type Dropdown -->
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-tag mr-1 text-primary"></i> Claim Type
+                </p>
+                <select id="productId" formControlName="productId"
+                  class="form-control form-select bg-white mt-1 w-full text-sm text-gray-800" required="">
+                  <option [ngValue]="null" disabled>Select Claim Type</option>
+                  <option *ngFor="let product of products" [value]="product.ProductId">{{ product.ProductName }}
+                  </option>
+                </select>
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('productId')?.touched && claimForm.get('productId')?.invalid">
+                  Claim type is required.
+                </div>
+              </div>
+
+            </div>
+            <div class="mt-4 ms-3">
+              <button type="button" class="btn btn-primary" (click)="nextSection('user')">Next</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- User Information Section -->
+        <div class="mb-2 bg-gray-100">
+          <h5 class="text-md font-medium flex items-center mb-3 section-header">
+            <i class="fas fa-user text-primary mr-2"></i> Policy Holder Information
+          </h5>
+
+          <form [formGroup]="claimForm" *ngIf="currentSection === 'user'">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 m-3">
+
+              <!-- User Select -->
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-id-card mr-1 text-primary"></i> Policy Holder
+                </p>
+                <select id="userId" formControlName="userId" class="form-control form-select">
+                  <option [ngValue]="null" disabled selected>Select Policy Holder</option>
+                  <option *ngFor="let user of users" [value]="user.UserId">{{ user.UserName }}</option>
+                </select>
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('userId')?.touched && claimForm.get('userId')?.errors?.['required']">
+                  User is required.
+                </div>
+              </div>
+
+              <!-- Phone Number -->
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-mobile-alt mr-1 text-primary"></i> Phone Number
+                </p>
+                <input id="phoneNumber" formControlName="phoneNumber" type="text"
+                  class="form-control bg-white mt-1 w-full text-sm text-gray-800" placeholder="Phone Number" />
+                <div *ngIf="claimForm.get('phoneNumber')?.touched && claimForm.get('phoneNumber')?.errors?.['required']"
+                  class="text-red-600 text-xs mt-1">
+                  Phone number is required.
+                </div>
+                <div *ngIf="claimForm.get('phoneNumber')?.touched && claimForm.get('phoneNumber')?.errors?.['pattern']"
+                  class="text-red-500 text-xs mt-1">
+                  Phone number must be a 10-digit number.
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-envelope mr-1 text-primary"></i> Email
+                </p>
+                <input id="email" formControlName="email" type="email"
+                  class="form-control bg-white mt-1 w-full text-sm text-gray-800" placeholder="Email Address" />
+                <div *ngIf="claimForm.get('email')?.touched && claimForm.get('email')?.errors?.['required']"
+                  class="text-red-600 text-xs mt-1">
+                  Email is required.
+                </div>
+                <div *ngIf="claimForm.get('email')?.touched && claimForm.get('email')?.errors?.['email']"
+                  class="text-red-500 text-xs mt-1">
+                  Please enter a valid email address.
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Buttons -->
+            <div class="mt-4 ms-3 flex justify-start space-x-2">
+              <button type="button" class="btn btn-outline-secondary" (click)="nextSection('policy')">Back</button>
+              <button type="button" class="btn btn-primary" (click)="nextSection('company')">Next</button>
+            </div>
+          </form>
+        </div>
+
+
+        <!-- Company and Employee Details Section -->
+        <div class="mb-2 bg-gray-100">
+          <h5 class="text-md font-medium flex items-center mb-3 section-header">
+            <i class="fas fa-building text-primary mr-2"></i> Insurance Company Details
+          </h5>
+          <form [formGroup]="claimForm" *ngIf="currentSection === 'company'">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 m-3">
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-building mr-1 text-primary"></i> Insurance Company
+                </p>
+                <select id="CompanyId" formControlName="CompanyId"
+                  class="form-control form-select bg-white mt-1 w-full text-sm text-gray-800">
+                  <option [ngValue]="null" disabled selected>Select Insurance Company</option>
+                  <option *ngFor="let company of companies" [value]="company.CompanyId">{{ company.CompanyName }}
+                  </option>
+                </select>
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('CompanyId')?.touched && claimForm.get('CompanyId')?.invalid">
+                  Insurance Company is required.
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 ms-3 flex justify-start space-x-2">
+              <button type="button" class="btn btn-outline-secondary" (click)="nextSection('user')">Back</button>
+              <button type="button" class="btn btn-primary" (click)="nextSection('other')">Next</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Other Details Section -->
+        <div class="mb-2 bg-gray-100">
+          <h5 class="text-md font-medium flex items-center mb-3 section-header">
+            <i class="fas fa-info-circle text-primary mr-2"></i> Claim Details
+          </h5>
+          <form [formGroup]="claimForm" *ngIf="currentSection === 'other'">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 m-3">
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-calendar-day mr-1 text-primary"></i> Submission Date
+                </p>
+                <input id="submissionDate" formControlName="submissionDate" type="datetime-local"
+                  class="form-control bg-white mt-1 w-full text-sm text-gray-800" />
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('submissionDate')?.touched && claimForm.get('submissionDate')?.invalid">
+                  Submission Date is required.
+                </div>
+              </div>
+
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-money-bill-wave mr-1 text-primary"></i> Claim Amount
+                </p>
+                <input id="claimAmount" formControlName="claimAmount" type="number"
+                  class="form-control bg-white mt-1 w-full text-sm text-gray-800" placeholder="Claim Amount" />
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('claimAmount')?.touched && claimForm.get('claimAmount')?.invalid">
+                  Claim Amount is required.
+                </div>
+                <div *ngIf="claimForm.get('claimAmount')?.touched && claimForm.get('claimAmount')?.invalid"
+                  class="text-red-500 text-xs mt-1">
+                  Claim amount must be non-negative
+                </div>
+              </div>
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-id-card mr-1 text-primary"></i> Claim Status
+                </p>
+                <select id="ClaimStatusId" formControlName="ClaimStatusId" class="form-control form-select">
+                  <option [ngValue]="null" disabled>Select Status</option>
+                  <option *ngFor="let claim of claimStatuses" [value]="claim.ClaimStatusId">
+                    {{ claim.ClaimStatus }}
+                  </option>
+                </select>
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('ClaimStatusId')?.touched && claimForm.get('ClaimStatusId')?.invalid">
+                  Claim Status is required.
+                </div>
+              </div>
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-id-card mr-1 text-primary"></i> Claim Description
+                </p>
+                <textarea id="description" formControlName="description" rows="4" class="form-control"
+                  placeholder="Enter claim description..."></textarea>
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('description')?.touched && claimForm.get('description')?.invalid">
+                  Description is required.
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 ms-3 flex justify-start space-x-2">
+              <button type="button" class="btn btn-outline-secondary" (click)="nextSection('company')">Back</button>
+              <button type="button" class="btn btn-primary" (click)="nextSection('documents')">Next</button>
+            </div>
+          </form>
+        </div>
+
+
+        <!-- Claim Documents Section with Preview -->
+        <div class="mb-2 bg-gray-100">
+          <h5 class="text-md font-medium flex items-center mb-3 section-header">
+            <i class="fas fa-folder-open text-primary mr-2"></i> Claim Documents
+          </h5>
+          <form [formGroup]="claimForm" (ngSubmit)="onSubmit()" *ngIf="currentSection === 'documents'">
+            <div class="grid grid-cols-1 gap-3 m-3">
+              <div class="">
+                <div formArrayName="claimDocuments">
+                  <div *ngFor="let doc of claimDocuments.controls; let i=index" [formGroupName]="i"
+                    class="grid grid-cols-1 md:grid-cols-12 gap-3 mb-3 border-b border-gray-200 pb-3">
+
+                    <!-- Document Name -->
+                    <div class="md:col-span-3">
+                      <p class="text-xs font-medium text-primary-dark flex items-center">
+                        <i class="fas fa-file-alt mr-1 text-primary"></i> Document Type
+                      </p>
+                      <select formControlName="docName" class="form-control bg-white mt-1 w-full text-sm text-gray-800"
+                        placeholder="Select Document Type">
+                        <option value="" disabled selected>Select Document Type</option>
+                        <option value="Aadhar Card">Aadhar Card</option>
+                        <option value="PAN Card">PAN Card</option>
+                        <option value="Driving Licence">Driving Licence</option>
+                        <option value="Passport">Passport</option>
+                        <option value="Voter ID">Voter ID</option>
+                        <option value="Ration Card">Ration Card</option>
+                        <option value="Insurance Policy">Insurance Policy</option>
+                        <option value="Medical Report">Medical Report</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+
+                    <!-- Status Dropdown -->
+                    <div class="md:col-span-2">
+                      <p class="text-xs font-medium text-primary-dark flex items-center">
+                        <i class="fas fa-info-circle mr-1 text-primary"></i> Status
+                      </p>
+                      <select formControlName="status" class="form-control bg-white mt-1 w-full text-sm text-gray-800"
+                        placeholder="Select Status">
+                        <option value="" disabled>Select Status</option>
+                        <option value="Not-Verified">Not-Verified</option>
+                        <option value="Verified">Verified</option>
+                        <option value="Rejected">Rejected</option>
+                      </select>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="md:col-span-4">
+                      <p class="text-xs font-medium text-primary-dark flex items-center">
+                        <i class="fas fa-upload mr-1 text-primary"></i> File Upload
+                      </p>
+                      <div class="mt-1 flex items-center">
+                        <input type="file" class="hidden" id="file-upload-{{i}}" (change)="onFileSelected($event, i)" />
+                        <label for="file-upload-{{i}}" class="btn btn-outline-primary text-sm cursor-pointer">
+                          <i class="fas fa-cloud-upload-alt mr-1"></i> Choose File
+                        </label>
+                        <span id="file-name-{{i}}" class="ml-2 text-sm text-gray-600 hidden"></span>
+                        <input formControlName="docPath" type="hidden" />
+                      </div>
+                    </div>
+
+                    <!-- Remove Button -->
+                    <div class="md:col-span-3 flex items-end gap-2">
+
+                      <button type="button" (click)="removeDocument(i)" class="btn btn-outline-danger text-sm mr-2">
+                        <i class="fas fa-trash mr-1"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Add Document Button -->
+                  <button type="button" (click)="addDocument()" class="btn btn-outline-primary mt-2">
+                    <i class="fas fa-plus-circle mr-1"></i> Add Document
+                  </button>
+                </div>
+                <!-- Update your existing document summary table to include the View button -->
+                <div class="mt-6 ms-3" *ngIf="claimForm.get('claimDocuments')?.value?.length > 0">
+                  <h6 class="text-md font-semibold mb-2">Claim Document Summary</h6>
+                  <div class="overflow-x-auto">
+                    <table class="table-auto w-full border border-black-500 text-sm bg-white">
+                      <thead class="text-left text-gray-700">
+                        <tr>
+                          <th class="p-2 border">#</th>
+                          <th class="p-2 border">Document Type</th>
+                          <th class="p-2 border">Status</th>
+                          <th class="p-2 border">Actions</th> <!-- Added Actions column -->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let doc of claimForm.get('claimDocuments')?.value; let i = index" class="border-t">
+                          <td class="p-2 border">{{ i + 1 }}</td>
+                          <td class="p-2 border">{{ doc.docName }}</td>
+                          <td class="p-2 border">
+                            <span class="" [ngClass]="{
+                'bg-green-500': doc.status === 'Verified',
+                'bg-red-500': doc.status === 'Rejected',
+                'bg-orange-400': doc.status === 'Not-Verified'
+              }"></span>
+                            {{ doc.status }}
+                          </td>
+                          <td class="p-2 border">
+                            <button type="button"
+                              *ngIf="previewUrls.has(i)"
+                              class="btn btn-outline-primary btn-sm"
+                              (click)="openPreview(i)">
+                              <i class="fas fa-eye mr-1"></i> Preview
+                            </button>
+                          </td>
+                          
+                          
+                          
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Add this modal to the bottom of your template -->
+                <div class="modal fade" id="documentPreviewModal" tabindex="-1"
+                  aria-labelledby="documentPreviewModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="documentPreviewModalLabel">Document Preview</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body text-center">
+                        <!-- The document preview will be inserted here by JavaScript -->
+                        <div id="documentPreviewContent"></div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form Navigation and Submit Buttons -->
+            <div class="mt-4 ms-3 flex justify-start space-x-2">
+              <button type="button" class="btn btn-outline-secondary" (click)="nextSection('other')">
+                <i class="fas fa-arrow-left mr-1"></i> Back
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-check-circle mr-1"></i> Submit Claim
+              </button>
+            </div>
+
+            <!-- Messages -->
+            <div *ngIf="errorMessage" class="alert alert-danger mt-4">
+              <i class="fas fa-exclamation-triangle me-2"></i> {{ errorMessage }}
+            </div>
+            <div *ngIf="successMessage" class="alert alert-success mt-4">
+              <i class="fas fa-check-circle me-2"></i> {{ successMessage }}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bg-primary {
+    background-color: var(--title-bg);
+  }
+
+  .text-primary {
+    color: var(--title-bg);
+  }
+
+  .border-primary {
+    border-color: var(--title-bg);
+  }
+
+  .bg-primary-light {
+    background-color: rgba(4, 100, 164, 0.3);
+  }
+
+  .text-primary-light {
+    color: rgba(4, 100, 164, 0.7);
+  }
+
+  .bg-primary-lighter {
+    background-color: rgba(4, 100, 164, 0.1);
+  }
+
+  .bg-primary-badge {
+    background-color: rgba(4, 100, 164, 0.2);
+  }
+
+  .text-primary-dark {
+    color: rgb(3, 80, 131);
+  }
+
+  .border-primary-lightest {
+    border-color: rgba(4, 100, 164, 0.2);
+  }
+
+  .text-primary-lightest {
+    color: rgba(4, 100, 164, 0.5);
+  }
+
+  .btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .btn-primary {
+    background-color: var(--title-bg);
+    color: white;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background-color: rgb(3, 80, 131);
+  }
+
+  .btn-outline-secondary {
+    background-color: white;
+    color: rgb(4, 100, 164);
+    border: 1px solid var(--title-bg);
+  }
+
+  .btn-outline-secondary:hover {
+    background-color: rgba(4, 100, 164, 0.1);
+  }
+
+  .btn-outline-danger {
+    background-color: white;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+  }
+
+  .btn-outline-danger:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+  }
+
+  .btn-outline-primary {
+    background-color: white;
+    color: var(--title-bg);
+    border: 1px solid var(--title-bg);
+  }
+
+  .btn-outline-primary:hover {
+    background-color: rgba(4, 100, 164, 0.1);
+  }
+
+  .form-control {
+    border: 1px solid rgba(4, 100, 164, 0.2);
+    border-radius: 4px;
+    padding: 6px 12px;
+  }
+
+  .form-control:focus {
+    border-color: var(--title-bg);
+    box-shadow: 0 0 5px rgba(4, 100, 164, 0.3);
+  }
+
+  .form-select {
+    border: 1px solid rgba(4, 100, 164, 0.2);
+    border-radius: 4px;
+    padding: 6px 12px;
+    background-color: white;
+  }
+
+  .form-select:focus {
+    border-color: rgb(4, 100, 164);
+    box-shadow: 0 0 5px rgba(4, 100, 164, 0.3);
+  }
+
+  .invalid-feedback {
+    color: #dc3545;
+    font-size: 12px;
+  }
+
+  .alert {
+    border-radius: 4px;
+    padding: 10px;
+  }
+
+  .alert-danger {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+  }
+
+  .alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+  }
+
+  .section-header {
+    background-color: #e0f2fe;
+    /* Light Sky Blue */
+    padding: 10px 12px;
+    border-radius: 6px;
+    color: #0369a1;
+    /* Darker blue text */
+    font-weight: 500;
+  }
+</style>

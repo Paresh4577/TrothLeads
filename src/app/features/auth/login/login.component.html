@@ -1,0 +1,99 @@
+<!-- Horizontal Line Loader -->
+<div *ngIf="loading" class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+  <div class="h-full bg-blue-600 animate-lineLoader"></div>
+</div>
+
+<div class="flex items-center justify-center min-h-screen bg-grey-100">
+  <div class="w-full max-w-md p-8 bg-white rounded-lg"
+    style="box-shadow:6px 12px 12px 12px rgba(0, 0, 0, 0.4); height: 600px; width: 500px;">
+    <div class="flex justify-center">
+
+      <img src="images/logos/Troth.png" alt="Logo" class="w-48 h-25 m-4">
+    </div>
+    <h2 class="text-2xl font-semibold text-center text-blue-700 mt-5" style="color: darkblue;">Login</h2>
+
+    <form class="mt-6" (ngSubmit)="onClick()">
+
+
+
+
+      <div class="relative mb-6 mt-5">
+        <div class="relative m-3">
+          <input #NameInput type="text" [(ngModel)]="form.Name" name="Name" id="Name" placeholder=" "
+            class="peer w-full h-12 px-6 py-2 pl-9 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            required (blur)="NameInput.classList.add('touched')">
+
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-blue-500">
+            <i class="fas fa-user"></i>
+          </div>
+
+
+          <label for="Name"
+            class="absolute text-sm text-gray-600 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-1 left-8
+                       peer-placeholder-shown:scale-100 peer-placeholder-shown:text-blue-600 peer-placeholder-shown:top-7 peer-placeholder-shown:left-9 
+                       peer-focus:left-8 peer-focus:-top-0.5 peer-focus:scale-75 peer-focus:text-blue-600 peer-focus:px-3 peer-focus:bg-white">
+            User Name <span class="text-red-500">*</span>
+          </label>
+        </div>
+
+
+        <div *ngIf="NameInput.classList.contains('touched') && !form.Name"
+          class="bg-red-50 text-red-500 text-sm py-1 px-2 mt-1 rounded">
+          This field is required
+        </div>
+      </div>
+
+
+
+      <div class="relative mb-6">
+        <div class="relative m-3">
+          <input #PasswordInput [type]="showPassword ? 'text' : 'Password'" [(ngModel)]="form.Password" name="Password"
+            id="Password" placeholder=" "
+            class="peer w-full h-12 px-6 py-2 pl-9 pr-10 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            required (blur)="PasswordInput.classList.add('touched')">
+
+
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-blue-500">
+            <i class="fas fa-lock"></i>
+          </div>
+
+
+          <label for="Password"
+            class="absolute text-sm text-gray-600 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-1 left-8
+        peer-placeholder-shown:scale-100 peer-placeholder-shown:text-blue-600 peer-placeholder-shown:top-7 peer-placeholder-shown:left-9 
+        peer-focus:left-8 peer-focus:-top-0.5 peer-focus:scale-75 peer-focus:text-blue-600 peer-focus:px-3 peer-focus:bg-white">
+            Password <span class="text-red-500">*</span>
+          </label>
+
+
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" (click)="togglePassword()">
+            <i [ngClass]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" class="text-blue-500"></i>
+          </div>
+        </div>
+
+
+        <div *ngIf="PasswordInput.classList.contains('touched') && !form.Password"
+          class="bg-red-50 text-red-500 text-sm py-1 px-2 mt-1 rounded">
+          This field is required
+        </div>
+      </div>
+      <p *ngIf="errorMessage" class="text-red-500 text-sm mt-2">{{ errorMessage }}</p>
+
+      <p *ngIf="successMessage" class="text-green-500 text-sm mt-2">{{ successMessage }}</p>
+
+      <div class="flex justify-end text-sm" style="color: grey;">
+        <!-- <button>
+          <p (click)="navigateToForgotPassword()">Forget Password?</p>
+        
+        </button> -->
+        <p>Forgot Password?</p>
+      </div>
+      <div class="flex justify-center m-5">
+        <button type="submit"
+          class="px-6 py-2 text-white bg-blue-500 rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+          Login
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

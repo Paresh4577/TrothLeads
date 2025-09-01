@@ -1,0 +1,112 @@
+<div class="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg pl-0">
+    <!-- Header Section -->
+    <div class="text-white p-2 rounded-t-lg flex justify-between items-center"
+        style="background-color: var(--title-bg);">
+        <p class="m-2 text-base" style="font-weight: 500;">Claim Decision Management</p>
+        <div class="flex items-center space-x-2">
+            <button
+                style="padding: 6px 13px; border-radius: 25px; border: none; background-color: white; color: black; font-size: 15px; cursor: pointer;"
+                *appCanWrite="'master'" (click)="navigateToAddClaimDecision()">
+                Claim Decision
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="flex justify-center items-center mt-8">
+        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mt-4">
+        {{ errorMessage }}
+    </div>
+
+    <!-- Form Section (Input Table) with Horizontal Scroll -->
+       <!-- Card 2: Approved Claims (ClaimStatusId = 7) -->
+<div class="bg-white p-4 rounded-xl border border-gray-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
+  <h5 class="text-lg font-semibold flex items-center mb-4 text-gray-800">
+    <i class="fas fa-check-circle mr-2 text-blue-500"></i>
+    Approved Claims
+  </h5>
+
+  <div class="relative max-h-[60vh] overflow-x-auto overflow-y-auto custom-scrollbar scrollbar-hide">
+    <table class="min-w-full text-sm text-gray-700 border border-gray-100 rounded-lg overflow-hidden">
+      <thead class="sticky top-0 bg-blue-50 text-gray-650">
+        <tr>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Policy No</th>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Claim No</th>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">User</th>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Phone</th>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Email</th>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Status</th>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Type</th>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">IDV</th>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Insurer</th>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Amount</th>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Policy Status</th>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Policy Type</th>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Reg No</th>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Submission</th>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Txn No</th>
+          <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Company</th>
+       
+        </tr>
+      </thead>
+      <tbody>
+        <tr 
+          *ngFor="let claim of inProgressClaims" 
+          class="bg-white border-b border-gray-100 hover:bg-blue-50 transition-colors duration-200">
+          <td class="p-3 truncate" [title]="claim.PolicyNo">{{ claim.PolicyNo || '-' }}</td>
+          <td class="p-3 truncate" [title]="claim.ClaimIdNumber">{{ claim.ClaimIdNumber || '-' }}</td>
+          <td class="p-3 truncate">{{ claim.CreatedByUserName || '-' }}</td>
+          <td class="p-3 truncate">{{ claim.PhoneNumber || '-' }}</td>
+          <td class="p-3 truncate">{{ claim.Email || '-' }}</td>
+          <td class="p-3 truncate">{{ claim.ClaimStatus || '-' }}</td>
+          <td class="p-3 truncate">{{ claim.ProductName || '-' }}</td>
+          <td class="p-3 truncate">{{ claim.approvedAmount || '-' }}</td>
+          <td class="p-3 truncate">{{ claim.InsurerName || '-' }}</td>
+          <td class="p-3 truncate">{{ claim.claimAmount || '-' }}</td>
+          <td class="p-3 truncate">{{ claim.PolicyStatus || '-' }}</td>
+          <td class="p-3 truncate">{{ claim.PolicyType || '-' }}</td>
+          <td class="p-3 truncate">{{ claim.RegistrationNo || '-' }}</td>
+          <td class="p-3 truncate">{{ claim.submissionMethod || '-' }}</td>
+          <td class="p-3 truncate">{{ claim.TransactionNo || '-' }}</td>
+          <td class="p-3 truncate">{{ claim.CompanyName || '-' }}</td>
+     
+        </tr>
+
+        <tr *ngIf="inProgressClaims?.length === 0">
+          <td colspan="17" class="px-4 py-6 text-center text-gray-500 bg-white">
+            No approved claims available
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && claimDecisions.length === 0"
+        class="mt-6 bg-gray-100 p-6 rounded-md text-center shadow-md">
+        <p class="text-gray-600">{{noRecordMessage}}</p>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-between items-center p-4 mt-6 border-t">
+        <div>
+            <label for="itemsPerPage" class="text-gray-700 mr-2">Items per page:</label>
+            <select id="itemsPerPage" class="border p-2 rounded-md text-gray-700 focus:ring-2 focus:ring-cyan-500"
+                (change)="onItemsPerPageChange($event)">
+                <option [value]="10" [selected]="itemsPerPage === 10">10</option>
+                <option [value]="20" [selected]="itemsPerPage === 20">20</option>
+                <option [value]="50" [selected]="itemsPerPage === 50">50</option>
+            </select>
+        </div>
+        <div class="text-gray-700">
+            Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ (currentPage - 1) * itemsPerPage +
+            paginatedClaimDecisions.length
+            }} of {{ totalItems }} results
+        </div>
+    </div>
+</div>

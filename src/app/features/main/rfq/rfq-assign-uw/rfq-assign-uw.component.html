@@ -1,0 +1,55 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-medium">
+        {{title}}
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <!-- <button mat-raised-button class="new-button" (click)="SubmitData()">Save</button> -->
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- region main heading ends-->
+    
+   <div class="mt-5">
+
+    <!-- Under Writer -->
+    <div class="relative " [formGroup]="assignForm" *ngIf="type == 'assign' || type == 'reassign'">
+        <div class="icon">
+            <mat-icon>person</mat-icon>
+        </div>
+    
+        <div class="flex">
+            <input type="text" class="peer" id="UserName" formControlName="Assign" placeholder=" " [matAutocomplete]="UserName"
+                (blur)="onAssignBlur()" autocomplete="off">
+            <mat-autocomplete #UserName="matAutocomplete" autoActiveFirstOption="true" [displayWith]="displayassignpDataFn">
+                <mat-option *ngFor="let User of userList$ | async" [value]="User">
+                    {{User.FullName}}
+                </mat-option>
+            </mat-autocomplete>
+            <button class="-m-5 z-10" type="button" (click)="openDiologForMasterData('User','Select Under Writer')">
+                <mat-icon class="-ml-2">search</mat-icon>
+            </button>
+            <button *ngIf="assignForm.get('AssignName').value" type="button" class="-mx-7 z-10" matTooltip="Clear" (click)="clearAssign()">
+                <mat-icon>clear</mat-icon>
+            </button>
+            <label for="UserName" class="">Under Writer</label>
+        </div>
+    
+    </div>
+
+    <div class="font-medium px-2 mt-5">
+        <span *ngIf="type == 'assign'">Are you sure you wants to assign this RFQ to selected Under Writer?</span>
+        <span *ngIf="type == 'reassign'">Are you sure you wants to Re-assign RFQ No. -{{data.rfqData?.RFQNo}} to selected Under Writer?</span>
+        <span *ngIf="type == 'unassign'">Are you sure you wants to Un Assign RFQ No. - {{data.rfqData?.RFQNo}} ?</span>
+    </div>
+
+   </div>
+    
+    <div class="flex gap-3 mt-5">
+        <button class="bg-royal text-white" type="button" mat-button (click)="assignUnderWriter()">Yes</button>
+        <button class="bg-royal text-white" type="button" mat-button (click)="close()">No</button>
+    </div>
+
+
+</div>

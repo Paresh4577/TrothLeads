@@ -1,0 +1,265 @@
+<!-- Navigation -->
+<nav style="background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 50%, #1e293b 100%); color: white; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); position: sticky; top: 0; z-index: 10; height: 70px;">
+  <div style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; height: 100%;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);">
+        <i class="fas fa-shield-alt" style="color: white; font-size: 18px;"></i>
+      </div>
+      <span style="font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">Admin Dashboard</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div style="display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 8px; backdrop-filter: blur(10px);">
+        <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+          <i class="fas fa-user" style="color: white; font-size: 14px;"></i>
+        </div>
+        <span style="font-size: 14px; font-weight: 500;">
+          <a routerLink="/grouppolicydashboard" style="text-decoration: none; color: inherit;">Back</a>
+        </span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen">
+  <div class="container mx-auto px-4 py-8">
+    
+    <!-- Page Header -->
+    <h2 style="font-size: 2.00rem; font-weight: bold; color: #1e3a8a; margin-bottom: 2rem; display: flex; align-items: center;">
+      <i class="fas fa-building-circle-plus" style="margin-right: 0.75rem;"></i>
+      {{ isEdit ? 'Edit Company' : 'Add New Company' }}
+    </h2>
+    <br>
+
+    <!-- Company Form -->
+    <div class="bg-white rounded-xl shadow-lg p-8 max-w-3xl mx-auto">
+      <form (ngSubmit)="submitForm()" #companyForm="ngForm" novalidate>
+        
+        <!-- First Row: Company Name and Contact Email -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label for="companyName" class="block text-gray-700 text-sm font-bold mb-2">
+              Company Name: <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="companyName" 
+              name="companyName" 
+              required 
+              minlength="2" 
+              maxlength="100"
+              [(ngModel)]="formData.companyName"
+              #companyName="ngModel"
+              class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+              [class.border-red-500]="companyName.invalid && companyName.touched"
+              [class.border-green-500]="companyName.valid && companyName.touched"
+              placeholder="e.g., TechCorp Solutions" />
+            <div *ngIf="companyName.invalid && companyName.touched" class="text-red-500 text-sm mt-1">
+              <div *ngIf="companyName.errors?.['required']">Company name is required.</div>
+              <div *ngIf="companyName.errors?.['minlength']">Company name must be at least 2 characters.</div>
+              <div *ngIf="companyName.errors?.['maxlength']">Company name cannot exceed 100 characters.</div>
+            </div>
+          </div>
+          <div>
+            <label for="contactEmail" class="block text-gray-700 text-sm font-bold mb-2">
+              Contact Email: <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="email" 
+              id="contactEmail" 
+              name="contactEmail" 
+              required 
+              maxlength="100"
+              [(ngModel)]="formData.contactEmail"
+              #contactEmail="ngModel"
+              class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+              [class.border-red-500]="contactEmail.invalid && contactEmail.touched"
+              [class.border-green-500]="contactEmail.valid && contactEmail.touched"
+              placeholder="e.g., hr@techcorp.com" />
+            <div *ngIf="contactEmail.invalid && contactEmail.touched" class="text-red-500 text-sm mt-1">
+              <div *ngIf="contactEmail.errors?.['required']">Email is required.</div>
+              <div *ngIf="contactEmail.errors?.['email']">Please enter a valid email address.</div>
+              <div *ngIf="contactEmail.errors?.['maxlength']">Email cannot exceed 100 characters.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Second Row: Contact Number (Full Width) -->
+        <div class="mb-6">
+          <label for="contactNumber" class="block text-gray-700 text-sm font-bold mb-2">
+            Contact Number: <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="tel" 
+            id="contactNumber" 
+            name="contactNumber" 
+            required 
+            pattern="[+]?[\d\s\-\(\)]{10,20}"
+            minlength="10"
+            maxlength="20"
+            [(ngModel)]="formData.contactPhone"
+            #contactNumber="ngModel"
+            class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+            [class.border-red-500]="contactNumber.invalid && contactNumber.touched"
+            [class.border-green-500]="contactNumber.valid && contactNumber.touched"
+            placeholder="e.g., +1 (555) 123-4567" />
+          <div *ngIf="contactNumber.invalid && contactNumber.touched" class="text-red-500 text-sm mt-1">
+            <div *ngIf="contactNumber.errors?.['required']">Phone number is required.</div>
+            <div *ngIf="contactNumber.errors?.['pattern']">Please enter a valid phone number.</div>
+            <div *ngIf="contactNumber.errors?.['minlength']">Phone number must be at least 10 characters.</div>
+            <div *ngIf="contactNumber.errors?.['maxlength']">Phone number cannot exceed 20 characters.</div>
+          </div>
+        </div>
+
+        <!-- Third Row: Contact Person (Full Width) -->
+        <div class="mb-6">
+          <label for="contactPerson" class="block text-gray-700 text-sm font-bold mb-2">
+            Contact Person: <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="contactPerson" 
+            name="contactPerson" 
+            required 
+            minlength="2" 
+            maxlength="100"
+            [(ngModel)]="formData.contactPerson"
+            #contactPerson="ngModel"
+            class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+            [class.border-red-500]="contactPerson.invalid && contactPerson.touched"
+            [class.border-green-500]="contactPerson.valid && contactPerson.touched"
+            placeholder="e.g., John Doe" />
+          <div *ngIf="contactPerson.invalid && contactPerson.touched" class="text-red-500 text-sm mt-1">
+            <div *ngIf="contactPerson.errors?.['required']">Contact person name is required.</div>
+            <div *ngIf="contactPerson.errors?.['minlength']">Contact person name must be at least 2 characters.</div>
+            <div *ngIf="contactPerson.errors?.['maxlength']">Contact person name cannot exceed 100 characters.</div>
+          </div>
+        </div>
+
+        <!-- Fourth Row: Company Address (Full Width) -->
+        <div class="mb-6">
+          <label for="companyAddress" class="block text-gray-700 text-sm font-bold mb-2">
+            Company Address: <span class="text-red-500">*</span>
+          </label>
+          <textarea 
+            id="companyAddress" 
+            name="companyAddress" 
+            required 
+            minlength="10" 
+            maxlength="500" 
+            rows="4"
+            [(ngModel)]="formData.companyAddress"
+            #companyAddress="ngModel"
+            class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+            [class.border-red-500]="companyAddress.invalid && companyAddress.touched"
+            [class.border-green-500]="companyAddress.valid && companyAddress.touched"
+            placeholder="e.g., 123 Tech Street, Silicon Valley, CA 94000"></textarea>
+          <div *ngIf="companyAddress.invalid && companyAddress.touched" class="text-red-500 text-sm mt-1">
+            <div *ngIf="companyAddress.errors?.['required']">Address is required.</div>
+            <div *ngIf="companyAddress.errors?.['minlength']">Address must be at least 10 characters.</div>
+            <div *ngIf="companyAddress.errors?.['maxlength']">Address cannot exceed 500 characters.</div>
+          </div>
+        </div>
+
+        <!-- Fifth Row: City and Pincode -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label for="city" class="block text-gray-700 text-sm font-bold mb-2">
+              City: <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="city" 
+              name="city" 
+              required 
+              minlength="2" 
+              maxlength="50"
+              [(ngModel)]="formData.city"
+              #city="ngModel"
+              class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+              [class.border-red-500]="city.invalid && city.touched"
+              [class.border-green-500]="city.valid && city.touched"
+              placeholder="e.g., New York" />
+            <div *ngIf="city.invalid && city.touched" class="text-red-500 text-sm mt-1">
+              <div *ngIf="city.errors?.['required']">City is required.</div>
+              <div *ngIf="city.errors?.['minlength']">City must be at least 2 characters.</div>
+              <div *ngIf="city.errors?.['maxlength']">City cannot exceed 50 characters.</div>
+            </div>
+          </div>
+          <div>
+            <label for="pincode" class="block text-gray-700 text-sm font-bold mb-2">
+              Pincode: <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="pincode" 
+              name="pincode" 
+              required 
+              pattern="[0-9]{6}"
+              minlength="6"
+              maxlength="6"
+              [(ngModel)]="formData.pincode"
+              #pincode="ngModel"
+              class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+              [class.border-red-500]="pincode.invalid && pincode.touched"
+              [class.border-green-500]="pincode.valid && pincode.touched"
+              placeholder="e.g., 123456" />
+            <div *ngIf="pincode.invalid && pincode.touched" class="text-red-500 text-sm mt-1">
+              <div *ngIf="pincode.errors?.['required']">Pincode is required.</div>
+              <div *ngIf="pincode.errors?.['pattern']">Please enter a valid 6-digit pincode.</div>
+              <div *ngIf="pincode.errors?.['minlength']">Pincode must be exactly 6 digits.</div>
+              <div *ngIf="pincode.errors?.['maxlength']">Pincode must be exactly 6 digits.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center justify-end gap-4">
+          <button 
+            type="submit"
+            [disabled]="!companyForm.form.valid"
+            class="action-btn bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline flex items-center transition-all duration-200 hover:transform hover:-translate-y-1 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none">
+            <i class="fas fa-plus-circle mr-2"></i> {{ isEdit ? 'Update Company' : 'Add Company' }}
+          </button>
+          
+          <button 
+            type="button" 
+            (click)="resetForm()"
+            class="action-btn bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline flex items-center transition-all duration-200 hover:transform hover:-translate-y-1 hover:scale-105">
+            <i class="fas fa-undo mr-2"></i> Reset
+          </button>
+          
+          <button 
+            type="button" 
+            (click)="goBack()"
+            class="action-btn bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline flex items-center transition-all duration-200 hover:transform hover:-translate-y-1 hover:scale-105">
+            <i class="fas fa-times mr-2"></i> Cancel
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Add this CSS to your component's styles -->
+<style>
+  body { 
+    font-family: 'Inter', sans-serif; 
+  }
+  
+  .action-btn:hover { 
+    transform: translateY(-2px) scale(1.03); 
+  }
+  
+  .shadow {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+  
+  .appearance-none {
+    appearance: none;
+  }
+  
+  .leading-tight {
+    line-height: 1.25;
+  }
+</style>

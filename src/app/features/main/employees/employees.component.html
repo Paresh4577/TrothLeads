@@ -1,0 +1,123 @@
+<div class="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg pl-0">
+  <!-- Header Section -->
+  <div class="text-white p-2 rounded-t-lg flex justify-between items-center" style="background-color: var(--title-bg);">
+    <p class="m-2 text-base" style="font-weight: 500;">Employee Management</p>
+    <div class="flex items-center space-x-2">
+      <button *appCanWrite
+        style="padding: 6px 13px; border-radius: 25px; border: none; background-color: white; color: black; font-size: 15px; cursor: pointer;"
+        (click)="navigateToAddEmployee()">
+        Add New
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="flex justify-center items-center mt-8">
+    <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mt-4">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Form Section (Input Table) -->
+  <div class="mt-2 relative overflow-x-auto" style="height: calc(100vh - 200px);">
+    <div class="absolute inset-0 overflow-x-auto">
+      <table class="min-w-full border-collapse shadow-md mb-2" style="background-color: var(--tableNav-bg);">
+        <thead class="sticky top-0 z-10">
+          <tr class="text-white" style="background-color: var(--tableNav-bg)">
+            <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">First Name</th>
+            <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Last Name</th>
+            <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Email</th>
+            <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Mobile</th>
+            <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Role</th>
+            <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Active</th>
+            <th class="text-left whitespace-nowrap font-medium text-sm ps-3 pt-2">Action</th>
+          </tr>
+          <tr style="background-color: var(--tableNav-bg)">
+            <td class="p-2 align-middle ps-3 pb-2">
+              <input type="text"
+                class="p-2 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                [(ngModel)]="searchFirstName" (input)="searchEmployees()" />
+            </td>
+            <td class="p-2 align-middle ps-3 pb-2">
+              <input type="text"
+                class="p-2 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                [(ngModel)]="searchLastName" (input)="searchEmployees()" />
+            </td>
+            <td class="p-2 align-middle ps-3 pb-2">
+              <input type="text"
+                class="p-2 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                [(ngModel)]="searchEmail" (input)="searchEmployees()" />
+            </td>
+            <td class="p-2 align-middle ps-3 pb-2">
+              <input type="text"
+                class="p-2 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                [(ngModel)]="searchMobile" (input)="searchEmployees()" />
+            </td>
+            <td class="p-2 align-middle ps-3 pb-2">
+              <input type="text"
+                class="p-2 w-37 h-6 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                [(ngModel)]="searchRole" (input)="searchEmployees()" />
+            </td>
+            <td class="p-2 align-middle"></td>
+            <td class="p-2 align-middle"></td>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data Rows -->
+          <tr *ngFor="let employee of paginatedEmployees" class="border-b bg-white">
+            <td class="p-3 w-40">
+              <span 
+                class="text-blue-600 hover:text-blue-800 cursor-pointer hover:underline"
+                (click)="viewEmployeeDashboard(employee.EmpId)"
+                title="View Employee Dashboard"
+              >
+                {{ employee.FirstName || '-' }}
+              </span>
+            </td>
+            <td class="p-3 w-40">
+              <span 
+                class="text-blue-600 hover:text-blue-800 cursor-pointer hover:underline"
+                (click)="viewEmployeeDashboard(employee.EmpId)"
+                title="View Employee Dashboard"
+              >
+                {{ employee.LastName || '-' }}
+              </span>
+            </td>
+            <td class="p-3 w-40">{{ employee.Email || '-' }}</td>
+            <td class="p-3 w-40">{{ employee.Mobile || '-' }}</td>
+            <td class="p-3 w-40">{{ employee.Role || '-' }}</td>
+            <td class="p-3 w-40"><span *ngIf="employee.IsActive" class="text-green-600">
+                <i class="fas fa-check-circle"></i>
+              </span>
+              <span *ngIf="employee.IsActive === false" class="text-red-600">
+                <i class="fas fa-times-circle"></i>
+              </span>
+            </td>
+            <td class="p-3 w-40">
+              <div class="flex gap-4">
+                <i class='bx bx-edit-alt text-2xl cursor-pointer text-yellow-600'
+                  (click)="editEmployee(employee.EmpId)"></i>
+                <i class='bx bx-trash text-2xl cursor-pointer text-red-500'
+                  (click)="deleteEmployee(employee.EmpId)"></i>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && employees.length === 0" class="mt-6 bg-gray-100 p-6 rounded-md text-center shadow-md">
+    <p class="text-gray-600">No employees found.</p>
+  </div>
+
+  <!-- Pagination -->
+  <app-pagination [itemsPerPage]="itemsPerPage" [currentPage]="currentPage" [totalItems]="totalItems"
+    [currentPageItems]="paginatedEmployees.length" [itemsPerPageOptions]="itemsPerPageOptions"
+    (itemsPerPageChange)="onItemsPerPageChange($event)">
+  </app-pagination>
+</div>

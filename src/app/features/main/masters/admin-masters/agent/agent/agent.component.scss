@@ -1,0 +1,49 @@
+.wd{
+@apply min-w-60 #{!important};
+}
+
+
+.padding{
+    @apply pl-2 #{!important};
+}
+
+
+
+// label {
+//     @apply absolute text-md text-gray-500 dark:text-gray-400 duration-300 -translate-y-4 scale-75 bg-white top-2 z-10 origin-[0] dark:bg-gray-900 px-2 peer-focus:bg-white peer-focus:px-2 peer-focus:text-primary-500 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-9;
+//   }
+
+  .select {
+    @apply col-span-6 xl:col-span-4 w-full text-md rounded shadow-sm hover:cursor-pointer hover:bg-accent-100 transition-colors px-2 py-1 disabled:opacity-80;
+    @apply bg-white;
+    @apply border border-accent-400;
+    @apply disabled:opacity-80 disabled:bg-white;
+    @apply block px-10 pb-3 pt-3 w-full text-sm text-gray-900 bg-transparent rounded-lg border-gray-300 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-primary-500 #{!important};
+  }
+
+  .aaptimepicker{
+    select, textarea {
+      font-family: inherit !important;
+      font-size: 100% !important;
+      line-height: 1.15 !important;
+      margin: 0 !important;
+      border:none !important;
+      background-image:none !important;
+      width: 26px !important;
+      padding: 0px !important;
+  }
+  select {
+    text-transform: none !important;
+  }
+  }
+
+
+    .lableInputCheckbox {  
+      label {
+        position: unset !important;
+        cursor: pointer !important;
+        background-color: transparent !important;
+        font-size: medium;
+        font-weight: 400;
+      }
+    }

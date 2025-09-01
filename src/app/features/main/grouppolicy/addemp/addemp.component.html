@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Add Employee - Broker Admin | Insurance Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    }
+
+    .dashboard-card {
+      transition: all 0.3s;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    .form-input:focus {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    }
+
+    .required-field::after {
+      content: " *";
+      color: #ef4444;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+   <nav style="background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 50%, #1e293b 100%); color: white; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); position: sticky; top: 0; z-index: 10; height: 70px;">
+    <div style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; height: 100%;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);">
+          <i class="fas fa-shield-alt" style="color: white; font-size: 18px;"></i>
+        </div>
+        <span style="font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">Admin Dashboard</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 8px; backdrop-filter: blur(10px);">
+          <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-user" style="color: white; font-size: 14px;"></i>
+          </div>
+       <span style="font-size: 14px; font-weight: 500;">
+  <a routerLink="/grouppolicydashboard" style="text-decoration: none; color: inherit;">Back</a>
+</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header and Navigation -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+      <div>
+        <h2 class="text-3xl font-bold text-blue-900 mb-2 flex items-center">
+          <i class="fas" [ngClass]="isEditing ? 'fa-user-edit mr-3' : 'fa-user-plus mr-3'"></i>{{ isEditing ? 'Edit Employee' : 'Add Employee' }}
+        </h2>
+        <p class="text-gray-600">{{ isEditing ? 'Update employee information and details.' : 'Create a new employee account with complete information.' }}</p>
+      </div>
+      <div class="flex space-x-2 mt-4 md:mt-0">
+       
+        <button onclick="history.back()" class="bg-gray-600 hover:bg-gray-700 text-white px-5 py-2 rounded-lg font-semibold flex items-center action-btn">
+          <i class="fas fa-arrow-left mr-2"></i>Back
+        </button>
+      </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div *ngIf="successMessage" class="bg-green-50 border-l-4 border-green-400 p-4 mb-6 rounded-lg">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <i class="fas fa-check-circle text-green-400"></i>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm text-green-700">{{ successMessage }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="errorMessage" class="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-lg">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <i class="fas fa-exclamation-circle text-red-400"></i>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm text-red-700">{{ errorMessage }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6 rounded-lg">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <i class="fas fa-spinner fa-spin text-blue-400"></i>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm text-blue-700">Loading employee data...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Important Note Card -->
+    <div class="bg-blue-50 border-l-4 border-blue-400 p-6 mb-8 rounded-lg shadow-sm">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <i class="fas fa-info-circle text-blue-400 text-xl"></i>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-lg font-medium text-blue-800 mb-2">
+            <i class="fas fa-exclamation-triangle mr-2"></i>{{ isEditing ? 'Employee Update Information' : 'Important Login Information' }}
+          </h3>
+          <div class="text-blue-700">
+            <p class="mb-2" *ngIf="!isEditing"><strong>Please note the following login credentials:</strong></p>
+            <p class="mb-2" *ngIf="isEditing"><strong>Please review and update the employee information:</strong></p>
+            <ul class="list-disc list-inside space-y-1">
+              <li *ngIf="!isEditing"><strong>Username:</strong> Will be the employee's <strong>First Name</strong></li>
+              <li *ngIf="!isEditing"><strong>Password:</strong> As set in the password field below</li>
+              <li *ngIf="!isEditing">Both username and password are <strong>mandatory</strong> for login</li>
+              <li *ngIf="!isEditing">Please ensure the employee remembers these credentials for system access</li>
+              <li *ngIf="isEditing">All fields marked with <strong>*</strong> are required</li>
+              <li *ngIf="isEditing">Password can be updated if needed for security purposes</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Employee Form -->
+    <div class="bg-white rounded-2xl shadow-lg p-8 dashboard-card">
+      <form class="space-y-6" (ngSubmit)="submitEmployee()" #empForm="ngForm">
+        
+        <!-- Employee ID Display (Edit Mode) -->
+        <div *ngIf="isEditing && currentUser.EmpId" class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <i class="fas fa-id-badge text-blue-600 mr-3 text-xl"></i>
+              <div>
+                <h4 class="font-semibold text-blue-800">Employee ID: {{ currentUser.EmpId }}</h4>
+                <p class="text-blue-600 text-sm">Employee Code: {{ currentUser.Employeecode }}</p>
+              </div>
+            </div>
+            <button 
+              type="button"
+              (click)="loadEmployeeData(currentUser.EmpId)"
+              class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm font-semibold flex items-center"
+            >
+              <i class="fas fa-sync-alt mr-1"></i>Reload
+            </button>
+          </div>
+        </div>
+
+        <!-- Manual Load Section (if EmpId is available but data not loaded) -->
+        <div *ngIf="isEditing && employeeId && !currentUser.FirstName" class="mb-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <i class="fas fa-exclamation-triangle text-yellow-600 mr-3 text-xl"></i>
+              <div>
+                <h4 class="font-semibold text-yellow-800">Employee ID Found: {{ employeeId }}</h4>
+                <p class="text-yellow-600 text-sm">Click the button to manually load employee data</p>
+              </div>
+            </div>
+            <button 
+              type="button"
+              (click)="loadEmployeeData(employeeId)"
+              class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded font-semibold flex items-center"
+            >
+              <i class="fas fa-download mr-2"></i>Load Data
+            </button>
+          </div>
+        </div>
+
+        <!-- Company Selection Section -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2 required-field">
+            <i class="fas fa-building mr-1 text-gray-500"></i>Select Company
+          </label>
+          <select 
+            name="companyId" 
+            [(ngModel)]="currentUser.CompanyId" 
+            required 
+            class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-gray-900"
+          >
+            <option value="" class="text-gray-500">Select Company</option>
+            <option *ngFor="let comp of companies" [value]="comp.CompanyId">{{ comp.CompanyName }}</option>
+          </select>
+        </div>
+
+        <!-- Personal Information Section -->
+        <div class="border-b border-gray-200 pb-6">
+          <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-user mr-2 text-blue-600"></i>Personal Information
+          </h4>
+          
+          <!-- Name Fields -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2 required-field">
+                <i class="fas fa-user mr-1 text-gray-500"></i>First Name
+              </label>
+              <input 
+                name="Name" 
+                [(ngModel)]="currentUser.FirstName" 
+                required 
+                placeholder="Enter first name" 
+                class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                <i class="fas fa-user mr-1 text-gray-500"></i>Middle Name
+              </label>
+              <input 
+                name="MidName" 
+                [(ngModel)]="currentUser.MidName" 
+                placeholder="Enter middle name" 
+                class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2 required-field">
+                <i class="fas fa-user mr-1 text-gray-500"></i>Last Name
+              </label>
+              <input 
+                name="LastName" 
+                [(ngModel)]="currentUser.LastName" 
+                required 
+                placeholder="Enter last name" 
+                class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+              />
+            </div>
+          </div>
+
+          <!-- Contact Information -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2 required-field">
+                <i class="fas fa-envelope mr-1 text-gray-500"></i>Email
+              </label>
+              <input 
+                name="Email" 
+                type="email" 
+                [(ngModel)]="currentUser.Email" 
+                required 
+                placeholder="Enter email address" 
+                class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2 required-field">
+                <i class="fas fa-phone mr-1 text-gray-500"></i>Mobile
+              </label>
+              <input 
+                name="Mobile" 
+                type="tel" 
+                [(ngModel)]="currentUser.Mobile" 
+                required 
+                placeholder="Enter mobile number" 
+                class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+              />
+            </div>
+          </div>
+
+          <!-- Birth Date and Gender -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2 required-field">
+                <i class="fas fa-calendar-alt mr-1 text-gray-500"></i>Birth Date
+              </label>
+              <input 
+                name="birthdate" 
+                type="date" 
+                [(ngModel)]="currentUser.birthdate" 
+                required 
+                class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2 required-field">
+                <i class="fas fa-venus-mars mr-1 text-gray-500"></i>Gender
+              </label>
+              <select 
+                name="Gender" 
+                [(ngModel)]="currentUser.Gender" 
+                required 
+                class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+              >
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Employment Information Section -->
+        <div class="border-b border-gray-200 pb-6">
+          <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-briefcase mr-2 text-blue-600"></i>Employment Information
+          </h4>
+          
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700 mb-2 required-field">
+              <i class="fas fa-lock mr-1 text-gray-500"></i>Password
+            </label>
+            <input 
+              [type]="showPassword ? 'text' : 'password'"
+              name="Password"
+              [(ngModel)]="currentUser.Password"
+              required
+              placeholder="Enter password"
+              class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 pr-12"
+            />
+            <button 
+              type="button" 
+              (click)="showPassword = !showPassword" 
+              class="absolute right-3 top-[38px] text-gray-500 focus:outline-none"
+            >
+              <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Address Information Section -->
+        <div class="pb-6">
+          <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-map-marker-alt mr-2 text-blue-600"></i>Address Information
+          </h4>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2 required-field">
+              <i class="fas fa-home mr-1 text-gray-500"></i>Address
+            </label>
+            <textarea 
+              name="Address" 
+              [(ngModel)]="currentUser.Address" 
+              required 
+              placeholder="Enter complete address" 
+              rows="3"
+              class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+            ></textarea>
+          </div>
+            <!-- File Upload -->
+    <div class="md:col-span-2">
+      <label class="form-label required">Employee Document</label>
+      <input type="file" class="form-input" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx">
+      <p class="text-sm text-gray-500 mt-1" *ngIf="currentUser.document">Selected: {{ currentUser.document }}</p>
+    </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex flex-col md:flex-row justify-end gap-4 pt-6 border-t border-gray-200">
+          <button 
+            type="button" 
+            (click)="cancelForm()"
+            class="action-btn bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center transition-all duration-300"
+          >
+            <i class="fas fa-times mr-2"></i>Cancel
+          </button>
+          <button 
+            type="button" 
+            (click)="resetForm()"
+            class="action-btn bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center transition-all duration-300"
+          >
+            <i class="fas fa-undo mr-2"></i>{{ isEditing ? 'Reset Changes' : 'Reset Form' }}
+          </button>
+          <button 
+            type="submit"
+            [disabled]="isLoading"
+            class="action-btn bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center transition-all duration-300"
+          >
+            <i class="fas" [ngClass]="isEditing ? 'fa-save mr-2' : 'fa-save mr-2'"></i>{{ isEditing ? 'Update Employee' : 'Add Employee' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

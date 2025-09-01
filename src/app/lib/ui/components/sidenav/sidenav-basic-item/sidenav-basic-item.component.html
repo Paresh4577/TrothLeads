@@ -1,0 +1,64 @@
+<div class="gnx-menu-item-wrapper">
+  <!-- Basic Menu Item with internal link -->
+  <ng-container *ngIf="item.path && !item.external && !item.disabled">
+    <a class="gnx-menu-item"
+      [routerLink]="[item.path]"
+      [matTooltip]="item.tooltip || ''">
+      <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
+    </a>
+  </ng-container>
+
+  <!-- Basic Menu Item with external link -->
+  <ng-container *ngIf="item.path && item.external && !item.disabled">
+    <a class="gnx-menu-item"
+      [href]="[item.path]"
+      [target]="item.target || '_self'"
+      [matTooltip]="item.tooltip || ''">
+      <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
+    </a>
+  </ng-container>
+
+  <!-- Item disabled -->
+  <ng-container *ngIf="item.disabled">
+    <a class="gnx-menu-item gnx-menu-item-disabled"
+      [matTooltip]="item.tooltip || ''">
+      <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
+    </a>
+  </ng-container>
+
+</div>
+
+<ng-template #itemTemplate>
+  <!-- Icon -->
+  <ng-container *ngIf="item.icon">
+    <mat-icon class="gnx-menu-item-icon" [svgIcon]="item.icon">
+    </mat-icon>
+  </ng-container>
+
+  <!-- Title & Subtitle -->
+  <div class="gnx-menu-item-title-wrapper">
+    <div class="gnx-menu-item-title">
+      <span>
+        {{item.title}}
+      </span>
+    </div>
+
+    <ng-container *ngIf="item.subtitle">
+      <div class="gnx-menu-item-subtitle">
+        <span>
+          {{item.subtitle}}
+        </span>
+      </div>
+    </ng-container>
+
+    <!-- Badge -->
+    <ng-container *ngIf="item.badge">
+      <div class="gnx-menu-item-badge">
+        <div class="gnx-menu-item-badge-content">
+          {{item.badge.title}}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+</ng-template>

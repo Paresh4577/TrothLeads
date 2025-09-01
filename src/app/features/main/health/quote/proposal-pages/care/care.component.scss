@@ -1,0 +1,20 @@
+.kycsuccess {
+  color: #58bf58 !important;
+}
+
+.invisible {
+  display: block;
+  visibility: hidden;
+  height: 0;
+  width: 0;
+}
+
+.mt-que
+{
+ border-top-width: 1px !important;
+ border-color: rgba(var(--gnx-primary-500-rgb), var(--tw-border-opacity)) !important;
+}
+
+.padding{
+  @apply pl-2 #{!important};
+}

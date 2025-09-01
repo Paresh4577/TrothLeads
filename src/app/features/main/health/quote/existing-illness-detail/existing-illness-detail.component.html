@@ -1,0 +1,109 @@
+<div class="p-2 w-full">
+  <h1
+    class="new-head text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold"
+  >
+    {{ title }}
+    <div class="flex gap-x-3  items-center text-lg font-normal">
+      <button mat-raised-button class="new-button" (click)="save()">
+        Select
+      </button>
+      <button
+        mat-raised-button
+        class="button button-primary"
+        (click)="cancle()"
+      >
+        Cancel
+      </button>
+    </div>
+  </h1>
+
+  <form
+    [formGroup]="ExistingIllnessDetailForm">
+    <div class="grid md:grid-cols-4 grid-cols-2 sm:grid-cols-3 gap-2 w-full pt-4">
+      <!-- Cholesterol -->
+      <div class="pt-5">
+        <div class="lableInputbox">
+          <input
+            type="checkbox"
+            title="Cholesterol"
+            id="chkchol"
+            formControlName="CholesterolDisorDr"
+          />
+          <label for="chkchol"> Cholesterol</label>
+        </div>
+      </div>
+      <!-- Thyroid -->
+      <div class="pt-5">
+        <div class="lableInputbox">
+          <input
+            type="checkbox"
+            title="Thyroid"
+            id="chkThyroid"
+            formControlName="Thyroid"
+          />
+          <label for="chkThyroid">Thyroid</label>
+        </div>
+      </div>
+      <div class="pt-5">
+        <!-- Diabetes -->
+        <div class="lableInputbox">
+          <input
+            type="checkbox"
+            title="Hypertension"
+            id="chkHypertension"
+            formControlName="Hypertension"
+          /><label for="chkHypertension">Hypertension</label>
+        </div>
+      </div>
+      <div class="pt-5">
+        <div class="lableInputbox">
+          <input type="checkbox" title="Diabetes" id="chkDiabetes" formControlName="Diabetes" /><label
+            for="chkDiabetes"
+            >Diabetes</label
+          >
+        </div>
+      </div>
+      <!-- Asthma -->
+      <div class="pt-5">
+        <div class="lableInputbox">
+          <input
+            type="checkbox"
+            title="Asthma"
+            id="chkAsthma"
+            formControlName="Asthma"
+          /><label for="chkAsthma">Asthma</label>
+        </div>
+      </div>
+      <div class="pt-5">
+        <div class="lableInputbox">
+          <input type="checkbox" title="Obesity" id="chkObesity" formControlName="Obesity" /><label
+            for="chkObesity"
+            >Obesity</label
+          >
+        </div>
+      </div>
+      <!-- Heart disease -->
+      <div class="pt-5">
+        <div class="lableInputbox">
+          <input
+            type="checkbox"
+            title="Heart disease"
+            id="chkHeartdisease"
+            formControlName="Heartdisease"
+          /><label for="chkHeartdisease">Heart disease</label>
+        </div>
+      </div>
+      <!-- Other -->
+      <div class="pt-5">
+        <div class="lableInputbox">
+          <input
+            type="checkbox"
+            title="Other"
+            id="chkPreExistDisease"
+            formControlName="PreExistDisease"
+          /><label for="chkPreExistDisease">Other</label>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

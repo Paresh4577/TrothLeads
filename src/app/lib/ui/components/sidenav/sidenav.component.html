@@ -1,0 +1,34 @@
+<div class="gnx-sidenav-wrapper flex flex-col justify-between">
+  <div class="gnx-sidenav-content bg-white">
+
+    <!-- Menu items -->
+    <ng-container *ngFor="let item of menuItems$ | async; trackBy: trackByFn">
+
+      <!-- Skip hidden items -->
+      <ng-container *ngIf="!item.hidden">
+        <!-- Basic Item -->
+        <ng-container *ngIf="item.type === 'basic'">
+          <gnx-sidenav-basic-item [item]="item"></gnx-sidenav-basic-item>
+        </ng-container>
+
+        <!-- Group -->
+        <ng-container *ngIf="item.type === 'group'">
+          <gnx-sidenav-group-item [item]="item" [autoCollapse]="autoCollapse">
+          </gnx-sidenav-group-item>
+        </ng-container>
+
+        <!-- Collapsible -->
+        <ng-container *ngIf="item.type === 'collapsible'">
+          <gnx-sidenav-collapsible-item [item]="item" [autoCollapse]="autoCollapse">
+          </gnx-sidenav-collapsible-item>
+        </ng-container>
+
+        <!-- Divider -->
+        <div *ngIf="item.type === 'divider'" class="gnx-menu-item-wrapper divider">
+        </div>
+
+      </ng-container>
+    </ng-container>
+
+  </div>
+</div>

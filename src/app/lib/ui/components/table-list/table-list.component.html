@@ -1,0 +1,612 @@
+<div class="overflow-x-scroll flex flex-col h-full">
+  <div class="flex-grow overflow-auto">
+    <table class="shadow-md relative w-full border">
+      <!-- region table header -->
+      <thead class="font-sans sticky top-0">
+        <!-- region column title  -->
+        <tr>
+
+          <th *ngFor="let head of headArray" class="pt-2 pb-1 tracking-wide subpixel-antialiased font-normal ">
+            <span *ngIf="head.fieldName" class="flex justify-between items-center hover:cursor-pointer"
+              (click)="sortColumns(head.searchFieldName,head.sortFieldName,head.isAdditional, head)"
+              [ngClass]="{'pointer-events-none': !head.isSearch}">
+              <span class="mr-2 truncate ">{{ head.head }}</span>
+              <i *ngIf="head.isSearch && head.isSort" class="fa-solid fa-sort text-md"></i>
+            </span>
+
+
+            <!-- for action header only -->
+            <span *ngIf="!head.fieldName" class="hover:cursor-pointer">
+              <span class="mr-2">{{ head.head }}</span>
+            </span>
+          </th>
+
+        </tr>
+        <!-- endregion column title  -->
+
+        <!-- region column search  -->
+        <tr>
+          <th *ngFor="let head of headArray" class="pt-0 pb-2">
+
+            <input
+              *ngIf="head.isSearch && head.searchType == 'text' && (head.searchFieldName != 'PremiumAmount' && head.searchFieldName != 'SumInsured' && head.searchFieldName != 'Id' && head.searchFieldName != 'CNG' && head.searchFieldName != 'LLDriver' && head.searchFieldName != 'OwnerDriver' && head.searchFieldName != 'PassengerPAAmount' && head.searchFieldName != 'PassengerPA' && head.searchFieldName != 'PaidDriver' && head.searchFieldName != 'PaymentAmount' && head.searchFieldName != 'IDV' && head.searchFieldName != 'MotorPolicyPayment.PaymentAmount' && head.searchFieldName != 'CC' && head.searchFieldName != 'PremiumDetail.TotalNetPremium' && head.searchFieldName != 'CoShareTotalNetPremium'&& head.searchFieldName != 'GrossPremium'&& head.searchFieldName != 'LoadingPremiumAmount' && head.searchFieldName != 'PremiumAmountPaid' )"
+              id="{{head.searchFieldName}}" type="text" #input
+              class="padding h-7 min-w-2/3 bg-accent-50  shadow text-on-accent-50 font-medium text-sm placeholder:font-medium rounded-md"
+              (input)="columnSearch(input.id, input.value,head.isAdditional)"
+              [value]="pagefilters.columnSearchOptions.field==head.searchFieldName? pagefilters.columnSearchOptions.searchString: ''">
+
+            <input
+              *ngIf="head.isSearch && head.searchType == 'text' && (head.searchFieldName == 'PremiumAmount' || head.searchFieldName == 'SumInsured' || head.searchFieldName == 'Id' || head.searchFieldName == 'CNG' || head.searchFieldName == 'LLDriver' || head.searchFieldName == 'OwnerDriver' || head.searchFieldName == 'PassengerPAAmount' || head.searchFieldName == 'PassengerPA' || head.searchFieldName == 'PaidDriver' || head.searchFieldName == 'PaymentAmount' || head.searchFieldName == 'IDV' || head.searchFieldName == 'MotorPolicyPayment.PaymentAmount' || head.searchFieldName == 'PremiumDetail.TotalNetPremium' || head.searchFieldName == 'CoShareTotalNetPremium' || head.searchFieldName == 'GrossPremium'|| head.searchFieldName == 'LoadingPremiumAmount' || head.searchFieldName == 'PremiumAmountPaid' )"
+              maxlength="12" Decimal id="{{head.searchFieldName}}" type="text" #input
+              class="padding h-7 min-w-2/3 bg-accent-50  shadow text-on-accent-50 font-medium text-sm placeholder:font-medium rounded-md"
+              (input)="premiumamountSearch(input.id, input.value,head.isAdditional, 'eq')"
+              [value]="pagefilters.columnSearchOptions.field==head.searchFieldName? pagefilters.columnSearchOptions.searchString: ''">
+
+            <input *ngIf="head.isSearch && head.searchType == 'text' && (head.searchFieldName == 'CC' )" maxlength="5"
+              Decimal id="{{head.searchFieldName}}" type="text" #input
+              class="padding h-7 min-w-2/3 bg-accent-50  shadow text-on-accent-50 font-medium text-sm placeholder:font-medium rounded-md"
+              (input)="CCSearch(input.id, input.value,head.isAdditional, 'eq')"
+              [value]="pagefilters.columnSearchOptions.field==head.searchFieldName? pagefilters.columnSearchOptions.searchString: ''">
+
+            <select *ngIf="head.isSearch && head.isSearch == 'true' && head.searchType == 'dropdown'"
+              id="{{head.searchFieldName}}" (change)="onSearchChange($event,head.searchFieldName,head.isAdditional)"
+              class="h-7 py-0 appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 px-2 pr-4 rounded leading-none focus:outline-none focus:bg-white focus:border-gray-500">
+              <option *ngFor="let options of head.optionArray" [value]="options.Value">
+                {{options.Text}}
+              </option>
+            </select>
+
+            <div *ngIf="head.isSearch && head.searchType == 'date'">
+
+              <div class="flex">
+                <input matInput id="{{head.searchFieldName}}" type="text" #inp [matDatepicker]="input" datemask
+                  placeholder="__/__/____"
+                  class="padding h-7 min-w-28 bg-accent-50 mt-1 shadow text-on-accent-50 font-medium text-sm placeholder:font-medium rounded-md "
+                  (dateInput)="dateColumnSearch(inp.id, $event ,head.isAdditional,'eq',head.searchType)"
+                  [value]="pagefilters.columnSearchOptions.field==head.searchFieldName? pagefilters.columnSearchOptions.searchString: ''">
+                <mat-datepicker-toggle class="-ml-9" matSuffix [for]="input"></mat-datepicker-toggle>
+                <mat-datepicker #input></mat-datepicker>
+              </div>
+
+            </div>
+          </th>
+        </tr>
+        <!-- endregion column search  -->
+      </thead>
+      <!-- endregion table header -->
+
+      <!-- region table body -->
+      <tbody *ngIf="pagedData">
+        <tr *ngFor="let item of pagedData['Data']['Items'],let i=index">
+          <td class="h-min py-1" *ngFor="let head of headArray">
+            <ng-container [ngSwitch]="head.head">
+
+              <!-- table cell for Actions -->
+              <div *ngSwitchCase="'Actions'" class="flex gap-x-4 justify-start items-center pr-6 w-full">
+                <ng-container [ngSwitch]="masterName">
+                  <ng-container *ngSwitchCase="'Policy'">
+
+                    <i *ngIf="!isDownloadDisabled"
+                      class="fa fa-download iconColor hover:text-primary-900 hover:cursor-pointer" [routerLink]=""
+                      matTooltip="Download Policy" (click)="download(item.Id)"></i>
+                    <i *ngIf="item.PaymentStatus!=1"
+                      class="fas fa-rupee-sign iconColor hover:text-primary-900 hover:cursor-pointer" [routerLink]=""
+                      matTooltip="Complete Payment" (click)="payment(item.Id)"></i>
+                    <i *ngIf="item.IsKYC!=true"
+                      class="fa-solid fa-check iconColor hover:text-primary-900 hover:cursor-pointer" [routerLink]=""
+                      matTooltip="Complete KYC" (click)="KYC(item.Id)"></i>
+                    <i *ngIf="item.Insurer.toLowerCase()==InsurerCompanyName.GoDigit && item.PolicyStatusName!='Complete'"
+                      class="	fas fa-sync-alt iconColor hover:text-primary-900 hover:cursor-pointer" [routerLink]=""
+                      matTooltip="Sync" (click)="statusCheck(item.Id)"></i>
+                    <i *ngIf="item.Insurer.toLowerCase()==InsurerCompanyName.HdfcErgo && item.PolicyStatus== 10"
+                      class="	fas fa-sync-alt iconColor hover:text-primary-900 hover:cursor-pointer" [routerLink]=""
+                      matTooltip="Payment Mapping" (click)="paymentMapping(item.Id)"></i>
+                  </ng-container>
+
+                  <!-- Motor Policy -->
+                  <ng-container *ngSwitchCase="'MotorPolicy'">
+                    <i *ngIf="!isDownloadDisabled"
+                      class="fa fa-download iconColor hover:text-primary-900 hover:cursor-pointer" [routerLink]=""
+                      matTooltip="Download Policy" (click)="download(item.Id)"></i>
+                    <i *ngIf="item.PaymentStatus!=1 && item.PolicyStatus != 2"
+                      class="fas fa-rupee-sign iconColor hover:text-primary-900 hover:cursor-pointer" [routerLink]=""
+                      matTooltip="Complete Payment" (click)="payment(item.Id)"></i>
+                    <i *ngIf="item.IsKYC!=true && item.PolicyStatus != 2"
+                      class="fa-solid fa-user-check iconColor hover:text-primary-900 hover:cursor-pointer"
+                      [routerLink]="" matTooltip="Complete KYC" (click)="KYC(item.Id)"></i>
+                    <i *ngIf="item.PolicyStatus == 2"
+                      class="fa-solid fa-sync-alt iconColor hover:text-primary-900 hover:cursor-pointer" [routerLink]=""
+                      matTooltip="Break-In" (click)="breakIn(item.TransactionNo)"></i>
+                    <i *ngIf="item.Insurer == 'BajajAllianz' && item.PaymentStatus==0"
+                      class="fa-solid fa-sync-alt iconColor hover:text-primary-900 hover:cursor-pointer" [routerLink]=""
+                      matTooltip="Refresh Payment Status" (click)="refreshPaymentStatus(item)"></i>
+                    <i *ngIf="item.Insurer == 'GoDigit' &&item.PolicyStatus != 1 && !item.IsKYC"
+                      class="fa-solid fa-sync-alt iconColor hover:text-primary-900 hover:cursor-pointer" [routerLink]=""
+                      matTooltip="Check KYC Status" (click)="CheckKYCStatus(item.TransactionNo)"></i>
+                  </ng-container>
+
+                  <ng-container *ngIf="masterName == 'Roles'">
+                    <i *ngIf="!isRoleDisabled" matTooltip="Role Permission"
+                      class="fa fa-cog hover:text-primary-900 hover:cursor-pointer"
+                      [routerLink]="['role-permission', item.Id]"></i>
+                  </ng-container>
+
+                  <!-- <ng-container *ngSwitchCase="'Country'">
+                  <i *ngIf="!isViewDisabled" matTooltip="View" class="fa fa-eye hover:text-primary-900 hover:cursor-pointer" [routerLink]="['view', item.Id]"></i>
+                </ng-container> -->
+
+                  <!-- <ng-container *ngSwitchCase="'State'">
+                  <i *ngIf="!isViewDisabled" matTooltip="View" class="fa fa-eye hover:text-primary-900 hover:cursor-pointer" [routerLink]="['view', item.Id]"></i>
+                </ng-container> -->
+
+                  <!-- Vehicle master -->
+                  <ng-container *ngSwitchCase="'Vehicle'">
+                    <i *ngIf="!isViewDisabled" matTooltip="View"
+                      class="fa fa-eye hover:text-primary-900 hover:cursor-pointer"
+                      [routerLink]="['view', item.Id]"></i>
+                    <i *ngIf="!isEditDisabled" matTooltip="Edit"
+                      class="fa fa-edit hover:text-accent-900 hover:cursor-pointer"
+                      [routerLink]="['edit', item.Id]"></i>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'Category'">
+                    <i *ngIf="!isViewDisabled" matTooltip="View"
+                      class="fa fa-eye hover:text-primary-900 hover:cursor-pointer"
+                      [routerLink]="['view', item.Id]"></i>
+                    <i *ngIf="!isEditDisabled" matTooltip="Edit"
+                      class="fa fa-edit hover:text-accent-900 hover:cursor-pointer"
+                      [routerLink]="['edit', item.Id]"></i>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'SubCategory'">
+                    <i *ngIf="!isViewDisabled" matTooltip="View"
+                      class="fa fa-eye hover:text-primary-900 hover:cursor-pointer"
+                      [routerLink]="['view', item.Id]"></i>
+                  </ng-container>
+
+                  <!-- <ng-container *ngSwitchCase="'City'">
+                  <i *ngIf="!isViewDisabled" matTooltip="View" class="fa fa-eye hover:text-primary-900 hover:cursor-pointer"
+                    [routerLink]="['view', item.Id]"></i>
+                </ng-container> -->
+
+                  <ng-container *ngSwitchCase="'Insurance Company'">
+                    <i *ngIf="!isViewDisabled" matTooltip="View"
+                      class="fa fa-eye hover:text-primary-900 hover:cursor-pointer"
+                      [routerLink]="['view', item.Code]"></i>
+                    <i *ngIf="!isEditDisabled" matTooltip="Edit"
+                      class="fa fa-edit hover:text-accent-900 hover:cursor-pointer"
+                      [routerLink]="['edit', item.Code]"></i>
+                  </ng-container>
+
+
+                  <!-- Individual List actions -->
+                  <ng-container *ngSwitchCase="'IndividualRFQList'">
+                    <i matTooltip="Attachments"
+                      class="fa-solid fa-paperclip  hover:text-primary-900 hover:cursor-pointer"
+                      (click)="attachmentButton(item)"></i>
+                  </ng-container>
+
+                  <!-- TotalRaisedRFQ List actions -->
+                  <ng-container *ngSwitchCase="'TotalRaisedRFQList'">
+                    <i matTooltip="Attachments"
+                      class="fa-solid fa-paperclip  hover:text-primary-900 hover:cursor-pointer"
+                      (click)="attachmentButton(item)"></i>
+                  </ng-container>
+
+                  <!-- RFQ List actions -->
+                  <ng-container *ngSwitchCase="'RFQList'">
+                    <i *ngIf="!isViewDisabled && item.Stage != 'RFQTransactionEntry' && item.Stage != 'RFQTransactionEntryDone' && item.Stage != 'RFQRejected'"
+                      matTooltip="next" class="fa-solid fa-arrow-right hover:text-primary-900 hover:cursor-pointer"
+                      (click)="redirectButton(item.Id)"></i>
+                    <i *ngIf="item.Stage == 'RFQTransactionEntry'" class="fa-solid fa-sync-alt hover:cursor-pointer"
+                      matTooltip="Convert to Transaction Entry" (click)="convertToTransactionButton(item)"></i>
+                    <i *ngIf="item.Stage == 'RFQTransactionEntry' && item.SubCategoryCode == 'MediclaimTopUpPlan'"
+                      class="fa-solid text-primary-600 fa-repeat hover:text-primary-900 hover:cursor-pointer"
+                      matTooltip="Convert (Top-Up Plan) to Transaction Entry"
+                      (click)="convertTopUpToTransactionEntryButton(item)"></i>
+                    <i matTooltip="Attachments"
+                      class="fa-solid fa-paperclip  hover:text-primary-900 hover:cursor-pointer"
+                      (click)="attachmentButton(item)"></i>
+                  </ng-container>
+
+                  <!-- TransactionList -->
+                  <ng-container *ngSwitchCase="'TransactionList'">
+                    <i *ngIf="!isViewDisabled" matTooltip="View"
+                      class="fa fa-eye hover:text-primary-900 hover:cursor-pointer"
+                      [routerLink]="['view', item.Id]"></i>
+                    <i *ngIf="!isEditDisabled" matTooltip="Edit"
+                      class="fa fa-edit hover:text-accent-900 hover:cursor-pointer"
+                      [routerLink]="['edit', item.Id]"></i>
+                    <!-- <i *ngIf="!isCancelDisabled" matTooltip="Cancel" class="fa-solid fa-ban hover:text-accent-900 hover:cursor-pointer"
+                    [routerLink]="['cancel', item.Id]"></i> -->
+                    <i *ngIf="!isDeleteDisabled  && item.Status != 2" matTooltip="Cancel"
+                      class="fa-solid fa-ban hover:text-warn-500 hover:cursor-pointer" (click)="cancelButton(item)"></i>
+                    <i *ngIf="!isDeleteDisabled  && item.Status == 2" matTooltip="Canceled Reason"
+                      class="fa-solid fa-ban hover:cursor-pointer" (click)="cancelButton(item)"></i>
+                    <i *ngIf="!isEditDisabled" matTooltip="Attachments"
+                      class="fa-solid fa-paperclip hover:text-warn-500 hover:cursor-pointer"
+                      (click)="attachmentButton(item)"></i>
+                  </ng-container>
+
+                  <!-- EndorsementTransactionList -->
+                  <ng-container *ngSwitchCase="'EndorsementTransactionList'">
+                    <i *ngIf="!isViewDisabled" matTooltip="View"
+                      class="fa fa-eye hover:text-primary-900 hover:cursor-pointer" (click)="redirectButton(item)"></i>
+                    <!-- <i class="fa-solid fa-sync-alt hover:cursor-pointer"
+                        matTooltip="Convert to Transaction Entry"></i>
+                        <i class="fa-solid fa-money-bill-transfer hover:cursor-pointer" matTooltip="Convert to RFQ"></i> -->
+                  </ng-container>
+
+                  <!-- TransactionList -->
+                  <ng-container *ngSwitchCase="'RenewalTransactionList'">
+                    <i *ngIf="!isViewDisabled" matTooltip="View"
+                      class="fa fa-eye hover:text-primary-900 hover:cursor-pointer" (click)="redirectButton(item)"></i>
+                    <i class="fa-solid fa-sync-alt hover:cursor-pointer" matTooltip="Convert to Transaction Entry"></i>
+                    <i class="fa-solid fa-money-bill-transfer hover:cursor-pointer" matTooltip="Convert to RFQ"></i>
+                  </ng-container>
+
+                  <!-- Trans List actions -->
+                  <ng-container *ngSwitchCase="'transList'">
+                    <i *ngIf="!isViewDisabled" matTooltip="View"
+                      class="fa fa-eye hover:text-primary-900 hover:cursor-pointer"></i>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'ProductPlan'">
+                    <i *ngIf="!isViewDisabled" matTooltip="View"
+                      class="fa fa-eye hover:text-primary-900 hover:cursor-pointer"
+                      [routerLink]="['view', item.ProductCode , item.InsurerCode]"></i>
+                    <i *ngIf="!isEditDisabled" matTooltip="Edit"
+                      class="fa fa-edit hover:text-accent-900 hover:cursor-pointer"
+                      [routerLink]="['edit', item.ProductCode , item.InsurerCode]"></i>
+                    <i *ngIf="!isDeleteDisabled" matTooltip="Delete"
+                      class="fa fa-trash hover:text-warn-500 hover:cursor-pointer" (click)="deleteButton(item)"></i>
+                  </ng-container>
+
+                  <ng-container *ngSwitchDefault>
+                    <i *ngIf="!isViewDisabled" matTooltip="View"
+                      class="fa fa-eye hover:text-primary-900 hover:cursor-pointer"
+                      [routerLink]="['view', item.Id]"></i>
+                    <i *ngIf="!isEditDisabled" matTooltip="Edit"
+                      class="fa fa-edit hover:text-accent-900 hover:cursor-pointer"
+                      [routerLink]="['edit', item.Id]"></i>
+                    <i *ngIf="!isDeleteDisabled" matTooltip="Delete"
+                      class="fa fa-trash hover:text-warn-500 hover:cursor-pointer" (click)="deleteButton(item.Id)"></i>
+                  </ng-container>
+
+                </ng-container>
+              </div>
+
+              <!-- table cell for Image -->
+              <div *ngSwitchCase="'Image'">
+                <img class="w-max max-h-7" [src]="item[head['fieldName']]" alt="">
+              </div>
+              <!-- table cell for Radio Button -->
+              <div *ngSwitchCase="'Select'" (click)="valueChange(i)" class="w-fit">
+                <mat-radio-button [value]="i" (click)="valueChange(i)"> </mat-radio-button>
+              </div>
+
+              <!-- table cell for date -->
+              <div *ngSwitchCase="'TP End Date'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+
+              <div *ngSwitchCase="'OD End Date'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+
+              <div *ngSwitchCase="'Date Of Purchase'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+
+              <div *ngSwitchCase="'Payment Date'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+
+              <div *ngSwitchCase="'To'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+
+              <div *ngSwitchCase="'From'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+
+              <div *ngSwitchCase="'Date of Entry'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+              <div *ngSwitchCase="'Policy issue date'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+              <div *ngSwitchCase="'Policy Start date'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+              <div *ngSwitchCase="'Policy end date'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+
+              <div *ngSwitchCase="'Request Date'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+              <div *ngSwitchCase="'Policy Issue Date'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+              <div *ngSwitchCase="'RFQ Date'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+
+              <div *ngSwitchCase="'QN Date'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+
+              <div *ngSwitchCase="'Rejection Date	'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+
+              <div *ngSwitchCase="'Issue Data'">
+                {{item[head['fieldName']] | date: 'dd-MM-yyyy'}}
+              </div>
+
+              <!-- table cell checkbox -->
+              <div *ngSwitchCase="'Select Multiple'">
+                <mat-checkbox class="example-margin" (click)="multiSelect($event, i)"></mat-checkbox>
+              </div>
+
+              <!-- table cell for Image -->
+              <div *ngSwitchCase="'Is Active?'">
+                {{ item[head['fieldName']] | active }}
+              </div>
+
+              <!-- table cell for Image -->
+              <div *ngSwitchCase="'Offline'">
+                {{ item[head['fieldName']] | yesNo }}
+              </div>
+
+              <!-- table cell for Image -->
+              <div *ngSwitchCase="'Online'">
+                {{ item[head['fieldName']] | yesNo }}
+              </div>
+
+
+              <div *ngSwitchCase="'Query by Insurance Company'">
+                {{ item[head['fieldName']] | yesNo }}
+              </div>
+
+              <div *ngSwitchCase="'Customer Response'">
+                {{ item[head['fieldName']] | yesNo }}
+              </div>
+
+              <!-- table cell for Currency -->
+              <div *ngSwitchCase="'Sum Insured'" style="float: right;">
+                {{ item[head['fieldName']] | indCurrency }}
+              </div>
+
+              <div *ngSwitchCase="'IDV'" style="float: right;">
+                <div *ngIf="item[head['fieldName']] != null">
+                  {{ item[head['fieldName']] | iNDcurrency }}
+                </div>
+                <div *ngIf="item[head['fieldName']] == null">
+                  {{ item[head['fieldName']] }}
+                </div>
+              </div>
+
+
+              <div *ngSwitchCase="'Total Premium Amount'" style="float: right;">
+                <div *ngIf="item[head['fieldName']] != null">
+                  {{ item[head['fieldName']] | iNDcurrency }}
+                </div>
+                <div *ngIf="item[head['fieldName']] == null">
+                  {{ item[head['fieldName']] }}
+                </div>
+              </div>
+
+              <div *ngSwitchCase="'Loading Premium'" style="float: right;">
+                <div *ngIf="item[head['fieldName']] != null">
+                  {{ item[head['fieldName']] | indCurrency }}
+                </div>
+                <div *ngIf="item[head['fieldName']] == null">
+                  {{ item[head['fieldName']] }}
+                </div>
+              </div>
+
+              <div *ngSwitchCase="'Total Paid Premium'" style="float: right;">
+                <div *ngIf="item[head['fieldName']] != null">
+                  {{ item[head['fieldName']] | indCurrency }}
+                </div>
+                <div *ngIf="item[head['fieldName']] == null">
+                  {{ item[head['fieldName']] }}
+                </div>
+              </div>
+
+              <div *ngSwitchCase="'Gross Premium'" style="float: right;">
+                <div *ngIf="item[head['fieldName']] != null">
+                  {{ item[head['fieldName']] | indCurrency }}
+                </div>
+                <div *ngIf="item[head['fieldName']] == null">
+                  {{ item[head['fieldName']] }}
+                </div>
+              </div>
+
+
+              <div *ngSwitchCase="'Premium Amount'" style="float: right;">
+                <div *ngIf="item[head['fieldName']] != null">
+                  {{ item[head['fieldName']] | iNDcurrency }}
+                </div>
+                <div *ngIf="item[head['fieldName']] == null">
+                  {{ item[head['fieldName']] }}
+                </div>
+              </div>
+
+              <div *ngSwitchCase="'CNG'" style="float: right;">
+                <div *ngIf="item[head['fieldName']] != null">
+                  {{ item[head['fieldName']] | iNDcurrency }}
+                </div>
+                <div *ngIf="item[head['fieldName']] == null">
+                  {{ item[head['fieldName']] }}
+                </div>
+              </div>
+
+              <div *ngSwitchCase="'LL Driver'" style="float: right;">
+                <div *ngIf="item[head['fieldName']] != null">
+                  {{ item[head['fieldName']] | iNDcurrency }}
+                </div>
+                <div *ngIf="item[head['fieldName']] == null">
+                  {{ item[head['fieldName']] }}
+                </div>
+              </div>
+
+              <div *ngSwitchCase="'Owner Driver'" style="float: right;">
+                <div *ngIf="item[head['fieldName']] != null">
+                  {{ item[head['fieldName']] | iNDcurrency }}
+                </div>
+                <div *ngIf="item[head['fieldName']] == null">
+                  {{ item[head['fieldName']] }}
+                </div>
+              </div>
+
+              <div *ngSwitchCase="'Passanger PA Amt.'" style="float: right;">
+                <div *ngIf="item[head['fieldName']] != null">
+                  {{ item[head['fieldName']] | iNDcurrency }}
+                </div>
+                <div *ngIf="item[head['fieldName']] == null">
+                  {{ item[head['fieldName']] }}
+                </div>
+              </div>
+
+              <div *ngSwitchCase="'Passanger PA'" style="float: right;">
+                <div *ngIf="item[head['fieldName']] != null">
+                  {{ item[head['fieldName']] | iNDcurrency }}
+                </div>
+                <div *ngIf="item[head['fieldName']] == null">
+                  {{ item[head['fieldName']] }}
+                </div>
+              </div>
+
+              <div *ngSwitchCase="'Paid Driver'" style="float: right;">
+                <div *ngIf="item[head['fieldName']] != null">
+                  {{ item[head['fieldName']] | iNDcurrency }}
+                </div>
+                <div *ngIf="item[head['fieldName']] == null">
+                  {{ item[head['fieldName']] }}
+                </div>
+              </div>
+
+              <div *ngSwitchCase="'Payment Amount'" style="float: right;">
+                {{ item[head['fieldName']] | iNDcurrency }}
+              </div>
+
+              <!-- table cell for default text fields -->
+              <div *ngSwitchDefault>
+                <ng-container [ngSwitch]="masterName">
+
+                  <ng-container *ngSwitchCase="'Popup'">
+                    <span>{{ item[head['fieldName']]
+                      }}</span>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'Policy'">
+                    <span>{{
+                      item[head['fieldName']]
+                      }}</span>
+                  </ng-container>
+
+                  <!-- Motor Policy -->
+                  <ng-container *ngSwitchCase="'MotorPolicy'">
+                    <span>{{
+                      item[head['fieldName']]
+                      }}</span>
+                  </ng-container>
+
+                  <!-- RFQList -->
+                  <ng-container *ngSwitchCase="'RFQList'">
+                    <span>{{
+                      item[head['fieldName']]
+                      }}</span>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'Insurance Company'">
+                    <span class="">{{
+                      item[head['fieldName']]
+                      }}</span>
+                  </ng-container>
+
+                  <ng-container *ngSwitchDefault>
+                    <span class="">{{
+                      item[head['fieldName']]
+                      }}</span>
+                  </ng-container>
+
+                </ng-container>
+              </div>
+
+            </ng-container>
+
+          </td>
+        </tr>
+
+        <tr *ngIf="!pagedData['Data']['TotalCount']">
+          <td colspan="3" class="hover:text-accent-800">
+            No record found
+          </td>
+        </tr>
+
+      </tbody>
+      <!-- endregion table body -->
+
+      <!-- region table footer -->
+      <tfoot *ngIf="pagedData">
+        <tr class="relative">
+          <td [attr.colspan]="headArray.length + 1">
+            <div [ngClass]="masterName == 'Popup'?' xl:flex-row xl:justify-between xl:items-center' :
+          'md:flex-row md:justify-between md:items-center'" class="flex gap-y-2.5 flex-col">
+              <div
+                class="text-accent-500 flex sm:flex-row flex-col  sm:items-center gap-y-4 gap-x-8 xl:justify-between">
+
+                <div class="flex gap-x-2 items-center">
+                  <span for="limit">Items per page:</span>
+                  <select id="limit" #limit name="limit" class="px-2 py-1 w-20" (change)="setLimit(limit.value)"
+                    [value]="pagefilters.limit">
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                  </select>
+                </div>
+
+                <div>
+                  Showing
+                  {{
+                  pagedData['Data']['TotalCount']? pagedData['Data']['CurrentPage'] * pagedData['Data']['PageSize'] -
+                  pagedData['Data']['PageSize'] + 1: 0
+                  }}
+                  to
+                  {{
+                  pagedData['Data']['TotalCount'] > pagedData['Data']['CurrentPage'] * pagedData['Data']['PageSize']
+                  ? pagedData['Data']['CurrentPage'] * pagedData['Data']['PageSize']
+                  : pagedData['Data']['TotalCount']
+                  }}
+                  of {{ pagedData['Data']['TotalCount'] }} results
+                </div>
+              </div>
+
+              <!-- region table navigations -->
+              <div [ngClass]="masterName == 'Popup'? 'xl:right-0 xl:absolute' : 'lg:right-0 lg:absolute'"
+                class="flex space-x-9 md:space-x-4 md:w-50 lg:justify-center">
+                <button mat-raised-button
+                  class="rounded-lg border w-20 button p-1 text-primary-500 hover:bg-primary hover:text-on-primary disabled:hover:bg-transparent disabled:hover:text-accent-500 disabled:text-accent-500"
+                  [disabled]="!pagedData['Data']['HasPrevious']" (click)="pagePrevious()">
+                  Previous
+                </button>
+                <button mat-raised-button
+                  class="rounded-lg border w-20 button p-1 text-primary-500 hover:bg-primary hover:text-on-primary disabled:hover:bg-transparent disabled:hover:text-accent-500 disabled:text-accent-500"
+                  [disabled]="!pagedData['Data']['HasNext']" (click)="pageNext()">
+                  Next
+                </button>
+              </div>
+              <!-- endregion table navigations -->
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+      <!-- endregion table footer -->
+    </table>
+  </div>
+</div>

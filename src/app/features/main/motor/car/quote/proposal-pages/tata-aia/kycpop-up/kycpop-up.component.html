@@ -1,0 +1,103 @@
+<div class="p-4 h-full w-full">
+  <!-- region main heading -->
+  <h1
+    class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold"
+  >
+    {{ pagetitle }}
+    <!-- region main heading controls-->
+    <div class="flex gap-x-3 items-center text-lg font-normal">
+      <button mat-raised-button class="new-button" (click)="close()" title="Close">X</button>
+      <!-- <button mat-raised-button class="new-button" (click)="SubmitKYCData()">
+        Verify
+      </button> -->
+    </div>
+    <!-- endregion main heading controls-->
+  </h1>
+
+  <div class="py-5">
+    <form [formGroup]="KYCDetailsForm">
+      <div class="grid gap-5">
+        <div class="grid sm:grid-cols-1 lg:grid-cols-1 gap-7">
+          <!-- PAN -->
+          <div class="relative">
+            <div class="icon">
+              <mat-icon>credit_card</mat-icon>
+            </div>
+            <input
+              type="text"
+              maxlength="10"
+              formControlName="PanNumber"
+              id="PANCard"
+              placeholder=" "
+              class="peer"
+              [readOnly]="isReKYC"
+            />
+            <label for="PANCard" class="mandatory">PAN</label>
+          </div>
+
+          <!-- <div class="relative ordiv">OR</div> -->
+
+          <!-- UID -->
+          <!-- <div class="relative">
+            <div class="icon">
+              <mat-icon>credit_card</mat-icon>
+            </div>
+            <input
+              type="text"
+              maxlength="14"
+              formControlName="UID"
+              id="UID"
+              placeholder=" "
+              class="peer"
+            />
+            <label for="UID" class="">Aadhar</label>
+          </div> -->
+          <div  class="relative" *ngIf="!isReKYC">
+            <div class="flex gap-x-3 items-end justify-end text-lg font-normal">
+              <button
+                mat-raised-button
+                class="new-button bg-royal text-white"
+                (click)="SubmitKYCData('')"
+              >
+                Verify
+              </button>
+            </div>
+          </div>
+
+          <!-- CIN -->
+          <div class="relative" *ngIf="isReKYC">
+            <div class="icon">
+              <mat-icon>credit_card</mat-icon>
+            </div>
+            <input
+              type="text"
+              maxlength="21"
+              formControlName="CIN"
+              id="CIN"
+              placeholder=" "
+              class="peer"
+            />
+            <label for="CIN" class="mandatory">CIN</label>
+          </div>
+
+          <p *ngIf="isReKYC" class="mt-2 text-red-600 text-md">
+            <b>Note :</b> Please also provide CIN. <br> <span class="pl-10">If you do not have CIN so enter "NA"</span>
+          </p>
+
+          <div  class="relative" *ngIf="isReKYC">
+            <div class="flex gap-x-3 items-end justify-end text-lg font-normal">
+              <button
+                mat-raised-button
+                class="new-button bg-royal text-white"
+                (click)="SubmitKYCData('ReKYC')"
+              >
+                Re-Verify
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

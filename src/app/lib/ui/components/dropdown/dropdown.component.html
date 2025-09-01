@@ -1,0 +1,53 @@
+<div>
+    <div
+        *ngIf="!IsSearch"
+        class="flex w-full h-full hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150 bg-transparent">
+        <div id="formControl" class="relative inline-flex align-middle w-full h-full" (click)="toggleDropdown($event)"
+            #btnDropdownRef>
+            <input #inputDropdownRef type="text"
+                class="w-full text-md rounded shadow-sm hover:bg-accent-100 transition-colors" [disabled]="true"
+                [value]="selectedValue">
+            <i
+                class="fa-sharp fa-solid fa-angle-down accent-700 absolute right-0 top-1/2 -translate-y-1/2 -translate-x-4"></i>
+        </div>
+    </div>
+
+    <div
+        *ngIf="IsSearch"
+        class="flex w-full h-full hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150 bg-transparent">
+        <div id="formControl" class="relative inline-flex align-middle w-full h-full" 
+            #btnDropdownRef>
+            <input 
+                #inputDropdownRef 
+                type="text"
+                class="w-full h-8 px-2 text-md border border-accent-400 rounded shadow-sm hover:bg-accent-100 transition-colors"
+                [value]="selectedValue"
+                (input)="toggleDropdown($event)"
+                (click)="onClickInput()"
+                [disabled]="IsDisabled"
+                >
+            <i
+                class="fa fa-search accent-700 absolute right-0 top-1/2 -translate-y-1/2 -translate-x-4"
+                (click)="listPopoverShow = true"></i>
+        </div>
+    </div>
+
+    <!-- rendered list -->
+    <div 
+        class="z-50 max-h-52 overflow-y-auto w-fit absolute" 
+        #popoverDropdownRef
+        [ngClass]="dropdownPopoverShow ? 'shadow-lg drop-shadow' : 'shadow-none'"
+    >
+
+        <div class="bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1"
+            style="min-width: 12rem" [ngClass]="dropdownPopoverShow ? 'block' : 'hidden'">
+            <p *ngFor="let item of ListData"
+                class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-slate-700 hover:bg-accent-100 hover:cursor-pointer"
+                (click)="selectListItem(item['id'], item['name'])">
+                <span id="item['id']" class="w-full hover:cursor-pointer">
+                    {{item['name']}}
+                </span>
+            </p>
+        </div>
+    </div>
+<div>

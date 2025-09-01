@@ -1,0 +1,57 @@
+    <!-- region Main Heading -->
+    <!-- Motor Policy list -->
+   <h1 class="new-head text-lg px-4 py-2 mb-4 rounded flex justify-between items-center font-semibold">
+        {{title}}
+        <div class="flex gap-x-3 items-center text-md font-normal">
+          <button (click)="buyNow()" mat-raised-button class="new-button" *ngIf="canDisplayBuyNow">Buy Now</button>
+          <button #menuTriggerCar="matMenuTrigger"
+          (click)="menuTriggerCar.openMenu()" [matMenuTriggerFor]="menuCar">
+            <mat-icon matTooltip="icon info" class="text-white">info</mat-icon>
+          </button>
+        </div>
+    </h1>
+    <!-- endregion Heading Controls -->
+
+
+    <!-- region dynamic list table component  -->
+    <gnx-table [headArray]="columnDef" [listDataObservable]="MotorList$" [masterName]="'Policy'"
+      (onSort)="sortColumn($event)" (onSearch)="searchColumn($event)" (onNext)="nextPage()" (onPrev)="previousPage()"
+      (onLimitChange)="setLimit($event)">
+    </gnx-table>
+    <!-- endregion dynamic list table component  -->
+
+    <mat-menu #menuCar="matMenu" yPosition="above" overlapTrigger="false" class="px-4 py-3 gap-2 container mx-auto">
+
+      <div class="flex gap-3">
+        <div>
+
+          <div class="flex gap-5 items-center border-b border-sky-500">
+            <i class="fa fa-download iconColor"></i>
+            <p>To Download Policy</p>
+          </div>
+
+          <div class="flex gap-5 items-center border-b border-sky-500">
+            <i class="fas fa-rupee-sign iconColor"></i>
+            <p>To Complete Payment</p>
+          </div>
+
+          <div class="flex gap-5 items-center border-b border-sky-500">
+            <!-- <i class="fa-solid fa-certificate iconColor"></i> -->
+            <i class="fa-solid fa-user-check iconColor"></i>
+            <p>To Complete KYC</p>
+          </div>
+
+          <div class="flex gap-5 items-center border-b border-sky-500">
+            <i class="fa-solid fa-sync-alt iconColor"></i>
+            <p>Break-In</p>
+          </div>
+          
+          <div class="flex gap-5 items-center border-b border-sky-500">
+            <i class="fa fa-solid fa-money-bill-transfer"></i>
+            <p>Convert To transaction</p>
+          </div>
+
+        </div>
+      </div>
+
+  </mat-menu>

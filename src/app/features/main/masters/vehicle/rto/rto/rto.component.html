@@ -1,0 +1,162 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1
+        class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" [disabled]="RTOForm.invalid"
+                (click)="submitform()" *ngIf="mode == 'Create' || mode == 'Edit'">Save</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()"
+                *ngIf="mode == 'Edit' || mode == 'Create'">Cancel</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()"
+                *ngIf="mode == 'View'">Back</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+        <form [formGroup]="RTOForm" class="text-md">
+
+            <div class="sm:w-120 grid gap-6">
+
+                <!-- RTO Code -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>poll</mat-icon>
+                    </div>
+                    <input type="text" class="peer" maxlength="50" placeholder=" " id="Code" formControlName="Code" />
+                    <label for="Code" class="mandatory">RTO Code</label>
+                </div>
+
+                <!-- RTO Name -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>device_hub</mat-icon>
+                    </div>
+                    <input type="text" class="peer" maxlength="100" AlphabetOnly placeholder=" " id="Name" formControlName="Name" />
+                    <label for="Name" class="mandatory">RTO Name</label>
+                </div>
+
+                <!-- City -->
+                <div class="relative">
+                <div class="icon">
+                    <mat-icon>location_city</mat-icon>
+                </div>
+                <div class="flex">
+                    <input type="text" class="peer" maxlength="120" formControlName="CityName" AlphabetOnly placeholder=" " id="CityName" [matAutocomplete]="CitySearch">
+                    <mat-autocomplete #CitySearch="matAutocomplete" (optionSelected)="CitySelected($event)" >
+                      <mat-option *ngFor="let City Of Citys$ | async" [value]="City">
+                        {{City.Name}}
+                    </mat-option>
+                    </mat-autocomplete>
+                    <button class="-m-5 z-10" type="button" *ngIf="editable"
+                    (click)="openDiolog('City','Select City')"><mat-icon
+                      class="-ml-2">search</mat-icon></button>
+                      <button
+                      *ngIf="RTOForm.get('CityName').value && mode != 'View'"
+                      type="button"
+                      class="-m-7 z-10"
+                      aria-label="clear"
+                      matTooltip="Clear"
+                      (click)="clear('CityName', 'CityId')"
+                    >
+                      <mat-icon>clear</mat-icon>
+                    </button>
+                  <label for="CityName" class="mandatory">City</label>
+                </div>
+                </div>
+
+                <!-- State -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>domain</mat-icon>
+                    </div>
+                    <input type="text" class="peer" AlphabetOnly formControlName="StateName" />
+                    <label for="StateName" class="mandatory">State</label>
+                </div>
+
+                <!-- Status -->
+                <div class="font-medium py-3 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+                    <span for="Status" class="pr-2 py-1 font-medium ml-3">Status</span>
+                <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1" (change)="onChange($event,'Status')">
+                    <span class="flex font-medium text-xl ml-3 mt-1.5">
+                    {{
+                        RTOForm.controls['Status'].value == 1
+                    ? "Active"
+                    : "InActive"
+                    }}
+                    </span>
+                </mat-slide-toggle>
+                </div>
+
+
+
+            </div>
+
+            <div class="block py-5">
+                <span class="pr-2 py-1 font-bold text-base after:content-['*'] after:ml-1 after:text-red-500">
+                    RTO Insurance Mapping
+                </span>
+
+                <div *ngIf="editable" class="inline">
+                    <button mat-raised-button class="bg-sky-400 text-on-primary-800" (click)="addRTOInsuranceMappingRow()">
+                        <!-- <mat-icon>add</mat-icon> -->
+                        Add
+                    </button>
+                </div>
+
+                <div class="mappingtable overflow-x-scroll overflow-y-hidden">
+                    <table formArrayName="RTOInsuranceMapping" class="bg-white mt-5">
+                        <tr *ngIf="inf.length>0">
+                            <th>Company Code</th>
+                            <th>RTO Code</th>
+                            <th>Registration City</th>
+                            <th>Registration City Code</th>
+                            <th>State Code</th>
+                            <th>Cluster Zone</th>
+                            <th>CarZone</th>
+                            <th>Action</th>
+                        </tr>
+
+                        <tr *ngFor="let element of inf.controls,let i=index">
+                            <td [formGroupName]="i">
+                                <!-- <input type="text" formControlName="InsuranceCompanyCode"> -->
+                                <select class="select" id="" formControlName="InsuranceCompanyCode">
+                                    <option value="">--Select--</option>
+                                    <option *ngFor="let Company Of InsuranceCompany$ | async" [value]="Company.Code">
+                                        {{Company.Name}}
+                                    </option>
+                                </select>
+                            </td>
+                            <td [formGroupName]="i"><input type="text" formControlName="InsuranceRTOCode"></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="RegistrationCity"></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="RegistrationCityCode"></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="StateCode"></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="ClusterZone"></td>
+                            <td [formGroupName]="i"><input type="text" formControlName="CarZone"></td>
+                            <td [formGroupName]="i">
+                                <div *ngIf="editable">
+                                    <button mat-icon-button type="button" matTooltip="Remove"
+                                        (click)="deleteRTOInsuranceMappingRow(i)">
+                                        <mat-icon color="warn">delete</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+
+                        </tr>
+
+
+                    </table>
+                </div>
+
+
+            </div>
+        </form>
+    </div>
+</div>

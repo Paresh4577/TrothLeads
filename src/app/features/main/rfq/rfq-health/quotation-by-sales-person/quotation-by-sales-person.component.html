@@ -1,0 +1,1657 @@
+<div class="px-4 pb-4 max-h-none w-full">
+  <!-- region main heading -->
+
+  <!-- region main heading -->
+  <div class="pt-4 sticky z-30 headingBorder top-0 w-full">
+    <!-- region main heading -->
+    <h1 class="new-head h-14 text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold">
+      {{ pagetitle }}
+      <div class="flex gap-x-3  items-center text-lg font-normal">
+        <button mat-raised-button class="new-button" (click)="BackToListPage()">Back</button>
+        <button mat-raised-button class="new-button" (click)="ExpandCollaps()">
+          {{isExpand ? 'Collapse' : 'Expand All'}}
+        </button>
+      </div>
+    </h1>
+
+    <div class="">
+      <div class="px-4 py-4 rounded bg-white">
+        <mat-card class="bg-sky-100 px-4 py-3 gap-2 container mx-auto min-h-16">
+          <div class="flex flex-wrap gap-5 justify-between px-4 sm:text-center">
+
+            <!-- RFQ No -->
+            <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+              <span class="text-center font-semibold">RFQ No</span>
+              <span class="font-normal text-center">{{QuotationSelectionForm.get("RFQNo").value}}</span>
+            </div>
+
+            <!-- Customer name -->
+            <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+              <span class="text-center font-semibold">Customer name</span>
+              <span class="font-normal text-center">{{ProposerName}}</span>
+            </div>
+
+            <!-- Sub Category -->
+            <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+              <span class="text-center font-semibold">Sub Category</span>
+              <span class="font-normal text-center">{{QuotationSelectionForm.get("SubCategoryName").value}}</span>
+            </div>
+
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- endregion main heading -->
+
+  <!-- region form -->
+  <div class="py-5 rounded">
+
+    <mat-stepper orientation="vertical" [linear]="isLinear" #stepper [ngClass]="isExpand ? 'showstep' : ''">
+
+      <!-- First stepper -->
+      <mat-step label="RFQ Details">
+
+        <form [formGroup]="QuotationSelectionForm">
+            <div class="grid lg:grid-cols-4 md:grid-cols-3 gap-5  mt-4">
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon>confirmation_number</mat-icon>
+                </div>
+                <input matInput type="text" placeholder=" " class="peer w-fit" formControlName="RFQNo" readonly />
+                <label for="rFQNo" class="mandatory">RFQ No.</label>
+              </div>
+
+              <div class="relative">
+                <div class="icon">
+                  <mat-datepicker-toggle class="-ml-2 pointer-events-none" matIconSuffix
+                    [for]="RFQDate"></mat-datepicker-toggle>
+                  <mat-datepicker #RFQDate></mat-datepicker>
+                </div>
+                <div class="flex">
+                  <input matInput type="text" id="RFQDate" [max]="maxBirthDate" placeholder="__/__/____" datemask
+                    [matDatepicker]="RFQDate" class="peer mb-1" formControlName="RFQDate" readonly />
+                  <label for="rFQDate" class="mandatory">RFQ Date</label>
+                </div>
+              </div>
+
+              <div class="relative min-w-36">
+                <div class="icon">
+                  <mat-icon>confirmation_number</mat-icon>
+                </div>
+                <input matInput type="text" placeholder=" " class="peer w-fit" formControlName="QNNo" readonly />
+                <label for="qNNo" class="mandatory">Qn No.</label>
+              </div>
+
+              <div class="relative">
+                <div class="icon">
+                  <mat-datepicker-toggle class="-ml-2 pointer-events-none" matIconSuffix
+                    [for]="qNDate"></mat-datepicker-toggle>
+                  <mat-datepicker #qNDate></mat-datepicker>
+                </div>
+                <div class="flex">
+                  <input matInput type="text" id="qNDate" [max]="maxBirthDate" placeholder="__/__/____" datemask
+                    [matDatepicker]="qNDate" class="peer mb-1" formControlName="QNDate" readonly />
+                  <label for="qNDate" class="mandatory">QN Date</label>
+                </div>
+              </div>
+
+            </div>
+        </form>
+
+        <div class="" *ngIf="!isExpand">
+          <button class="bg-royal text-white" mat-button matStepperNext>
+            Next
+          </button>
+        </div>
+
+      </mat-step>
+
+      <!-- Second stepper -->
+      <mat-step label="Basic Details">
+        <form [formGroup]="QuotationSelectionForm">
+          <div class="py-5">
+            <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-4">
+
+              <!-- Product Sub Category -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon> compass_calibration</mat-icon>
+                </div>
+                <select class="peer bg-white" formControlName="SubCategoryId">
+                  <option disabled value=0>--Select--</option>
+                  <option disabled *ngFor="let option of SubCategoryList" value="{{option.Id}}">
+                    {{ option.Name }}
+                  </option>
+                </select>
+                <label for="SubCategory" class="mandatory">Product Sub Category</label>
+              </div>
+
+              <!-- Policy Type -->
+              <div class="relative ">
+                <div class="icon">
+                  <mat-icon>category</mat-icon>
+                </div>
+                <input matInput type="text" id="PolicyType" [value]="displayValuesOfForm.PolicyType" placeholder=" "
+                  class="peer" readonly />
+                <label for="PolicyType" class="mandatory">Policy Type</label>
+              </div>
+
+              <!-- Category Type -->
+              <div class="relative ">
+                <div class="icon">
+                  <mat-icon>category</mat-icon>
+                </div>
+                <select id="" formControlName="CategoryType">
+                  <option disabled value="">--Select--</option>
+                  <option disabled *ngFor="let option of CategoryTypeList" [value]="option.key">
+                    {{option.name}}
+                  </option>
+                </select>
+                <label for="CategoryType" class="mandatory">Category Type</label>
+              </div>
+
+              <!-- Policy Period -->
+              <div class="relative ">
+                <div class="icon">
+                  <mat-icon>category</mat-icon>
+                </div>
+                <select id="" formControlName="PolicyPeriod">
+                  <option disabled *ngFor="let option of PolicyTenureList" [value]="option.key">
+                    {{option.name}}
+                  </option>
+                </select>
+                <label for="PolicyPeriod" class="mandatory">Policy Period</label>
+              </div>
+
+            </div>
+          </div>
+        </form>
+        <div *ngIf="!isExpand">
+          <button class="bg-royal text-white" mat-button matStepperPrevious>
+            Back
+          </button>
+          <button class="bg-royal text-white mx-3" mat-button matStepperNext>
+            Next
+          </button>
+        </div>
+      </mat-step>
+
+      <!-- Second stepper -->
+      <mat-step label="Quotation Selection" [stepControl]="QuotationSelectionValidation()">
+        <form [formGroup]="QuotationSelectionForm">
+
+          <div class="mt-7 flex flex-wrap justify-between">
+            <p class="text-left font-semibold my-2">Quotation - {{displayQNLabel}}</p>
+            <div>
+              <button class="bg-royal text-white mx-3" mat-button (click)="DonloadQNdocument()">
+                <mat-icon class="text-white">picture_as_pdf</mat-icon>
+              </button>
+              <button class="bg-royal text-white mx-3" mat-button (click)="openDiologShare('common')">
+                <mat-icon class="text-white">share</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="min-w-full rounded bg-white" formArrayName="QNDocuments">
+
+            <div *ngFor="let item of QNselection.controls; let i = index;" [formGroupName]="i">
+
+              <div class="grid QuotationResponsive md:grid-cols-3 sm:grid-cols-2 gap-3 mt-4">
+
+                <div class="relative">
+                  <div class="icon">
+                    <mat-icon>business</mat-icon>
+                  </div>
+                  <input type="text" class="peer" id="InsuranceCompany" placeholder=" " readonly
+                    value="{{item.value.InsuranceCompanyShortName}}">
+                  <label for="InsuranceCompany" class="mandatory">Insurance Company</label>
+                </div>
+
+                <div class="relative">
+                  <div class="icon">
+                    <mat-icon>tonality</mat-icon>
+                  </div>
+                  <input type="text" class="peer" id="PlanName" placeholder=" " readonly
+                    value="{{item.value.ProductName}}">
+                  <label for="PlanName" class="mandatory">Plan Name</label>
+                </div>
+
+                <div class="relative">
+                  <div class="icon rs">₹</div>
+                  <input type="text" class="peer" id="SumInsuredOrIDV" placeholder=" " readonly
+                    value="{{item.value.SumInsured | indCurrencyWithoutSymbol}}">
+                  <label for="SumInsuredOrIDV" class="mandatory">Sum Insured</label>
+                </div>
+
+                <!-- Deductible -->
+                <div class="relative"
+                  *ngIf="QuotationSelectionForm.get('SubCategoryCode').value == SubCategoryCodeEnum.TopUpPlan">
+                  <div class="icon rs">₹</div>
+                  <input type="text" class="peer" id="Deductible" placeholder=" " readonly
+                    value="{{item.value.Deductible | indCurrencyWithoutSymbol}}">
+                  <label for="Deductible" class="mandatory">Deductible</label>
+                </div>
+
+                <div class="relative">
+                  <div class="icon rs">₹</div>
+                  <input type="text" class="peer" id="GrossPremium" placeholder=" " readonly
+                    value="{{item.value.GrossPremium | indCurrencyWithoutSymbol}}">
+                  <label for="GrossPremium" class="mandatory">Gross Premium</label>
+                </div>
+
+                <div class="relative min-w-20">
+                  <div class="dummy-formField justify-evenly max-w-24">
+                    <span class="text-md mandatory">Buy</span>
+                    <input type="radio" id="Buy" name="Buy" [disabled]="mode=='view'" [checked]="item.value.Buy == true"
+                      (click)="SelectBuy(i)">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="HealthTopUpQNDocuments.controls?.length > 0" class="mt-7 flex flex-wrap justify-between">
+            <p class="text-left font-semibold my-2">Quotation - Top up</p>
+
+            <div>
+              <button class="bg-royal text-white mx-3" mat-button (click)="DonloadTopUpPlanQNdocument()">
+                <mat-icon class="text-white">picture_as_pdf</mat-icon>
+              </button>
+              <button class="bg-royal text-white mx-3" mat-button (click)="openDiologShare('HealthTopUp')">
+                <mat-icon class="text-white">share</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="min-w-full rounded bg-white" formArrayName="HealthTopUpQNDocuments">
+
+            <div *ngFor="let item of HealthTopUpQNDocuments.controls; let i = index;" [formGroupName]="i">
+
+              <div class="grid QuotationResponsive md:grid-cols-3 gap-3 mt-4">
+
+                <div class="relative">
+                  <div class="icon">
+                    <mat-icon>business</mat-icon>
+                  </div>
+                  <input type="text" class="peer" id="InsuranceCompany" placeholder=" " readonly
+                    value="{{item.value.InsuranceCompanyShortName}}">
+                  <label for="InsuranceCompany" class="mandatory">Insurance Company</label>
+                </div>
+
+                <div class="relative">
+                  <div class="icon">
+                    <mat-icon>tonality</mat-icon>
+                  </div>
+                  <input type="text" class="peer" id="PlanName" placeholder=" " readonly
+                    value="{{item.value.ProductName}}">
+                  <label for="PlanName" class="mandatory">Plan Name</label>
+                </div>
+
+                <div class="relative">
+                  <div class="icon rs">₹</div>
+                  <input type="text" class="peer" id="SumInsuredOrIDV" placeholder=" " readonly
+                    value="{{item.value.SumInsured | indCurrencyWithoutSymbol}}">
+                  <label for="SumInsuredOrIDV" class="mandatory">Sum Insured/IDV</label>
+                </div>
+
+
+                <!-- Deductible -->
+                <div class="relative">
+                  <div class="icon rs">₹</div>
+                  <input type="text" class="peer" id="SumInsuredOrIDV" placeholder=" " readonly
+                    value="{{item.value.Deductible | indCurrencyWithoutSymbol}}">
+                  <label for="SumInsuredOrIDV" class="mandatory">Deductible</label>
+                </div>
+
+                <div class="relative">
+                  <div class="icon rs">₹</div>
+                  <input type="text" class="peer" id="GrossPremium" placeholder=" " readonly
+                    value="{{item.value.GrossPremium | indCurrencyWithoutSymbol}}">
+                  <label for="GrossPremium" class="mandatory">Gross Premium</label>
+                </div>
+
+
+                <div class="relative min-w-20">
+                  <div class="dummy-formField justify-evenly max-w-24">
+                    <span class="text-md mandatory">Buy</span>
+                    <input type="radio" id="RFQHealthTopUpPlanBuy" name="RFQHealthTopUpPlanBuy"
+                      [disabled]="mode=='view'" [checked]="item.value.Buy == true"
+                      (click)="SelectHealthTopUpQNDocumentsBuy(i)">
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div *ngIf="HealthTopUpQNDocuments.controls?.length > 0" class="mt-7 flex justify-end">
+
+              <div class="relative min-w-36 max-w-56">
+                <div class="icon rs">₹</div>
+                <input type="text" class="peer" id="GrossPremium" placeholder=" " readonly
+                  value="{{TotalGrossPremium| indCurrencyWithoutSymbol}}">
+                <label for="GrossPremium" class="">Gross Premium</label>
+              </div>
+
+            </div>
+
+
+            <div class="flex flex-wrap gap-3 mt-4" [formGroup]="QuotationSelectionForm">
+
+              <!-- Additional Information -->
+              <div class="relative min-w-48 max-w-72 w-screen"
+                [matTooltip]="QuotationSelectionForm.get('Additionalinformation').value">
+                <div class="icon">
+                  <mat-icon>border_color</mat-icon>
+                </div>
+                <input type="text" class="peer" id="AdditionalInformation" placeholder=" "
+                  formControlName="Additionalinformation" />
+                <label for="AdditionalInformation">Additional Information</label>
+              </div>
+
+              <!-- Reason (For Send Back/Reject) -->
+              <div class="relative col-span-2 min-w-48 max-w-120 w-screen ">
+                <div class="icon">
+                  <mat-icon>bubble_chart</mat-icon>
+                </div>
+                <input matInput type="text" placeholder=" " id="Remarks" class="peer" required
+                  formControlName="SendBackRejectDesc" />
+                <label for="Remarks" class="mandatory">Reason (For Send Back/Reject)</label>
+              </div>
+
+              <div class="relative col-span-2">
+                <button class="bg-royal text-white mx-3" mat-button (click)="SendBackQNForm()">
+                  Send Back
+                </button>
+              </div>
+
+            </div>
+
+
+          </div>
+        </form>
+        <div class="px-4 mt-4" *ngIf="!isExpand">
+          <button class="bg-royal text-white" mat-button matStepperPrevious>
+            Back
+          </button>
+          <button class="bg-royal text-white mx-3" mat-button matStepperNext (click)="QuotationSelectionError()">
+            Next
+          </button>
+        </div>
+      </mat-step>
+
+      <!-- Third stepper -->
+      <mat-step label="Product Category Details" [stepControl]="ProductCategoryDetailsValidation()">
+        <form [formGroup]="QuotationSelectionForm">
+          <div class="px-4  min-w-full rounded bg-white">
+
+            <div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-5 mt-4">
+
+              <!-- Sum Insured(Mediclaim) -->
+              <div class="relative "
+                *ngIf="QuotationSelectionForm.get('CategoryType').value != HealthCategoryType.MultiIndividual">
+                <div class="icon rs">₹</div>
+                <select class="" name="" id="" formControlName="SumInsured">
+                  <option disabled *ngFor="let sum of DropdownMaster.RFQSumInsuredButtonOptions" [value]="sum.value">
+                    {{sum.name}} </option>
+                </select>
+                <label for="SumInsured"
+                  *ngIf="QuotationSelectionForm.get('SubCategoryCode').value != SubCategoryCodeEnum.MediclaimTopUpPlan">Sum
+                  Insured</label>
+                <label for="SumInsured"
+                  *ngIf="QuotationSelectionForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan">Sum
+                  Insured(Mediclaim)</label>
+              </div>
+
+              <!-- Sum Insured(TopUp) -->
+              <div class="relative "
+                *ngIf="QuotationSelectionForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan && QuotationSelectionForm.get('CategoryType').value != HealthCategoryType.MultiIndividual">
+                <div class="icon rs">₹</div>
+                <select class="" name="OtherSumInsured" id="OtherSumInsured" formControlName="OtherSumInsured">
+                  <option value=0>--Select--</option>
+                  <option disabled *ngFor="let sum of DropdownMaster.RFQSumInsuredButtonOptions" [value]="sum.value">
+                    {{sum.name}} </option>
+                </select>
+                <label for="OtherSumInsured">Sum Insured(Top-Up)</label>
+              </div>
+
+              <!-- Deductible -->
+              <div class="relative"
+                *ngIf="(QuotationSelectionForm.get('SubCategoryCode').value == SubCategoryCodeEnum.TopUpPlan || QuotationSelectionForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan) && QuotationSelectionForm.get('CategoryType').value != HealthCategoryType.MultiIndividual">
+                <div class="icon rs">₹</div>
+                <input matInput maxlength="7" type="text" id="Deductible" formControlName="Deductible" readonly
+                  placeholder=" " class="peer" required />
+                <label for="Deductible">Deductible</label>
+              </div>
+
+            </div>
+
+            <div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-5 mt-4">
+
+              <!-- PIN Code -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon>pin_drop</mat-icon>
+                </div>
+                <div class="flex">
+                  <input type="text" Onlynumber maxlength="6" class="peer" matInput readonly formControlName="Pincode"
+                    id="PinCode" placeholder=" " required />
+                  <label for="PinCode" class="mandatory">PIN Code</label>
+                </div>
+              </div>
+
+              <!-- Proposer Mobile No -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon class="-ml-2">smartphone</mat-icon>
+                </div>
+                <input matInput type="text" readonly id="ProposerMobileNo" formControlName="ProposerMobileNo" readonly
+                  placeholder=" " class="peer" required />
+                <label for="ProposerMobileNo" class="mandatory">Proposer Mobile No</label>
+              </div>
+
+              <!-- Proposer Mobile No -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon class="-ml-2">smartphone</mat-icon>
+                </div>
+                <input matInput type="text" readonly id="ProposerEmail" formControlName="ProposerEmail" readonly
+                  placeholder=" " class="peer" required />
+                <label for="ProposerEmail" class="mandatory">Email ID</label>
+              </div>
+
+            </div>
+
+            <p class="font-semibold text-base col-start-1 md:col-span-2 lg:col-span-3 pt-5">
+              Details of Proposed Insured & Family (If Applicable)
+            </p>
+            <br />
+            <h3>Select Proposer's Gender:</h3>
+            <br />
+
+            <mat-button-toggle-group #group="matButtonToggleGroup" disabled [value]="SelfGender" class="genderbtn">
+              <mat-button-toggle value="Male"> Male </mat-button-toggle>
+              <mat-button-toggle value="Female"> Female </mat-button-toggle>
+            </mat-button-toggle-group>
+            <h3 class="mandatory mt-4">Who would you like to insure?</h3>
+
+            <div class="flex flex-wrap">
+              <div class="w-full">
+                <div class="flex flex-wrap text-black">
+                  <div class="my-4 w-full lg:mt-3">
+                    <div class="grid md:grid-cols-6 grid-cols-2 xl:grid-cols-12 gap-x-4">
+                      <button *ngFor="let member of allMemberCard , let m = index"
+                        class="shadow-lg rounded-lg text-center mt-4"
+                        [ngClass]=" QuotationSelectionForm.get(member.cover).value == true ? 'bg-sky-300' : 'bg-gray-100'">
+                        <div class="rounded-full w-fit py-2 px-5 mx-auto" [ngClass]="m==0 ?'self':''">
+                          <div>
+                            <img src="{{member.member}}" alt="member.title" />
+                          </div>
+                        </div>
+                        <p *ngIf="member.title=='Son' || member.title=='Daughter'"
+                          class="text-sm mt-2 pb-4 font-semibold">
+                          <span *ngIf="QuotationSelectionForm.get(member.cover).value == true" class="font-bold">
+                            {{ QuotationSelectionForm.get("noOf"+member.title).value }}
+                          </span>
+                          {{member.title}}<span *ngIf="QuotationSelectionForm.get('noOf'+member.title).value > 1"
+                            class="font-bold">s</span>
+                        </p>
+                        <p *ngIf="member.title!='Son' && member.title!='Daughter'"
+                          class="text-sm mt-2 pb-4 font-semibold">
+                          {{member.title}} <span *ngIf="member.title=='Self'" class="font-bold">
+                            <br> (Proposer)</span>
+                        </p>
+                      </button>
+                    </div>
+                    <div class="grid sm:grid-cols-1 md:grid-cols-2">
+                      <div
+                        class="grid grid-rows-1 grid-cols-1 md:grid-rows-1 md:grid-cols-2 md:col-span-2 xl:col-span-1 sm:grid-rows-2 sm:grid-cols-1">
+                        <div class="shadow-lg rounded-lg text-center mt-4 py-4"
+                          *ngIf="QuotationSelectionForm.controls['DaughterCoverRequired'].value == true">
+                          <!-- noOfDaughter -->
+                          <div>Number of Daughters to Insure</div>
+                          <div>
+                            <div class="flex justify-evenly px-2 mt-2">
+                              <div class="px-2">
+                                <input type="radio" [checked]="QuotationSelectionForm.get('noOfDaughter').value == 1"
+                                  name="noOfDaughter" value="1" disabled />
+                                <span for="" class="ml-2 font-bold">1</span>
+                              </div>
+                              <div class="px-2">
+                                <input type="radio" [checked]="QuotationSelectionForm.get('noOfDaughter').value == 2"
+                                  name="noOfDaughter" value="2" disabled />
+                                <span for="" class="ml-2 font-bold">2</span>
+                              </div>
+                              <div class="px-2">
+                                <input type="radio" [checked]="QuotationSelectionForm.get('noOfDaughter').value == 3"
+                                  name="noOfDaughter" value="3" disabled />
+                                <span for="" class="ml-2 font-bold">3</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="shadow-lg rounded-lg text-center mt-4 py-4"
+                          *ngIf="QuotationSelectionForm.controls['SonCoverRequired'].value == true">
+                          <!-- noOfSon -->
+                          <div>Number of Sons to Insure</div>
+                          <div>
+                            <div class="flex justify-evenly px-2 mt-2">
+                              <div class="px-2">
+                                <input type="radio" [checked]="QuotationSelectionForm.get('noOfSon').value == 1"
+                                  name="noOfSon" value="1" disabled />
+                                <span for="" class="ml-2">1</span>
+                              </div>
+                              <div class="px-2">
+                                <input type="radio" [checked]="QuotationSelectionForm.get('noOfSon').value == 2"
+                                  name="noOfSon" value="2" disabled />
+                                <span for="" class="ml-2">2</span>
+                              </div>
+                              <div class="px-2">
+                                <input type="radio" [checked]="QuotationSelectionForm.get('noOfSon').value == 3"
+                                  name="noOfSon" value="3" disabled />
+                                <span for="" class="ml-2">3</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="px-4 py-5 rounded">
+              <div formArrayName="Members" class="text-md">
+                <div *ngFor="let item of myMembers , let i = index" class="tablecontent mat-expansion-panel-body">
+                  <!-- myMember Array -->
+                  <div [formGroupName]="i" class="md:grid grid-cols-[minmax(50px,90px)_minmax(300px,1fr)] gap-9 py-2">
+
+                    <div class="self-center col-start-1">
+                      <div class="w-fit h-fit">
+                        <img src="{{item.member}}" alt="" />
+                        <p class="text-center">{{item.title}}</p>
+                      </div>
+                    </div>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 self-center py-2">
+
+                      <!-- Name -->
+                      <div class="relative">
+                        <div class="icon">
+                          <mat-icon>person</mat-icon>
+                        </div>
+                        <input type="text" class="peer" id="Name{{i}}" formControlName="Name" AlphabetOnly
+                          placeholder=" " readonly />
+                        <label for="Name{{i}} " class="mandatory">Name</label>
+                      </div>
+
+                      <!-- Date Of Birth -->
+                      <div class="relative ">
+                        <div class="icon ">
+                          <mat-datepicker-toggle class="-ml-2 pointer-events-none" matIconSuffix
+                            [for]="icker"></mat-datepicker-toggle>
+                          <mat-datepicker #icker></mat-datepicker>
+                        </div>
+                        <div class="flex">
+                          <input matInput type="text" id="dob{{i}}" formControlName="DOB" [max]="maxBirthDate" readonly
+                            placeholder="__/__/____" datemask [matDatepicker]="icker" class="peer mb-1" />
+                          <label for="dob{{i}}" class="mandatory">Date Of Birth</label>
+                        </div>
+                      </div>
+
+                      <!-- Habit of Smoking/Tobacco? -->
+                      <div class=" min-w-52">
+                        <span
+                          class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                          for="">Habit of Smoking/Tobacco?</span>
+                        <div class="grid grid-cols-4 w-full gap-5">
+                          <div class="lableInputbox">
+                            <input type="radio" id="TobaccoYes{{i}}" disabled
+                              [checked]=" PolicyPersonsArray.at(i).get('SmokerTibco').value == true" [value]="true" />
+                            <label for="TobaccoYes{{i}}">Yes</label>
+                          </div>
+                          <div class="lableInputbox">
+                            <input type="radio" id="TobaccoNo{{i}}" disabled
+                              [checked]="PolicyPersonsArray.at(i).get('SmokerTibco').value == false" [value]="false" />
+                            <label for="TobaccoNo{{i}}">No</label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Any Existing Illness? -->
+                      <div class=" min-w-52">
+                        <span
+                          class="dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 z-10"
+                          for="">Any Existing Illness?</span>
+                        <div class="grid grid-cols-4 w-full gap-5">
+                          <div class="lableInputbox">
+                            <input type="radio" [value]="true" disabled
+                              [checked]="PolicyPersonsArray.at(i).get('ExistingIllness').value == true"
+                              id="ExistingIllnessYes{{i}}" />
+                            <label for="ExistingIllnessYes{{i}}">Yes</label>
+                          </div>
+                          <div class="lableInputbox">
+                            <input type="radio" id="ExistingIllnessNo{{i}}" disabled
+                              [checked]="PolicyPersonsArray.at(i).get('ExistingIllness').value == false"
+                              [value]="false" />
+                            <label for="ExistingIllnessNo{{i}}">No</label>
+                          </div>
+                          <div>
+                            <button *ngIf="PolicyPersonsArray.at(i).get('ExistingIllness').value == true">
+                              <button [disabled]="PolicyPersonsArray.at(i).get('ExistingIllness').value == false"
+                                (click)="openDiolog(i, 'ExistingIllnessDetail', item.title+' Existing Illness Detail')">
+                                <mat-icon>fact_check</mat-icon>
+                              </button>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Sum Insured -->
+                      <div class="relative  "
+                        *ngIf="QuotationSelectionForm.get('CategoryType').value == HealthCategoryType.MultiIndividual">
+                        <div class="icon rs">₹</div>
+                        <select class="" name="" id="" formControlName="SumInsured">
+                          <option disabled *ngFor="let sum of DropdownMaster.RFQSumInsuredButtonOptions"
+                            [value]="sum.value"> {{sum.name}} </option>
+                        </select>
+                        <label
+                          *ngIf="QuotationSelectionForm.get('SubCategoryCode').value != SubCategoryCodeEnum.MediclaimTopUpPlan"
+                          for="SumInsured" class="mandatory">Sum Insured</label>
+                        <label
+                          *ngIf="QuotationSelectionForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan"
+                          for="SumInsured" class="mandatory">Sum Insured(Mediclaim)</label>
+                      </div>
+
+                      <!-- Sum Insured(Top-Up) -->
+                      <div class="relative  "
+                        *ngIf="QuotationSelectionForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan && QuotationSelectionForm.get('CategoryType').value == HealthCategoryType.MultiIndividual">
+                        <div class="icon rs">₹</div>
+                        <select class="" name="" id="" formControlName="OtherSumInsured">
+                          <option disabled *ngFor="let sum of DropdownMaster.RFQSumInsuredButtonOptions"
+                            [value]="sum.value"> {{sum.name}} </option>
+                        </select>
+                        <label for="OtherSumInsured" class="mandatory">Sum
+                          Insured(Top-Up)</label>
+                      </div>
+
+                      <!-- Deductable(TopUp) -->
+                      <div class="relative "
+                        *ngIf="(QuotationSelectionForm.get('SubCategoryCode').value == SubCategoryCodeEnum.TopUpPlan || QuotationSelectionForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MediclaimTopUpPlan) && QuotationSelectionForm.get('CategoryType').value == HealthCategoryType.MultiIndividual">
+                        <div class="icon rs">₹</div>
+                        <input matInput maxlength="10" type="text" id="Deductible" Onlynumber
+                          formControlName="Deductible" placeholder=" " class="peer" required />
+                        <label for="Deductible">Deductible</label>
+                      </div>
+
+                      <!-- Remarks -->
+                      <div class="relative ">
+                        <div class="icon">
+                          <mat-icon>bubble_chart</mat-icon>
+                        </div>
+                        <input matInput type="text" placeholder=" " id="Remarks" formControlName="Remark"
+                          class="peer w-fit pad" readonly required />
+                        <label for="Remarks"
+                          [ngClass]="PolicyPersonsArray.at(i).get('ExistingIllness').value == true ? 'mandatory' : ''">Remarks</label>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="grid lg:grid-cols-4 grid-cols-2 mt-4 ">
+
+              <div class="relative">
+                <p class="font-semibold text-base">
+                  Details of Proposed Insured & Family (If Applicable)
+                </p>
+              </div>
+
+              <div class="relative">
+                <span class="mr-2">
+                  <button class="bg-royal text-white mx-3" mat-button 
+                    [disabled]="mode=='view'">
+                    <mat-icon class="text-white">share</mat-icon>
+                    Share
+                  </button>
+                </span>
+              </div>
+
+            </div>
+
+            <div class="grid grid-cols-[minmax(207px,300px)_minmax(200px,1fr)_1fr_1fr] gap-5 mt-4">
+
+              <div>
+                <div class="grid grid-flow-row auto-rows-max gap-y-5 ">
+                  <span class="headingColor">Details</span>
+                  <div *ngFor="let item of detailsFieldsList" class="flex items-center h-[42.4px] ">
+                    <span class="font-semibold" [ngClass]="item.require ? 'mandatory' : '' ">{{item.question}} </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-span-3 overflow-x-auto " formArrayName="Members">
+                <div class="grid grid-flow-col md:auto-cols-max gap-5  overflow-y-auto last:pr-4">
+                  <div *ngFor="let item of inf.controls; let i = index;" class="space-y-5">
+                    <span class="headingColor">{{inf.controls[i].value.Relation == "Self" ? "Proposer" : "Member "+ (i +
+                      1)}}</span>
+                    <div class="grid gap-5 grid-flow-row auto-rows-max" [formGroupName]="i">
+
+                      <!-- Name -->
+                      <div class="relative ">
+                        <div class="icon">
+                          <mat-icon>person</mat-icon>
+                        </div>
+                        <input type="text" class="peer" AlphabetOnly placeholder=" " formControlName="Name"
+                          onfocus="this.select()" maxlength="100" />
+                      </div>
+
+                      <!-- Sum Insured -->
+                      <!-- <div class="relative " *ngIf="QuotationSelectionForm.get('CategoryType').value == HealthCategoryType.MultiIndividual">
+                        <div class="icon">
+                          <mat-icon>person</mat-icon>
+                        </div>
+                        <input type="text" class="peer"  placeholder=" " formControlName="SumInsured" />
+                      </div> -->
+
+                      <!-- Do you Smoke/Drink/Chew Tobacco? -->
+                      <div class="relative">
+                        <div class="icon">
+                          <mat-icon>smoking_rooms</mat-icon>
+                        </div>
+                        <select class="peer min-w-36" formControlName="SmokerTibco">
+                          <option value="">Select</option>
+                          <option class="example-radio-button" *ngFor="let option of DropdownMaster.YesNoOptions"
+                            [value]="option.name">
+                            {{ option.value }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <!-- Are you currently taking any medications or have you taken any in the past? -->
+                      <div class="relative">
+                        <div class="icon">
+                          <mat-icon>medical_services</mat-icon>
+                        </div>
+                        <select class="peer min-w-36" formControlName="TakingMedicine">
+                          <option value="">Select</option>
+                          <option class="example-radio-button" *ngFor="let option of DropdownMaster.YesNoOptions"
+                            [value]="option.name">
+                            {{ option.value }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <!-- Medicine name,If any being taken -->
+                      <div class="relative "
+                        [ngClass]="(item.get('TakingMedicine').value != 'true' && item.get('TakingMedicine').value != true) ? 'readOnly-disble' : ''">
+                        <div class="icon">
+                          <mat-icon>local_hospital</mat-icon>
+                        </div>
+                        <input type="text" class="peer" maxlength="50" placeholder=" " onfocus="this.select()"
+                          [readOnly]="(item.get('TakingMedicine').value != 'true' && item.get('TakingMedicine').value != true)"
+                          formControlName="RunningMedicineName" />
+                      </div>
+
+                      <!-- No. of years for which medicine is taken -->
+                      <div class="relative"
+                        [ngClass]="(item.get('TakingMedicine').value != 'true' && item.get('TakingMedicine').value != true) ? 'readOnly-disble' : ''">
+                        <div class="icon">
+                          <mat-icon>local_offer</mat-icon>
+                        </div>
+                        <input type="text" placeholder=" " class="peer" onfocus="this.select()"
+                          [readOnly]="(item.get('TakingMedicine').value != 'true' && item.get('TakingMedicine').value != true)"
+                          formControlName="MedicineRunningYears">
+                      </div>
+
+                      <!-- Undergone any surgery (or) any treatment taken till date? -->
+                      <div class="relative" formGroupName="ExistingIllnessDetail">
+                        <div class="icon">
+                          <mat-icon>local_hospital</mat-icon>
+                        </div>
+                        <select class="peer min-w-36" formControlName="Anysurgery">
+                          <option value="">Select</option>
+                          <option class="example-radio-button" *ngFor="let option of DropdownMaster.YesNoOptions"
+                            [value]="option.name">
+                            {{ option.value }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <!-- If Yes, then provide details of treatment taken. -->
+                      <div class="relative" formGroupName="ExistingIllnessDetail"
+                        [ngClass]="(item.get('ExistingIllnessDetail.Anysurgery').value != 'true' && item.get('ExistingIllnessDetail.Anysurgery').value != true) ? 'readOnly-disble' : ''">
+                        <div class="icon">
+                          <mat-icon>local_offer</mat-icon>
+                        </div>
+                        <input type="text" [readOnly]="item.get('ExistingIllnessDetail.Anysurgery').value != 'true'"
+                          onfocus="this.select()" formControlName="SurgeryDescription" placeholder=" " class="peer">
+                      </div>
+
+                      <!-- Height(cm) -->
+
+                      <div class="flex gap-2 max-w-72">
+
+                        <div class="relative">
+                          <div class="icon">
+                            <mat-icon>F</mat-icon>
+                          </div>
+                          <input type="text" id="Feet" maxlength="30" placeholder=" " class="peer"
+                            onfocus="this.select()" formControlName="HeightFeetInch">
+                          <label for="Feet" class="mandatory">Feet/Inch</label>
+                        </div>
+
+                        <div class="relative">
+                          <div class="icon">
+                            <mat-icon>C</mat-icon>
+                          </div>
+                          <input type="text" id="CM" maxlength="30" placeholder=" " class="peer" onfocus="this.select()"
+                            formControlName="HeightCM">
+                          <label for="CM" class="mandatory">CM</label>
+                        </div>
+                      </div>
+
+
+                      <!-- Weight -->
+
+                      <div class="relative">
+                        <div class="icon">
+                          <mat-icon>W</mat-icon>
+                        </div>
+                        <input type="text" Onlynumber maxlength="3" placeholder=" " class="peer" onfocus="this.select()"
+                          formControlName="Weight">
+                      </div>
+
+                      <!-- Marital Status -->
+
+                      <div class="relative">
+                        <div class="icon">
+                          <mat-icon>wc</mat-icon>
+                        </div>
+                        <select class="peer min-w-36" formControlName="Marital">
+                          <option value="">Select</option>
+                          <option class="example-radio-button"
+                            *ngFor="let option of DropdownMaster.HealthMaritalOptions" [value]="option.value">{{
+                            option.name }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <!-- Occupation -->
+                      <div class="relative">
+                        <div class="icon">
+                          <mat-icon>work</mat-icon>
+                        </div>
+                        <input type="text" placeholder=" " class="peer" formControlName="Occupation" maxlength="30"
+                          onfocus="this.select()">
+                      </div>
+
+                      <!-- Nominee Details -->
+                      <ng-container formArrayName="NomineeDetails">
+                        <ng-container *ngFor="let doc of nominees(i).controls; let j = index;" [formGroupName]="j">
+
+                          <!-- Nominee Name -->
+                          <div class="relative ">
+                            <div class="icon">
+                              <mat-icon>person</mat-icon>
+                            </div>
+                            <input type="text" class="peer" AlphabetOnly placeholder=" " formControlName="Name"
+                              onfocus="this.select()" maxlength="100" />
+                          </div>
+
+                          <!-- DOB of Nominee -->
+                          <div class="relative h-[50px]">
+                            <div class="icon">
+                              <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="icker"></mat-datepicker-toggle>
+                              <mat-datepicker #icker></mat-datepicker>
+                            </div>
+                            <div class="flex">
+                              <input matInput type="text" id="dob" [max]="maxBirthDate" placeholder="__/__/____"
+                                datemask [matDatepicker]="icker" formControlName="DOB" />
+                            </div>
+                          </div>
+
+                          <!-- Relation of Nominee with Proposer -->
+                          <div class="relative">
+                            <div class="icon">
+                              <mat-icon>people</mat-icon>
+                            </div>
+                            <select class="peer min-w-36" formControlName="Relation">
+                              <option value="">Select</option>
+                              <option class="example-radio-button"
+                                *ngFor="let option of DropdownMaster.HealthPersonNomineeRelationOptions"
+                                [value]="option.name">
+                                {{ option.value }}
+                              </option>
+
+                            </select>
+                          </div>
+
+                        </ng-container>
+                      </ng-container>
+
+                      <!-- Was Health insurance taken in Previous year? -->
+                      <!-- <div class="relative">
+                        <div class="icon">
+                          <mat-icon>timelapse</mat-icon>
+                        </div>
+                        <select class="peer min-w-36" formControlName="PrevPolicy">
+                          <option value="">Select</option>
+                          <option class="example-radio-button" *ngFor="let option of DropdownMaster.YesNoOptions"
+                            [value]="option.name">
+                            {{ option.value }}
+                          </option>
+                        </select>
+                      </div> -->
+
+                      <!-- If yes, Then Last 1 Years Policy Details -->
+                      <!-- <div class="relative ">
+                        <div class="icon">
+                          <mat-icon>filter_1</mat-icon>
+                        </div>
+                        <input type="text" class="peer" [readOnly]="item.get('PrevPolicy').value != 'true'"
+                          onfocus="this.select()" placeholder=" " formControlName="PrevPolicy1yearDescription"
+                          maxlength="500" />
+                      </div> -->
+
+                      <!-- If yes, Then Last 2 Years Policy Details -->
+                      <!-- <div class="relative ">
+                        <div class="icon">
+                          <mat-icon>filter_2</mat-icon>
+                        </div>
+                        <input type="text" class="peer" placeholder=" "
+                          [readOnly]="item.get('PrevPolicy').value != 'true'" onfocus="this.select()"
+                          formControlName="PrevPolicy2yearDescription" maxlength="500" />
+                      </div> -->
+
+
+                      <!-- If yes, Then Last 3 Years Policy Details -->
+                      <!-- <div class="relative ">
+                        <div class="icon">
+                          <mat-icon>filter_3</mat-icon>
+                        </div>
+                        <input type="text" class="peer" placeholder=" " onfocus="this.select()"
+                          [readOnly]="item.get('PrevPolicy').value != 'true'"
+                          formControlName="PrevPolicy3yearDescription" maxlength="500" />
+                      </div> -->
+
+
+                      <!-- Any Health Insurance Claim Made? -->
+                      <!-- <div class="relative">
+                        <div class="icon">
+                          <mat-icon>local_pharmacy</mat-icon>
+                        </div>
+                        <select class="peer min-w-36" formControlName="ClaimMade">
+                          <option value="">Select</option>
+                          <option class="example-radio-button" *ngFor="let option of DropdownMaster.YesNoOptions"
+                            [value]="option.name">
+                            {{ option.value }}
+                          </option>
+                        </select>
+                      </div> -->
+
+                      <!-- Claim Deatils, If any -->
+                      <!-- <div class="relative ">
+                        <div class="icon">
+                          <mat-icon>rate_review</mat-icon>
+                        </div>
+                        <input type="text" class="peer" placeholder=" " onfocus="this.select()"
+                          [readOnly]="item.get('ClaimMade').value != 'true'" formControlName="ClaimMadeDescription"
+                          maxlength="500" />
+                      </div> -->
+
+                      <!-- Affected by Corona anytime? -->
+                      <div class="relative" formGroupName="ExistingIllnessDetail">
+                        <div class="icon">
+                          <mat-icon>streetview</mat-icon>
+                        </div>
+                        <select class="peer min-w-36" formControlName="AffectedByCorona">
+                          <option value="">Select</option>
+                          <option class="example-radio-button" *ngFor="let option of DropdownMaster.YesNoOptions"
+                            [value]="option.name">
+                            {{ option.value }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <!-- If yes ,then year in which affected -->
+                      <div class="relative " formGroupName="ExistingIllnessDetail"
+                        [ngClass]="(item.get('ExistingIllnessDetail.AffectedByCorona').value != 'true' && item.get('ExistingIllnessDetail.AffectedByCorona').value != true) ? 'readOnly-disble' : ''">
+                        <div class="icon">
+                          <mat-icon>rate_review</mat-icon>
+                        </div>
+                        <input type="text" class="peer"
+                          [readOnly]="item.get('ExistingIllnessDetail.AffectedByCorona').value != 'true'"
+                          onfocus="this.select()" placeholder=" " formControlName="AffectedByCoronaDesc"
+                          maxlength="500" />
+                      </div>
+
+
+
+                      <!-- Have you ever been hospitalized before? -->
+                      <div class="relative">
+                        <div class="icon">
+                          <mat-icon>medication_liquid</mat-icon>
+                        </div>
+                        <select class="peer min-w-36" formControlName="HospitalisedBefore">
+                          <option value="">Select</option>
+                          <option *ngFor="let option of DropdownMaster.YesNoOptions" [value]="option.name">
+                            {{ option.value }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <!-- If Yes, Date or Year of hospitalized -->
+                      <div class="relative h-[50px]"
+                        [ngClass]="(item.get('HospitalisedBefore').value != 'true' && item.get('HospitalisedBefore').value != true) ? 'readOnly-disble' : ''">
+                        <div class="icon">
+                          <mat-datepicker-toggle class="-ml-2"
+                            [ngClass]="item.get('HospitalisedBefore').value != 'true' ? 'pointer-events-none' : ''"
+                            matIconSuffix [for]="HospitalisedYear"></mat-datepicker-toggle>
+                          <mat-datepicker #HospitalisedYear></mat-datepicker>
+                        </div>
+                        <div class="flex">
+                          <input type="text" id="HospitalisedYear" [max]="maxBirthDate" placeholder="__/__/____"
+                            datemask [matDatepicker]="HospitalisedYear"
+                            [readOnly]="item.get('HospitalisedBefore').value != 'true'"
+                            formControlName="HospitalisedYear" />
+                        </div>
+                      </div>
+
+                      <!-- Which treatment taken during hospitalization? -->
+                      <div class="relative "
+                        [ngClass]="item.get('HospitalisedBefore').value != 'true' ? 'readOnly-disble' : ''">
+                        <div class="icon">
+                          <mat-icon>vaccines</mat-icon>
+                        </div>
+                        <input type="text" class="peer" placeholder=" "
+                          [readOnly]="item.get('HospitalisedBefore').value != 'true'"
+                          formControlName="TakenTreatment" />
+                      </div>
+
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+            <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5  mt-4">
+            </div>
+
+          </div>
+
+          <div>
+            <div class="flex gap-2 items-center">
+              <div class=" my-1">
+                <span class="mandatory">Have you taken any claim in the last 3 year?</span>
+                =>
+                <span class="font-bold">
+                  {{displayValuesOfForm.AnyClaiminLast3Year ? 'Yes' : 'No'}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4 gap-x-9" formArrayName="PrevPolicyDetail"
+            *ngIf="displayValuesOfForm.AnyClaiminLast3Year">
+            <div class="space-y-4 mt-2" *ngFor="let item of PrevPolicyDetail.controls;let j = index">
+              <div class="grid relative lg:grid-cols-4 md:grid-cols-2  gap-4 border rounded-lg p-5" [formGroupName]="j">
+
+
+                <div *ngIf="PrevPolicyDetail.controls.length > 1"
+                  class="absolute -right-2 -top-3 cursor-pointer flex justify-center items-center p-0.5 rounded-md bg-royal"
+                  (click)="removePreviouspolicyDetails(j)">
+                  <mat-icon class=" text-white hover:text-red-500">delete</mat-icon>
+                </div>
+
+                <!--  Financial Year -->
+                <div class="relative ">
+                  <div class="icon">
+                    <mat-icon>event</mat-icon>
+                  </div>
+                  <select class="peer" id="FinancialYear" formControlName="FinancialYearId">
+                    <option value="">--Select--</option>
+                    <option *ngFor="let option of FinancialYearList" [value]="option.Id">
+                      {{option.FYCode}}</option>
+                  </select>
+
+                  <label for="FinancialYear" class="mandatory">Financial Year</label>
+                </div>
+
+                <!-- MemberName -->
+                <div class="relative">
+                  <div class="icon">
+                    <mat-icon>person</mat-icon>
+                  </div>
+                  <input matInput type="text" id="MemberName" placeholder=" " class="peer"
+                    formControlName="MemberName" />
+                  <label for="MemberName" class="mandatory">Member Name</label>
+                </div>
+
+                <!-- Reason of Claim -->
+                <div class="relative">
+                  <div class="icon">
+                    <mat-icon>bubble_chart</mat-icon>
+                  </div>
+                  <input matInput type="text" id="ReasonOfClaim" placeholder=" " class="peer"
+                    formControlName="ReasonOfClaim" />
+                  <label for="ReasonOfClaim" class="mandatory">Reason of Claim</label>
+                </div>
+
+                <!--  Status -->
+                <div class="relative">
+                  <div class="icon">
+                    <mat-icon>quiz</mat-icon>
+                  </div>
+
+                  <select id="Status" formControlName="Status">
+                    <option value="">--Select--</option>
+                    <option *ngFor="let item of PrevPolicyCliamStatus" value="{{item.value}}">
+                      {{item.name}}
+                    </option>
+                  </select>
+                  <label for="Status" class="mandatory">Status</label>
+                </div>
+
+                <!-- Claim Approved Amount -->
+                <div class="relative">
+                  <div class="icon rs">₹</div>
+                  <input matInput type="text" id="ClaimApprovalAmount" placeholder=" " class="peer"
+                    formControlName="ClaimApprovalAmount" Decimal onfocus="this.select()" maxlength="12" />
+                  <label for="ClaimApprovalAmount" class="mandatory  text-xs">Claim Approved Amount</label>
+                </div>
+
+                <!-- Premium Amount -->
+                <div class="relative">
+                  <div class="icon rs">₹</div>
+                  <input matInput type="text" id="Premium" placeholder=" " class="peer" formControlName="Premium"
+                    Decimal onfocus="this.select()" maxlength="12" />
+                  <label for="Premium" class="text-xs">Premium Amount</label>
+                </div>
+
+
+
+              </div>
+            </div>
+          </div>
+
+          <div class="flex mt-2 justify-end items-center h-full gap-5" *ngIf="displayValuesOfForm.AnyClaiminLast3Year">
+            <button class="bg-royal text-white" mat-button (click)="AddExistingPolicyDetails()">
+              + Add
+            </button>
+          </div>
+
+        </form>
+
+        <div class="px-4" *ngIf="!isExpand">
+          <button class="bg-royal text-white" mat-button matStepperPrevious>
+            Back
+          </button>
+          <button class="bg-royal text-white mx-3" mat-button matStepperNext (click)="ProductCategoryDetailsError()">
+            Next
+          </button>
+        </div>
+      </mat-step>
+
+      <!-- Fourth stepper -->
+      <mat-step label="KYC Details" [stepControl]="KYCDetailsValidation()">
+        <form [formGroup]="QuotationSelectionForm">
+          <div class="px-4 py-7 min-w-full rounded bg-white">
+
+            <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mt-4">
+
+              <div class="relative min-w-44">
+                <div class="icon">
+                  <mat-icon>credit_card</mat-icon>
+                </div>
+                <input type="text" id="DocumentNo" placeholder=" " onfocus="this.select()" class="peer"
+                  [maxlength]="'10'" formControlName="PANNo">
+                <label for="DocumentNo" class="mandatory">PAN</label>
+              </div>
+
+              <!-- Attach PAN Card -->
+              <div class="relative min-w-36">
+                <mat-icon *ngIf="QuotationSelectionForm.value.PANDetails.FileName && mode!='view'"
+                  (click)="removeKycDoc('PAN')"
+                  class="absolute -right-2 -top-3 text-red-500 cursor-pointer z-10">cancel</mat-icon>
+                <div class="dummy-formField justify-start">
+                  <div class="icon">
+                    <mat-icon>attach_file</mat-icon>
+                  </div>
+                  <input type="file" class="hidden" accept=".pdf" #PANAttachDocument
+                    (change)="SelectKycDoc($event,'PAN')">
+                  <p class="text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                    [ngClass]="mode!='view' ? 'cursor-pointer text-primary-500 hover:text-primary-500' : 'pointer-events-none' "
+                    matTooltip="{{QuotationSelectionForm.value.PANDetails.FileName}}"
+                    (click)="PANAttachDocument.click()">
+                    {{QuotationSelectionForm.value.PANDetails.FileName || 'Choose File' | excerpt:'max' }}</p>
+                  <label for="AttachDocument" class="">Attach PAN Card</label>
+                  <div class="flex justify-end absolute right-2 bg-white" matTooltip="View Document"
+                    *ngIf="QuotationSelectionForm.value.PANDetails.FileName">
+                    <mat-icon (click)="ViewDocument(QuotationSelectionForm.value.PANDetails?.StorageFilePath)"
+                      class="cursor-pointer">visibility</mat-icon>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Aadhar -->
+              <div class="relative col-start-1">
+                <div class="icon">
+                  <mat-icon>credit_card</mat-icon>
+                </div>
+                <input type="text" id="DocumentNo" placeholder=" " onfocus="this.select()" class="peer"
+                  [maxlength]="'12'" formControlName="AadharNo">
+
+                <label for="DocumentNo" class="mandatory">Aadhar</label>
+              </div>
+
+              <!-- Attach Aadhar Card -->
+              <div class="relative min-w-36">
+                <mat-icon *ngIf="QuotationSelectionForm.value.AadharDetails.FileName && mode!='view'"
+                  (click)="removeKycDoc('UID')"
+                  class="absolute -right-2 -top-3 text-red-500 cursor-pointer z-10">cancel</mat-icon>
+                <div class="dummy-formField justify-start">
+                  <div class="icon">
+                    <mat-icon>attach_file</mat-icon>
+                  </div>
+                  <input type="file" class="hidden" accept=".pdf" #UIDAttachDocument
+                    (change)="SelectKycDoc($event,'UID')">
+                  <p class="text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                    [ngClass]="mode!='view' ? 'cursor-pointer text-primary-500 hover:text-primary-500' : 'pointer-events-none' "
+                    matTooltip="{{QuotationSelectionForm.value.AadharDetails?.FileName}}"
+                    (click)="UIDAttachDocument.click()">
+                    {{QuotationSelectionForm.value.AadharDetails?.FileName || 'Choose File' | excerpt:'max' }}</p>
+                  <label for="AttachDocument" class="">Attach Aadhar Card</label>
+                  <div class="flex justify-end absolute right-2 bg-white" matTooltip="View Document"
+                    *ngIf="QuotationSelectionForm.value.AadharDetails?.FileName">
+                    <mat-icon (click)="ViewDocument(QuotationSelectionForm.value.AadharDetails?.StorageFilePath)"
+                      class="cursor-pointer">visibility</mat-icon>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="px-4" *ngIf="!isExpand">
+          <button class="bg-royal text-white" mat-button matStepperPrevious>
+            Back
+          </button>
+          <button class="bg-royal text-white mx-3" mat-button matStepperNext (click)="KYCDetailsError()">
+            Next
+          </button>
+        </div>
+
+      </mat-step>
+
+      <!-- Fifth stepper -->
+      <mat-step label="Payment Mode Details" [stepControl]="PaymentModeDetailsValidation()">
+        <form [formGroup]="QuotationSelectionForm">
+          <div class="px-4 py-5 min-w-full rounded bg-white">
+
+            <div class="grid grid-cols-3 gap-5 mt-4">
+              <div class="relative]">
+                <div class="flex gap-2 items-center">
+                  <input type="radio" class="peer" id="PaymentModeCompany" formControlName="PaymentMode"
+                    name="PaymentMode" [value]="'Online'" />
+                  <p class="pl-1 flex-shrink-0 font-medium" for="PaymentModeCompany">
+                    Online Payment to Insurance company
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid lg:grid-cols-[minmax(390px,390px)_minmax(200px,240px)]  gap-3 mt-4">
+
+              <div class="relative">
+                <div class="flex gap-2 items-center">
+                  <input type="radio" class="peer" id="PaymentMode" formControlName="PaymentMode" name="PaymentMode"
+                    [value]="'Cheque'" />
+                  <span class="pl-1 flex-shrink-0  font-medium" for="PaymentMode">
+                    A/C Payee cheque in the Name of Insurance Company
+                  </span>
+                </div>
+              </div>
+
+              <div class="relative w-80 "
+                *ngIf="QuotationSelectionForm.get('PaymentMode').value == 'Cheque' && canDisplayPaymentAccountName">
+                <div class="icon">
+                  <mat-icon>business</mat-icon>
+                </div>
+                <input type="text" formControlName="PaymentAccountName" class="peer" id="InsuranceCompanyFullName"
+                  onfocus="this.select()" name="InsuranceCompanyFullName" placeholder=" " maxlength="150" />
+                <label class="mandatory " for="InsuranceCompanyFullName">{{displayQNLabel}}-Insurance Company</label>
+              </div>
+
+
+              <div class="relative w-80 "
+                *ngIf="QuotationSelectionForm.get('PaymentMode').value == 'Cheque' && canDisplayTopUpPaymentAccountName">
+                <div class="icon">
+                  <mat-icon>business</mat-icon>
+                </div>
+                <input type="text" formControlName="TopUpPaymentAccountName" class="peer" id="TopUpPaymentAccountName"
+                  onfocus="this.select()" name="TopUpPaymentAccountName" placeholder=" " />
+                <label class="mandatory " for="TopUpPaymentAccountName">Top Up-Insurance Company</label>
+              </div>
+
+            </div>
+
+          </div>
+        </form>
+        <div class="px-4" *ngIf="!isExpand">
+          <button class="bg-royal text-white" mat-button matStepperPrevious>
+            Back
+          </button>
+          <button class="bg-royal text-white mx-3" mat-button matStepperNext (click)="PaymentModeDetailsError()">
+            Next
+          </button>
+        </div>
+      </mat-step>
+
+      <!-- Sixth stepper -->
+      <mat-step label="Team Details">
+        <form [formGroup]="QuotationSelectionForm">
+          <div class="px-4 py-5 min-w-full rounded bg-white">
+
+            <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-7 my-5">
+
+              <!-- Branch -->
+              <div class="relative min-w-36">
+                <div class="icon">
+                  <mat-icon>place</mat-icon>
+                </div>
+                <input matInput type="text" placeholder=" " formControlName="BranchName" readonly id="Branch"
+                  class="peer w-fit " />
+                <label for="Branch">Branch</label>
+              </div>
+
+              <!-- Police Type  -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon>group_work</mat-icon>
+                </div>
+
+                <select id="" id="SalesPersonType" formControlName="SalesPersonType">
+                  <option disabled value="">--Select--</option>
+                  <option disabled [value]="'Direct'">Direct</option>
+                  <option disabled [value]="'POSP'">POSP</option>
+                  <option disabled [value]="'Team Reference'">Team Reference</option>
+                </select>
+                <label for="SalesPersonType">Sales Person Type</label>
+              </div>
+
+              <!-- Sales Person -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon>person</mat-icon>
+                </div>
+                <input matInput type="text" placeholder=" " formControlName="SalesPersonName" readonly
+                  id="SalesPersonName" class="peer w-fit " />
+                <label for="SalesPersonName" class="mandatory">Sales Person</label>
+              </div>
+
+              <!--  Team Reference -->
+              <div class="relative " *ngIf="QuotationSelectionForm.get('SalesPersonType').value == 'Team Reference'">
+                <div class="icon">
+                  <mat-icon> person_pin</mat-icon>
+                </div>
+                <input type="text" class="peer " formControlName="TeamReferenceName" readonly placeholder=" "
+                  id="TeamReferenceName" />
+                <label for="TeamReferenceName">Team Reference</label>
+              </div>
+
+              <!--  BDO -->
+              <div class="relative ">
+                <div class="icon">
+                  <mat-icon>person_pin</mat-icon>
+                </div>
+                <input type="text" class="peer " formControlName="BDOName" readonly placeholder=" " id="BDOName" />
+                <label for="BDOName" class="mandatory ">BDO</label>
+              </div>
+
+              <!-- BDM -->
+              <div class="relative ">
+                <div class="icon">
+                  <mat-icon>person_pin</mat-icon>
+                </div>
+                <input type="text" class="peer " formControlName="BDMName" readonly placeholder=" " id="BDMName" />
+                <label for="BDMName" class="mandatory ">BDM</label>
+              </div>
+
+            </div>
+
+          </div>
+        </form>
+        <div class="px-4" *ngIf="!isExpand">
+          <button class="bg-royal text-white" mat-button matStepperPrevious>
+            Back
+          </button>
+          <button class="bg-royal text-white mx-3" mat-button matStepperNext>
+            Next
+          </button>
+        </div>
+      </mat-step>
+
+      <!-- Seventh stepper -->
+      <mat-step label="Previous Policy Details"
+        *ngIf="QuotationSelectionForm.get('PolicyType').value == HealthPolicyType.Rollover  || QuotationSelectionForm.get('PolicyType').value == 'Renewal-Change Company' || QuotationSelectionForm.get('PolicyType').value == 'Renewal-Same Company'">
+        <form [formGroup]="QuotationSelectionForm">
+
+          <div class="px-4 py-5 min-w-full rounded bg-white">
+            <div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-5 mt-4 pb-5 ">
+
+              <!-- Insurance Company -->
+              <div class="relative self-end min-w-36">
+                <div class="icon">
+                  <mat-icon>business</mat-icon>
+                </div>
+                <input type="text" id="PrevPolicyInsurCompShortName" readonly class="peer"
+                  formControlName="PrevPolicyInsurCompShortName" />
+                <label for="PrevPolicyInsurCompShortName">Insurance Company</label>
+              </div>
+
+              <!-- Policy Type -->
+              <div class="relative self-end min-w-36">
+                <div class="icon">
+                  <mat-icon>timelapse</mat-icon>
+                </div>
+                <select class="peer" id="PolicyType" formControlName="PrevPolicyType">
+                  <!-- <option value="">--Select--</option> -->
+                  <option *ngFor="let option of DropdownMaster.PolicyTypeRadioButtonOptions" disabled
+                    [value]="option.value">{{option.value}}</option>
+                </select>
+
+                <label for="PolicyType">Policy Type</label>
+              </div>
+
+              <!-- Policy StartDate -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-datepicker-toggle class="-ml-2 pointer-events-none" matIconSuffix
+                    [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </div>
+                <div class="flex">
+                  <input matInput type="text" id="PolicyStartDate" [max]="maxBirthDate" readonly
+                    placeholder="__/__/____" datemask [matDatepicker]="picker" class="peer"
+                    formControlName="PreviousPolicyStartDate" />
+                  <label for="PolicyStartDate">Policy StartDate</label>
+                </div>
+              </div>
+
+              <!-- Policy EndDate -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-datepicker-toggle class="-ml-2 pointer-events-none" matIconSuffix
+                    [for]="icker"></mat-datepicker-toggle>
+                  <mat-datepicker #icker></mat-datepicker>
+                </div>
+                <div class="flex">
+                  <input matInput type="text" id="PolicyEndDate" [max]="maxBirthDate" readonly placeholder="__/__/____"
+                    datemask [matDatepicker]="icker" class="peer" formControlName="PreviousPolicyEndDate" />
+                  <label for="PolicyEndDate">Policy EndDate</label>
+                </div>
+              </div>
+
+              <!-- Claim In Previous Year -->
+              <!-- <div class="min-w-36">
+                <span class="">Claim In Previous Year</span>
+                <div class="relative flex gap-9 mt-2">
+                  <div class="lableInputbox">
+                    <input type="radio" id="Yes" class="peer" disabled
+                      [checked]="QuotationSelectionForm.get('ClaimInPreviousYear').value == true"
+                      name="ClaimInPreviousYear" [value]="true" />
+                    <label class="pl-1 flex-shrink-0 font-normal" for="Yes">Yes</label>
+                  </div>
+                  <div class="lableInputbox">
+                    <input type="radio" id="No" class="peer" disabled
+                      [checked]="QuotationSelectionForm.get('ClaimInPreviousYear').value == false"
+                      name="ClaimInPreviousYear" [value]="false" />
+                    <label class="pl-1 flex-shrink-0 font-normal" for="No">No</label>
+                  </div>
+                </div>
+              </div> -->
+
+              <!-- Sum Insured -->
+              <div class="relative ">
+                <div class="icon rs">₹</div>
+                <input type="text" class="peer" readonly placeholder=" " id="PrevPolicySumInsured"
+                  formControlName="PrevPolicySumInsured" />
+                <label for="PrevPolicySumInsured" class="mandatory">Sum Insured</label>
+              </div>
+
+              <!-- Premioum Amount -->
+              <div class="relative ">
+                <div class="icon rs">₹</div>
+                <input type="text" class="peer" readonly placeholder=" " id="PreviousPolicyPremium"
+                  formControlName="PreviousPolicyPremium" />
+                <label for="PreviousPolicyPremium" class="mandatory">Premioum Amount</label>
+              </div>
+
+            </div>
+          </div>
+        </form>
+        <div class="px-4" *ngIf="!isExpand">
+          <button class="bg-royal text-white" mat-button matStepperPrevious>
+            Back
+          </button>
+          <button class="bg-royal text-white mx-3" mat-button matStepperNext>
+            Next
+          </button>
+        </div>
+      </mat-step>
+
+      <!-- Eight stepper -->
+      <mat-step label="Attachment details">
+
+        <div class="py-7 min-w-full rounded bg-white">
+          <form [formGroup]="QuotationSelectionForm">
+
+            <div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-5 mt-4">
+
+              <!-- Select Document -->
+              <div class="relative min-w-36">
+                <div class="icon">
+                  <mat-icon> compass_calibration</mat-icon>
+                </div>
+                <select class="peer bg-white" #DocumentDropdown (change)="onDocumentSelectionChange($event)">
+                  <option value="">--Select--</option>
+                  <option [value]="option.DocumentType" *ngFor="let option of PolicyDocumentList">
+                    {{option.DocumentTypeName}}
+                  </option>
+                </select>
+                <label for="">Select Document</label>
+              </div>
+
+              <!-- Additional Information -->
+              <div class="relative" [matTooltip]="QuotationSelectionForm.get('Additionalinformation').value">
+                <div class="icon">
+                  <mat-icon>border_color</mat-icon>
+                </div>
+                <input type="text" class="peer" id="AdditionalInformation" placeholder=" "
+                  formControlName="Additionalinformation" />
+                <label for="AdditionalInformation">Additional Information</label>
+              </div>
+
+
+              <!-- Reason (Send Back / Reject) -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon>timelapse</mat-icon>
+                </div>
+                <input matInput type="text" id="Remarks" formControlName="SendBackRejectDesc" placeholder=" "
+                  class="peer" required />
+                <label for="Remarks" class="mandatory">Reason (For Send Back/Reject)</label>
+              </div>
+
+            </div>
+
+            <div class="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-5 mt-4" formArrayName="Documents">
+              <div *ngFor="let doc of PolicyDocumentAttachment;let i=index">
+
+                <div [formGroupName]="i">
+                  <div class="relative min-w-36">
+                    <mat-icon *ngIf="doc.value.Stage == 'RFQQNSelectionSP'" (click)="RemoveDocuments(i)"
+                      class="absolute -right-2 -top-3 text-red-500 cursor-pointer">cancel</mat-icon>
+                    <div class="dummy-formField justify-start">
+                      <div class="icon">
+                        <mat-icon>attach_file</mat-icon>
+                      </div>
+                      <input type="file" class="hidden" accept=".doc,.docx,.pdf" #AttachDocument
+                        (change)="SelectRFQDocument($event, i)">
+                      <p class="text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                        [ngClass]="doc.value.Stage == 'RFQQNSelectionSP' ? 'cursor-pointer text-primary-500 hover:text-primary-500' : 'pointer-events-none' "
+                        matTooltip="{{doc.value.FileName}}" (click)="AttachDocument.click()">
+                        {{doc.value.FileName || 'Choose File' | excerpt:'max' }}</p>
+                      <label for="AttachDocument" class="mandatory">{{
+                        doc.value.DocumentTypeName}}</label>
+                      <div class="flex justify-end absolute right-2 bg-white" matTooltip="View Document"
+                        (click)="ViewDocument(doc.value?.StorageFilePath)">
+                        <mat-icon *ngIf="doc.value?.StorageFilePath" class="cursor-pointer">visibility</mat-icon>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </form>
+
+        </div>
+
+
+        <div class="pb-4">
+          <button class="bg-royal text-white mr-3" mat-button matStepperPrevious *ngIf="!isExpand">
+            Back
+          </button>
+          <button *ngIf="mode != 'view'" class="bg-royal text-white mx-3" mat-button matStepperNext
+            (click)="RejectQNForm()">
+            Reject
+          </button>
+          <button *ngIf="mode != 'view'" class="bg-royal text-white mx-3" mat-button matStepperNext
+            (click)="SendBackQNForm()">
+            Send Back
+          </button>
+          <button *ngIf="mode != 'view'" class="bg-royal text-white mx-3" mat-button matStepperNext
+            (click)="QuotationSelectionSubmit()">
+            Submit
+          </button>
+        </div>
+      </mat-step>
+
+    </mat-stepper>
+  </div>
+  <!-- endregion form -->
+</div>

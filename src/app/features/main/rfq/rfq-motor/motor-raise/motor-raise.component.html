@@ -1,0 +1,1372 @@
+<div class="px-4 pb-4 max-h-none w-full">
+    <!-- region main heading -->
+
+    <!-- region main heading -->
+    <div class="pt-4 sm:sticky z-30 headingBorder top-0 w-full">
+        <!-- region main heading -->
+        <h1
+            class="new-head  text-lg px-4 gap-5 py-1.5 rounded flex flex-wrap justify-between items-center font-semibold">
+            {{ pagetitle }}
+
+            <div class="flex gap-x-3  items-center text-lg font-normal">
+                <button mat-raised-button class="new-button" (click)="backButton()">Back</button>
+                <button *ngIf="mode!='view'" mat-raised-button class="new-button" (click)="ExpandCollaps()">
+                    {{isExpand ? 'Collapse' : 'Expand All'}}
+                </button>
+            </div>
+        </h1>
+        <!-- </div> -->
+        <!-- endregion main heading -->
+
+        <div class="">
+            <div class="px-4 py-4 rounded bg-white">
+                <mat-card class="bg-sky-100 px-4 py-3 gap-2 container mx-auto min-h-16">
+
+                    <div class="flex flex-wrap gap-5 justify-between px-4 sm:text-center">
+
+                        <!-- VehicleNo -->
+                        <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                            <span class="text-center font-semibold">RFQ No</span>
+                            <span class="font-normal text-center">{{RFQMotorForm.get('RFQNo').value }}</span>
+                        </div>
+
+                        <!-- Policy Period -->
+                        <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                            <span class="text-center font-semibold">Vehicle (Registration No)</span>
+                            <span class="font-normal text-center">{{VehicleNo.value}}</span>
+                        </div>
+
+                        <!-- Business Type -->
+                        <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                            <span class="text-center font-semibold">Customer name</span>
+                            <span class="font-normal text-center">{{RFQMotorForm.get('ProposerName').value}}</span>
+                        </div>
+
+                    </div>
+
+                    <!-- </div> -->
+
+                </mat-card>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start of Body -->
+    <form [formGroup]="RFQMotorForm">
+        <!-- Region Form -->
+        <div class="py-5 rounded">
+            <mat-stepper orientation="vertical" #stepper [linear]="true" [ngClass]="isExpand ? 'showstep' : ''">
+
+                <!-- First stepper -->
+                <mat-step label="Basic Details" [stepControl]="BasicDetailsValidations()">
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                        <!-- Vehicle Category -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>category</mat-icon>
+                            </div>
+                            <select class="peer" id="VehicleCategory" formControlName="SubCategoryId">
+                                <option value="0">--Select--</option>
+                                <option *ngFor="let option of SubCategoryList" value="{{option.Id}}">
+                                    {{ option.Name }}
+                                </option>
+                            </select>
+
+                            <label for="VehicleCategory" class="mandatory">Vehicle Category</label>
+                        </div>
+
+                        <!-- Policy Type -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>timelapse</mat-icon>
+                            </div>
+                            <select class="peer" id="ProposalType" formControlName="PolicyType">
+                                <option value="">--Select--</option>
+                                <option *ngFor="let item of DisplayedPolicyType" value="{{item.value}}">
+                                    {{item.name}}
+                                </option>
+                            </select>
+
+                            <label for="ProposalType" class="mandatory">Policy Type</label>
+                        </div>
+
+                        <!--Category Type -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>timelapse</mat-icon>
+                            </div>
+                            <select class="peer" id="CategoryType" formControlName="CategoryType">
+                                <option value="">--Select--</option>
+
+                                <option value="Comprehensive">Comprehensive</option>
+
+                                <option value="ThirdParty">Third Party</option>
+
+                                <option value="SAOD" *ngIf="((RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.PrivateCar  || 
+                                           RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.TwoWheeler) &&
+                                         RFQMotorForm.get('PolicyType').value != 'New')">SAOD</option>
+
+                                <option value="PAOD" *ngIf="RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.PrivateCar || 
+                                           RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.TwoWheeler">
+                                    PA - Owner Driver</option>
+
+                                <!-- <option *ngFor="let item of DisplayedCategoryType" value="{{item.value}}">
+                                    {{item.name}}
+                                </option> -->
+                            </select>
+
+                            <label for="CategoryType" class="mandatory">Category Type</label>
+                        </div>
+                    </div>
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3.5 mt-4" formGroupName="VehicleDetail">
+
+                        <!-- Registration No. -->
+                        <div class="relative">
+                            <div class="icon" [ngSwitch]="RFQMotorForm.get('SubCategoryCode').value">
+                                <mat-icon *ngSwitchDefault>directions_car</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.TwoWheeler">motorcycle</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.MiscellaneousD">rv_hookup</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.GCV">local_shipping</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.PCV">directions_bus</mat-icon>
+                            </div>
+                            <input type="text" id="Cnumber" (blur)="rtoDetailsAPI($event)"
+                                (keyup)="vehicleNoFormating($event)" maxlength="14" [formControl]="VehicleNo"
+                                placeholder="GJ-01-AA-1111" class="peer">
+                            <label for="RegistrationNo" class="mandatory">Registration No.</label>
+                        </div>
+
+                        <!-- Registration Date -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                    [for]="RegistrationDate"></mat-datepicker-toggle>
+                                <mat-datepicker #RegistrationDate></mat-datepicker>
+                            </div>
+                            <div class="flex">
+                                <input matInput type="text" id="RegistrationDate" placeholder="__/__/____" datemask
+                                    [matDatepicker]="RegistrationDate" class="peer mb-1"
+                                    formControlName="RegistrationDate" />
+                                <label for="RegistrationDate" class="mandatory">Registration Date</label>
+                            </div>
+                        </div>
+
+                        <!-- RTO Code -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>code</mat-icon>
+                            </div>
+                            <mat-select class="peer bg-white" formControlName="RTOCode"
+                                (closed)="CloseDropdownEven('RTO')">
+                                <div class="flex sticky top-0 z-10">
+                                    <input type="text" #RTOSearchCtrl class=" searchBox ml-1 mr-1" placeholder="Search"
+                                        (keyup)="rtoCodeFormating($event)" maxlength="5" matInput
+                                        (keyup)="searchInDropDown($event,'RTO')">
+                                    <mat-icon class="-ml-7 mt-3">search</mat-icon>
+                                </div>
+                                <mat-option *ngFor="let option of FilteredRTOCodeList" [value]="option.Code">
+                                    {{ option.Code }}
+                                </mat-option>
+                            </mat-select>
+                            <label for="RTOCode" class="mandatory">RTO Code</label>
+                        </div>
+
+                    </div>
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4" formGroupName="VehicleDetail">
+
+                        <!-- Manufacturer/Brand Name -->
+                        <div class="relative">
+                            <div class="icon" [ngSwitch]="RFQMotorForm.get('SubCategoryCode').value">
+                                <mat-icon *ngSwitchDefault>directions_car</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.TwoWheeler">motorcycle</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.MiscellaneousD">rv_hookup</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.GCV">local_shipping</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.PCV">directions_bus</mat-icon>
+                            </div>
+                            <mat-select class="peer bg-white" name="Brand" (closed)="CloseDropdownEven('Brand')"
+                                formControlName="BrandId">
+                                <div class="flex sticky top-0 z-10">
+                                    <input type="text" class=" searchBox ml-1 mr-1" #BrandSearchCtrl
+                                        placeholder="Search" (keyup)="searchInDropDown($event,'Brand')">
+                                    <mat-icon class="-ml-7 mt-1">
+                                        search
+                                    </mat-icon>
+                                </div>
+                                <mat-option *ngFor="let option of FilteredBrandList" [value]="option.Id">
+                                    {{ option.Name }}
+                                </mat-option>
+                            </mat-select>
+                            <label for="Brand" class="mandatory">
+                                Manufacturer / Brand
+                            </label>
+                        </div>
+
+                        <!-- Model Name -->
+                        <div class="relative">
+                            <div class="icon" [ngSwitch]="RFQMotorForm.get('SubCategoryCode').value">
+                                <mat-icon *ngSwitchDefault>directions_car</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.TwoWheeler">motorcycle</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.MiscellaneousD">rv_hookup</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.GCV">local_shipping</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.PCV">directions_bus</mat-icon>
+                            </div>
+                            <mat-select class="peer bg-white" name="Model" formControlName="ModelId"
+                                (closed)="CloseDropdownEven('Model')">
+                                <div class="flex sticky top-0 z-10">
+                                    <input type="text" #ModelSearchCtrl class="searchBox ml-1 mr-1" placeholder="Search"
+                                        matInput (keyup)="searchInDropDown($event,'Model')">
+                                    <mat-icon class="-ml-7 mt-1">search</mat-icon>
+                                </div>
+                                <mat-option *ngFor="let option of FilteredModelList" [value]="option.Id">
+                                    {{ option.Name }}
+                                </mat-option>
+                            </mat-select>
+                            <label for="Model" class="mandatory">Model</label>
+                        </div>
+
+
+                        <!-- SubModel Name -->
+                        <div class="relative">
+                            <div class="icon" [ngSwitch]="RFQMotorForm.get('SubCategoryCode').value">
+                                <mat-icon *ngSwitchDefault>directions_car</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.TwoWheeler">motorcycle</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.MiscellaneousD">rv_hookup</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.GCV">local_shipping</mat-icon>
+                                <mat-icon *ngSwitchCase="SubCategoryCodeEnum.PCV">directions_bus</mat-icon>
+                            </div>
+                            <mat-select class="peer bg-white" name="SubModel" formControlName="SubModelId"
+                                (closed)="CloseDropdownEven('Sub')">
+                                <div class="flex sticky top-0 z-10">
+                                    <input type="text" #SubModelSearchCtrl class=" searchBox ml-1 mr-1"
+                                        (keyup)="searchInDropDown($event,'Sub')" placeholder="Search" matInput>
+                                    <mat-icon class="-ml-7 mt-1">search</mat-icon>
+                                </div>
+                                <mat-option *ngFor="let option of FilteredSubModelList" [value]="option.Id">
+                                    {{ option.Name }}
+                                </mat-option>
+                            </mat-select>
+                            <label for="SubModel" class="mandatory">Sub Model</label>
+                        </div>
+
+                        <!-- Fuel -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>local_gas_station</mat-icon>
+                            </div>
+                            <select class="peer bg-white " name="FuelType" formControlName="FuelType">
+                                <option value="" disabled>Select</option>
+                                <!-- <option *ngFor="let option of DropdownMaster.FuelTypeOptions" [value]="option.value"
+                                    disabled>
+                                    {{ option.name }}
+                                </option> -->
+                                <option value="P" disabled>Petrol</option>
+                                <option value="D" disabled
+                                    *ngIf="RFQMotorForm.get('SubCategoryCode').value != SubCategoryCodeEnum.TwoWheeler">
+                                    Diesel</option>
+                                <option value="E" disabled>Electric</option>
+                                <option value="C" disabled>CNG</option>
+                                <option value="L" disabled *ngIf="RFQMotorForm.get('SubCategoryCode').value != SubCategoryCodeEnum.TwoWheeler">LPG</option>
+                                <option value="H" disabled>Hybrid</option>
+                                <option value="NA" disabled>NA</option>
+                            </select>
+                            <label for="FuelType" class="mandatory">Fuel Type</label>
+                        </div>
+
+                    </div>
+
+
+                    <div class="mt-5" *ngIf="!isExpand">
+                        <button class="bg-royal text-white mx-3" type="button" mat-button matStepperNext
+                            (click)="BasicDetailsError()">
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
+
+                <!-- Second stepper -->
+                <mat-step label="Product Category Details" [stepControl]="ProductCategoryDetailsValidations()">
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                        <!-- Sum Insured -->
+                        <div class="relative"
+                            *ngIf="RFQMotorForm.get('VehicleDetail.PremiumType').value != 'SATP' && 
+                               RFQMotorForm.get('VehicleDetail.PremiumType').value != 'PAOD' && (RFQMotorForm.get('PolicyType').value != this.MotorPolicyType.Rollover && RFQMotorForm.get('PolicyType').value != 'Renewal-Change Company' && RFQMotorForm.get('PolicyType').value != 'Renewal-Same Company')">
+                            <div class="icon">
+                                <div class="icon rs">₹</div>
+                            </div>
+                            <input type="text" class="peer" id="IDV" placeholder="" Onlynumber
+                                formControlName="SumInsured" onfocus="this.select()">
+                            <label for="IDV" class="mandatory">IDV</label>
+                        </div>
+
+                        <!--  PIN Code -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <mat-icon>pin_drop</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" Onlynumber maxlength="6" class="peer" formControlName="Pincode"
+                                    placeholder=" " id="PincodeNumber" [matAutocomplete]="oppoSearch"
+                                    autocomplete="off" />
+                                <mat-autocomplete class="peer" #oppoSearch="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'PINcode')">
+                                    <mat-option *ngFor="let pincode of pincodes$ | async" [value]="pincode">
+                                        {{ pincode.PinCode }} {{ pincode.CityName }},{{pincode.Area}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button"
+                                    (click)="openDiologForPINcode('Pincode','Select Pincode')" *ngIf="mode != 'view'">
+                                    <mat-icon class="-ml-2">
+                                        search
+                                    </mat-icon>
+                                </button>
+                                <button *ngIf="RFQMotorForm.get('Pincode').value && mode != 'view'" type="button"
+                                    class="-mx-7 z-10" aria-label="clear" matTooltip="Clear" (click)="ClearPincode()">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="PinCodeNumber" class="mandatory">PIN Code</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="md:grid space-y-4 lg:grid-cols-4 grid-cols-2 gap-3 ">
+
+                        <!-- Proposer Details  -->
+                        <p class="text-left  font-semibold text-base pt-5">Proposer Details</p>
+
+                        <!-- Proposer Name -->
+                        <div class="relative col-start-1">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <input matInput formControlName="ProposerName" AlphabetNumberOnly type="text"
+                                id="ProposerName" placeholder=" " class="peer" />
+                            <label for="ProposerName" class="mandatory">Proposer Name</label>
+                        </div>
+
+                        <!-- Mobile No. -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>phone</mat-icon>
+                            </div>
+                            <input matInput maxlength="10" Onlynumber formControlName="ProposerMobileNo" type="text"
+                                id="MobileNo" placeholder=" " class="peer" />
+                            <label for="MobileNo" class="mandatory">Mobile No.</label>
+                        </div>
+
+                        <!-- Email ID -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>mail</mat-icon>
+                            </div>
+                            <input matInput formControlName="ProposerEmail" type="email" id="EmailID" placeholder=" "
+                                class="peer" />
+                            <label for="EmailID" class="">Email ID</label>
+                        </div>
+
+                    </div>
+
+                    <div class="md:grid space-y-4 lg:grid-cols-4 grid-cols-2 gap-3 " formGroupName="VehicleDetail">
+                        <!-- Category Details  -->
+                        <p class="text-left  font-semibold text-bas pt-5">Category Details</p>
+
+                        <!--  Premium Type -->
+                        <div class="relative col-start-1">
+                            <div class="icon">
+                                <mat-icon>group_work</mat-icon>
+                            </div>
+
+                            <select id="PremiumType" formControlName="PremiumType">
+                                <option value="">--Select--</option>
+                                <option [value]="'1 OD + 1 TP'" *ngIf="
+                                    ((RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.PrivateCar  && RFQMotorForm.get('PolicyType').value != 'New') || 
+                                      (RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.TwoWheeler  && RFQMotorForm.get('PolicyType').value != 'New' ) ||  
+                                      RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.PCV || 
+                                      RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.GCV || 
+                                      RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.MiscellaneousD)  &&
+                                    RFQMotorForm.get('CategoryType').value == 'Comprehensive'">1 OD + 1 TP
+                                </option>
+                                <option [value]="'1 OD + 3 TP'" *ngIf="(RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.PrivateCar
+                                && RFQMotorForm.get('PolicyType').value == 'New')
+                                    && (RFQMotorForm.get('CategoryType').value == 'Comprehensive')">
+                                    1 OD + 3 TP
+                                </option>
+                                <option [value]="'1 OD + 5 TP'" *ngIf="(RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.TwoWheeler
+                                 && RFQMotorForm.get('PolicyType').value == 'New')
+                                    && (RFQMotorForm.get('CategoryType').value == 'Comprehensive')">
+                                    1 OD + 5 TP
+                                </option>
+                                <option [value]="'PAOD'" *ngIf="(RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.PrivateCar || 
+                                           RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.TwoWheeler)
+                                           && (RFQMotorForm.get('CategoryType').value == 'PAOD')">
+                                    PA Owner Driver
+                                </option>
+                                <option [value]="'SAOD'" *ngIf="(
+                                    ((RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.PrivateCar|| 
+                                    RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.TwoWheeler) && RFQMotorForm.get('PolicyType').value != 'New') ) 
+                                           && (RFQMotorForm.get('CategoryType').value == 'SAOD') ">
+                                    SAOD
+                                </option>
+                                <option [value]="'SATP'" *ngIf="RFQMotorForm.get('CategoryType').value == 'ThirdParty'">
+                                    SATP
+                                </option>
+                            </select>
+                            <label for="PremiumType" class="mandatory">Premium Type</label>
+                        </div>
+
+                        <!-- Any Claim in Previous Year? -->
+                        <div class="relative" *ngIf="(RFQMotorForm.get('PolicyType').value != 'New') &&
+                                     (RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.PrivateCar || 
+                                     RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.TwoWheeler ||  
+                                      RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.PCV || 
+                                      RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.GCV || 
+                                      RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.MiscellaneousD)">
+                            <div class="icon">
+                                <mat-icon>spa</mat-icon>
+                            </div>
+
+                            <select id="" formControlName="AnyClaiminPreviousYear">
+                                <option value="">--Select--</option>
+                                <option [value]="true">Yes</option>
+                                <option [value]="false">No</option>
+                            </select>
+                            <label for="Category" class="mandatory w-fit min-w-max">Any Claim in Previous Year?</label>
+                        </div>
+
+                        <!--  Passenger Capacity -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>timelapse</mat-icon>
+                            </div>
+                            <input matInput readonly formControlName="PassengerCapacity" type="text"
+                                id="PassengerCapacity" placeholder=" " class="peer" />
+                            <label for="PassengerCapacity" class="mandatory">Passenger Capacity</label>
+                        </div>
+
+                        <!-- Gross Vehicle Weight (KG) -->
+                        <div class="relative" *ngIf="RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.PCV || 
+                            RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.GCV">
+                            <div class="icon">
+                                <mat-icon>timelapse</mat-icon>
+                            </div>
+                            <input matInput type="text" Decimal formControlName="GrossVehicleWeight"
+                                id="GrossVehicleWeight" placeholder=" " class="peer" />
+                            <label for="GrossVehicleWeight"
+                                [ngClass]="RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.GCV ? 'mandatory' : ''"
+                                class="w-fit min-w-max text-xs">Gross Vehicle Weight (KG)</label>
+                        </div>
+
+                        <!--  Cubic Capacity/KW -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>timelapse</mat-icon>
+                            </div>
+                            <input matInput readonly type="text" id="CubitCapacity" placeholder=" " class="peer"
+                                formControlName="CubicCapacityORKW" />
+                            <label for="CubitCapacity" class="mandatory">Cubic Capacity/KW</label>
+                        </div>
+
+                        <!-- Vehicle Age-->
+                        <div class="relative" *ngIf="VehicleNo.value != 'New'">
+                            <div class="icon">
+                                <mat-icon>insert_chart</mat-icon>
+                            </div>
+                            <input matInput type="text" readonly id="VehicleAge" placeholder=" " class="peer"
+                                formControlName="VehicleAge" />
+                            <label for="VehicleAge" class="mandatory">Vehicle Age</label>
+                        </div>
+
+                    </div>
+
+                    <div class="md:grid space-y-4 lg:grid-cols-4 grid-cols-2 gap-3" formGroupName="VehicleDetail"
+                        *ngIf="RFQMotorForm.get('VehicleDetail.PremiumType').value != 'SATP' && 
+                               RFQMotorForm.get('VehicleDetail.PremiumType').value != 'PAOD'">
+                        <!-- Additional Details (Optional)  -->
+                        <p class="text-left font-semibold text-base pt-5">Additional Details</p>
+
+                        <!-- Electrical Accessories Value -->
+                        <div class="relative col-start-1">
+                            <div class="icon">
+                                <mat-icon>flash_on</mat-icon>
+                            </div>
+                            <input matInput formControlName="ElectricalAccessoriesValue" Decimal type="text"
+                                id="ElectricalAccessoriesValue" placeholder=" " class="peer" />
+                            <label for="ElectricalAccessoriesValue" class="w-fit min-w-max text-xs">
+                                Electrical Accessories Value
+                            </label>
+                        </div>
+
+                        <!-- Non Electrical Accessories Value -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>flash_off</mat-icon>
+                            </div>
+                            <input matInput type="text" formControlName="NonElectricalAccessoriesValue" Decimal
+                                id="NonElectricalAccessoriesValue" placeholder=" " class="peer" />
+                            <label for="NonElectricalAccessoriesValue" class="w-fit min-w-max text-xs">
+                                Non Electrical Accessories Value
+                            </label>
+                        </div>
+
+                        <!-- CNG Kit Value -->
+                        <div class="relative">
+                            <div class="icon">
+                                <div class="icon rs">₹</div>
+                            </div>
+                            <input matInput formControlName="CNGKitValue" type="text" Decimal id="CNGKitValue"
+                                placeholder=" " class="peer" />
+                            <label for="CNGKitValue" class="">CNG Kit Value</label>
+                        </div>
+                    </div>
+
+                    <div class="mt-3" *ngIf="!isExpand">
+
+                        <button class="bg-royal text-white mx-3" type="button" mat-button matStepperPrevious>
+                            Back
+                        </button>
+
+                        <!-- (click)="stepOneError()" -->
+                        <button class="bg-royal text-white mx-3" type="button" mat-button matStepperNext
+                            (click)="ProductCategoryDetailsError()">
+                            Next
+                        </button>
+
+                    </div>
+
+                </mat-step>
+
+                <!-- Third stepper -->
+                <mat-step label="Wants to insure Add Ons?" [stepControl]="AddOnDetailsValidations()">
+
+                    <div class="relative min-w-56 gap-2 md:flex mt-4" formGroupName="VehicleDetail">
+                        <div class=" my-1 font-bold">
+                            <span class="mandatory">Wants to Insure Add ons?</span>
+                        </div>
+
+                        <div class="relative flex gap-2">
+                            <div class="lableInputbox min-w-20 flex items-center">
+                                <input class="peer" type="radio" id="yes" formControlName="InsureAddons" placeholder=""
+                                    [value]='true'>
+                                <label for="yes" class="mt-1">Yes</label>
+                            </div>
+
+                            <div class="lableInputbox min-w-20 flex items-center">
+                                <input class="peer" type="radio" id="no" formControlName="InsureAddons" placeholder=""
+                                    [value]="false">
+                                <label for="no" class="mt-1">No</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lableInputbox mt-4" *ngIf="RFQMotorForm.get('VehicleDetail.InsureAddons').value"
+                        formGroupName="VehicleDetail">
+                        <input type="checkbox" id="NonTariffAddOns" class="peer mb-2" formControlName="NonTariffAddOns"
+                            [checked]="checkNonTariffAddOns()" />
+                        <label for="NonTariffAddOns" class="font-semibold min-w-40">Non Tariff Add Ons</label>
+                    </div>
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4"
+                        *ngIf="RFQMotorForm.get('VehicleDetail.InsureAddons').value" formGroupName="VehicleDetail">
+
+                        <!-- Zero Depreciation -->
+                        <div class="min-w-56">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="ZeroDepreciation" class="peer mb-2" [value]="true"
+                                    formControlName="ZeroDepreciation" />
+                                <label for="ZeroDepreciation" class="font-medium min-w-40">Zero Depreciation</label>
+                            </div>
+                        </div>
+
+                        <!-- Consumable -->
+                        <div class="min-w-56"
+                            *ngIf="!(RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.GCV
+                               && (RFQMotorForm.get('PolicyType').value == MotorPolicyType.Rollover || RFQMotorForm.get('PolicyType').value == 'Renewal-Change Company' || RFQMotorForm.get('PolicyType').value == 'Renewal-Same Company'))">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="Consumable" class="peer mb-2" [value]="true"
+                                    formControlName="Consumable" />
+                                <label for="Consumable" class="font-medium min-w-40">Consumable</label>
+                            </div>
+                        </div>
+
+                        <!-- Engine Protector -->
+                        <div class="min-w-56"
+                            *ngIf="!(RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.GCV
+                               && (RFQMotorForm.get('PolicyType').value == MotorPolicyType.Rollover || RFQMotorForm.get('PolicyType').value == 'Renewal-Change Company' || RFQMotorForm.get('PolicyType').value == 'Renewal-Same Company'))">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="EngineProtector" class="peer mb-2" [value]="true"
+                                    formControlName="EngineProtector" />
+                                <label for="EngineProtector" class="font-medium min-w-40">Engine Protector</label>
+                            </div>
+                        </div>
+
+                        <!-- Return to Invoice -->
+                        <div class="min-w-56"
+                            *ngIf="!(RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.GCV
+                               && (RFQMotorForm.get('PolicyType').value == MotorPolicyType.Rollover|| RFQMotorForm.get('PolicyType').value == 'Renewal-Change Company' || RFQMotorForm.get('PolicyType').value == 'Renewal-Same Company'))">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="InvoiceCover" class="peer mb-2" [value]="true"
+                                    formControlName="ReturnToInvoice" />
+                                <label for="InvoiceCover" class="font-medium min-w-40">Return to Invoice</label>
+                            </div>
+                        </div>
+
+                        <!-- 24x7 Road Side Assistance -->
+                        <div class="min-w-56"
+                            *ngIf="!(RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.GCV
+                               && (RFQMotorForm.get('PolicyType').value == MotorPolicyType.Rollover|| RFQMotorForm.get('PolicyType').value == 'Renewal-Change Company' || RFQMotorForm.get('PolicyType').value == 'Renewal-Same Company'))">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="RoadsideAssistance" class="peer mb-2" [value]="true"
+                                    formControlName="RoadsideAssistance" />
+                                <label for="RoadsideAssistance" class="font-medium  min-w-48">24x7 Road Side
+                                    Assistance</label>
+                            </div>
+                        </div>
+
+                        <!-- Tyre Cover -->
+                        <div class="min-w-56"
+                            *ngIf="!(RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.GCV
+                               && (RFQMotorForm.get('PolicyType').value == MotorPolicyType.Rollover|| RFQMotorForm.get('PolicyType').value == 'Renewal-Change Company' || RFQMotorForm.get('PolicyType').value == 'Renewal-Same Company'))">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="TyreCover" class="peer mb-2" [value]="true"
+                                    formControlName="TyreCover" />
+                                <label for="TyreCover" class="font-medium min-w-40">Tyre Cover</label>
+                            </div>
+                        </div>
+
+                        <!-- Key and Lock Replacement -->
+                        <div class="min-w-56"
+                            *ngIf="!(RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.GCV
+                               && (RFQMotorForm.get('PolicyType').value == MotorPolicyType.Rollover|| RFQMotorForm.get('PolicyType').value == 'Renewal-Change Company' || RFQMotorForm.get('PolicyType').value == 'Renewal-Same Company'))">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="KeyandLockReplacement" class="peer mb-2" [value]="true"
+                                    formControlName="KeyandLockReplacement" />
+                                <label for="KeyandLockReplacement" class="font-medium  min-w-60">Key and Lock
+                                    Replacement</label>
+                            </div>
+                        </div>
+
+                        <!-- NCB Protection -->
+                        <div class="min-w-56"
+                            *ngIf="!(RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.GCV
+                               && (RFQMotorForm.get('PolicyType').value == MotorPolicyType.Rollover|| RFQMotorForm.get('PolicyType').value == 'Renewal-Change Company' || RFQMotorForm.get('PolicyType').value == 'Renewal-Same Company'))">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="NCBProtection" class="peer mb-2" [value]="true"
+                                    formControlName="NCBProtection" />
+                                <label for="NCBProtection" class="font-medium min-w-40">NCB Protection</label>
+                            </div>
+                        </div>
+
+                        <!-- Personal Belongings -->
+                        <div class="min-w-56"
+                            *ngIf="!(RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.GCV
+                               && (RFQMotorForm.get('PolicyType').value == MotorPolicyType.Rollover|| RFQMotorForm.get('PolicyType').value == 'Renewal-Change Company' || RFQMotorForm.get('PolicyType').value == 'Renewal-Same Company'))">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="PersonalBelongings" class="peer mb-2" [value]="true"
+                                    formControlName="PersonalBelongings" />
+                                <label for="PersonalBelongings" class="font-medium min-w-40">Personal Belongings</label>
+                            </div>
+                        </div>
+
+
+                        <!-- Daily Allowance  -->
+                        <div class="min-w-56"
+                            *ngIf="!(RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.GCV
+                               && (RFQMotorForm.get('PolicyType').value == MotorPolicyType.Rollover|| RFQMotorForm.get('PolicyType').value == 'Renewal-Change Company' || RFQMotorForm.get('PolicyType').value == 'Renewal-Same Company'))">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="DailyAllowance" class="peer mb-2" [value]="true"
+                                    formControlName="DailyAllowance" />
+                                <label for="DailyAllowance" class="font-medium min-w-40">Daily Allowance</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="lableInputbox mt-8" *ngIf="RFQMotorForm.get('VehicleDetail.InsureAddons').value"
+                        formGroupName="VehicleDetail">
+                        <input type="checkbox" id="TariffAddOns" class="peer mb-2" formControlName="TariffAddOns"
+                            [checked]="checkTariffAddOns()" />
+                        <label for="TariffAddOns" class="font-semibold min-w-40">Tariff Add Ons</label>
+                    </div>
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4"
+                        *ngIf="RFQMotorForm.get('VehicleDetail.InsureAddons').value" formGroupName="VehicleDetail">
+
+                        <!-- PA - Owner Driver -->
+                        <div class="min-w-56">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="PAOwnerDriver" class="peer mb-2" [value]="true"
+                                    formControlName="PAOwnerDriver" />
+                                <label for="PAOwnerDriver" class="font-medium min-w-40">PA - Owner Driver</label>
+                            </div>
+                        </div>
+
+                        <!-- Geographical Extension  -->
+                        <div class="min-w-56">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="GeographicalExtension " class="peer mb-2" [value]="true"
+                                    formControlName="GeographicalExtention" />
+                                <label for="GeographicalExtension " class="font-medium min-w-40">Geographical
+                                    Extension</label>
+                            </div>
+                        </div>
+
+                        <!-- PA - Pillion Rider -->
+                        <div class="min-w-56"
+                            *ngIf="RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.TwoWheeler">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="PAPillionRider" class="peer mb-2" [value]="true"
+                                    formControlName="PAPillionRider" />
+                                <label for="PAPillionRider" class="font-medium min-w-40">PA - Pillion Rider</label>
+                            </div>
+                        </div>
+
+                        <!-- PA - Paid Driver  -->
+                        <div class="min-w-56">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="PAPaidDriver " class="peer mb-2" [value]="true"
+                                    formControlName="PAPaidDriver" />
+                                <label for="PAPaidDriver " class="font-medium min-w-40">PA - Paid Driver</label>
+                            </div>
+                        </div>
+
+
+                        <!-- PA - Unnammed Passenger -->
+                        <div class="min-w-56" *ngIf="RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.GCV ||
+                        RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.PrivateCar ||
+                        RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MiscellaneousD ||
+                        RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.PCV">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="PAUnnammedPassenger" class="peer mb-2" [value]="true"
+                                    formControlName="PAUnnamedPassenger" />
+                                <label for="PAUnnammedPassenger" class="font-medium  min-w-48">PA - Unnammed
+                                    Passenger</label>
+                            </div>
+                        </div>
+
+                        <!-- Restricted TPPD  -->
+                        <div class="min-w-56" *ngIf="RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.GCV ||
+                            RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.PrivateCar ||
+                            RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MiscellaneousD ||
+                            RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.PCV">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="RestrictedTPPD " class="peer mb-2" [value]="true"
+                                    formControlName="RestrictedTPPD" />
+                                <label for="RestrictedTPPD " class="font-medium min-w-40">Restricted TPPD</label>
+                            </div>
+                        </div>
+
+                        <!-- Liability-Paid Driver  -->
+                        <div class="min-w-56" *ngIf="RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.GCV ||
+                            RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.PrivateCar ||
+                            RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MiscellaneousD ||
+                            RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.PCV">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="LiabilityPaidDriver" class="peer mb-2" [value]="true"
+                                    formControlName="LiabilityPaidDriver" />
+                                <label for="LiabilityPaidDriver" class="font-medium min-w-40">Liability-Paid
+                                    Driver</label>
+                            </div>
+                        </div>
+
+                        <!-- Liability-Other Employees  -->
+                        <div class="min-w-56" *ngIf="RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.GCV ||
+                            RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.PrivateCar ||
+                            RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MiscellaneousD ||
+                            RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.PCV">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="LiabilityOtherEmployees" class="peer mb-2" [value]="true"
+                                    formControlName="LiabilityOtherEmployees" />
+                                <label for="LiabilityOtherEmployees" class="font-medium  min-w-60">Liability-Other
+                                    Employees</label>
+                            </div>
+                        </div>
+
+
+                        <!-- IMT23 -->
+                        <div class="min-w-56"
+                            *ngIf="RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.GCV ||
+                            RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MiscellaneousD ||
+                            (RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.PCV && 
+                            (RFQMotorForm.get('PolicyType').value == MotorPolicyType.Rollover|| RFQMotorForm.get('PolicyType').value == 'Renewal-Change Company' || RFQMotorForm.get('PolicyType').value == 'Renewal-Same Company'))">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="IMT23" class="peer mb-2" [value]="true"
+                                    formControlName="IMT23" />
+                                <label for="IMT23" class="font-medium min-w-40">IMT23</label>
+                            </div>
+                        </div>
+
+                        <!-- IMT47 -->
+                        <div class="min-w-56"
+                            *ngIf="RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.MiscellaneousD">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="IMT47" class="peer mb-2" [value]="true"
+                                    formControlName="IMT47" />
+                                <label for="IMT47" class="font-medium min-w-40">IMT47</label>
+                            </div>
+                        </div>
+
+                        <!-- </div>
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4"
+                        *ngIf="RFQMotorForm.get('VehicleDetail.InsureAddons').value" formGroupName="VehicleDetail"> -->
+
+                        <!-- Other, Please Specify in Remarks -->
+                        <div class="relative min-w-56">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="Other" class="peer mb-2" [value]="false"
+                                    formControlName="OtherAddOn" />
+                                <label for="Other" class="font-medium min-w-80">Other, Please Specify in Remarks</label>
+                            </div>
+                        </div>
+
+                        <!-- Remarks -->
+                        <div class="relative  col-span-2"
+                            *ngIf="RFQMotorForm.get('VehicleDetail.OtherAddOn').value">
+                            <div class="icon">
+                                <mat-icon>bubble_chart</mat-icon>
+                            </div>
+                            <input type="text" class="peer" id="DocumentRemarks" placeholder=""
+                                formControlName="OtherAddonDesc" />
+                            <label for="DocumentRemarks">Remarks</label>
+                            <!-- (Only for selection of other Document) -->
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3" *ngIf="!isExpand">
+
+                        <button class="bg-royal text-white mx-3" type="button" mat-button matStepperPrevious>
+                            Back
+                        </button>
+                        <button class="bg-royal text-white mx-3" type="button" mat-button matStepperNext
+                            (click)="AddOnDetailsError()">
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
+
+                <!-- Fourth stepper -->
+                <mat-step label="Previous Policy Details"
+                    *ngIf="(RFQMotorForm.get('PolicyType').value == MotorPolicyType.Rollover|| RFQMotorForm.get('PolicyType').value == 'Renewal-Change Company' || RFQMotorForm.get('PolicyType').value == 'Renewal-Same Company')"
+                    [stepControl]="PreviousPolicyDetailsValidations()">
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                        <!-- Insurance Company -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>business</mat-icon>
+                            </div>
+                            <select class="peer" id="InsuranceCompany" formControlName="PrevPolicyInsurComp">
+                                <option value="">--Select--</option>
+                                <option *ngFor="let option of InsuranceCompany" [value]="option.Code">
+                                    {{option.ShortName}}</option>
+                            </select>
+
+                            <label for="InsuranceCompany" class="mandatory">Insurance Company</label>
+                        </div>
+
+                        <!-- Premium Type -->
+                        <div class="relative">
+                            <div class="relative col-start-1">
+                                <div class="icon">
+                                    <mat-icon>group_work</mat-icon>
+                                </div>
+                                <select id="PremiumType" formControlName="PrevPolicyType">
+                                    <option value="">--Select--</option>
+                                    <option [value]="'1 OD + 1 TP'">1 OD + 1 TP</option>
+                                    <option [value]="'1 OD + 3 TP'"
+                                        *ngIf="(RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.PrivateCar)">
+                                        1 OD + 3 TP
+                                    </option>
+                                    <option [value]="'1 OD + 5 TP'"
+                                        *ngIf="(RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.TwoWheeler)">
+                                        1 OD + 5 TP
+                                    </option>
+                                    <option [value]="'PAOD'"
+                                        *ngIf="(RFQMotorForm.get('SubCategoryCode').value == SubCategoryCodeEnum.PrivateCar || 
+                                                                     RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.TwoWheeler)">
+                                        PA Owner Driver
+                                    </option>
+                                    <option [value]="'SAOD'"
+                                        *ngIf="(RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.PrivateCar || 
+                                                                      RFQMotorForm.get('SubCategoryCode').value==SubCategoryCodeEnum.TwoWheeler)">
+                                        SAOD
+                                    </option>
+                                    <option [value]="'SATP'">
+                                        SATP
+                                    </option>
+                                </select>
+                                <label for="PremiumType" class="">Premium Type</label>
+                            </div>
+                        </div>
+
+
+                        <!-- Policy Start Date -->
+                        <div class="relative ">
+                            <div class="flex">
+                                <div class="icon">
+                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                        [for]="StartDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #StartDate></mat-datepicker>
+                                </div>
+                                <input matInput type="text" id="StartDate" class="peer" placeholder="__/__/____"
+                                    datemask formControlName="PreviousPolicyStartDate" [matDatepicker]="StartDate"
+                                    autocomplete="off">
+                                <label for="StartDate" class=" lg:text-xs">Policy Start Date
+                                    <span
+                                        *ngIf="(RFQMotorForm.get('PrevPolicyType').value != '1 OD + 3 TP' && RFQMotorForm.get('PrevPolicyType').value != '1 OD + 5 TP')">
+                                        {{RFQMotorForm.get('PrevPolicyType').value}}
+                                    </span>
+                                    <span
+                                        *ngIf="(RFQMotorForm.get('PrevPolicyType').value=='1 OD + 3 TP' || RFQMotorForm.get('PrevPolicyType').value=='1 OD + 5 TP')">
+                                        - 1OD
+                                    </span>
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <!-- Policy End Date -->
+                        <div class="relative ">
+                            <div class="flex">
+                                <div class="icon">
+                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                        [for]="EndDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #EndDate></mat-datepicker>
+                                </div>
+                                <input matInput type="text" id="EndDate" class="peer" placeholder="__/__/____"
+                                    formControlName="PreviousPolicyEndDate" datemask [matDatepicker]="EndDate"
+                                    autocomplete="off">
+                                <label for="StartDate" class=" lg:text-xs">Policy End Date
+                                    <span
+                                        *ngIf="(RFQMotorForm.get('PrevPolicyType').value != '1 OD + 3 TP' && RFQMotorForm.get('PrevPolicyType').value != '1 OD + 5 TP')">
+                                        {{RFQMotorForm.get('PrevPolicyType').value}}
+                                    </span>
+                                    <span
+                                        *ngIf="(RFQMotorForm.get('PrevPolicyType').value=='1 OD + 3 TP' || RFQMotorForm.get('PrevPolicyType').value=='1 OD + 5 TP')">
+                                        - 1OD
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Policy Start Date -->
+                        <div class="relative "
+                            *ngIf="(RFQMotorForm.get('PrevPolicyType').value=='1 OD + 3 TP' || RFQMotorForm.get('PrevPolicyType').value=='1 OD + 5 TP')">
+                            <div class="flex">
+                                <div class="icon">
+                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                        [for]="PrevPolicyTPStartDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #PrevPolicyTPStartDate></mat-datepicker>
+                                </div>
+                                <input matInput type="text" id="PrevPolicyTPStartDate" class="peer"
+                                    placeholder="__/__/____" datemask formControlName="PrevPolicyTPStartDate"
+                                    [matDatepicker]="PrevPolicyTPStartDate" autocomplete="off">
+                                <label for="PolicyTPStartDate" class=" lg:text-xs">Policy Start Date
+                                    <span *ngIf="RFQMotorForm.get('PrevPolicyType').value == '1 OD + 3 TP'">-
+                                        3TP</span>
+                                    <span *ngIf="RFQMotorForm.get('PrevPolicyType').value == '1 OD + 5 TP'">-
+                                        5TP</span>
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <!-- Policy End Date -->
+                        <div class="relative "
+                            *ngIf="(RFQMotorForm.get('PrevPolicyType').value=='1 OD + 3 TP' || RFQMotorForm.get('PrevPolicyType').value=='1 OD + 5 TP')">
+                            <div class="flex">
+                                <div class="icon">
+                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                        [for]="PrevPolicyTPEndDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #PrevPolicyTPEndDate></mat-datepicker>
+                                </div>
+                                <input matInput type="text" id="PrevPolicyTPEndDate" class="peer"
+                                    placeholder="__/__/____" formControlName="PrevPolicyTPEndDate" datemask
+                                    [matDatepicker]="PrevPolicyTPEndDate" autocomplete="off">
+                                <label for="TPStartDate" class=" lg:text-xs">Policy End Date
+                                    <span *ngIf="RFQMotorForm.get('PrevPolicyType').value == '1 OD + 3 TP'">-
+                                        3TP</span>
+                                    <span *ngIf="RFQMotorForm.get('PrevPolicyType').value == '1 OD + 5 TP'">-
+                                        5TP</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- IDV -->
+                        <div class="relative">
+                            <div class="icon">
+                                <div class="icon rs">₹</div>
+                            </div>
+                            <input matInput formControlName="PrevPolicySumInsured" Decimal type="text" id="IDV"
+                                placeholder=" " class="peer" />
+                            <label for="IDV" class="">IDV</label>
+                        </div>
+
+                        <!-- Premium Amount -->
+                        <div class="relative">
+                            <div class="icon">
+                                <div class="icon rs">₹</div>
+                            </div>
+                            <input matInput formControlName="PreviousPolicyPremium" Decimal type="text" id="PremiumAmt"
+                                placeholder=" " class="peer" />
+                            <label for="PremiumAmt" class="">Premium Amount</label>
+                        </div>
+
+
+                        <!-- Claim in previous year -->
+                        <div class="relative">
+                            <div class="font-bold">
+                                <span class="">Claim in Previous Year?</span>
+                            </div>
+
+                            <div class="relative flex gap-2">
+                                <div class="lableInputbox min-w-20">
+                                    <input class="peer" type="radio" id="Claimyes" placeholder=""
+                                        formControlName="ClaimInPreviousYear" [value]="true">
+                                    <label for="Claimyes">Yes</label>
+                                </div>
+
+                                <div class="lableInputbox min-w-20">
+                                    <input class="peer" type="radio" id="Claimno" placeholder=""
+                                        formControlName="ClaimInPreviousYear" [value]="false">
+                                    <label for="Claimno">No</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Is previous policy CNG/LPG kit included? -->
+                        <div class="relative">
+                            <div class="font-bold">
+                                <span class="">Is previous policy CNG/LPG kit included?</span>
+                            </div>
+
+                            <div class="relative flex gap-2">
+                                <div class="lableInputbox min-w-20">
+                                    <input class="peer" type="radio" id="CNGyes" placeholder=""
+                                        formControlName="PrevPolicyCNGLPG" [value]="true">
+                                    <label for="CNGyes">Yes</label>
+                                </div>
+
+                                <div class="lableInputbox min-w-20">
+                                    <input class="peer" type="radio" id="CNGno" placeholder=""
+                                        formControlName="PrevPolicyCNGLPG" [value]="false">
+                                    <label for="CNGno">No</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                        <!-- Break in Period (Days) -->
+                        <div class="relative" formGroupName="VehicleDetail">
+                            <div class="icon">
+                                <mat-icon>timelapse</mat-icon>
+                            </div>
+                            <select class="peer" id="PolicyType" formControlName="BreakInPeriodDays">
+                                <option value="">--Select--</option>
+                                <option value=">90"> >90 </option>
+                                <option value="<=90">
+                                    <=90 </option>
+                            </select>
+                            <label for="PolicyType" class="">Break in Period (Days)</label>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white mx-3" type="button" mat-button matStepperPrevious>
+                            Back
+                        </button>
+                        <button class="bg-royal text-white mx-3" type="button" mat-button matStepperNext
+                            (click)="PreviousPolicyDetailsError()">
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
+
+                <!-- Fifth stepper -->
+                <mat-step label="Team Details" [stepControl]="TeamDetailsValidation()">
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-6">
+
+                        <!-- Branch -->
+                        <div class="relative min-w-36">
+                            <div class="icon">
+                                <mat-icon>place</mat-icon>
+                            </div>
+                            <select id="" formControlName="BranchId">
+                                <option [disabled]="!CanEditableSalespersonTypeAndBranch" value=0>--Select--</option>
+                                <option [disabled]="!CanEditableSalespersonTypeAndBranch" *ngFor="let Branch of Branchs"
+                                    [value]="Branch.Id">
+                                    {{Branch.Name}}
+                                </option>
+                            </select>
+                            <label for="Category" class="mandatory">Branch</label>
+                        </div>
+
+                        <!-- Sales Person Type  -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>group_work</mat-icon>
+                            </div>
+
+                            <select id="" formControlName="SalesPersonType">
+                                <option [disabled]="!CanEditableSalespersonTypeAndBranch" [value]="'Direct'">Direct
+                                </option>
+                                <option [disabled]="!CanEditableSalespersonTypeAndBranch" [value]="'POSP'">POSP</option>
+                                <option [disabled]="!CanEditableSalespersonTypeAndBranch" [value]="'Team Reference'">
+                                    Team Reference</option>
+                            </select>
+                            <label for="SalesPersonType" class="mandatory ">Sales Person Type</label>
+                        </div>
+
+                        <!-- Sales Person -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+
+                            <div class="flex">
+                                <input type="text" class="peer " formControlName="SalesPersonName" placeholder=" "
+                                    [readOnly]="!canEditableSalesPerson" id="SalesPerson"
+                                    [matAutocomplete]="SalesSearch" autocomplete="off" />
+                                <mat-autocomplete #SalesSearch="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'Sales')">
+                                    <mat-option *ngFor="let Sales of salesPersonName$ | async" [value]="Sales">
+                                        {{Sales.FullName}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button" *ngIf="canEditableSalesPerson && mode != 'view'"
+                                    (click)="openDiolog('User','Select Sales Person','Sales')">
+                                    <mat-icon class="-ml-2">search</mat-icon>
+                                </button>
+                                <button
+                                    *ngIf="RFQMotorForm.get('SalesPersonName').value && canEditableSalesPerson && mode != 'view'"
+                                    type="button" class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    (click)="clear('SalesPersonName', 'SalesPersonId')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="SalesPerson" class="mandatory">Sales Person</label>
+                            </div>
+
+                        </div>
+
+                        <!--  Team Reference -->
+                        <div class="relative" *ngIf="RFQMotorForm.get('SalesPersonType').value == 'Team Reference'">
+                            <div class="icon">
+                                <mat-icon> person_pin</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" class="peer " formControlName="TeamReferenceName" placeholder=" "
+                                    id="TeamReferenceUser" autocomplete="off" [matAutocomplete]="TeamRefSearch" />
+                                <mat-autocomplete #TeamRefSearch="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'TeamRef')">
+                                    <mat-option *ngFor="let Team of TeamRefUser$ | async" [value]="Team">
+                                        {{Team.FullName}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button"
+                                    (click)="openDiolog('User','Select Team Reference','TeamRef')">
+                                    <mat-icon class="-ml-2">search</mat-icon>
+                                </button>
+                                <button *ngIf="RFQMotorForm.get('TeamReferenceName').value" type="button"
+                                    class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    (click)="clear('TeamReferenceName', 'TeamReferenceId')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="TeamReferenceUser">Team Reference</label>
+                            </div>
+                        </div>
+
+
+                        <!-- BDM -->
+                        <div class="relative wd">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" class="peer " formControlName="BDMName" placeholder=" " id="BDMName"
+                                    [matAutocomplete]="CRMSearch" [readOnly]="!canEditableBdoBdm" />
+                                <mat-autocomplete #CRMSearch="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'BDMName')">
+                                    <mat-option *ngFor="let crm of BDMlist$ | async" [value]="crm">
+                                        {{crm.FullName}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button" *ngIf="canEditableBdoBdm && mode != 'view'"
+                                    (click)="openDiolog('User','Select BDM Name','BDMName')"><mat-icon
+                                        class="-ml-2">search</mat-icon></button>
+                                <button *ngIf="RFQMotorForm.get('BDMName').value && canEditableBdoBdm && mode != 'view'"
+                                    type="button" class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    (click)="clear('BDMName', 'BDMId')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="BDMName" class="mandatory">BDM Name</label>
+
+                            </div>
+                        </div>
+
+                        <!-- BDO -->
+                        <div class="relative wd">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" class="peer " formControlName="BDOName" placeholder=" " id="BDOName"
+                                    [matAutocomplete]="CRESearch" [readOnly]="!canEditableBdoBdm" />
+                                <mat-autocomplete #CRESearch="matAutocomplete"
+                                    (optionSelected)="AutocompleteSelectedEvent($event,'BDOName')">
+                                    <mat-option *ngFor="let CRE of BDOlist$ | async" [value]="CRE">
+                                        {{CRE.FullName}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button" *ngIf="canEditableBdoBdm"
+                                    (click)="openDiolog('User','Select BDO Name','BDOName')"><mat-icon
+                                        class="-ml-2">search</mat-icon></button>
+                                <button *ngIf="RFQMotorForm.get('BDOName').value && canEditableBdoBdm && mode != 'view'"
+                                    type="button" class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                    (click)="clear('BDOName', 'BDOId')">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="BDOName" class="mandatory">BDO Name</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white mx-3" type="button" mat-button matStepperPrevious>
+                            Back
+                        </button>
+                        <button class="bg-royal text-white mx-3" type="button" mat-button matStepperNext
+                            (click)="TeamDetailsError()">
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
+
+                <!-- Sixth stepper -->
+                <mat-step label="Attach Documents" [stepControl]="DocumentAttachmentValidation()">
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                        <!-- Select Document -->
+                        <div class="relative" *ngIf="mode != 'view'">
+                            <div class="icon">
+                                <mat-icon> compass_calibration</mat-icon>
+                            </div>
+                            <select class="peer bg-white" #DocumentDropdown
+                                (change)="onDocumentSelectionChange($event)">
+                                <option value="">--Select--</option>
+                                <option [value]="option.DocumentType" *ngFor="let option of PolicyDocumentList">
+                                    {{option.DocumentTypeName}}
+                                </option>
+                            </select>
+                            <label for="">Select Document</label>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <div class="relative" [matTooltip]="RFQMotorForm.get('Additionalinformation').value">
+                            <div class="icon">
+                                <mat-icon>border_color</mat-icon>
+                            </div>
+                            <input type="text" class="peer" id="AdditionalInformation" placeholder=" "
+                                formControlName="Additionalinformation" />
+                            <label for="AdditionalInformation">Additional Information</label>
+                        </div>
+
+                        <!-- Reason for (Send Back/Reject)  -->
+                        <div class="relative" *ngIf="RFQMotorForm.get('SendBackRejectDesc').value">
+                            <div class="icon">
+                                <mat-icon>timelapse</mat-icon>
+                            </div>
+                            <input readonly type="text" class="peer" id="ReasonforSendBack" placeholder=" "
+                                value="{{RFQMotorForm.get('SendBackRejectDesc').value}}" />
+                            <label for="ReasonforSendBack">Reason for (Send Back/Reject)</label>
+                        </div>
+
+                    </div>
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                        <ng-container formArrayName="Documents" *ngFor="let doc of Documents.controls; let i=index">
+                            <ng-container [formGroupName]="i" *ngIf="canDisplayDocuments(doc.value.DocumentType)">
+                                <!-- Attachment Document -->
+                                <div class="relative">
+                                    <div class="dummy-formField">
+                                        <mat-icon
+                                            *ngIf="doc.value.Stage == 'RFQRaised'"
+                                            (click)="RemoveDocuments(i)"
+                                            class="absolute -right-2 -top-3 text-red-500 cursor-pointer">cancel</mat-icon>
+                                        <div class="icon">
+                                            <mat-icon>attach_file</mat-icon>
+                                        </div>
+                                        <input type="file" class="hidden" id="AttachDocument{{i}}"
+                                            (change)="SelectDocuments($event, i)" placeholder=""
+                                            accept=".doc,.docx,.pdf" #AttachDocument>
+                                        <p class="ml-10 text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                            [ngClass]="doc.value.Stage == 'RFQRaised' && mode != 'view' ? 'cursor-pointer text-primary-500 hover:text-primary-500' : 'pointer-events-none' "
+                                            matTooltip="{{doc.value.FileName}}" (click)="AttachDocument.click()">
+                                            {{ doc.value.FileName || 'Choose File' | excerpt:'max' }}
+                                        </p>
+                                        <label for="AttachDocument{{i}}" class="mandatory">
+                                            {{ doc.value.DocumentTypeName }}
+                                        </label>
+                                        <div class="flex justify-end absolute right-2 bg-white"
+                                            matTooltip="View Document"
+                                            (click)="ViewDocuments(doc.value?.StorageFilePath)"
+                                            *ngIf="doc.value?.StorageFilePath">
+                                            <mat-icon class="cursor-pointer">visibility</mat-icon>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Remarks -->
+                                <div class="relative  lg:col-span-2" *ngIf="doc.value.DocumentType == 'Other'">
+                                    <div class="icon">
+                                        <mat-icon>bubble_chart</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" id="DocumentRemarks" placeholder=" "
+                                        formControlName="Description" />
+                                    <label for="DocumentRemarks">Remarks</label>
+                                    <!--NOTE: (Only for selection of other Document) -->
+                                </div>
+
+                            </ng-container>
+                        </ng-container>
+
+
+                    </div>
+
+                    <div class="my-3" *ngIf="mode!='view'">
+                        <button class="bg-royal text-white mx-3" type="button" mat-button matStepperPrevious
+                            *ngIf="!isExpand">
+                            Back
+                        </button>
+                        <button class="bg-royal text-white mx-3" (click)="nextComponent()" type="submit" mat-button
+                            matStepperNext>
+                            Submit
+                        </button>
+                    </div>
+
+                </mat-step>
+
+            </mat-stepper>
+        </div>
+        <!-- Region Form End -->
+    </form>
+    <!-- End of Body -->
+</div>

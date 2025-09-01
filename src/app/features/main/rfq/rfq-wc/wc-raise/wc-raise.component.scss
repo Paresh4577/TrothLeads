@@ -1,0 +1,22 @@
+.mappingtable {
+    table {
+        width: 100% !important;
+
+    }
+
+    th,
+    td {
+        border: 1px solid #CBD5E1;
+    }
+
+    input,select {
+        padding: 5px !important;
+        height: auto !important;
+        min-width: 85px !important;
+        // border: 0cap;
+    }
+}
+
+.headingBorder {
+    background-color: rgb(241, 245, 249) !important;
+}

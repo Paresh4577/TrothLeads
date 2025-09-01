@@ -1,0 +1,1355 @@
+<div class="px-4 pb-4 max-h-none w-full">
+
+    <!-- region main heading -->
+    <div class="pt-4 sticky z-30 headingBorder top-0 w-full">
+        <!-- region main heading -->
+        <h1
+            class="new-head  text-lg px-4 gap-3 py-1.5 rounded flex flex-wrap justify-between items-center font-semibold">
+            {{ pagetitle }}
+
+            <div class="flex gap-x-3  items-center text-lg font-normal">
+                <button mat-raised-button class="new-button" (click)="backButton()">Back</button>
+                <button mat-raised-button class="new-button" (click)="ExpandCollaps()">
+                    {{isExpand ? 'Collapse' : 'Expand All'}}
+                </button>
+            </div>
+        </h1>
+
+        <div class="">
+            <div class="px-4 py-4 rounded bg-white">
+                <mat-card class="bg-sky-100 px-4 py-3 gap-2 container mx-auto min-h-16">
+
+                    <div class="flex flex-wrap gap-3 justify-between px-4 sm:text-center">
+
+                        <!-- VehicleNo -->
+                        <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                            <span class="text-center font-semibold">RFQ No</span>
+                            <span class="font-normal text-center">{{DisplayForm.RFQNo}}</span>
+                        </div>
+
+                        <!-- Policy Period -->
+                        <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                            <span class="text-center font-semibold">Vehicle (Registration No)</span>
+                            <span class="font-normal text-center">{{DisplayForm.VehicleDetail.VehicleNumber}}</span>
+                        </div>
+
+                        <!-- Business Type -->
+                        <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                            <span class="text-center font-semibold">Customer name</span>
+                            <span class="font-normal text-center">{{DisplayForm.ProposerName}}</span>
+                        </div>
+
+                    </div>
+
+                    <!-- </div> -->
+
+                </mat-card>
+            </div>
+        </div>
+    </div>
+    <!-- endregion main heading -->
+
+    <!-- Start of Body -->
+    <div class="">
+        <form [formGroup]="PLUWForm">
+            <!-- Region Form -->
+            <div class=" py-5 rounded">
+                <mat-stepper orientation="vertical" #stepper [ngClass]="isExpand ? 'showstep' : ''">
+
+                    <!-- First stepper -->
+                    <mat-step label="RFQ Details">
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                            <!-- RFQ No. -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>confirmation_number</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="RFQNo" [value]="DisplayForm.RFQNo"
+                                    placeholder=" " class="peer" readonly required />
+                                <label for="RFQNo" class="mandatory">RFQ No.</label>
+                            </div>
+
+                            <!-- RFQ Date -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix></mat-datepicker-toggle>
+                                    <mat-datepicker #RFQDate></mat-datepicker>
+                                </div>
+                                <div class="flex">
+                                    <input matInput type="text" id="RFQDate" placeholder="__/__/____" datemask
+                                        [value]="DisplayForm.RFQDate" [matDatepicker]="RFQDate" class="peer mb-1"
+                                        readonly />
+                                    <label for="RFQDate" class="mandatory">RFQ Date</label>
+                                </div>
+                            </div>
+
+                            <!-- QN No. -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>confirmation_number</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="QNNo" [value]="DisplayForm.QNNo"
+                                    placeholder=" " class="peer" required readonly />
+                                <label for="QNNo" class="mandatory">QN No.</label>
+                            </div>
+
+                            <!-- QN Date -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix></mat-datepicker-toggle>
+                                    <mat-datepicker #QNDate></mat-datepicker>
+                                </div>
+                                <div class="flex">
+                                    <input matInput type="text" id="QNDate" placeholder="__/__/____" datemask
+                                        [value]="DisplayForm.QNDate" [matDatepicker]="QNDate" class="peer mb-1"
+                                        readonly />
+                                    <label for="QNDate" class="mandatory">QN Date</label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="mt-3" *ngIf="!isExpand">
+                            <button class="bg-royal text-white mx-3" type="button" mat-button matStepperNext>
+                                Next
+                            </button>
+                        </div>
+
+                    </mat-step>
+
+                    <!-- Second stepper -->
+                    <mat-step label="Basic Details">
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                            <!-- Vehicle Category -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>category</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="VehicleCategory"
+                                    [value]="DisplayForm.SubCategoryName" placeholder=" " class="peer" readonly
+                                    required />
+                                <label for="VehicleCategory" class="mandatory">Vehicle Category</label>
+                            </div>
+
+                            <!-- Policy Type -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>timelapse</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="PolicyType"
+                                    [value]="DisplayForm.PolicyType" placeholder=" " class="peer" readonly required />
+                                <label for="PolicyType" class="mandatory">Policy Type</label>
+                            </div>
+
+                            <!-- Category Type -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>timelapse</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="CategoryType"
+                                    [value]="DisplayForm.CategoryType" placeholder=" " class="peer" readonly required />
+                                <label for="CategoryType" class="mandatory">Category Type</label>
+                            </div>
+
+                        </div>
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                            <!-- Registration No. -->
+                            <div class="relative">
+                                <div class="icon" [ngSwitch]="DisplayForm.SubCategoryCode">
+                                    <mat-icon *ngSwitchDefault>directions_car</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.TwoWheeler">motorcycle</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.MiscellaneousD">rv_hookup</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.GCV">local_shipping</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.PCV">directions_bus</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="RegistrationNo"
+                                    [value]="DisplayForm.VehicleDetail.VehicleNumber" placeholder=" " class="peer"
+                                    required readonly />
+                                <label for="RegistrationNo" class="mandatory">Registration No.</label>
+                            </div>
+
+                            <!-- Registration Date -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                        [for]="RegistrationDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #RegistrationDate></mat-datepicker>
+                                </div>
+                                <div class="flex">
+                                    <input matInput type="text" id="RegistrationDate" placeholder="__/__/____" datemask
+                                        [value]="DisplayForm.VehicleDetail.RegistrationDate"
+                                        [matDatepicker]="RegistrationDate" class="peer mb-1" readonly />
+                                    <label for="RegistrationDate" class="mandatory">Registration Date</label>
+                                </div>
+                            </div>
+
+                            <!-- RTO Code -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>code</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="RTOCode"
+                                    [value]="DisplayForm.VehicleDetail.RTOCode" placeholder=" " class="peer" required
+                                    readonly />
+                                <label for="RTOCode" class="">RTO Code</label>
+                            </div>
+
+                        </div>
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                            <!-- Manufacturer/Brand Name -->
+                            <div class="relative ">
+                                <div class="icon" [ngSwitch]="DisplayForm.SubCategoryCode">
+                                    <mat-icon *ngSwitchDefault>directions_car</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.TwoWheeler">motorcycle</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.MiscellaneousD">rv_hookup</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.GCV">local_shipping</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.PCV">directions_bus</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="Manufacturer/BrandName"
+                                    [value]="DisplayForm.VehicleDetail.BrandName" placeholder=" " class="peer" required
+                                    readonly />
+                                <label for="Manufacturer/BrandName" class="mandatory">Manufacturer/Brand</label>
+                            </div>
+
+                            <!-- Model Name -->
+                            <div class="relative ">
+                                <div class="icon" [ngSwitch]="DisplayForm.SubCategoryCode">
+                                    <mat-icon *ngSwitchDefault>directions_car</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.TwoWheeler">motorcycle</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.MiscellaneousD">rv_hookup</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.GCV">local_shipping</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.PCV">directions_bus</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="Model"
+                                    [value]="DisplayForm.VehicleDetail.ModelName" placeholder=" " class="peer" required
+                                    readonly />
+                                <label for="Model" class="mandatory">Model</label>
+                            </div>
+
+                            <!-- SubModel Name -->
+                            <div class="relative ">
+                                <div class="icon" [ngSwitch]="DisplayForm.SubCategoryCode">
+                                    <mat-icon *ngSwitchDefault>directions_car</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.TwoWheeler">motorcycle</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.MiscellaneousD">rv_hookup</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.GCV">local_shipping</mat-icon>
+                                    <mat-icon *ngSwitchCase="SubCategoryCodeEnum.PCV">directions_bus</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="SubModel"
+                                    [value]="DisplayForm.VehicleDetail.SubModelName" placeholder=" " class="peer"
+                                    required readonly />
+                                <label for="SubModel" class="mandatory">Sub Model</label>
+                            </div>
+
+                            <!-- Fuel Type -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>local_gas_station</mat-icon>
+                                </div>
+                                <select class="peer bg-white " name="FuelType">
+                                    <option value="P" [selected]="DisplayForm.VehicleDetail.FuelType == 'P'" disabled>
+                                        Petrol</option>
+                                    <option value="D" [selected]="DisplayForm.VehicleDetail.FuelType == 'D'" disabled
+                                        *ngIf="DisplayForm.SubCategoryCode != SubCategoryCodeEnum.TwoWheeler">Diesel
+                                    </option>
+                                    <option value="E" [selected]="DisplayForm.VehicleDetail.FuelType == 'E'" disabled>
+                                        Electric</option>
+                                    <option value="C" [selected]="DisplayForm.VehicleDetail.FuelType == 'C'" disabled>
+                                        CNG</option>
+                                    <option value="L" [selected]="DisplayForm.VehicleDetail.FuelType == 'L'" disabled
+                                        *ngIf="DisplayForm.SubCategoryCode != SubCategoryCodeEnum.TwoWheeler">LPG</option>
+                                    <option value="H" [selected]="DisplayForm.VehicleDetail.FuelType == 'H'" disabled>Hybrid</option>
+                                    <option value="NA" [selected]="DisplayForm.VehicleDetail.FuelType == 'NA'" disabled>NA</option>
+                                </select>
+                                <label for="FuelType" class="mandatory">Fuel Type</label>
+                            </div>
+
+                        </div>
+
+                        <div class="mt-3" *ngIf="!isExpand">
+                            <button class="bg-royal text-white mx-3" type="button" mat-button matStepperPrevious>
+                                Back
+                            </button>
+                            <button class="bg-royal text-white mx-3" type="button" mat-button matStepperNext>
+                                Next
+                            </button>
+                        </div>
+
+                    </mat-step>
+
+                    <!-- Third stepper -->
+                    <mat-step label="Quotation Details">
+
+                        <div class="px-3 py-7 min-w-full rounded bg-white">
+
+                            <div *ngFor="let item of DisplayForm.QNDocuments; let i = index;">
+
+                                <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-3 mt-4"
+                                    *ngIf="item.Buy == true">
+
+                                    <div class="relative">
+                                        <div class="icon">
+                                            <mat-icon>business</mat-icon>
+                                        </div>
+                                        <input type="text" class="peer" id="InsuranceCompany"
+                                            value="{{item.InsuranceCompany}}" placeholder=" " readonly>
+                                        <label for="InsuranceCompany" class="mandatory w-fit min-w-max">Insurance Company</label>
+                                    </div>
+
+                                    <!-- <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>tonality</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" id="PlanName" 
+                                        value="{{item.ProductCode}}" placeholder=" " readonly>
+                                    <label for="PlanName" class="mandatory">Plan Name</label>
+                                </div> -->
+
+                                    <div class="relative">
+                                        <div class="icon rs">₹</div>
+                                        <input type="text" class="peer" id="SumInsuredOrIDV"
+                                            value="{{item.SumInsured | indCurrencyWithoutSymbol}}" placeholder=" "
+                                            readonly>
+                                        <label for="SumInsuredOrIDV" class="mandatory">IDV</label>
+                                    </div>
+
+                                    <div class="relative">
+                                        <div class="icon rs">₹</div>
+                                        <input type="text" class="peer" id="GrossPremium"
+                                            value="{{item.GrossPremium | indCurrencyWithoutSymbol}}" placeholder=" "
+                                            readonly>
+                                        <label for="GrossPremium" class="mandatory">Gross Premium</label>
+                                    </div>
+
+                                    <div class="relative">
+                                        <button class="bg-royal text-white mx-3" mat-button matTooltip="View Quotation"
+                                            (click)="ViewQnDocument(item?.StorageFilePath)">
+                                            <mat-icon class="text-white">picture_as_pdf</mat-icon>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="mt-3" *ngIf="!isExpand">
+                            <button class="bg-royal text-white mx-2" type="button" mat-button matStepperPrevious>
+                                Back
+                            </button>
+                            <button class="bg-royal text-white mx-2" type="button" mat-button matStepperNext>
+                                Next
+                            </button>
+                        </div>
+
+                    </mat-step>
+
+                    <!-- Fourth stepper -->
+                    <mat-step label="Product Category Details">
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                            <!-- IDV -->
+                            <div class="relative "
+                                *ngIf="DisplayForm.VehicleDetail.PremiumType != 'SATP' && 
+                               DisplayForm.VehicleDetail.PremiumType != 'PAOD' && (DisplayForm.PolicyType != 'Rollover' && DisplayForm.PolicyType != 'Renewal-Change Company' && DisplayForm.PolicyType != 'Renewal-Same Company')">
+                                <div class="icon">
+                                    <div class="icon rs">₹</div>
+                                </div>
+                                <input type="text" class="peer" id="SumInsured" placeholder=" "
+                                    [value]="DisplayForm.SumInsured | indCurrencyWithoutSymbol" readonly>
+                                <label for="SumInsured" class="mandatory">IDV</label>
+                            </div>
+
+                            <!--  PIN Code (Correspondence) -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>pin_drop</mat-icon>
+                                </div>
+                                <input type="text" class="peer" id="PincodeNumber" [value]="DisplayForm.Pincode"
+                                    readonly />
+                                <label for="PinCodeNumber" class="mandatory">PIN Code</label>
+                            </div>
+
+                        </div>
+
+                        <div class="font-bold mt-3">
+                            <h1 class="mandatory" for="">Proposer Details</h1>
+                        </div>
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                            <!-- Name -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="ProposerName" placeholder=" "
+                                    class="peer" [value]="DisplayForm.ProposerName" readonly />
+                                <label for="ProposerName" class="mandatory">Name</label>
+                            </div>
+
+                            <!-- Mobile No. -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>phone</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="number" id="MobileNo" placeholder=" " class="peer"
+                                    [value]="DisplayForm.ProposerMobileNo" readonly />
+                                <label for="MobileNo" class="mandatory">Mobile No.</label>
+                            </div>
+
+                            <!-- Email ID -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>mail</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="email" id="EmailID" placeholder=" " class="peer"
+                                    [value]="DisplayForm.ProposerEmail" readonly />
+                                <label for="EmailID" class="">Email ID</label>
+                            </div>
+
+                        </div>
+
+                        <div class="font-bold mt-3">
+                            <h1 class="mandatory" for="">Category Details</h1>
+                        </div>
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                            <!-- Premium Type -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>group_work</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="PremiumType" placeholder=" " class="peer"
+                                    [value]="DisplayForm.VehicleDetail.PremiumType" readonly />
+                                <label for="PremiumType" class="mandatory">Premium Type</label>
+                            </div>
+
+                            <!-- Any Claim in Previous Year? -->
+                            <div class="relative" *ngIf="(DisplayForm.PolicyType != 'New') &&
+                                     (DisplayForm.SubCategoryCode == SubCategoryCodeEnum.PrivateCar || 
+                                      DisplayForm.SubCategoryCode == SubCategoryCodeEnum.TwoWheeler ||  
+                                      DisplayForm.SubCategoryCode == SubCategoryCodeEnum.PCV || 
+                                      DisplayForm.SubCategoryCode == SubCategoryCodeEnum.GCV || 
+                                      DisplayForm.SubCategoryCode == SubCategoryCodeEnum.MiscellaneousD)">
+                                <div class="icon">
+                                    <mat-icon>spa</mat-icon>
+                                </div>
+                                <input type="text" class="peer" maxlength="120" id="PassengerCapacity" placeholder=" "
+                                    [value]="DisplayForm.VehicleDetail.AnyClaiminPreviousYear ? 'Yes' : 'No'"
+                                    readOnly />
+                                <label for="Category" class="mandatory w-fit min-w-max">Any Claim in Previous Year?</label>
+                            </div>
+
+                            <!-- Passenger Capacity -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>timelapse</mat-icon>
+                                </div>
+                                <input type="text" class="peer" maxlength="120" id="PassengerCapacity" placeholder=" "
+                                    [value]="DisplayForm.VehicleDetail.PassengerCapacity" readOnly />
+                                <label for="PassengerCapacity" class="mandatory">Passenger Capacity</label>
+                            </div>
+
+                            <!--   Gross Vehicle Weight -->
+                            <div class="relative"
+                                *ngIf="DisplayForm.SubCategoryCode==SubCategoryCodeEnum.PCV || DisplayForm.SubCategoryCode==SubCategoryCodeEnum.GCV">
+                                <div class="icon">
+                                    <mat-icon>timelapse</mat-icon>
+                                </div>
+                                <input type="text" class="peer " Decimal maxlength="120" id="GrossVehicleWeight"
+                                    placeholder=" " [value]="DisplayForm.VehicleDetail.GrossVehicleWeight" readOnly />
+                                <label for="GrossVehicleWeight" class="mandatory w-fit min-w-max">Gross Vehicle Weight (KG)</label>
+                            </div>
+
+                            <!-- Cubic Capacity OR KW -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>timelapse</mat-icon>
+                                </div>
+                                <input type="text" class="peer " maxlength="120" id="CubicCapacityORKW" placeholder=" "
+                                    [value]="DisplayForm.VehicleDetail.CubicCapacityORKW" readOnly />
+                                <label for="CubicCapacityORKW" class="mandatory">Cubic Capacity/KW</label>
+                            </div>
+
+                            <!-- Vehicle Age -->
+                            <div class="relative " *ngIf="DisplayForm.VehicleDetail.VehicleNumber != 'New'">
+                                <div class="icon">
+                                    <mat-icon>insert_chart</mat-icon>
+                                </div>
+                                <input type="text" class="peer" readonly id="VehicleAge" placeholder=" "
+                                    [value]="DisplayForm.VehicleDetail.VehicleAge" readonly />
+                                <label for="VehicleAge" class="mandatory">Vehicle Age</label>
+                            </div>
+
+                        </div>
+
+                        <div class="font-bold mt-3">
+                            <h1 class="" for="">Additional Details</h1>
+                        </div>
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                            <!-- Electrical Accessories Value -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>flash_on</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="ElectricalAccessoriesValue"
+                                    placeholder=" " class="peer"
+                                    [value]="DisplayForm.VehicleDetail.ElectricalAccessoriesValue | indCurrencyWithoutSymbol"
+                                    readonly />
+                                <label for="ElectricalAccessoriesValue" class="w-fit min-w-max text-xs">
+                                    Electrical Accessories Value
+                                </label>
+                            </div>
+
+                            <!-- Non Electrical Accessories Value -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>flash_off</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="NonElectricalAccessoriesValue"
+                                    placeholder=" " class="peer"
+                                    [value]="DisplayForm.VehicleDetail.NonElectricalAccessoriesValue | indCurrencyWithoutSymbol"
+                                    readonly />
+                                <label for="NonElectricalAccessoriesValue" class="w-fit min-w-max text-xs">
+                                    Non Electrical Accessories Value
+                                </label>
+                            </div>
+
+                            <!-- CNG Kit Value -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <div class="icon rs">₹</div>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="CNGKitValue" placeholder=" " class="peer"
+                                    [value]="DisplayForm.VehicleDetail.CNGKitValue | indCurrencyWithoutSymbol"
+                                    readonly />
+                                <label for="CNGKitValue" class="">CNG Kit Value</label>
+                            </div>
+
+                        </div>
+
+                        <div class="font-bold mt-3" *ngIf="DisplayForm.VehicleDetail.InsureAddons == true">
+                            <h1>Add On Details</h1>
+                        </div>
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4"
+                            *ngIf="DisplayForm.VehicleDetail.InsureAddons == true">
+
+                            <div class="font-semibold">
+                                <h1>Non Tariff Add Ons:</h1>
+                            </div>
+
+                            <!-- Zero Depreciation -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.ZeroDepreciation">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="ZeroDepreciation" class="peer mb-2" checked disabled />
+                                    <label for="ZeroDepreciation" class="font-medium min-w-40">Zero Depreciation</label>
+                                </div>
+                            </div>
+
+                            <!-- Consumable -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.Consumable">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="Consumable" class="peer mb-2" [value]="true" checked
+                                        disabled />
+                                    <label for="Consumable" class="font-medium min-w-40">Consumable</label>
+                                </div>
+                            </div>
+
+                            <!-- Engine Protector -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.EngineProtector">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="EngineProtector" class="peer mb-2" [value]="true" checked
+                                        disabled />
+                                    <label for="EngineProtector" class="font-medium min-w-40">Engine Protector</label>
+                                </div>
+                            </div>
+
+                            <!-- Return to Invoice -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.ReturnToInvoice">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="InvoiceCover" class="peer mb-2" [value]="true" checked
+                                        disabled />
+                                    <label for="InvoiceCover" class="font-medium min-w-40">Return to Invoice</label>
+                                </div>
+                            </div>
+
+                            <!-- 24x7 Road Side Assistance -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.RoadsideAssistance">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="RoadsideAssistance" class="peer mb-2" [value]="true"
+                                        checked disabled />
+                                    <label for="RoadsideAssistance" class="font-medium  min-w-48">24x7 Road Side
+                                        Assistance</label>
+                                </div>
+                            </div>
+
+                            <!-- Tyre Cover -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.TyreCover">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="TyreCover" class="peer mb-2" [value]="true" checked
+                                        disabled />
+                                    <label for="TyreCover" class="font-medium min-w-40">Tyre Cover</label>
+                                </div>
+                            </div>
+
+                            <!-- Key and Lock Replacement -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.KeyandLockReplacement">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="KeyandLockReplacement" class="peer mb-2" [value]="true"
+                                        checked disabled />
+                                    <label for="KeyandLockReplacement" class="font-medium  min-w-60">Key and Lock
+                                        Replacement</label>
+                                </div>
+                            </div>
+
+                            <!-- NCB Protection -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.NCBProtection">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="NCBProtection" class="peer mb-2" [value]="true" checked
+                                        disabled />
+                                    <label for="NCBProtection" class="font-medium min-w-40">NCB Protection</label>
+                                </div>
+                            </div>
+
+                            <!-- Personal Belongings -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.PersonalBelongings">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="PersonalBelongings" class="peer mb-2" [value]="true"
+                                        checked disabled />
+                                    <label for="PersonalBelongings" class="font-medium min-w-40">Personal
+                                        Belongings</label>
+                                </div>
+                            </div>
+
+
+                            <!-- Daily Allowance  -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.DailyAllowance">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="DailyAllowance" class="peer mb-2" [value]="true" checked
+                                        disabled />
+                                    <label for="DailyAllowance" class="font-medium min-w-40">Daily Allowance</label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4"
+                            *ngIf="DisplayForm.VehicleDetail.InsureAddons == true">
+
+                            <div class="font-semibold">
+                                <h1>Tariff Add Ons:</h1>
+                            </div>
+
+                            <!-- PA - Owner Driver -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.PAOwnerDriver">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="PAOwnerDriver" class="peer mb-2" [value]="true" checked
+                                        disabled />
+                                    <label for="PAOwnerDriver" class="font-medium min-w-40">PA - Owner Driver</label>
+                                </div>
+                            </div>
+
+                            <!-- Geographical Extension  -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.GeographicalExtention">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="GeographicalExtension " class="peer mb-2" [value]="true"
+                                        checked disabled />
+                                    <label for="GeographicalExtension " class="font-medium min-w-40">Geographical
+                                        Extension</label>
+                                </div>
+                            </div>
+
+                            <!-- PA - Pillion Rider -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.PAPillionRider">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="PAPillionRider" class="peer mb-2" [value]="true" checked
+                                        disabled />
+                                    <label for="PAPillionRider" class="font-medium min-w-40">PA - Pillion Rider</label>
+                                </div>
+                            </div>
+
+                            <!-- PA - Paid Driver  -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.PAPaidDriver">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="PAPaidDriver " class="peer mb-2" [value]="true" checked
+                                        disabled />
+                                    <label for="PAPaidDriver " class="font-medium min-w-40">PA - Paid Driver</label>
+                                </div>
+                            </div>
+
+
+                            <!-- PA - Unnammed Passenger -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.PAUnnamedPassenger">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="PAUnnammedPassenger" class="peer mb-2" [value]="true"
+                                        checked disabled />
+                                    <label for="PAUnnammedPassenger" class="font-medium  min-w-48">PA - Unnammed
+                                        Passenger</label>
+                                </div>
+                            </div>
+
+                            <!-- Restricted TPPD  -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.RestrictedTPPD">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="RestrictedTPPD " class="peer mb-2" [value]="true" checked
+                                        disabled />
+                                    <label for="RestrictedTPPD " class="font-medium min-w-40">Restricted TPPD</label>
+                                </div>
+                            </div>
+
+                            <!-- Liability-Paid Driver  -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.LiabilityPaidDriver">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="LiabilityPaidDriver" class="peer mb-2" [value]="true"
+                                        checked disabled />
+                                    <label for="LiabilityPaidDriver" class="font-medium min-w-40">Liability-Paid
+                                        Driver</label>
+                                </div>
+                            </div>
+
+                            <!-- Liability-Other Employees  -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.LiabilityOtherEmployees">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="LiabilityOtherEmployees" class="peer mb-2" [value]="true"
+                                        checked disabled />
+                                    <label for="LiabilityOtherEmployees" class="font-medium  min-w-60">Liability-Other
+                                        Employees</label>
+                                </div>
+                            </div>
+
+
+                            <!-- IMT23 -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.IMT23">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="IMT23" class="peer mb-2" [value]="true" checked
+                                        disabled />
+                                    <label for="IMT23" class="font-medium min-w-40">IMT23</label>
+                                </div>
+                            </div>
+
+                            <!-- IMT47 -->
+                            <div class="min-w-56" *ngIf="DisplayForm.VehicleDetail.IMT47">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="IMT47" class="peer mb-2" [value]="true" checked
+                                        disabled />
+                                    <label for="IMT47" class="font-medium min-w-40">IMT47</label>
+                                </div>
+                            </div>
+
+                            <!-- </div>
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4"
+                            *ngIf="DisplayForm.VehicleDetail.OtherAddOn"> -->
+
+                            <!-- Other, Please Specify in Remarks -->
+                            <div class="relative min-w-56" *ngIf="DisplayForm.VehicleDetail.OtherAddOn">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="Other" class="peer mb-2" [value]="false" checked
+                                        disabled />
+                                    <label for="Other" class="font-medium min-w-80">Other, Please Specify in
+                                        Remarks</label>
+                                </div>
+                            </div>
+
+                            <!-- Remarks -->
+                            <div class="relative min-w-56 col-span-2" *ngIf="DisplayForm.VehicleDetail.OtherAddon">
+                                <div class="icon">
+                                    <mat-icon>bubble_chart</mat-icon>
+                                </div>
+                                <input type="text" class="peer" id="DocumentRemarks" placeholder=""
+                                    [value]="DisplayForm.VehicleDetail.OtherAddonDesc" readonly />
+                                <label for="DocumentRemarks">Remarks</label>
+                            </div>
+
+                        </div>
+
+                        <div class="font-semibold mt-3">
+                            <h1>Vehicle Details</h1>
+                        </div>
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                            <!-- Engine No. -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>explicit</mat-icon>
+                                </div>
+                                <input type="text" class="peer" readonly id="EngineNo" placeholder=" "
+                                    [value]="DisplayForm.VehicleDetail.EngineNumber">
+                                <label for="EngineNo" class="mandatory">Engine No.</label>
+                            </div>
+
+                            <!-- Chasis No. -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>dehaze</mat-icon>
+                                </div>
+                                <input type="text" class="peer" readonly id="ChasisNo" placeholder=" "
+                                    [value]="DisplayForm.VehicleDetail.ChasisNumber">
+                                <label for="ChasisNo" class="mandatory">Chasis No.</label>
+                            </div>
+
+                            <!-- Fleet Business -->
+                            <div class="relative flex gap-2 items-center" *ngIf="DisplayForm.SubCategoryCode == SubCategoryCodeEnum.PrivateCar || 
+                               DisplayForm.SubCategoryCode == SubCategoryCodeEnum.TwoWheeler">
+                                <span for="FleetBusiness" class="CustomBox dummy-formField">
+                                    <input type="checkbox" id="FleetBusiness" class="peer" disabled
+                                        [checked]="DisplayForm.VehicleDetail?.IsFleetBusiness">
+                                    <span class="text-sm ms-3 CustomLabel">Fleet Business</span>
+                                </span>
+                            </div>
+
+                            <!-- Fleet Code -->
+                            <div class="relative " *ngIf="DisplayForm.VehicleDetail?.IsFleetBusiness && 
+                                (DisplayForm.SubCategoryCode == SubCategoryCodeEnum.PrivateCar || 
+                               DisplayForm.SubCategoryCode == SubCategoryCodeEnum.TwoWheeler)">
+                                <div class="icon">
+                                    <mat-icon>tonality</mat-icon>
+                                </div>
+                                <input maxlength="30" type="text" id="FleetBusinessName" readonly placeholder=" "
+                                    class="peer" [value]="DisplayForm.VehicleDetail.FleetBusinessName" />
+                                <label for="FleetBusinessName" class="mandatory">Fleet Code</label>
+                            </div>
+
+                            <!-- Vehicle Class -->
+                            <div class="relative" *ngIf="DisplayForm.SubCategoryCode == SubCategoryCodeEnum.PrivateCar">
+                                <div class="icon">
+                                    <mat-icon>tonality</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="VehicleClass" readonly placeholder=" "
+                                    class="peer" [value]="DisplayForm.VehicleDetail.VehicleClass" />
+                                <!-- <select class="peer" id="VehicleClass" value="VehicleClass">
+                                <option value="">--Select--</option>
+                                <option [value]="'High End'">High End</option>
+                                <option [value]="'Non High End'">Non High End</option>
+                            </select> -->
+                                <label for="VehicleClass" class="mandatory">Vehicle Class</label>
+                            </div>
+
+                            <!--  -->
+                            <!--Remove Field In Enhancement TI-594   -->
+                            <!--  -->
+
+                            <!-- Taxi Agency -->
+                            <!-- <div class="relative" *ngIf="DisplayForm.SubCategoryCode == SubCategoryCodeEnum.PCV">
+                                <div class="icon">
+                                    <mat-icon>tonality</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="TaxiAgency" placeholder=" " class="peer"
+                                    readonly [value]="DisplayForm.VehicleDetail.TaxiAgency" />
+                                <label for="TaxiAgency" class="mandatory">Taxi Agency</label>
+                            </div> -->
+
+                            <!-- Usage -->
+                            <div class="relative" *ngIf="DisplayForm.SubCategoryCode == SubCategoryCodeEnum.PCV ||
+                                    DisplayForm.SubCategoryCode == SubCategoryCodeEnum.GCV||
+                                    DisplayForm.SubCategoryCode == SubCategoryCodeEnum.MiscellaneousD">
+                                <div class="icon">
+                                    <mat-icon>tonality</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="Usage" placeholder=" " class="peer"
+                                    readonly [value]="DisplayForm.VehicleDetail.Usage" />
+                                <label for="Usage" class="mandatory">Usage</label>
+                            </div>
+
+                            <!--  -->
+                            <!--Remove Field In Enhancement TI-594   -->
+                            <!--  -->
+
+                            <!-- Registration Type - Bus -->
+                            <!-- <div class="relative" *ngIf="DisplayForm.SubCategoryCode == SubCategoryCodeEnum.PCV">
+                                <div class="icon">
+                                    <mat-icon>tonality</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="RegistrationType" placeholder=" "
+                                    class="peer" readonly [value]="DisplayForm.VehicleDetail.RegistrationType" />
+                                <label for="RegistrationType" class="mandatory">Registration Type - Bus</label>
+                            </div> -->
+
+                            <!--  -->
+                            <!--Remove Field In Enhancement TI-594   -->
+                            <!--  -->
+
+                            <!-- Contract Period - Bus -->
+                            <!-- <div class="relative min-w-56"
+                                *ngIf="DisplayForm.SubCategoryCode == SubCategoryCodeEnum.PCV">
+                                <div class="icon">
+                                    <mat-icon>tonality</mat-icon>
+                                </div>
+                                <input matInput maxlength="15" type="text" id="ContractPeriod" placeholder=" "
+                                    [value]="DisplayForm.VehicleDetail.ContractPeriod" class="peer" readonly />
+                                <label for="ContractPeriod" class="mandatory">Contract Period(Year) - Bus</label>
+                            </div> -->
+
+                        </div>
+
+                        <div class="mt-3" *ngIf="!isExpand">
+                            <button class="bg-royal text-white mx-3" type="button" mat-button matStepperPrevious>
+                                Back
+                            </button>
+                            <button class="bg-royal text-white mx-3" type="button" mat-button matStepperNext>
+                                Next
+                            </button>
+                        </div>
+
+                    </mat-step>
+
+                    <mat-step label="KYC Details">
+
+                            <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                                <!-- PAN Number -->
+                                <div class="relative min-w-44">
+                                    <div class="icon">
+                                        <mat-icon>credit_card</mat-icon>
+                                    </div>
+                                    <input type="text" id="DocumentNo" placeholder=" " readonly
+                                        value="{{DisplayForm.PANNo}}" class="peer">
+                                    <label for="DocumentNo" class="">PAN</label>
+                                </div>
+
+                                <!-- Attach PAN Card -->
+                                <div class="relative min-w-36">
+                                    <div class="dummy-formField justify-start">
+                                        <div class="icon">
+                                            <mat-icon>attach_file</mat-icon>
+                                        </div>
+                                        <p class="text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                            matTooltip="{{DisplayForm.PANDetails?.FileName}}">
+                                            {{DisplayForm.PANDetails?.FileName || 'Choose File' | excerpt:'max' }}</p>
+                                        <label for="AttachDocument" class="mandatory">Attach PAN Card</label>
+                                        <div class="flex justify-end absolute right-2 bg-white"
+                                            matTooltip="View Document" *ngIf="DisplayForm.PANDetails?.FileName">
+                                            <mat-icon (click)="ViewQnDocument(DisplayForm.PANDetails?.StorageFilePath)"
+                                                class="cursor-pointer">visibility</mat-icon>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3  mt-4">
+
+                                <!-- Aadhar Number -->
+                                <div class="relative min-w-44">
+                                    <div class="icon">
+                                        <mat-icon>credit_card</mat-icon>
+                                    </div>
+                                    <input type="text" id="DocumentNo" placeholder=" " readonly class="peer"
+                                        value="{{DisplayForm.AadharNo}}" />
+                                    <label for="DocumentNo" class="">Aadhar</label>
+                                </div>
+
+                                <!-- Attach Aadhar Card -->
+                                <div class="relative">
+                                    <div class="dummy-formField justify-start">
+                                        <div class="icon">
+                                            <mat-icon>attach_file</mat-icon>
+                                        </div>
+                                        <p class="text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                            matTooltip="{{DisplayForm.AadharDetails?.FileName}}">
+                                            {{DisplayForm.AadharDetails?.FileName || 'Choose File' | excerpt:'max' }}
+                                        </p>
+                                        <label for="AttachDocument" class="mandatory">Attach Aadhar Card</label>
+                                        <div class="flex justify-end absolute right-2 bg-white"
+                                            matTooltip="View Document" *ngIf="DisplayForm.AadharDetails?.FileName">
+                                            <mat-icon
+                                                (click)="ViewQnDocument(DisplayForm.AadharDetails?.StorageFilePath)"
+                                                class="cursor-pointer">visibility</mat-icon>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                            <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3  mt-4">
+
+                                <!-- GST No -->
+                                <div class="relative min-w-44">
+                                    <div class="icon">
+                                        <mat-icon>credit_card</mat-icon>
+                                    </div>
+                                    <input type="text" id="DocumentNo" placeholder=" " readonly class="peer"
+                                        value="{{DisplayForm.GSTNo}}" />
+                                    <label for="DocumentNo" class="">GST No</label>
+                                </div>
+
+                                <!-- Attach GST Certificate -->
+                                <div class="relative">
+                                    <div class="dummy-formField justify-start">
+                                        <div class="icon">
+                                            <mat-icon>attach_file</mat-icon>
+                                        </div>
+                                        <p class="text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                            matTooltip="{{DisplayForm.GSTDetails?.FileName}}">
+                                            {{DisplayForm.GSTDetails?.FileName || 'Choose File' | excerpt:'max' }}
+                                        </p>
+                                        <label for="AttachDocument" class="w-fit min-w-max">Attach GST Certificate</label>
+                                        <div class="flex justify-end absolute right-2 bg-white"
+                                            matTooltip="View Document" *ngIf="DisplayForm.GSTDetails?.FileName">
+                                            <mat-icon (click)="ViewQnDocument(DisplayForm.GSTDetails?.StorageFilePath)"
+                                                class="cursor-pointer">visibility</mat-icon>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+             
+
+                        <div class="mt-3" *ngIf="!isExpand">
+                            <button class="bg-royal text-white" mat-button matStepperPrevious> Back </button>
+                            <button class="bg-royal text-white mx-3" type="button" mat-button matStepperNext> Next
+                            </button>
+                        </div>
+
+                    </mat-step>
+
+                    <mat-step label="Previous Policy Details"
+                        *ngIf="DisplayForm.PolicyType == 'Rollover'  || DisplayForm.PolicyType == 'Renewal-Change Company'|| DisplayForm.PolicyType == 'Renewal-Same Company'">
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                            <!-- Insurance Company -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>business</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="InsuranceCompany"
+                                    [value]="DisplayForm.PrevPolicyInsurCompName" placeholder=" " class="peer"
+                                    readonly />
+                                <label for="InsuranceCompany" class="mandatory w-fit min-w-max">Insurance Company</label>
+                            </div>
+
+                            <!-- Policy Type -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>timelapse</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="PolicyType"
+                                    [value]="DisplayForm.PrevPolicyType" placeholder=" " class="peer" readonly />
+                                <label for="PolicyType" class="">Policy Type</label>
+                            </div>
+
+                            <!-- Policy Start Date -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </div>
+                                <div class="flex">
+                                    <input matInput type="text" id="PolicyStartDate" placeholder="__/__/____" datemask
+                                        [matDatepicker]="picker" class="peer"
+                                        [value]="DisplayForm.PreviousPolicyStartDate" readonly />
+                                    <label for="StartDate" class=" lg:text-xs">Policy Start Date
+                                        <span
+                                            *ngIf="(DisplayForm.PrevPolicyType != '1 OD + 3 TP' && DisplayForm.PrevPolicyType != '1 OD + 5 TP')">
+                                            {{DisplayForm.PrevPolicyType}}
+                                        </span>
+                                        <span
+                                            *ngIf="(DisplayForm.PrevPolicyType=='1 OD + 3 TP' || DisplayForm.PrevPolicyType=='1 OD + 5 TP')">
+                                            - 1OD
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Policy End Date -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-datepicker-toggle class="-ml-2" matIconSuffix></mat-datepicker-toggle>
+                                    <mat-datepicker #icker></mat-datepicker>
+                                </div>
+                                <div class="flex">
+                                    <input matInput type="text" id="PolicyEndDate" placeholder="__/__/____" datemask
+                                        [matDatepicker]="icker" class="peer" [value]="DisplayForm.PreviousPolicyEndDate"
+                                        readonly />
+                                    <label for="StartDate" class=" lg:text-xs">Policy End Date
+                                        <span
+                                            *ngIf="(DisplayForm.PrevPolicyType != '1 OD + 3 TP' && DisplayForm.PrevPolicyType != '1 OD + 5 TP')">
+                                            {{DisplayForm.PrevPolicyType}}
+                                        </span>
+                                        <span
+                                            *ngIf="(DisplayForm.PrevPolicyType=='1 OD + 3 TP' || DisplayForm.PrevPolicyType=='1 OD + 5 TP')">
+                                            - 1OD
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+
+                            <div class="relative "
+                                *ngIf="(DisplayForm.PrevPolicyType=='1 OD + 3 TP' || DisplayForm.PrevPolicyType=='1 OD + 5 TP')">
+                                <div class="flex">
+                                    <div class="icon">
+                                        <mat-datepicker-toggle class="-ml-2 pointer-events-none" matIconSuffix
+                                            [for]="PrevPolicyTPStartDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #PrevPolicyTPStartDate></mat-datepicker>
+                                    </div>
+                                    <input matInput type="text" id="PrevPolicyTPStartDate" class="peer"
+                                        placeholder="__/__/____" datemask [value]="DisplayForm.PrevPolicyTPStartDate"
+                                        readonly [matDatepicker]="PrevPolicyTPStartDate" autocomplete="off">
+                                    <label for="PolicyTPStartDate" class=" lg:text-xs">Policy Start Date
+                                        <span *ngIf="DisplayForm.PrevPolicyType == '1 OD + 3 TP'">-
+                                            3TP</span>
+                                        <span *ngIf="DisplayForm.PrevPolicyType == '1 OD + 5 TP'">-
+                                            5TP</span>
+                                    </label>
+                                </div>
+
+                            </div>
+
+                            <!-- Policy End Date -->
+                            <div class="relative "
+                                *ngIf="(DisplayForm.PrevPolicyType=='1 OD + 3 TP' || DisplayForm.PrevPolicyType=='1 OD + 5 TP')">
+                                <div class="flex">
+                                    <div class="icon">
+                                        <mat-datepicker-toggle class="-ml-2 pointer-events-none" matIconSuffix
+                                            [for]="PrevPolicyTPEndDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #PrevPolicyTPEndDate></mat-datepicker>
+                                    </div>
+                                    <input matInput type="text" id="PrevPolicyTPEndDate" class="peer"
+                                        placeholder="__/__/____" [value]="DisplayForm.PrevPolicyTPEndDate" readonly
+                                        datemask [matDatepicker]="PrevPolicyTPEndDate" autocomplete="off">
+                                    <label for="TPStartDate" class=" lg:text-xs">Policy End Date
+                                        <span *ngIf="DisplayForm.PrevPolicyType == '1 OD + 3 TP'">-
+                                            3TP</span>
+                                        <span *ngIf="DisplayForm.PrevPolicyType == '1 OD + 5 TP'">-
+                                            5TP</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Is previous policy CNG/LPG kit included? -->
+                            <div class="relative">
+
+                                <div class="pl-2 flex h-full gap-2 items-center">
+                                    <span>Is previous policy CNG/LPG kit included?</span>
+                                    <span class="font-bold"> {{ DisplayForm.PrevPolicyCNGLPG ? 'Yes' : 'No'}} </span>
+                                </div>
+
+                            </div>
+
+                            <!-- Claim in Previous Year -->
+                            <div class="relative">
+
+                                <div class="pl-2 flex h-full gap-2 items-center">
+                                    <span>Claim in Previous Year?</span>
+                                    <span class="font-bold"> {{ DisplayForm.ClaimInPreviousYear ? 'Yes' : 'No'}} </span>
+                                </div>
+
+                            </div>
+
+
+                            <!-- IDV -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>timelapse</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="SumInsured"
+                                    [value]="DisplayForm.PrevPolicySumInsured | indCurrencyWithoutSymbol"
+                                    placeholder=" " class="peer" required readonly />
+                                <label for="SumInsured" class="">IDV</label>
+                            </div>
+
+                            <!-- Premium Amount -->
+                            <div class="relative ">
+                                <div class="icon">
+                                    <mat-icon>timelapse</mat-icon>
+                                </div>
+                                <input matInput maxlength="30" type="text" id="PremiumAmt"
+                                    [value]="DisplayForm.PreviousPolicyPremium | indCurrencyWithoutSymbol"
+                                    placeholder=" " class="peer" required readonly />
+                                <label for="PremiumAmt" class="">Premium Amount</label>
+                            </div>
+
+                        </div>
+                        <div class="mt-3" *ngIf="!isExpand">
+                            <button class="bg-royal text-white mx-3" type="button" mat-button matStepperPrevious>
+                                Back
+                            </button>
+                            <button class="bg-royal text-white mx-3" type="button" mat-button matStepperNext>
+                                Next
+                            </button>
+                        </div>
+
+                    </mat-step>
+
+                    <!-- Fifth stepper -->
+                    <mat-step label="Share Payment Link">
+
+
+                        <div class="grid lg:grid-cols-4 grid-cols-2 gap-3 mt-4">
+
+                            <!-- Payment link will be directly shared by Insurance Company -->
+                            <div class="relative lg:col-span-3 md:col-span-2 mb-3">
+                                <div class="lableInputbox">
+                                    <input type="checkbox" id="PaymentInsurer" formControlName="PaymentInsurer"
+                                        class="peer" name="PaymentInsurer"
+                                        [checked]="PLUWForm.get('PaymentInsurer').value == true" />
+                                    <label class="w-full" for="PaymentInsurer">
+                                        Payment link will be directly shared by Insurance Company
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                            <!-- Gross Premium -->
+                            <div class="relative">
+                                <div class="icon rs">₹</div>
+                                <input type="text" class="peer" id="GrossPremium" placeholder=" " readonly
+                                    value="{{getGrossPremium | indCurrencyWithoutSymbol}}">
+                                <label for="GrossPremium">Gross Premium</label>
+                            </div>
+
+                            <!-- Payment Link -->
+                            <div class="relative min-w-36" *ngIf="DisplayForm?.PaymentMode == 'Online'">
+                                <div class="icon">
+                                    <mat-icon>insert_link</mat-icon>
+                                </div>
+                                <input matInput type="text" id="PaymentLink" placeholder=" " onfocus="this.select()"
+                                    formControlName="PaymentLink" class="peer w-fit " required maxlength="500" />
+                                <label for="PaymentLink"
+                                    [ngClass]="(!PLUWForm.get('PaymentInsurer').value) && (DisplayForm?.PaymentMode == 'Online') ? 'mandatory' : ''">
+                                    Payment Link
+                                </label>
+                            </div>
+
+                            <!-- Attach Proposal Form -->
+                            <div class="relative min-w-36">
+                                <mat-icon *ngIf="PLUWForm?.value.ProposalSubmissionDetail.FileName"
+                                    (click)="removeProposalDoc()"
+                                    class="absolute -right-2 -top-3 text-red-500 cursor-pointer z-10">cancel</mat-icon>
+                                <div class="dummy-formField ">
+                                    <div class="icon">
+                                        <mat-icon>attach_file</mat-icon>
+                                    </div>
+                                    <input type="file" class="hidden" #file (change)="UploadDocument($event)">
+                                    <p class="cursor-pointer hover:text-primary-500" [ngClass]="'font-medium'"
+                                        matTooltip="{{PLUWForm.value.ProposalSubmissionDetail.FileName}}"
+                                        (click)="file.click()">{{
+                                        PLUWForm.value.ProposalSubmissionDetail.FileName ||
+                                        'Attach Proposal Form' | excerpt:'max' }}</p>
+                                    <label for="document" class="w-fit min-w-max">Attach Proposal Form</label>
+                                    <div class="flex justify-end absolute right-2 bg-white" matTooltip="View Document"
+                                        (click)="ViewQnDocument(PLUWForm.value.ProposalSubmissionDetail.StorageFilePath)">
+                                        <mat-icon *ngIf="PLUWForm.value.ProposalSubmissionDetail.StorageFilePath"
+                                            class="cursor-pointer">visibility</mat-icon>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- View Quotation -->
+                            <div class="relative min-w-28">
+                                <div class="icon z-10">
+                                    <mat-icon>picture_as_pdf</mat-icon>
+                                </div>
+                                <input matInput type="" readonly id="ViewQuotation" value="View Quotation"
+                                    placeholder=" " class="peer w-fit cursor-pointer hover:text-primary-500 font-medium"
+                                    (click)="ViewQuotation()" />
+                            </div>
+
+                        </div>
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                            <!-- Discount -->
+                            <div class="relative " *ngIf="!this.IsPOSPUser">
+                                <div class="icon">
+                                    <mat-icon>timelapse</mat-icon>
+                                </div>
+                                <input matInput type="text" id="Discount" placeholder=" " class="peer"
+                                    onfocus="this.select()" formControlName="Discount" required />
+                                <label for="Discount" class="">Discount</label>
+                            </div>
+
+                            <!-- Additional Information -->
+                            <div class="relative" [matTooltip]="PLUWForm.get('Additionalinformation').value">
+                                <div class="icon">
+                                    <mat-icon>border_color</mat-icon>
+                                </div>
+                                <input type="text" class="peer" id="AdditionalInformation" placeholder=" "
+                                    formControlName="Additionalinformation" />
+                                <label for="AdditionalInformation">Additional Information</label>
+                            </div>
+
+                            <!-- Reason (for Send back/reject) -->
+                            <div class="relative col-span-2">
+                                <div class="icon">
+                                    <mat-icon>bubble_chart</mat-icon>
+                                </div>
+                                <input matInput type="text" formControlName="SendBackRejectDesc" placeholder=" "
+                                    onfocus="this.select()" id="SendBackRejectDesc" class="peer w-fit pad" required />
+                                <label for="SendBackRejectDesc" class="mandatory ">
+                                    Reason (for Send Back/Reject)
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <div class="grid justify-items-end mt-4">
+
+                            <p class="text-red-500 font-bold">
+                                Note: The Above payment link will expire by 12:00 AM today Mid night.
+                            </p>
+
+                        </div>
+
+                        <div class="grid lg:grid-cols-2 md:grid-cols-1 gap-3 my-4">
+
+                            <div class="flex flex-wrap gap-3">
+                                <button class="bg-royal text-white " type="button" mat-button matStepperPrevious
+                                    *ngIf="!isExpand">
+                                    Back
+                                </button>
+                                <!-- Share -->
+                                <!-- <button class="bg-royal text-white " type="button" mat-button
+                                    (click)="ShareButton()">
+                                    Share
+                                </button> -->
+
+                                <!-- Reject -->
+                                <button class="bg-royal text-white " type="button" mat-button (click)="Reject()">
+                                    Reject
+                                </button>
+
+                                <!-- Send Back -->
+                                <button class="bg-royal text-white " type="button" mat-button (click)="SendBack()">
+                                    Send Back
+                                </button>
+
+                                <!-- Submit -->
+                                <button class="bg-royal text-white " (click)="SubmitForm()" type="submit" mat-button
+                                    matStepperNext>
+                                    Submit
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </mat-step>
+
+                </mat-stepper>
+            </div>
+            <!-- Region Form End -->
+        </form>
+    </div>
+    <!-- End of Body -->

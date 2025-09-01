@@ -1,0 +1,55 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1
+        class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" [disabled]="BankForm.invalid"
+                (click)="submitform()" *ngIf="mode == 'Create' || mode == 'Edit'">Save</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()"
+                *ngIf="mode == 'Edit' || mode == 'Create'">Cancel</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()"
+                *ngIf="mode == 'View'">Back</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+        <form [formGroup]="BankForm" class="sm:w-120 text-md">
+
+<div class="grid gap-4">
+
+    <!-- Bank Name  -->
+            <div class="relative">
+                <div class="icon">
+                    <mat-icon>account_balance</mat-icon>
+                </div>
+                <input type="text" class="peer" AlphabetOnly maxlength="120" formControlName="Name" id="Name" placeholder=" "/>
+                <label for="Name" class="mandatory">Bank Name</label>
+            </div>
+
+            <!-- Status  -->
+            <div class="font-medium py-5 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+                <span for="Status" class="pr-2 py-1 font-medium after:content-['*'] after:ml-1 after:text-red-500 ml-3">Status</span>
+            <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1" (change)="onChange($event,'Status')">
+                <span class="flex font-medium text-xl ml-3 mt-1.5">
+                {{
+                    BankForm.controls['Status'].value == 1
+                ? "Active"
+                : "InActive"
+                }}
+                </span>
+              </mat-slide-toggle>
+            </div>
+
+        </div>
+        </form>
+    </div>
+    <!-- endregion form -->
+</div>

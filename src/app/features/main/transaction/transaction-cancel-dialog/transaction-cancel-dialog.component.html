@@ -1,0 +1,34 @@
+<div class="h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        {{TransactionStatus != 2 ? 'Cancel ?' : 'View Reason'}}
+        
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3 items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" (click)="closeDialog()" title="Close">X</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+
+    <div class="py-5">
+        <form class="px-2" [formGroup]="CancelReasonForm">
+
+            <div *ngIf="TransactionStatus != 2">
+                <p>Are you sure you want to Cancel this Transaction?</p>
+            </div>
+
+            <div class="relative my-5">
+                <div class="icon">
+                    <mat-icon>bubble_chart</mat-icon>
+                </div>
+                <textarea type="text" class="peer max-h-24" placeholder=" " formControlName="StatusDesc" id="Reason" maxlength="500"></textarea>
+                <label for="Reason" class="mandatory">Reason</label>
+            </div>
+
+        </form>
+        <div class="flex justify-end gap-2" *ngIf="TransactionStatus != 2">
+            <button mat-raised-button (click)="closeDialog()">No</button>
+            <button class="bg-royal text-white mx-3" (click)="CancelTransaction()" mat-raised-button>Yes, Cancel</button>
+        </div>
+    </div>
+</div>

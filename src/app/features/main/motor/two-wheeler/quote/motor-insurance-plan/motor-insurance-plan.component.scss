@@ -1,0 +1,59 @@
+.searchBox {
+    background-color: rgb(240 249 255 / var(--tw-bg-opacity)) !important;
+    padding: 5px 15px !important;
+  }
+
+  mat-select {
+    @apply block pl-2 pr-3  w-full text-sm border border-accent-400 text-gray-900 bg-transparent rounded-lg dark:text-white dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-primary-500 #{!important};
+    @apply bg-white #{!important};
+  }
+  
+  .invisible {
+    display: block;
+    visibility: hidden;
+    height: 0;
+    width: 0;
+  }
+
+::ng-deep.mat-mdc-menu-panel.mat-mdc-menu-panel {
+  max-width: 600px !important;
+  background-color: #E0F2FE !important;
+  // box-shadow: none;
+}
+
+::ng-deep label.labelText{
+  color: #B7BABD !important;
+  font-weight: 400 !important;
+}
+
+::ng-deep div .MandateByIRDAI{
+  background-color: #B7BABD !important;
+  // font-weight: 400 !important;
+  color: black !important;
+}
+// .pa-hover::before{
+//   content: "";
+//   position: absolute;
+//   top: 13px;
+//   left: 145px;
+//   border: 11px solid transparent;
+//   border-bottom-color: #E0F2FE !important;
+// }
+
+
+::ng-deep.selectAddOn {
+  padding-bottom: 0.2rem !important;
+  padding-top: 0.2rem !important;
+  font-size: 0.7rem !important;
+}
+
+::ng-deep.AddOnicon {
+  pointer-events: none;
+  position: absolute;
+  top: 5px;
+  bottom: 0.25rem;
+  left: -5px;
+  display: flex;
+  align-items: center;
+  padding-left: 0.75rem;
+}

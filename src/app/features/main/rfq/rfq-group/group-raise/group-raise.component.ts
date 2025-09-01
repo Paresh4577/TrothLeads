@@ -1,0 +1,1830 @@
+import { DatePipe, Location } from '@angular/common';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { API_ENDPOINTS } from '@config/api-endpoints.config';
+import { dropdown } from '@config/dropdown.config';
+import { MY_DATE_FORMATS } from '@config/my-date-formats';
+import { ValidationRegex } from '@config/validationRegex.config';
+import { DialogService } from '@lib/services/dialog.service';
+import { AlertsService } from '@lib/services/error-handling/alerts.service';
+import { HttpService } from '@lib/services/http/http.service';
+import { MasterListService } from '@lib/services/master-list.service';
+import { Alert, IAdditionalFilterObject, IFilterRule, OrderBySpecs, QuerySpecs } from '@models/common';
+import { IMyProfile } from '@models/dtos/auth/MyProfile';
+import { GroupRaiseDTO, IGroupRaiseDTO } from '@models/dtos';
+import { IBranchDto } from '@models/dtos/core/BranchDto';
+import { IInsuranceCompanyDto } from '@models/dtos/core/insurance-company-dto';
+import { IUserDto } from '@models/dtos/core/userDto';
+import { AuthService } from '@services/auth/auth.service';
+import { Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { GroupPolicyType, GroupRenewalPolicyType } from '@config/rfq';
+import { RfqGroupService } from '../rfq-group.service';
+import { CategoryCodeEnum, SalesPersonTypeEnum, UserTypeEnum } from 'src/app/shared/enums';
+import { RFQDocumentsDrpList } from '@config/rfq';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { GenPopupComponent } from '@lib/ui/components/gen-popup/gen-popup.component';
+import { ROUTING_PATH } from '@config/routingPath.config';
+import { environment } from 'src/environments/environment';
+import { GroupClaimAnalysisDocumentDto, GroupClaimProofDocumentsDto, GroupCoverageDto, GroupDocumentsDto, GroupEmployeeList, IGroupClaimProofDocumentsDto, IGroupCoverageDto, GroupPreviousPolicyDocument } from '@models/dtos';
+
+const ActiveMasterDataRule: IFilterRule = { Field: 'Status', Operator: 'eq', Value: 1 }
+@Component({
+  selector: 'gnx-group-raise',
+  templateUrl: './group-raise.component.html',
+  styleUrls: ['./group-raise.component.scss'],
+  providers: [
+    DatePipe,
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+  ],
+})
+
+export class GroupRaiseComponent {
+  @ViewChild('DocumentDropdown') DocumentDropdown: ElementRef;
+
+  //Variables
+  pagetitle: string = "RFQ (Requisition for Quotation) - Group"; // Page main header title
+  mode: string; // for identify of Raise page is create or edit
+  currentDate // Set current date 
+  isExpand: boolean = false;
+  DisplayForm: any;
+  UserProfileObj: IMyProfile;
+
+  //APIs
+  UploadFileAPI = API_ENDPOINTS.Attachment.Upload;  // upload document API
+
+  // declare validation Regex
+  phoneNum: RegExp = ValidationRegex.phoneNumReg;
+  emailValidationReg: RegExp = ValidationRegex.emailValidationReg;
+
+  // declare Alert Array List
+  BasicDetailsAlert: Alert[] = [];
+  ProductCategoryDetailsAlert: Alert[] = [];
+  DocumentAttachmentAlert: Alert[] = [];
+  AttachDocumentAlerts: Alert[] = []; // Step Invalid field error message
+  TeamDetailsAlerts: Alert[] = [];
+  PrevPolicyDetailAlerts: Alert[] = []; // Insurer Query Details field error message
+  ClaimsDetailAlerts: Alert[] = [];
+  PrevPolicyClaimsDetailAlerts: Alert[] = [];
+
+  // declare form control
+  BasicDetailsStepCtrl = new FormControl(); // Step 1 Control
+  ProductCategoryDetailsStepCtrl = new FormControl();
+  DocumentAttachmentStepCtrl = new FormControl()
+  TeamDetailsStepCtrl = new FormControl(); // Step 5 Control
+  PreviousPolicyDetailsStepCtrl = new FormControl(); // Step 3 Control
+  ClaimsDetailStepCtrl = new FormControl(); // Step 3 Control
+
+  // Observable List
+  TeamRefUser$: Observable<IUserDto[]>;
+  salesPersonName$: Observable<IUserDto[]> // Observable of user list
+  InsuranceCompany$: Observable<IInsuranceCompanyDto[]>;
+  BDOlist$: Observable<IUserDto[]>;
+  BDMlist$: Observable<IUserDto[]>;
+
+  //List objects
+  Branches: IBranchDto[] = [];
+  InsuranceCompany: IInsuranceCompanyDto[];
+  SubCategoryList = [];
+  GroupCategoryTypeList = [];
+  CommodityTypeList = [];
+
+  DropdownMaster: dropdown;
+
+  //FormGroup 
+  RFQGroupForm !: FormGroup;
+  RFQGroup: IGroupRaiseDTO
+  destroy$: Subject<any>;
+
+  //#region  constructor
+  constructor(
+    private fb: FormBuilder,
+    private _alertservice: AlertsService,
+    public dialog: MatDialog,
+    public _router: Router,
+    private _route: ActivatedRoute,
+    private _dataService: HttpService,
+    private _MasterListService: MasterListService,
+    private _datePipe: DatePipe,
+    private authService: AuthService,
+    private _dialogService: DialogService,
+    private _RFQGroupService: RfqGroupService,
+    private _Location: Location,
+    private _cdr: ChangeDetectorRef,
+  ) {
+    this.destroy$ = new Subject();
+    this.DropdownMaster = new dropdown();
+  }
+  //#endregion constructor
+
+  //#region lifecyclehooks
+  // -----------------------------------------------------------------------------------------------------
+  // @ Lifecycle hooks
+  // -----------------------------------------------------------------------------------------------------
+  //On Init
+
+  ngOnInit(): void {
+
+    this.RFQGroup = new GroupRaiseDTO();
+
+    // Route params data
+    let data = this._route.snapshot.data;
+    this.pagetitle = data['title'];
+    this.mode = data['mode'];
+    this.DisplayForm = data['data'];
+
+    // in case of Edit and View mode then 
+    if (this.mode == "edit" || this.mode == "view" || this.mode == 'RenewalRFQ') {
+      this.RFQGroup = data['data'];
+    }
+
+    // build Group form
+    this.RFQGroupForm = this._buildForm(this.RFQGroup);
+
+    // add default claim proof attachment
+    if (this.mode.toUpperCase() == "Edit" && this.PrevPolicyDetails.controls.length <= 0 && (this.DisplayForm.PolicyType == "RollOver" || this.DisplayForm.PolicyType == 'Renewal-Change Company' || this.DisplayForm.PolicyType == 'Renewal-Same Company')) {
+      this.addPrevPolicyDetails()
+    }
+
+    this.authService.userProfile$.subscribe((user: IMyProfile) => {
+      if (user) {
+        this.UserProfileObj = user
+      }
+    })
+
+    // in case of view mode then all form value is disabled mode
+    if (this.mode == "view") {
+      this.RFQGroupForm.disable({ emitEvent: false });
+      this.isExpand = true;
+    }
+
+    this._fillMasterList();
+    this._onFormChange();
+  }
+
+  // After View Init
+  ngAfterViewInit(): void {
+    this._cdr.detectChanges();
+  }
+
+  // get Group policy type
+  get GroupPolicyType() {    
+    if (this.DisplayForm?.TransactionId) {
+      return GroupRenewalPolicyType;
+    }
+    else {
+      return GroupPolicyType;
+    }
+  }
+
+  // get uploaded documents
+  get Documents() {
+    return this.RFQGroupForm.controls["Documents"] as FormArray;
+  }
+
+  // Document Type List
+  get PolicyDocumentList() {
+    return RFQDocumentsDrpList.filter(doc => doc.Category.includes(CategoryCodeEnum.Group))
+  }
+
+  // get PrevPolicyDetail list
+  get PrevPolicyDetails() {
+    return this.RFQGroupForm.get('ClaimProofDocuments') as FormArray;
+  }
+
+  /**
+   * Only editable in login user is standard user & Sales person type is POSP
+   */
+  get canEditableSalesPerson() {
+    if (this.UserProfileObj?.UserType == UserTypeEnum.StandardUser && this.mode != 'view') {
+      if (this.RFQGroupForm.get('SalesPersonType').value == SalesPersonTypeEnum.POSP) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  /**
+ * Only editable in login user is standard user & Sales person type is Direct
+ */
+  get canEditableBdoBdm() {
+    if (this.UserProfileObj?.UserType == UserTypeEnum.StandardUser && this.mode != 'view') {
+      if (this.RFQGroupForm.get('SalesPersonType').value == SalesPersonTypeEnum.Direct) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Branch ANd sales person is editable only in login user is Standard User
+   */
+  get CanEditableSalespersonTypeAndBranch() {
+    if (this.UserProfileObj?.UserType == UserTypeEnum.StandardUser && this.mode != 'view') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //#endregion lifecyclehooks
+
+  //#region public-methods
+  // -----------------------------------------------------------------------------------------------------
+  // @ Public methods
+  // -----------------------------------------------------------------------------------------------------
+
+  public ExpandCollaps() {
+    this.isExpand = !this.isExpand;
+  }
+
+  // back button
+  public backButton() {
+    this._Location.back();
+  }
+
+  public AutocompleteSelectedEvent(event: MatAutocompleteSelectedEvent, SelectedFor: string): void {
+
+    switch (SelectedFor) {
+
+      case "TeamRef":
+        this.RFQGroupForm.patchValue({
+          TeamReferenceId: event.option.value.Id,
+          TeamReferenceName: event.option.value.FullName,
+          BDMName: event.option.value.BDMName,
+          BDMId: event.option.value.BDMId,
+          BDOName: event.option.value.BDOName,
+          BDOId: event.option.value.BDOId,
+        });
+        break;
+
+      case "Sales":
+        this.RFQGroupForm.patchValue({
+          SalesPersonId: event.option.value.Id,
+          SalesPersonName: event.option.value.FullName,
+          BDMName: event.option.value.BDMName,
+          BDMId: event.option.value.BDMId,
+          BDOName: event.option.value.BDOName,
+          BDOId: event.option.value.BDOId,
+        })
+        break;
+
+      case "BDMName":
+        this.RFQGroupForm.patchValue({
+          BDMName: event.option.value.FullName,
+          BDMId: event.option.value.Id,
+        });
+        break;
+
+      case "BDOName":
+        this.RFQGroupForm.patchValue({
+          BDOName: event.option.value.FullName,
+          BDOId: event.option.value.Id,
+        });
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  // /* Pop Up for Name of the Insurance Company
+  //  * @param type:to identify api of which list is to be called
+  //   * @param title: title that will be displayed on PopUp
+  //   * /
+  public openDiolog(type: string, title: string, openFor: string) {
+    let specs = new QuerySpecs()
+
+
+    switch (openFor) {
+
+      case "Sales":
+        specs = this._salesPersonListAPIfilter();
+        break;
+
+      case "TeamRef":
+        specs = this._teamReferenceListAPIfilter();
+        break;
+
+      case "BDOName":
+        specs = this._bdoListAPIfilter();
+        break;
+
+      case "BDMName":
+        specs = this._bdmListAPIfilter();
+        break;
+
+      default:
+        break;
+    }
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '51vw';
+    dialogConfig.minWidth = 'fit-content';
+    dialogConfig.minHeight = "80vh";
+    dialogConfig.maxHeight = "80vh";
+
+    dialogConfig.data = {
+      type: type,
+      title: title,
+      ispopup: true,
+      filterData: specs.FilterConditions.Rules,
+      addFilterData: specs.AdditionalFilters
+    };
+
+    const dialogRef = this.dialog.open(GenPopupComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+
+        switch (openFor) {
+
+          case "Sales":
+            this.RFQGroupForm.patchValue({
+              SalesPersonId: result.Id,
+              SalesPersonName: result.FullName,
+              BDMName: result.BDMName,
+              BDMId: result.BDMId,
+              BDOName: result.BDOName,
+              BDOId: result.BDOId,
+            });
+            break;
+
+          case "TeamRef":
+            this.RFQGroupForm.patchValue({
+              TeamReferenceId: result.Id,
+              TeamReferenceName: result.FullName,
+              BDMName: result.BDMName,
+              BDMId: result.BDMId,
+              BDOName: result.BDOName,
+              BDOId: result.BDOId,
+            });
+            break;
+
+          case "BDMName":
+            this.RFQGroupForm.patchValue({
+              BDMName: result.FullName,
+              BDMId: result.Id,
+            });
+            break;
+
+          case "BDOName":
+            this.RFQGroupForm.patchValue({
+              BDOName: result.FullName,
+              BDOId: result.Id,
+            });
+            break;
+
+          default:
+            break;
+        }
+      }
+
+    })
+  }
+
+  public clear(name: string, id: string): void {
+    this.RFQGroupForm.controls[name].setValue("")
+    this.RFQGroupForm.controls[id].setValue(null)
+  }
+
+  /**
+  * Validation part 
+  */
+
+  public BasicDetailsValidations() {
+    this.BasicDetailsAlert = []
+
+    if (this.RFQGroupForm.get('SubCategoryId').value == 0 || this.RFQGroupForm.get('SubCategoryId').value == null) {
+      this.BasicDetailsAlert.push({
+        Message: 'Select Poduct Sub Category',
+        CanDismiss: false,
+        AutoClose: false,
+      })
+    }
+
+    if (this.RFQGroupForm.get('PolicyType').hasError('required')) {
+      this.BasicDetailsAlert.push({
+        Message: 'Select Policy Type',
+        CanDismiss: false,
+        AutoClose: false,
+      })
+    }
+
+    if (this.BasicDetailsAlert.length > 0) {
+      this.BasicDetailsStepCtrl.setErrors({ required: true });
+      return this.BasicDetailsStepCtrl;
+    }
+    else {
+      this.BasicDetailsStepCtrl.reset();
+      return this.BasicDetailsStepCtrl;
+    }
+
+  }
+
+  public BasicDetailsError() {
+    if (this.BasicDetailsAlert.length > 0) {
+      this._alertservice.raiseErrors(this.BasicDetailsAlert);
+      return;
+    }
+  }
+
+  public ProductCategoryDetailsValidations() {
+
+    this.ProductCategoryDetailsAlert = []
+
+    if (!this.RFQGroupForm.get('ProposerMobileNo').value) {
+      this.ProductCategoryDetailsAlert.push({
+        Message: 'Enter Mobile No.',
+        CanDismiss: false,
+        AutoClose: false,
+      })
+    } else {
+      if (
+        !this.phoneNum.test(this.RFQGroupForm.get('ProposerMobileNo').value)
+      ) {
+        this.ProductCategoryDetailsAlert.push({
+          Message: 'Mobile No must be 10 digit.',
+          CanDismiss: false,
+          AutoClose: false,
+        });
+      }
+    }
+
+    if (this.RFQGroupForm.get('ProposerEmail').value != "" && this.RFQGroupForm.get('ProposerEmail').value != null) {
+      if (!this.emailValidationReg.test(this.RFQGroupForm.get('ProposerEmail').value)) {
+        this.ProductCategoryDetailsAlert.push({
+          Message: 'Enter Valid Email ID.',
+          CanDismiss: false,
+          AutoClose: false,
+        });
+      }
+    }
+
+    if (this.RFQGroupForm.get('ProposerName').invalid) {
+      this.ProductCategoryDetailsAlert.push({
+        Message: 'Enter Insured Name.',
+        CanDismiss: false,
+        AutoClose: false,
+      })
+    }
+
+    if (this.RFQGroupForm.get('EmpList.FileName').invalid) {
+      this.ProductCategoryDetailsAlert.push({
+        Message: 'Select Employee List.',
+        CanDismiss: false,
+        AutoClose: false,
+      })
+    }
+
+    if (this.RFQGroupForm.get('CoverageDetail.Other').value == true) {
+      if (this.RFQGroupForm.get('CoverageDetail.OtherDescription').value == "" || this.RFQGroupForm.get('CoverageDetail.OtherDescription').value == null) {
+        this.ProductCategoryDetailsAlert.push({
+          Message: 'Enter Remarks.',
+          CanDismiss: false,
+          AutoClose: false,
+        })
+      }
+    }
+
+    if (this.ProductCategoryDetailsAlert.length > 0) {
+      this.ProductCategoryDetailsStepCtrl.setErrors({ required: true });
+      return this.ProductCategoryDetailsStepCtrl;
+    }
+    else {
+      this.ProductCategoryDetailsStepCtrl.reset();
+      return this.ProductCategoryDetailsStepCtrl;
+    }
+
+  }
+
+  public ProductCategoryDetailsError() {
+    if (this.ProductCategoryDetailsAlert.length > 0) {
+      this._alertservice.raiseErrors(this.ProductCategoryDetailsAlert);
+      return;
+    }
+  }
+
+  // check step three  Field & Invalid Field Error message push in alert Array
+  public PreviousPolicyDetailsValidations() {
+    this.PrevPolicyDetailAlerts = []
+
+    if (this.RFQGroupForm.get('PreviousPolicyDocument.FileName').invalid) {
+      this.PrevPolicyDetailAlerts.push({
+        Message: 'Policy Attachment Required',
+        CanDismiss: false,
+        AutoClose: false,
+      })
+    }
+
+    if (this.RFQGroupForm.get('PolicyType').value == 'Rollover' || this.RFQGroupForm.get('PolicyType').value == 'Renewal-Change Company' || this.RFQGroupForm.get('PolicyType').value == 'Renewal-Same Company') {
+      if (this.RFQGroupForm.get('PreviousPolicyStartDate').value && this.RFQGroupForm.get('PreviousPolicyEndDate').value && this.RFQGroupForm.get('PreviousPolicyEndDate').value < this.RFQGroupForm.get('PreviousPolicyStartDate').value) {
+        this.PrevPolicyDetailAlerts.push({
+          Message: 'Enter Valid Policy End Date',
+          CanDismiss: false,
+          AutoClose: false,
+        })
+      }
+    }
+
+    if (this.RFQGroupForm.get('AnyClaiminLast3Year').value == true) {
+      this.validatePrevPolicyDetails();
+    }
+
+    if (this.PrevPolicyDetailAlerts.length > 0) {
+      this.PreviousPolicyDetailsStepCtrl.setErrors({ required: true });
+      return this.PreviousPolicyDetailsStepCtrl;
+    } else {
+      this.PreviousPolicyDetailsStepCtrl.reset();
+      return this.PreviousPolicyDetailsStepCtrl;
+    }
+  }
+
+  // alert message if step three is not validated
+  public PreviousPolicyDetailsError() {
+    if (this.PrevPolicyDetailAlerts.length > 0) {
+      this._alertservice.raiseErrors(this.PrevPolicyDetailAlerts);
+      return;
+    }
+  }
+
+  // check step four
+  public TeamDetailsValidations() {
+    this.TeamDetailsAlerts = [];
+
+    if (this.RFQGroupForm.get('BranchId').invalid || this.RFQGroupForm.get('BranchId').value == 0) {
+      this.TeamDetailsAlerts.push({
+        Message: 'Select Branch',
+        CanDismiss: false,
+        AutoClose: false,
+      })
+    }
+
+    if (this.RFQGroupForm.get('SalesPersonType').invalid || this.RFQGroupForm.get('SalesPersonType').value == "") {
+      this.TeamDetailsAlerts.push({
+        Message: 'Select Sales Person Type',
+        CanDismiss: false,
+        AutoClose: false,
+      })
+    }
+
+
+    if (this.RFQGroupForm.get('SalesPersonName').invalid || this.RFQGroupForm.get('SalesPersonName').value == "") {
+      this.TeamDetailsAlerts.push({
+        Message: 'Select Sales Person',
+        CanDismiss: false,
+        AutoClose: false,
+      })
+    }
+
+    if (this.RFQGroupForm.get('SalesPersonType').value == 'Team Reference') {
+      if (this.RFQGroupForm.get('TeamReferenceName').invalid || this.RFQGroupForm.get('TeamReferenceName').value == "") {
+        this.TeamDetailsAlerts.push({
+          Message: 'Select Team Reference Name',
+          CanDismiss: false,
+          AutoClose: false,
+        })
+      }
+    }
+
+    if (!this.RFQGroupForm.get('BDMName').value) {
+      this.TeamDetailsAlerts.push({
+        Message: 'BDM Name is Required.',
+        CanDismiss: false,
+        AutoClose: false,
+      })
+    }
+
+    if (!this.RFQGroupForm.get('BDOName').value) {
+      this.TeamDetailsAlerts.push({
+        Message: 'BDO Name is Required.',
+        CanDismiss: false,
+        AutoClose: false,
+      })
+    }
+
+    if (this.TeamDetailsAlerts.length > 0) {
+      this.TeamDetailsStepCtrl.setErrors({ required: true });
+      return this.TeamDetailsStepCtrl;
+    } else {
+      this.TeamDetailsStepCtrl.reset();
+      return this.TeamDetailsStepCtrl;
+    }
+  }
+
+  // alert message if step four is not validated
+  public TeamDetailsError() {
+    if (this.TeamDetailsAlerts.length > 0) {
+      this._alertservice.raiseErrors(this.TeamDetailsAlerts);
+    }
+  }
+
+  /**
+ * Document Selection Change
+*/
+  public onDocumentSelectionChange(selectedValue): void {
+    this._validateAttachDocField()
+
+    if (this.AttachDocumentAlerts.length > 0) {
+      this._alertservice.raiseErrors(this.AttachDocumentAlerts)
+      this.DocumentDropdown.nativeElement.value = ""
+      return;
+    }
+
+    let selectedDocument = selectedValue.target.value;
+    this.addDocuments(selectedDocument);
+    this.DocumentDropdown.nativeElement.value = ""
+  }
+
+  /**
+  * Validate the Attached Document
+ */
+  private _validateAttachDocField() {
+    this.AttachDocumentAlerts = []
+    this.Documents.controls.forEach((element, index) => {
+      if (element.get('StorageFilePath').hasError('required')) {
+        this.AttachDocumentAlerts.push({
+          Message: `${element.value.DocumentType} Attachment is required.`,
+          CanDismiss: false,
+          AutoClose: false,
+        })
+      }
+    });
+  }
+
+  /**
+   * Add new row in Document array
+  */
+  public addDocuments(selectedDocument?: string) {
+    const row: GroupDocumentsDto = new GroupDocumentsDto();
+    if (selectedDocument && selectedDocument != "") {
+      let RowIndex = this.PolicyDocumentList.findIndex((doc) => doc.DocumentType == selectedDocument)
+
+      if (RowIndex != -1) {
+        row.DocumentType = this.PolicyDocumentList[RowIndex].DocumentType;
+        row.DocumentTypeName = this.PolicyDocumentList[RowIndex].DocumentTypeName;
+        row.Stage = "RFQRaised";
+        this.Documents.push(this._initDocumentsForm(row));
+      }
+    }
+  }
+
+  /**
+ * File Data (policy document that is added)
+*/
+  public SelectDocuments(event, DocIndex: number) {
+    let file = event.target.files[0]
+
+    if (file) {
+      this._dataService.UploadFile(this.UploadFileAPI, file).subscribe((res) => {
+        if (res.Success) {
+          if (DocIndex >= 0) {
+            this.Documents.controls[DocIndex].patchValue({
+              FileName: res.Data.FileName,
+              StorageFileName: res.Data.StorageFileName,
+              StorageFilePath: res.Data.StorageFilePath,
+              Stage: "RFQRaised"
+            })
+          }
+          this._alertservice.raiseSuccessAlert(res.Message);
+        }
+        else {
+          if (res.Alerts && res.Alerts?.length > 0) {
+            this._alertservice.raiseErrors(res.Alerts)
+          }
+          else {
+            this._alertservice.raiseErrorAlert(res.Message)
+          }
+        }
+      });
+    }
+  }
+
+  /**
+ * View Uploaded Document
+*/
+  public ViewDocuments(fileName: string) {
+    if (fileName) {
+      window.open(environment.apiDomain + environment.Attachments_Middleware + "/" + fileName)
+    }
+  }
+
+  /**
+   * Delete document With User Confirmation
+   */
+  public RemoveDocuments(index: number) {
+    this._dialogService.confirmDialog({
+      title: 'Are You Sure?',
+      message: "You won't be able to revert this",
+      confirmText: 'Yes, Delete!',
+      cancelText: 'No',
+    })
+      .subscribe((res) => {
+        if (res) {
+          this.Documents.removeAt(index)
+        }
+      });
+  }
+
+  public DocumentAttachmentValidation() {
+    this.DocumentAttachmentAlert = []
+
+    this.Documents.controls.forEach((item, index) => {
+      if (item.get('FileName').hasError('required') || item.get('StorageFilePath').hasError('required')) {
+        this.DocumentAttachmentAlert.push({
+          Message: `${item.value.DocumentTypeName} Attachment is required.`,
+          CanDismiss: false,
+          AutoClose: false,
+        })
+      }
+
+    })
+
+    if (this.DocumentAttachmentAlert.length > 0) {
+      this.DocumentAttachmentStepCtrl.setErrors({ required: true });
+      return this.DocumentAttachmentStepCtrl;
+    }
+    else {
+      this.DocumentAttachmentStepCtrl.reset();
+      return this.DocumentAttachmentStepCtrl;
+    }
+
+  }
+
+  public SubmitRfqGroup() {
+
+    if (this.BasicDetailsAlert.length > 0) {
+      this._alertservice.raiseErrors(this.BasicDetailsAlert);
+      return;
+    }
+
+    if (this.ProductCategoryDetailsAlert.length > 0) {
+      this._alertservice.raiseErrors(this.ProductCategoryDetailsAlert);
+      return;
+    }
+
+    if (this.RFQGroupForm.get('PolicyType').value == 'Rollover' || this.RFQGroupForm.get('PolicyType').value == 'Renewal-Change Company' || this.RFQGroupForm.get('PolicyType').value == 'Renewal-Same Company') {
+      if (this.PrevPolicyDetailAlerts.length > 0) {
+        this._alertservice.raiseErrors(this.PrevPolicyDetailAlerts);
+        return;
+      }
+    }
+
+    if (this.TeamDetailsAlerts.length > 0) {
+      this._alertservice.raiseErrors(this.TeamDetailsAlerts);
+      return;
+    }
+
+    if (this.DocumentAttachmentAlert.length > 0) {
+      this._alertservice.raiseErrors(this.DocumentAttachmentAlert);
+      return;
+    }
+
+    this._dateFormat();
+
+    let submitFormValue = JSON.parse(JSON.stringify(this.RFQGroupForm.value))
+
+    if (submitFormValue.PolicyType == "New") {
+      submitFormValue.PreviousPolicyDocument = null
+      submitFormValue.ClaimAnalysisDocument = null
+      submitFormValue.ClaimProofDocuments = []
+    }
+    else {
+      if (submitFormValue.ClaimAnalysisDocument?.StorageFilePath == "" || submitFormValue.ClaimAnalysisDocument?.StorageFilePath == null) {
+        submitFormValue.ClaimAnalysisDocument = null
+      }
+    }
+
+    // submit form
+    switch (this.mode) {
+      case "create": case "RenewalRFQ":
+        this._RFQGroupService.CreateProposal(submitFormValue).subscribe((res) => {
+          if (res.Success) {
+            this._alertservice.raiseSuccessAlert(res.Message, "false")
+            this._router.navigate([ROUTING_PATH.Basic.Dashboard])
+          }
+          else {
+            if (res.Alerts && res.Alerts?.length > 0) {
+              this._alertservice.raiseErrors(res.Alerts)
+            }
+            else {
+              this._alertservice.raiseErrorAlert(res.Message)
+            }
+          }
+        })
+        break;
+
+      case "edit":
+        this._RFQGroupService.UpdateProposal(submitFormValue).subscribe((res) => {
+          if (res.Success) {
+            this._alertservice.raiseSuccessAlert(res.Message, "false")
+            this._router.navigate([ROUTING_PATH.Basic.Dashboard])
+          }
+          else {
+            if (res.Alerts && res.Alerts?.length > 0) {
+              this._alertservice.raiseErrors(res.Alerts)
+            }
+            else {
+              this._alertservice.raiseErrorAlert(res.Message)
+            }
+          }
+        })
+        break;
+    }
+  }
+
+  // Upload Documents
+  public uploadDocument(event, DocumentType: string) {
+    let file = event.target.files[0]
+
+    if (file) {
+      this._dataService.UploadFile(this.UploadFileAPI, file).subscribe((res) => {
+        if (res.Success) {
+          if (DocumentType == 'EmpList') {
+            this.RFQGroupForm.get('EmpList').patchValue({
+              RFQId: this.RFQGroupForm.value.Id,
+              DocumentType: "EmployeeList",
+              DocumentTypeName: "Employee List",
+              FileName: res.Data.FileName,
+              StorageFileName: res.Data.StorageFileName,
+              StorageFilePath: res.Data.StorageFilePath,
+              Stage: this.RFQGroupForm.value.Stage
+            })
+          }
+          else if (DocumentType == 'PolicyAttachment') {
+            this.RFQGroupForm.get('PreviousPolicyDocument').patchValue({
+              RFQId: this.RFQGroupForm.value.Id,
+              DocumentType: "PrevPolicyGroup",
+              DocumentTypeName: "Previous Policy Group",
+              FileName: res.Data.FileName,
+              StorageFileName: res.Data.StorageFileName,
+              StorageFilePath: res.Data.StorageFilePath,
+              Stage: this.RFQGroupForm.value.Stage
+            })
+          }
+          else if (DocumentType == 'ClaimAnalysisReport') {
+            this.RFQGroupForm.get('ClaimAnalysisDocument').patchValue({
+              RFQId: this.RFQGroupForm.value.Id,
+              DocumentType: "ClaimAnalysis",
+              DocumentTypeName: "Claim Analysis",
+              FileName: res.Data.FileName,
+              StorageFileName: res.Data.StorageFileName,
+              StorageFilePath: res.Data.StorageFilePath,
+              Stage: this.RFQGroupForm.value.Stage
+            })
+          }
+          this._alertservice.raiseSuccessAlert(res.Message);
+        }
+        else {
+          if (res.Alerts && res.Alerts?.length > 0) {
+            this._alertservice.raiseErrors(res.Alerts)
+          }
+          else {
+            this._alertservice.raiseErrorAlert(res.Message)
+          }
+        }
+      });
+    }
+  }
+
+  // Remove Uploaded Documents
+  public removeUploadedDocument(DocumentType: string) {
+
+    this._dialogService.confirmDialog({
+      title: 'Are You Sure?',
+      message: "You won't be able to revert this",
+      confirmText: 'Yes, Delete!',
+      cancelText: 'No',
+    })
+      .subscribe((res) => {
+        if (res) {
+          if (DocumentType == 'EmpList') {
+            this.RFQGroupForm.get('EmpList').patchValue({
+              FileName: null,
+              StorageFileName: null,
+              StorageFilePath: null
+            })
+          }
+          else if (DocumentType == 'PolicyAttachment') {
+            this.RFQGroupForm.get('PreviousPolicyDocument').patchValue({
+              FileName: null,
+              StorageFileName: null,
+              StorageFilePath: null
+            })
+          }
+          else if (DocumentType == 'ClaimAnalysisReport') {
+            this.RFQGroupForm.get('ClaimAnalysisDocument').patchValue({
+              FileName: null,
+              StorageFileName: null,
+              StorageFilePath: null
+            })
+          }
+
+        }
+      });
+  }
+
+  public addPrevPolicyDetails() {
+
+    if (this.PrevPolicyClaimsDetailAlerts.length > 0) {
+      this._alertservice.raiseErrors(this.PrevPolicyClaimsDetailAlerts);
+      return;
+    }
+    else {
+      var row: IGroupClaimProofDocumentsDto = new GroupClaimProofDocumentsDto()
+      row.RFQId = this.RFQGroupForm.get("Id").value;
+      row.Stage = "RFQRaised";
+      this.PrevPolicyDetails.push(this._initClaimProofDocumentsForm(row));
+    }
+  }
+
+  // Previous Policy Details validation
+  public validatePrevPolicyDetails() {
+    this.PrevPolicyDetails.controls.forEach((el, i) => {
+
+      if (el.get("FileName").invalid) {
+        this.PrevPolicyDetailAlerts.push({
+          Message: `Claim Dump Attachment Required.`, // ${i + 1}.
+          CanDismiss: false,
+          AutoClose: false,
+        })
+      }
+
+    });
+  }
+
+  // remove Query details 
+  public removePrevPolicyDetails(index: number) {
+
+    this._dialogService
+      .confirmDialog({
+        title: 'Are You Sure?',
+        message: "You won't be able to revert this",
+        confirmText: 'Yes, Delete!',
+        cancelText: 'No',
+      })
+      .subscribe((res) => {
+        if (res) {
+          // this.PrevPolicyDetails.removeAt(index);
+
+          this.PrevPolicyDetails.controls[0].patchValue({
+            FileName: null,
+            StorageFileName: null,
+            StorageFilePath: null,
+            // Stage: "RFQRaised"
+          });
+        }
+      });
+
+  }
+
+  public uploadClaimProofAttachment(event, DocIndex: number) {
+    let file = event.target.files[0]
+
+    if (file) {
+      this._dataService.UploadFile(this.UploadFileAPI, file).subscribe((res) => {
+        if (res.Success) {
+          if (DocIndex >= 0) {
+            this.PrevPolicyDetails.controls[DocIndex].patchValue({
+              DocumentType: "ClaimProof",
+              DocumentTypeName: "Claim Proof",
+              FileName: res.Data.FileName,
+              StorageFileName: res.Data.StorageFileName,
+              StorageFilePath: res.Data.StorageFilePath,
+              Stage: "RFQRaised"
+            });
+          }
+          this._alertservice.raiseSuccessAlert(res.Message);
+        }
+        else {
+          if (res.Alerts && res.Alerts?.length > 0) {
+            this._alertservice.raiseErrors(res.Alerts)
+          }
+          else {
+            this._alertservice.raiseErrorAlert(res.Message)
+          }
+        }
+      });
+    }
+  }
+
+  public DownloadSampleFile() {
+    let link = document.createElement("a");
+    link.download = "Download Employee List Sample File";
+    link.href = environment.apiDomain + "/rfq/GMCDataformat.xlsx";
+    link.click();
+  }
+
+  /**
+   * When Convert Transaction TO RFQ All Attachments are get
+   * Display documents As Per category wise 
+   */
+  public canDisplayDocuments(DocumentType: string): boolean {
+    if (this.mode == 'RenewalRFQ' && this.DisplayForm && this.DisplayForm?.TransactionId) {
+      let CategoryWiseDocument = this.PolicyDocumentList.map(doc => doc.DocumentType)
+      if (CategoryWiseDocument.includes(DocumentType)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
+  }
+  //#endregion public-methods
+
+
+  //#region private-methods
+  // -----------------------------------------------------------------------------------------------------
+  // @ private methods
+  // -----------------------------------------------------------------------------------------------------
+
+  // Build RFQ Group Main Form
+  private _buildForm(data: IGroupRaiseDTO) {
+    let form = this.fb.group({
+      Id: [0],
+      TransactionId: [0],
+      RFQDate: [""],
+      RFQNo: [],
+      CategoryId: [0],
+      CategoryName: [""],
+
+      // Basic Details
+      SubCategoryId: [0],
+      SubCategoryCode: [],
+      SubCategoryName: [""],
+      PolicyType: ["", [Validators.required]],
+
+      // Product  Category detail
+      ProposerMobileNo: [""],
+      ProposerEmail: [""],
+
+      // Proposer Detail
+      ProposerName: [""],
+      CommunicationAddress: [""],
+      NatureOfBusiness: [""],
+      GSTNo: [""],
+      EmpList: this._initEmployeeListForm(data.EmpList),
+      EmployerDetailRemark: [""],
+
+      // Product Category Details >>>> Coverage Preference
+      CoverageDetail: this._initCoveragesForm(data.CoverageDetail),
+
+      // Previous Policy Detail (Only for Rollover)
+      PrevPolicyInsurComp: [""],
+      PreviousPolicyPremium: [0],
+      PreviousPolicyRemark: [""],
+      PreviousPolicyStartDate: [""],
+      PreviousPolicyEndDate: [""],
+      PreviousPolicyDocument: this._initPreviousPolicyDocumentForm(data.PreviousPolicyDocument),
+      AnyClaiminLast3Year: [false],
+      ClaimProofDocuments: this._buildClaimProofsForm(data.ClaimProofDocuments),
+      ClaimAnalysisDocument: this._initClaimAnalysisDocumentForm(data.ClaimAnalysisDocument),
+
+      // Team Details
+      BranchId: [0, [Validators.required]],
+      BranchName: ['', [Validators.required]],
+      SalesPersonType: [""],
+      SalesPersonId: [],
+      SalesPersonName: ['', [Validators.required]],
+      TeamReferenceId: [null],
+      TeamReferenceName: ['', [Validators.required]],
+      BDOId: [0],
+      BDOName: [""],
+      BDMId: [0],
+      BDMName: [""],
+
+      // Attachment Details
+      Documents: this._buildDocumentsForm(data.Documents),
+      SendBackRejectDesc: [''],
+      Additionalinformation: [''],
+    });
+    if (data) {
+      form.patchValue(data);
+    }
+    return form;
+  }
+
+  //RFQ-Group document Formarray
+  private _buildDocumentsForm(items: GroupDocumentsDto[] = []): FormArray {
+    let formArray: FormArray = new FormArray([]);
+    if (items != null) {
+      if (!(items && items.length > 0)) {
+        return formArray;
+      }
+      if (items != null) {
+        items.forEach((i) => {
+          formArray.push(this._initDocumentsForm(i));
+        });
+      }
+    }
+    return formArray;
+  }
+
+  //Init document form group
+  private _initDocumentsForm(item: GroupDocumentsDto): FormGroup {
+    let dF = this.fb.group({
+      Id: [0],
+      RFQId: [0],
+      DocumentType: [''],
+      DocumentTypeName: [''],
+      FileName: ['', [Validators.required]],
+      StorageFileName: [''],
+      StorageFilePath: ['', [Validators.required]],
+      Stage: [''],
+      Description: [''], // remarks
+    })
+    if (item != null) {
+      if (!item) {
+        item = new GroupDocumentsDto();
+      }
+      if (item) {
+        dF.patchValue(item);
+      }
+    }
+    return dF
+  }
+
+  //Init employee list form group
+  private _initEmployeeListForm(item: GroupEmployeeList): FormGroup {
+    let dF = this.fb.group({
+      Id: [0],
+      RFQId: [0],
+      DocumentType: [''],
+      DocumentTypeName: [''],
+      FileName: ['', [Validators.required]],
+      StorageFileName: [''],
+      StorageFilePath: ['', [Validators.required]],
+      Stage: [''],
+      Description: [''], // remarks
+    })
+    if (item != null) {
+      if (!item) {
+        item = new GroupEmployeeList();
+      }
+      if (item) {
+        dF.patchValue(item);
+      }
+    }
+    return dF
+  }
+
+  //Init Coverage formgroup
+  private _initCoveragesForm(item: IGroupCoverageDto): FormGroup {
+    let dF = this.fb.group({
+      Id: [0],
+      RFQId: [0],
+      AccidentalDeath: [false],
+      PermanentTotalDisability: [false],
+      PermanentPartialDisability: [false],
+      TemporaryDisability: [false],
+      PreExistingDiseases: [false],
+      MeternityBenefit: [false],
+      CorporateBuffer: [false],
+      Other: [false],
+      OtherDescription: [""]
+    })
+    if (item != null) {
+      if (!item) {
+        item = new GroupCoverageDto();
+      }
+
+      if (item) {
+        dF.patchValue(item);
+      }
+    }
+    return dF
+  }
+
+  //Init previous policy form group
+  private _initPreviousPolicyDocumentForm(item: GroupPreviousPolicyDocument): FormGroup {
+    let dF = this.fb.group({
+      Id: [0],
+      RFQId: [0],
+      DocumentType: [''],
+      DocumentTypeName: [''],
+      FileName: ['', [Validators.required]],
+      StorageFileName: [''],
+      StorageFilePath: ['', [Validators.required]],
+      Stage: [''],
+      Description: [''], // remarks
+    })
+    if (item != null) {
+      if (!item) {
+        item = new GroupPreviousPolicyDocument();
+      }
+      if (item) {
+        dF.patchValue(item);
+      }
+    }
+    return dF
+  }
+
+  //RFQ-Group Claim Proofs documents Formarray
+  private _buildClaimProofsForm(items: IGroupClaimProofDocumentsDto[] = []): FormArray {
+    let formArray: FormArray = new FormArray([]);
+    if (items != null) {
+      if (!(items && items.length > 0)) {
+        return formArray;
+      }
+      if (items != null) {
+        items.forEach((i) => {
+          formArray.push(this._initClaimProofDocumentsForm(i));
+        });
+      }
+    }
+    return formArray;
+  }
+
+  //Init Claim Proofs document form group
+  private _initClaimProofDocumentsForm(item: GroupClaimProofDocumentsDto): FormGroup {
+    let dF = this.fb.group({
+      Id: [0],
+      RFQId: [0],
+      DocumentType: [''],
+      DocumentTypeName: [''],
+      FileName: ['', [Validators.required]],
+      StorageFileName: [''],
+      StorageFilePath: ['', [Validators.required]],
+      Stage: [''],
+      Description: [''], // remarks
+    })
+    if (item != null) {
+      if (!item) {
+        item = new GroupClaimProofDocumentsDto();
+      }
+      if (item) {
+        dF.patchValue(item);
+      }
+    }
+    return dF
+  }
+
+  //Init Claim Analysis Document form group
+  private _initClaimAnalysisDocumentForm(item: GroupClaimAnalysisDocumentDto): FormGroup {
+    let dF = this.fb.group({
+      Id: [0],
+      RFQId: [0],
+      DocumentType: [''],
+      DocumentTypeName: [''],
+      FileName: ['', [Validators.required]],
+      StorageFileName: [''],
+      StorageFilePath: ['', [Validators.required]],
+      Stage: [''],
+      Description: [''], // remarks
+    })
+    if (item != null) {
+      if (!item) {
+        item = new GroupClaimAnalysisDocumentDto();
+      }
+      if (item) {
+        dF.patchValue(item);
+      }
+    }
+    return dF
+  }
+
+  // form changes 
+  private _onFormChange() {
+
+    // changes product type
+    this.RFQGroupForm.get('SubCategoryId').valueChanges.subscribe(val => {
+
+      let SelectedSubCategory = this.SubCategoryList.find(x => x.Id == val)
+      if (SelectedSubCategory) {
+        this.RFQGroupForm.patchValue({
+          SubCategoryName: SelectedSubCategory.Name,
+          SubCategoryCode: SelectedSubCategory.Code
+        })
+      }
+      else {
+        this.RFQGroupForm.patchValue({
+          SubCategoryName: "",
+          SubCategoryCode: ""
+        })
+      }
+
+      if (SelectedSubCategory.Code != 'CRA' && SelectedSubCategory.Code != 'ERA') {
+        this.RFQGroupForm.patchValue({
+          PrevPolicyInsurComp: "",
+          PrevPolicySumInsured: 0,
+          PreviousPolicyPremium: 0,
+          PreviousPolicyRemark: "",
+          PreviousPolicyStartDate: "",
+          PreviousPolicyEndDate: "",
+          AnyClaiminLast3Year: false,
+          ProjectStartDate: "",
+          ProjectPeriod: "",
+        });
+      }
+
+    })
+
+    this.RFQGroupForm.get('PolicyType').valueChanges.subscribe(val => {
+      if (val == "New") {
+      this.RFQGroupForm.patchValue({
+        PrevPolicyInsurComp: "",
+        PrevPolicySumInsured: 0,
+        PreviousPolicyPremium: 0,
+        PreviousPolicyRemark: "",
+        PreviousPolicyStartDate: "",
+        PreviousPolicyEndDate: "",
+        AnyClaiminLast3Year: false,
+      })
+    }
+
+
+    })
+
+    // change sales person
+    this.RFQGroupForm.get('SalesPersonName').valueChanges.subscribe((val) => {
+
+      let salesPersonListSpecs = this._salesPersonListAPIfilter();
+      salesPersonListSpecs.AdditionalFilters.push({ key: "FullName", filterValues: [val] })
+
+
+      this.salesPersonName$ = this._MasterListService
+        .getFilteredMultiRulMasterDataList(API_ENDPOINTS.User.List, 'FirstName', "", salesPersonListSpecs.FilterConditions.Rules,salesPersonListSpecs.AdditionalFilters)
+        .pipe(
+          takeUntil(this.destroy$),
+          switchMap((res) => {
+            if (res.Success) {
+              if (res.Data.Items.length) {
+                return of(res.Data.Items);
+              } else {
+                return of([]);
+              }
+            } else {
+              return of([]);
+            }
+          })
+        );
+    });
+
+    // change Team Referance
+    this.RFQGroupForm.get('TeamReferenceName').valueChanges.subscribe(
+      (val) => {
+
+        let teamReferenceListSpecs = this._teamReferenceListAPIfilter();
+        teamReferenceListSpecs.AdditionalFilters.push({ key: "FullName", filterValues: [val] })
+
+        this.TeamRefUser$ = this._MasterListService
+          .getFilteredMultiRulMasterDataList(API_ENDPOINTS.User.List, 'FirstName', "", teamReferenceListSpecs.FilterConditions.Rules,teamReferenceListSpecs.AdditionalFilters)
+          .pipe(
+            takeUntil(this.destroy$),
+            switchMap((res) => {
+              if (res.Success) {
+                if (res.Data.Items) {
+                  return of(res.Data.Items);
+                } else {
+                  return of([]);
+                }
+              } else {
+                return of([]);
+              }
+            })
+          );
+      }
+    );
+
+    this.RFQGroupForm.get('TeamReferenceId').valueChanges.subscribe(
+      (val) => {
+        if (!val && this.UserProfileObj.UserType == UserTypeEnum.StandardUser && this.RFQGroupForm.get('SalesPersonType').value == SalesPersonTypeEnum.TeamReference) {
+          this.RFQGroupForm.patchValue({
+            BDMId: null,
+            BDMName: null,
+            BDOId: null,
+            BDOName: null,
+          }, { emitEvent: false });
+        }
+      }
+    );
+
+
+    this.RFQGroupForm.get('SalesPersonId').valueChanges.subscribe(
+      (val) => {
+        if (!val && this.UserProfileObj.UserType == UserTypeEnum.StandardUser && this.RFQGroupForm.get('SalesPersonType').value == SalesPersonTypeEnum.POSP) {
+          this.RFQGroupForm.patchValue({
+            BDMId: null,
+            BDMName: null,
+            BDOId: null,
+            BDOName: null,
+          }, { emitEvent: false });
+        }
+      }
+    );
+
+    /**
+     * Sales person Type - Direct"
+     * Selected branch BQP need to auto fetch under sales person
+     */
+    this.RFQGroupForm.get('BranchId').valueChanges.subscribe((val) => {
+      this._TeamDetailsForStandardUser()
+    })
+
+
+    this.RFQGroupForm.get('SalesPersonType').valueChanges.subscribe((val) => {
+      this._TeamDetailsForStandardUser()
+    })
+
+    /**
+    * selected branch All BDO from user
+    */
+    this.RFQGroupForm.get('BDOName').valueChanges.subscribe((val) => {
+      let bdoListSpecs = this._bdoListAPIfilter()
+      bdoListSpecs.AdditionalFilters.push({ key: "FullName", filterValues: [val] })
+
+      this.BDOlist$ = this._MasterListService.getFilteredMultiRulMasterDataList(API_ENDPOINTS.User.List, 'FirstName', '', bdoListSpecs.FilterConditions.Rules,bdoListSpecs.AdditionalFilters).pipe(
+        takeUntil(this.destroy$),
+        switchMap((res) => {
+          if (res.Success) {
+            if (res.Data.Items.length) {
+              return of(res.Data.Items);
+            } else {
+              return of([]);
+            }
+          } else {
+            return of([]);
+          }
+        })
+      );
+    });
+
+    /**
+     * BDM - Selected branch all BDM from user
+     */
+    this.RFQGroupForm.get('BDMName').valueChanges.subscribe((val) => {
+      let bdmListSpecs = this._bdmListAPIfilter()
+      bdmListSpecs.AdditionalFilters.push({ key: "FullName", filterValues: [val] })
+
+      this.BDMlist$ = this._MasterListService.getFilteredMultiRulMasterDataList(API_ENDPOINTS.User.List, 'FirstName', '', bdmListSpecs.FilterConditions.Rules,bdmListSpecs.AdditionalFilters).pipe(
+        takeUntil(this.destroy$),
+        switchMap((res) => {
+          if (res.Success) {
+            if (res.Data.Items.length) {
+              return of(res.Data.Items);
+            } else {
+              return of([]);
+            }
+          } else {
+            return of([]);
+          }
+        })
+      );
+    });
+
+    /**
+     * AnyClaiminLast3Year change event
+     */
+
+    this.RFQGroupForm.get('AnyClaiminLast3Year').valueChanges.subscribe(val => {
+      if (!val) {
+        //Remove Previous Policy Details
+        while (this.PrevPolicyDetails.controls.length !== 0) {
+          this.PrevPolicyDetails.removeAt(0)
+        }
+        this.RFQGroupForm.get("ClaimAnalysisDocument").patchValue({
+          FileName: null,
+          StorageFileName: null,
+          StorageFilePath: null,
+        })
+      }
+      else if (val) {
+        this.addPrevPolicyDetails();
+      }
+    })
+
+  }
+
+  private _fillMasterList() {
+    // fill Product Type
+    let SubCategoryRule: IFilterRule[] = [ActiveMasterDataRule,
+      { Field: "Category.Code", Operator: "eq", Value: CategoryCodeEnum.Group }
+    ]
+    let OrderBySpecs: OrderBySpecs[] = [{ field: "SrNo", direction: "asc" }]
+
+    this._MasterListService.getFilteredMultiRulMasterDataList(API_ENDPOINTS.SubCategory.List, 'Name', '', SubCategoryRule, [], OrderBySpecs)
+      .subscribe(res => {
+        if (res.Success) {
+          this.SubCategoryList = res.Data.Items
+        }
+      })
+
+    // Fill Insurance Company
+    let InsuranceCompanyRule: IFilterRule[] = [{ Field: 'Status', Operator: 'eq', Value: 1, }];
+    let InsuranceCompanyAdditionalFilters: IAdditionalFilterObject[] = [{ key: "Code", filterValues: [CategoryCodeEnum.Group] }]
+
+    this.InsuranceCompany$ = this._MasterListService
+      .getFilteredMultiRulMasterDataList(API_ENDPOINTS.InsuranceCompany.list, 'Name', "", InsuranceCompanyRule, InsuranceCompanyAdditionalFilters)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((res) => {
+          if (res.Success) {
+            if (res.Data.Items.length) {
+              return of(res.Data.Items);
+            } else {
+              return of([]);
+            }
+          } else {
+            return of([]);
+          }
+        })
+      );
+
+    // fill Branch
+    this._MasterListService.getFilteredMultiRulMasterDataList(API_ENDPOINTS.Branch.List + "/true", 'Name', "", [ActiveMasterDataRule])
+      .subscribe(res => {
+        if (res.Success) {
+          this.Branches = res.Data.Items
+
+          /**
+           * After Get Branch list Fill Team details 
+           */
+          if (this.mode == 'create') {
+            this._TeamDetailsInfo()
+          }
+        }
+      });
+  }
+
+  private _dateFormat() {
+    this.RFQGroupForm.patchValue({
+      ProjectStartDate: this._datePipe.transform(this.RFQGroupForm.get('ProjectStartDate')?.value, 'yyyy-MM-dd'),
+      PreviousPolicyStartDate: this._datePipe.transform(this.RFQGroupForm.get('PreviousPolicyStartDate')?.value, 'yyyy-MM-dd'),
+      PreviousPolicyEndDate: this._datePipe.transform(this.RFQGroupForm.get('PreviousPolicyEndDate')?.value, 'yyyy-MM-dd'),
+    }, { emitEvent: false })
+  }
+
+  // Team details from MyProfile
+  private _TeamDetailsInfo() {
+    this.authService.userProfile$.subscribe((user: IMyProfile) => {
+      if (user) {
+        this.UserProfileObj = user
+        // set Branch details
+        this.RFQGroupForm.patchValue({
+          BranchId: user.BranchId,
+          BranchName: user.BranchName,
+        });
+
+        // ************* set required field from user profile data ************* \\
+        // set User type from user profile
+        if (user.UserType == UserTypeEnum.Agent) {
+
+          this.RFQGroupForm.patchValue({
+            SalesPersonId: user.Id,
+            SalesPersonName: user.FullName,
+            SalesPersonType: 'POSP',
+            BDMId: user.BDMId,
+            BDMName: user.BDMName,
+            BDOId: user.BDOId,
+            BDOName: user.BDOName,
+          }, { emitEvent: false });
+
+        }
+        else if (user.UserType == UserTypeEnum.TeamReference) {
+          // in case of login user type is "team reference" then auto bind data in team reference id and team reference name from user profile api
+          this.RFQGroupForm.patchValue({
+            TeamReferenceId: user.Id,
+            TeamReferenceName: user.FullName,
+            SalesPersonType: 'Team Reference',
+            BDMId: user.BDMId,
+            BDMName: user.BDMName,
+            BDOId: user.BDOId,
+            BDOName: user.BDOName,
+          }, { emitEvent: false });
+
+          if (this.RFQGroupForm.value?.BranchId) {
+
+            let LoginUserBranch = this.Branches.find(b => b.Id == this.RFQGroupForm.value?.BranchId)
+            if (LoginUserBranch) {
+              this.RFQGroupForm.patchValue({
+                SalesPersonId: LoginUserBranch.BrokerQualifiedPersonId,
+                SalesPersonName: LoginUserBranch.BrokerQualifiedPersonName,
+              }, { emitEvent: false });
+            }
+          }
+        }
+      }
+    })
+  }
+
+  /**
+  * When Login use is Standard user then 
+  * change branch or Sales person type then call function
+  */
+
+  private _TeamDetailsForStandardUser() {
+    if (this.UserProfileObj.UserType == UserTypeEnum.StandardUser) {
+
+      /**
+       * SalesPersonType Direct sales person is Selected branch bqp
+       * Other Field is null
+       */
+      if (this.RFQGroupForm.get('SalesPersonType').value == SalesPersonTypeEnum.Direct) {
+
+
+        let LoginUserBranch = this.Branches.find(b => b.Id == this.RFQGroupForm.get('BranchId').value)
+
+
+        if (LoginUserBranch) {
+          this.RFQGroupForm.patchValue({
+            SalesPersonId: LoginUserBranch.BrokerQualifiedPersonId,
+            SalesPersonName: LoginUserBranch.BrokerQualifiedPersonName,
+          });
+        } else {
+          this.RFQGroupForm.patchValue({
+            SalesPersonId: null,
+            SalesPersonName: null,
+          });
+        }
+
+        this.RFQGroupForm.patchValue({
+          TeamReferenceId: null,
+          TeamReferenceName: null,
+        });
+
+      } else if (this.RFQGroupForm.get('SalesPersonType').value == SalesPersonTypeEnum.POSP) {
+
+        this.RFQGroupForm.patchValue({
+          SalesPersonId: null,
+          SalesPersonName: null,
+          TeamReferenceId: null,
+          TeamReferenceName: null,
+        });
+
+
+        /**
+         * SalesPersonType TeamReference sales person is Selected branch bqp
+         * Other Field is null
+         */
+      } else if (this.RFQGroupForm.get('SalesPersonType').value == SalesPersonTypeEnum.TeamReference) {
+
+        let LoginUserBranch = this.Branches.find(b => b.Id == this.RFQGroupForm.value?.BranchId)
+        if (LoginUserBranch) {
+          this.RFQGroupForm.patchValue({
+            SalesPersonId: LoginUserBranch.BrokerQualifiedPersonId,
+            SalesPersonName: LoginUserBranch.BrokerQualifiedPersonName,
+          });
+        } else {
+          this.RFQGroupForm.patchValue({
+            SalesPersonId: null,
+            SalesPersonName: null,
+          });
+        }
+
+        this.RFQGroupForm.patchValue({
+          TeamReferenceId: null,
+          TeamReferenceName: null,
+        });
+      }
+
+      this.RFQGroupForm.patchValue({
+        BDMId: null,
+        BDMName: null,
+        BDOId: null,
+        BDOName: null,
+      });
+
+    }
+  }
+
+  /**
+* Sales person list data List API query spec
+* @returns 
+*/
+  private _salesPersonListAPIfilter(): QuerySpecs {
+    let specs = new QuerySpecs()
+    specs.AdditionalFilters = [];
+    specs.FilterConditions.Rules = [];
+
+    /**
+     * Sales person Type - "POSP"
+     * Login BDO/BDM- POSP need to display under Sales person
+     */
+    if (this.RFQGroupForm.get('SalesPersonType').value == "Direct") {
+      specs.FilterConditions.Rules = [ActiveMasterDataRule,
+        { Field: 'Branch.Id', Operator: 'eq', Value: this.RFQGroupForm.get('BranchId').value, }
+      ]
+    }
+
+    if (this.RFQGroupForm.get('SalesPersonType').value == "POSP") {
+      specs.FilterConditions.Rules = [
+        ActiveMasterDataRule,
+        { Field: 'Branch.Id', Operator: 'eq', Value: this.RFQGroupForm.get('BranchId').value, }
+      ];
+    }
+
+
+    if (this.RFQGroupForm.get('SalesPersonType').value == "Direct") {
+      specs.AdditionalFilters.push({ key: 'UserType', filterValues: ['StandardUser', 'Agent'] })
+    }
+    else if (this.RFQGroupForm.get('SalesPersonType').value == "POSP") {
+      specs.AdditionalFilters.push({ key: 'UserType', filterValues: ['Agent'] })
+      specs.AdditionalFilters.push({ key: 'RFQSalesPersonOnly', filterValues: ['true'] })
+    }
+
+    return specs;
+  }
+
+  /**
+  * Team ref. list data List API query spec
+  * @returns 
+  */
+  private _teamReferenceListAPIfilter(): QuerySpecs {
+
+    let specs = new QuerySpecs()
+    specs.AdditionalFilters = [];
+    specs.FilterConditions.Rules = [];
+
+    /**
+         * Sales Person Type -"Team Reference"
+         * Login BDO/BDM- Team Reference need to display under Team Reference
+         */
+    if (this.RFQGroupForm.get('SalesPersonType').value == "Team Reference") {
+      specs.FilterConditions.Rules = [ActiveMasterDataRule,
+        { Field: 'Branch.Id', Operator: 'eq', Value: this.RFQGroupForm.get('BranchId').value, }
+      ];
+    }
+
+    if (this.RFQGroupForm.get('SalesPersonType').value == "Direct") {
+      specs.AdditionalFilters.push({ key: 'UserType', filterValues: ['StandardUser', 'Agent'] })
+    }
+    else if (this.RFQGroupForm.get('SalesPersonType').value == "Team Reference") {
+      specs.AdditionalFilters.push({ key: 'UserType', filterValues: ['TeamReference'] })
+      specs.AdditionalFilters.push({ key: 'RFQSalesPersonOnly', filterValues: ['true'] })
+    }
+
+    return specs;
+  }
+
+  /**
+  * BDO list data List API query spec
+  * @returns 
+  */
+  private _bdoListAPIfilter(): QuerySpecs {
+
+    let specs = new QuerySpecs()
+    specs.AdditionalFilters = [];
+    specs.FilterConditions.Rules = [];
+
+    if (this.RFQGroupForm.get('SalesPersonType').value == "Direct") {
+      specs.FilterConditions.Rules = [ActiveMasterDataRule];
+    }
+
+    if (this.RFQGroupForm.get('SalesPersonType').value == "Direct") {
+      specs.AdditionalFilters.push({ key: 'BDOOnly', filterValues: ['true'] });
+      specs.AdditionalFilters.push({ key: 'AccessOnRFQandTrans', filterValues: ['true'] });
+
+      if (this.RFQGroupForm.get('BranchId').value) {
+        specs.AdditionalFilters.push({ key: 'Branch', filterValues: [this.RFQGroupForm.get('BranchId').value?.toString()] })
+      }
+    }
+
+
+    return specs;
+  }
+
+  /**
+    *BDM list data List API query spec
+    * @returns 
+    */
+  private _bdmListAPIfilter(): QuerySpecs {
+
+    let specs = new QuerySpecs()
+    specs.AdditionalFilters = [];
+    specs.FilterConditions.Rules = [];
+
+    if (this.RFQGroupForm.get('SalesPersonType').value == "Direct") {
+      specs.FilterConditions.Rules = [ActiveMasterDataRule];
+    }
+
+    if (this.RFQGroupForm.get('SalesPersonType').value == "Direct") {
+      specs.AdditionalFilters.push({ key: 'BDMOnly', filterValues: ['true'] });
+      specs.AdditionalFilters.push({ key: 'AccessOnRFQandTrans', filterValues: ['true'] });
+
+      if (this.RFQGroupForm.get('BranchId').value) {
+        specs.AdditionalFilters.push({ key: 'Branch', filterValues: [this.RFQGroupForm.get('BranchId').value?.toString()] })
+      }
+    }
+
+    return specs;
+  }
+  //#endregion private-methods
+
+}

@@ -1,0 +1,296 @@
+<div class="min-h-screen bg-gray-50 py-0 px-0 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+      <!-- Header Section -->
+      <div class="text-white  rounded-t-lg flex justify-between items-center"
+        style="background-color: var(--title-bg);">
+        <div class="flex items-center">
+
+          <p class="m-2 text-base" style="font-weight: 500; padding-left: 5px;">Forward Claim</p>
+        </div>
+        <div class="flex items-center space-x-2">
+        </div>
+      </div>
+
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mt-4">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Success Message -->
+      <div *ngIf="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-md mt-4">
+        {{ successMessage }}
+      </div>
+
+      <!-- Claim Lists Section -->
+      <div class="px-0 py-2">
+        <div class="grid grid-cols-1 gap-4">
+
+
+          <!-- Card: To Be Forward Claims -->
+          <div
+            class="bg-white p-4 rounded-xl border border-gray-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <h5 class="text-lg font-semibold flex items-center mb-4 text-gray-800">
+              <i class="fas fa-hourglass-half mr-2 text-blue-500"></i>
+              To Be Forward Claims
+            </h5>
+
+            <div class="relative max-h-[60vh] overflow-x-auto overflow-y-auto custom-scrollbar scrollbar-hide">
+              <table class="min-w-full text-sm text-gray-700 border border-gray-100 rounded-lg overflow-hidden">
+                <thead class="sticky top-0 bg-blue-50 text-gray-650">
+                  <tr>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Claim Number</th>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Policy Number</th>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Policy Holder Name</th>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Claim Status</th>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Claim Type</th>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Payment Amount</th>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Submission Method</th>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Insurance Company</th>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let claim of claims">
+                    <tr *ngIf="!claim.forwardComment null"
+                      class="bg-white border-b border-gray-100 hover:bg-blue-50 transition-colors duration-200">
+                      <td class="p-3 truncate" [title]="claim.ClaimIdNumber">{{ claim.ClaimIdNumber || '-' }}</td>
+                      <td class="p-3 truncate" [title]="claim.PolicyNo">{{ claim.PolicyNo || '-' }}</td>
+                      <td class="p-3 truncate">{{ claim.CreatedByUserName || '-' }}</td>
+                      <td class="p-3">
+                        <span class="inline-block px-2 py-1 text-xs font-medium rounded-full shadow-sm
+              ">
+                          {{ claim.ClaimStatus || '-' }}
+                        </span>
+                      </td>
+                      <td class="p-3 truncate">{{ claim.ProductName || '-' }}</td>
+                      <td class="p-3 truncate">{{ claim.claimAmount || '-' }}</td>
+                      <td class="p-3 truncate">{{ claim.submissionMethod || '-' }}</td>
+                      <td class="p-3 truncate">{{ claim.CompanyName || '-' }}</td>
+                      <td class="p-3">
+                        <button (click)="editClaim(claim.ClaimId)"
+                          class="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white py-1.5 px-4 rounded-lg text-xs font-semibold transition-all duration-200 shadow-sm hover:shadow">
+                          <i class="fas fa-arrow-right text-white text-xs"></i> Forward
+                        </button>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <tr *ngIf="claims?.length === 0">
+                    <td colspan="9" class="px-4 py-6 text-center text-gray-500 bg-white">
+                      No assigned claims available
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+
+          <!-- Card 3: Forwarded Claims -->
+          <div
+            class="bg-white p-4 rounded-xl border border-gray-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <h5 class="text-lg font-semibold flex items-center mb-4 text-gray-800">
+              <i class="fas fa-arrow-right mr-2 text-blue-500"></i>
+              Forwarded Claims
+            </h5>
+
+            <div class="relative max-h-[60vh] overflow-x-auto overflow-y-auto custom-scrollbar scrollbar-hide">
+              <table class="min-w-full text-sm text-gray-700 border border-gray-100 rounded-lg overflow-hidden">
+                <thead class="sticky top-0 bg-blue-50 text-gray-650">
+                  <tr>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Claim Number</th>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Policy Number</th>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Policy Holder Name</th>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Claim Status</th>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Claim Type</th>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Payment Amount</th>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Submission Method</th>
+                    <th class="p-3 text-left font-semibold whitespace-nowrap tracking-wide">Insurance Company</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let claim of claims">
+                    <tr *ngIf="claim.forwardComment null"
+                      class="bg-white border-b border-gray-100 hover:bg-blue-50 transition-colors duration-200">
+                      <td class="p-3 truncate" [title]="claim.ClaimIdNumber">{{ claim.ClaimIdNumber || '-' }}</td>
+                      <td class="p-3 truncate" [title]="claim.PolicyNo">{{ claim.PolicyNo || '-' }}</td>
+                      <td class="p-3 truncate">{{ claim.CreatedByUserName || '-' }}</td>
+                      <td class="p-3">
+                        <span class="inline-block px-2 py-1 text-xs font-medium rounded-full shadow-sm ">
+                          {{ claim.ClaimStatus || '-' }}
+                        </span>
+                      </td>
+                      <td class="p-3 truncate">{{ claim.ProductName || '-' }}</td>
+                      <td class="p-3 truncate">{{ claim.claimAmount || '-' }}</td>
+                      <td class="p-3 truncate">{{ claim.submissionMethod || '-' }}</td>
+                      <td class="p-3 truncate">{{ claim.CompanyName || '-' }}</td>
+                    </tr>
+                  </ng-container>
+                  <tr *ngIf="!hasForwardedClaims">
+                    <td colspan="8" class="px-4 py-6 text-center text-gray-500 bg-white">
+                      No forwarded claims available
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <style>
+    /* Existing styles retained */
+    .bg-primary {
+      background-color: var(--title-bg);
+    }
+
+    .text-primary {
+      color: var(--title-bg);
+    }
+
+    .border-primary {
+      border-color: var(--title-bg);
+    }
+
+    .bg-primary-light {
+      background-color: rgba(4, 100, 164, 0.3);
+    }
+
+    .text-primary-light {
+      color: rgba(4, 100, 164, 0.7);
+    }
+
+    .bg-primary-lighter {
+      background-color: rgba(4, 100, 164, 0.1);
+    }
+
+    .bg-primary-badge {
+      background-color: rgba(4, 100, 164, 0.2);
+    }
+
+    .text-primary-dark {
+      color: rgb(3, 80, 131);
+    }
+
+    .border-primary-lightest {
+      border-color: rgba(4, 100, 164, 0.2);
+    }
+
+    .text-primary-lightest {
+      color: rgba(4, 100, 164, 0.5);
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background-color: var(--title-bg);
+      color: white;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: rgb(3, 80, 131);
+    }
+
+    .btn-outline-secondary {
+      background-color: white;
+      color: rgb(4, 100, 164);
+      border: 1px solid var(--title-bg);
+    }
+
+    .btn-outline-secondary:hover {
+      background-color: rgba(4, 100, 164, 0.1);
+    }
+
+    .btn-outline-danger {
+      background-color: white;
+      color: #dc3545;
+      border: 1px solid #dc3545;
+    }
+
+    .btn-outline-danger:hover {
+      background-color: rgba(220, 53, 69, 0.1);
+    }
+
+    .btn-outline-primary {
+      background-color: white;
+      color: var(--title-bg);
+      border: 1px solid var(--title-bg);
+    }
+
+    .btn-outline-primary:hover {
+      background-color: rgba(4, 100, 164, 0.1);
+    }
+
+    .form-control {
+      border: 1px solid rgba(4, 100, 164, 0.2);
+      border-radius: 4px;
+      padding: 6px 12px;
+    }
+
+    .form-control:focus {
+      border-color: var(--title-bg);
+      box-shadow: 0 0 5px rgba(4, 100, 164, 0.3);
+    }
+
+    .form-select {
+      border: 1px solid rgba(4, 100, 164, 0.2);
+      border-radius: 4px;
+      padding: 6px 12px;
+      background-color: white;
+    }
+
+    .form-select:focus {
+      border-color: rgb(4, 100, 164);
+      box-shadow: 0 0 5px rgba(4, 100, 164, 0.3);
+    }
+
+    .invalid-feedback {
+      color: #dc3545;
+      font-size: 12px;
+    }
+
+    .alert {
+      border-radius: 4px;
+      padding: 10px;
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+
+    .alert-success {
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+
+    .section-header {
+      background-color: #e0f2fe;
+      padding: 10px 12px;
+      border-radius: 6px;
+      color: #0369a1;
+      font-weight: 500;
+    }
+
+    /* Additional styles for table */
+    .w-37 {
+      width: 150px;
+    }
+
+    .w-40 {
+      min-width: 160px;
+    }
+  </style>

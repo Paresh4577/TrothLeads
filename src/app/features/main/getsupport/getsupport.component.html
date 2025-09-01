@@ -1,0 +1,64 @@
+<div class="w-full max-w-8xl mx-auto bg-white shadow-lg rounded-lg pl-0">
+    <!-- Header -->
+    <div class="text-white p-2 rounded-t-lg flex justify-between items-center" style="background-color: var(--title-bg);">
+      <p class="m-2 text-base font-medium"> Contact Us Logs</p>
+    </div>
+  
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="flex justify-center items-center mt-8">
+      <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+    </div>
+  
+    <!-- Error Message -->
+    <div *ngIf="errorMessage && !isLoading" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mt-4">
+      {{ errorMessage }}
+    </div>
+  
+    <!-- Table Section -->
+    <div class="mt-2 relative overflow-x-auto" style="height: calc(100vh - 200px);">
+      <div class="absolute inset-0 overflow-x-auto">
+        <table class="min-w-full border-collapse shadow-md mb-2" style="background-color: var(--tableNav-bg);">
+          <thead class="sticky top-0 z-10">
+            <tr class="text-white" style="background-color: var(--tableNav-bg);">
+          
+              <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Name</th>
+              <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Email</th>
+              <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Phone</th>
+              <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Purpose</th>
+              <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Product</th>
+              <th class="p-2 text-left whitespace-nowrap font-medium text-sm">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data Rows -->
+            <tr *ngFor="let support of paginatedSupportList; " class="border-b bg-white">
+          
+              <td class="p-3 w-40">{{ support.FirstName }} {{ support.LastName }}</td>
+              <td class="p-3 w-40">{{ support.Email }}</td>
+              <td class="p-3 w-40">{{ support.PhoneNumber }}</td>
+              <td class="p-3 w-40">{{ support.Purpose }}</td>
+              <td class="p-3 w-40">{{ support.ProductName }}</td>
+              <td class="p-3 w-40">{{ support.DateCreated | date: 'medium' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && paginatedSupportList.length === 0" class="mt-6 bg-gray-100 p-6 rounded-md text-center shadow-md">
+      <p class="text-gray-600">No support data available.</p>
+    </div>
+  
+    <!-- Pagination -->
+    <app-pagination
+      [itemsPerPage]="itemsPerPage"
+      [currentPage]="currentPage"
+      [totalItems]="totalItems"
+      [currentPageItems]="paginatedSupportList.length"
+      [itemsPerPageOptions]="itemsPerPageOptions"
+      (itemsPerPageChange)="onItemsPerPageChange($event)"
+  
+    ></app-pagination>
+  </div>
+  

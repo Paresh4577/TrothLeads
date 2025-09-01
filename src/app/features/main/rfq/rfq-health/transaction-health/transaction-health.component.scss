@@ -1,0 +1,18 @@
+p.mandatory,span.mandatory {
+    @apply after:content-['*'] after:ml-1 after:text-red-500;
+}
+span {
+    font-weight: bold;
+}
+.headingBorder {
+    background-color: rgb(241,245,249) !important;
+}
+.inputfile {
+	opacity: 0;
+	overflow: hidden;
+}
+
+
+::ng-deep.dummy-formField{
+    height: 2.5rem !important;
+}

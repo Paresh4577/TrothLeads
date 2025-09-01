@@ -1,0 +1,126 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" (click)="submitForm()" [disabled]="FinancialYearForm.invalid" *ngIf="mode == 'Create' || mode == 'Edit'">
+                Save
+            </button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'Edit' || mode == 'Create'">
+                Cancel
+            </button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'View'">
+                Back
+            </button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+        <form [formGroup]="FinancialYearForm" class="grid md:grid-cols-3 gap-5">
+            <div class="grid gap-6" >
+
+                <!-- Financial Year -->
+                <div class="relative ">
+                    <div class="icon">
+                        <mat-icon>tonality</mat-icon>
+                    </div>
+                    <input type="text" class="peer " maxlength="120" id="Name" formControlName="FYCode" placeholder=" " />
+                    <label for="Name" class="mandatory">Financial Year</label>
+                </div>
+
+                <!-- From Date -->
+                <div class="relative ">
+                    <div class="flex">
+                      <div class="icon">
+                        <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="Todob"></mat-datepicker-toggle>
+                        <mat-datepicker #Todob></mat-datepicker>
+                      </div>
+                      <input matInput type="text" id="Todob" class="peer" [max]="FinancialYearForm.get('ToDate').value" formControlName="FromDate" placeholder="__/__/____" datemask [matDatepicker]="Todob">
+                      <label for="Todob" class="mandatory">From Date</label>
+                    </div>
+                </div>
+
+                <!-- To Date -->
+                <div class="relative ">
+                    <div class="flex">
+                      <div class="icon">
+                        <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="fromD"></mat-datepicker-toggle>
+                        <mat-datepicker #fromD></mat-datepicker>
+                      </div>
+                      <input matInput type="text" id="fromD" class="peer" [min]="FinancialYearForm.get('FromDate').value" formControlName="ToDate" placeholder="__/__/____" datemask [matDatepicker]="fromD">
+                      <label for="fromD" class="mandatory">To Date</label>
+                    </div>
+                </div>
+
+                <!-- Status  -->
+                <div class="font-medium py-1 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+                    <span for="Status" class="pr-2 py-1 font-medium ml-3">Status</span>
+                    <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1" (change)="onChange($event,'Status')">
+                      <span class="flex font-medium text-xl ml-3 mt-1.5">
+                        {{ FinancialYearForm.get('Status').value==1 ? "Active" : "InActive" }}
+                      </span>
+                    </mat-slide-toggle>
+                </div>
+
+            </div>
+
+            <div class="grid gap-6" *ngIf="mode == 'View'">
+            
+                    <!-- Created By -->
+                    <div class="relative min-w-36">
+                        <div class="dummy-formField">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <p> {{ FinancialYear.CreatedByName }}</p>
+                            <label for="QNno">Created By</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Created Date -->
+                    <div class="relative min-w-36">
+                        <div class="dummy-formField">
+                            <div class="icon">
+                                <mat-icon>event</mat-icon>
+                            </div>
+                            <p>
+                                {{FinancialYear.CreatedDate | date:'dd/MM/yyyy , hh:mm' }}</p>
+                            <label for="QNDate">Created Date</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Updated By -->
+                    <div class="relative min-w-36">
+                        <div class="dummy-formField">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <p> {{ FinancialYear.LastUpdatedByName }}</p>
+                            <label for="QNno" >Updated By</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Updated Date -->
+                    <div class="relative min-w-36">
+                        <div class="dummy-formField">
+                            <div class="icon">
+                                <mat-icon>event</mat-icon>
+                            </div>
+                            <p>{{ FinancialYear.LastUpdatedDate | date:'dd/MM/yyyy , hh:mm' }}</p>
+                            <label for="QNDate" >Updated Date</label>
+                        </div>
+                    </div>
+            
+            </div>
+        </form>
+
+    </div>
+
+</div>

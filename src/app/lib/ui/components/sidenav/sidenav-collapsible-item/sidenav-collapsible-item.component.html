@@ -1,0 +1,68 @@
+<!-- Item wrapper -->
+<div class="gnx-menu-item-wrapper">
+  <div class="gnx-menu-item"
+    [ngClass]="{'gnx-menu-item-disabled': item.disabled}"
+    [matTooltip]="item.tooltip || ''"
+    (click)="toggleCollapssible()">
+
+    <!-- Icon -->
+    <ng-container *ngIf="item.icon">
+      <mat-icon class="gnx-menu-item-icon" [svgIcon]="item.icon">
+      </mat-icon>
+    </ng-container>
+
+    <!-- Title & Subtitle -->
+    <div class="gnx-menu-item-title-wrapper">
+      <div class="gnx-menu-item-title">
+        <span>
+          {{item.title}}
+        </span>
+      </div>
+
+      <ng-container *ngIf="item.subtitle">
+        <div class="gnx-menu-item-subtitle">
+          <span>
+            {{item.subtitle}}
+          </span>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Badge -->
+    <ng-container *ngIf="item.badge">
+      <div class="gnx-menu-item-badge">
+        <div class="gnx-menu-item-badge-content">
+          {{item.badge.title}}
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Arrow -->
+    <mat-icon class="gnx-menu-item-arrow icon-size-4" [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
+  </div>
+</div>
+
+<div class="gnx-menu-item-children" *ngIf="!isCollapsed" @expandCollapse>
+
+  <ng-container *ngFor="let item of item.children; trackBy: trackByFn">
+    <!-- Skip hidden items -->
+    <ng-container *ngIf="!item.hidden">
+      <!-- Basic Item -->
+      <ng-container *ngIf="item.type === 'basic'">
+        <gnx-sidenav-basic-item [item]="item"></gnx-sidenav-basic-item>
+      </ng-container>
+
+      <!-- Group -->
+      <ng-container *ngIf="item.type === 'group'">
+        <gnx-sidenav-group-item [item]="item" [autoCollapse]="autoCollapse">
+        </gnx-sidenav-group-item>
+      </ng-container>
+
+      <!-- Collapsible -->
+      <ng-container *ngIf="item.type === 'collapsible'">
+        <gnx-sidenav-collapsible-item [item]="item" [autoCollapse]="autoCollapse"></gnx-sidenav-collapsible-item>
+      </ng-container>
+
+    </ng-container>
+  </ng-container>
+</div>

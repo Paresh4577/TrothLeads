@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assign Group Policy - Insurance Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .page { display: none; }
+    .page.active { display: block; }
+    .modal { display: none; }
+    .modal.active { display: flex; }
+    .modal-bg { background: rgba(0,0,0,0.5); }
+    .nav-btn.active, .nav-btn:hover { background: rgba(59,130,246,0.1); }
+    .table-row:hover { background: #f1f5f9; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #374151; }
+    .form-input { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; focus:outline-none; focus:ring-2; focus:ring-blue-500; focus:border-transparent; }
+    .form-select { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; background-color: white; focus:outline-none; focus:ring-2; focus:ring-blue-500; focus:border-transparent; }
+    .btn-primary { background: linear-gradient(to right, #3b82f6, #1d4ed8); color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; }
+    .btn-secondary { background: #6b7280; color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; }
+    .btn-secondary:hover { background: #4b5563; }
+    .file-upload-area { border: 2px dashed #d1d5db; border-radius: 0.5rem; padding: 2rem; text-align: center; }
+    .file-upload-area:hover { border-color: #3b82f6; background-color: #f8fafc; }
+    .file-upload-area.dragover { border-color: #3b82f6; background-color: #eff6ff; }
+    
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen">
+
+  <!-- Navigation -->
+    <nav style="background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 50%, #1e293b 100%); color: white; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); position: sticky; top: 0; z-index: 10; height: 70px;">
+    <div style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; height: 100%;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);">
+          <i class="fas fa-shield-alt" style="color: white; font-size: 18px;"></i>
+        </div>
+        <span style="font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">Admin Dashboard</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 8px; backdrop-filter: blur(10px);">
+          <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-user" style="color: white; font-size: 14px;"></i>
+          </div>
+       <span style="font-size: 14px; font-weight: 500;">
+  <a routerLink="/grouppolicydashboard" style="text-decoration: none; color: inherit;">Back</a>
+</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mx-auto px-4 py-8">
+
+    <!-- Assign Group Policy Page -->
+     <div id="page-assign-policy" class="page active">
+      
+       <!-- Header Section -->
+       <div class="mb-8">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-4xl font-bold text-blue-900 mb-2 flex items-center">
+              <i class="fas fa-file-contract mr-3"></i>Assign Group Policy
+            </h2>
+            <p class="text-gray-600">Assign insurance policies to client companies</p>
+          </div>
+         <!-- 🔼 Move this to just below the header or before main form -->
+<!-- <form (ngSubmit)="AddExcel()" enctype="multipart/form-data">
+  <div class="form-group">
+    <label class="form-label">Upload Excel (optional)</label>
+    <input
+      type="file"
+      (change)="onexcelfileselet($event)"
+      accept=".xlsx, .xls"
+      class="form-input"
+    />
+  </div>
+  <button type="submit" class="btn-primary mt-2">
+    <i class="fas fa-upload mr-2"></i> Upload Excel
+  </button>
+</form> -->
+
+        </div>
+       </div>
+
+       <!-- Policy Assignment Form -->
+       <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+          <i class="fas fa-plus-circle mr-2 text-blue-600"></i>New Policy Assignment
+        </h3>
+        
+    <form #policyForm="ngForm" (ngSubmit)="submitPolicyForm(policyForm)" class="space-y-6">
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    
+    <!-- Company Dropdown -->
+    <!-- <div>
+      <label class="form-label required">Select Company</label>
+      <select name="companyId" [(ngModel)]="formData.companyId" required class="form-select">
+        <option value="">Choose a company...</option>
+        <option *ngFor="let comp of companyList" [value]="comp.CompanyId">{{ comp.CompanyName }}</option>
+      </select>
+    </div> -->
+
+    <div>
+      <label class="form-label required">Select Company</label>
+      <ng-select 
+        [items]="companyList"
+        bindLabel="CompanyName"
+        bindValue="CompanyId"
+        [(ngModel)]="formData.companyId"
+        placeholder="Type to search company..."
+        required
+        name="companyId"
+        #companySelect="ngModel"
+        [class.is-invalid]="companySelect.invalid && companySelect.touched"
+        (change)="onCompanyChange()"
+      ></ng-select>
+      <div *ngIf="companySelect.invalid && companySelect.touched" class="invalid-feedback">
+        Please select a company
+      </div>
+    </div>
+    
+
+    <!-- Insurer Dropdown -->
+    <div>
+      <label class="form-label required">Select Insurer</label>
+     <select class="form-control" [(ngModel)]="formData.insurerId" name="companyId" required>
+        <option [ngValue]=0 disabled selected>Select Company</option>
+        <option *ngFor="let company of insurer" [value]="company.CompanyId">
+          {{ company.CompanyName }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Policy Number -->
+    <div>
+      <label class="form-label required">Policy Number</label>
+      <input type="text" name="policyNumber" [(ngModel)]="formData.policyNumber" required class="form-input" placeholder="e.g., POL-2024-001">
+    </div>
+
+    <!-- Policy Type -->
+    <div>
+      <label class="form-label required">Policy Type</label>
+      <select name="policyType" [(ngModel)]="formData.policyType" required class="form-select">
+        <option value="">Select Policy Type</option>
+        <option value="GROUP MEDICLAIM">GROUP MEDICLAIM</option>
+        <option value="GROUP PERSONAL ACCIDENT">GROUP PERSONAL ACCIDENT</option>
+      </select>
+    </div>
+
+    <!-- Sum Insured -->
+    <div class="md:col-span-2">
+      <label class="form-label required">Sum Insured</label>
+      <input type="number" name="sumInsured" [(ngModel)]="formData.sumInsured" required class="form-input" placeholder="500000">
+    </div>
+
+    <!-- Start Date -->
+    <div>
+      <label class="form-label required">Policy Start Date</label>
+      <input type="date" name="policyStartDate" [(ngModel)]="formData.policyStartDate" required class="form-input">
+    </div>
+
+    <!-- End Date -->
+    <div>
+      <label class="form-label required">Policy End Date</label>
+      <input type="date" name="policyEndDate" [(ngModel)]="formData.policyEndDate" required class="form-input">
+    </div>
+
+    <!-- Features -->
+    <div>
+      <label class="form-label">Features</label>
+      <textarea name="features" [(ngModel)]="formData.features" class="form-input" rows="3" placeholder="Enter policy features..."></textarea>
+    </div>
+
+    <!-- Policy Detail -->
+    <div>
+      <label class="form-label">Policy Detail</label>
+      <textarea name="policydetail" [(ngModel)]="formData.policydetail" class="form-input" rows="3" placeholder="Enter policy details..."></textarea>
+    </div>
+
+    <!-- File Upload -->
+    <div class="md:col-span-2">
+      <label class="form-label required">Policy Document</label>
+      <input type="file" class="form-input" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx">
+      <p class="text-sm text-gray-500 mt-1" *ngIf="formData.document">Selected: {{ formData.document }}</p>
+    </div>
+
+  </div>
+
+  <div class="flex justify-end gap-4 border-t pt-6 mt-6">
+    <button type="button" class="btn-secondary" (click)="resetForm(policyForm)">
+      <i class="fas fa-undo mr-2"></i>Reset
+    </button>
+    <button type="submit" class="btn-primary">
+      <i class="fas fa-save mr-2"></i>Assign Policy
+    </button>
+  </div>
+</form>
+
+       </div>
+
+       <!-- Assigned Policies List -->
+       <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-gray-800 flex items-center">
+            <i class="fas fa-list-alt mr-2 text-blue-600"></i>Assigned Policies
+          </h3>
+          <div class="flex space-x-2">
+            <button 
+              (click)="fetchAssignedPolicies(formData.companyId)"
+              class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center"
+              [disabled]="isLoading"
+            >
+              <i class="fas fa-sync-alt mr-2" [class.animate-spin]="isLoading"></i>
+              Refresh
+            </button>
+            <input type="text" id="searchPolicies" placeholder="Search policies..." 
+                   class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <!-- Loading indicator -->
+          <div *ngIf="isLoading" class="flex justify-center items-center py-8">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <span class="ml-2 text-gray-600">Loading policies and employee counts...</span>
+          </div>
+          
+          <table class="min-w-full" *ngIf="!isLoading">
+            <thead>
+              <tr class="bg-gray-100 text-left text-gray-600 font-medium">
+                <th class="py-3 px-4">Policy No.</th>
+                <th class="py-3 px-4">Policy Name</th>
+                <th class="py-3 px-4">Company</th>
+                <th class="py-3 px-4">Insurer Name</th>
+                <th class="py-3 px-4">Sum Insured</th>
+               
+                <th class="py-3 px-4">Status</th>
+                <th class="py-3 px-4">Actions</th>
+              </tr>
+            </thead>
+           <tbody>
+  <tr
+    *ngFor="let policy of assignedPolicies"
+    class="table-row border-b border-gray-200"
+  >
+    <td class="py-4 px-4 font-medium">{{ policy.PolicyNo }}</td>
+    <div 
+    class="font-bold text-gray-900 cursor-pointer hover:text-blue-600 hover:underline"
+    (click)="viewPolicy(policy.GrPolicyId)"
+    title="View Employee Dashboard"
+  >
+    {{ policy.PolicyName }}
+  </div>
+    <td class="py-4 px-4">{{ policy.CompanyName }}</td>
+    <td class="py-4 px-4">{{ policy.InsurerName }}</td>
+    <td class="py-4 px-4">₹{{ policy.SumInsured | number }}</td>
+   
+    <td class="py-4 px-4">
+      <span
+        [ngClass]="{
+          'bg-green-100 text-green-800': policy.isActive,
+          'bg-yellow-100 text-yellow-800': !policy.isActive
+        }"
+        class="px-3 py-1 rounded-full text-sm"
+      >
+        {{ policy.isActive ? 'Active' : 'Pending' }}
+      </span>
+    </td>
+    <td class="py-4 px-4">
+      <button
+        class="text-blue-600 hover:text-blue-800 mr-2"
+        title="View Details"
+        (click)="viewPolicyDetails(policy.PolicyId || policy.policyid)"
+      >
+        <i class="fas fa-eye"></i>
+      </button>
+      <button
+        class="text-green-600 hover:text-green-800 mr-2"
+        title="Edit"
+        (click)="editPolicy(policy.PolicyId || policy.policyid)"
+      >
+        <i class="fas fa-edit"></i>
+      </button>
+      <button
+        class="text-red-600 hover:text-red-800"
+        title="Delete"
+        (click)="deletePolicy(policy.PolicyId || policy.policyid)"
+      >
+        <i class="fas fa-trash"></i>
+      </button>
+    </td>
+  </tr>
+
+  <!-- Fallback for empty state -->
+  <tr *ngIf="assignedPolicies.length === 0">
+    <td class="py-4 px-4 text-center text-gray-500" colspan="8">
+      No policies found.
+    </td>
+  </tr>
+</tbody>
+
+          </table>
+          </div>
+        </div>
+      </div>
+  </div>
+
+
+
+  
+</body>
+</html>

@@ -1,0 +1,41 @@
+:host {
+    @apply w-full h-full flex flex-col justify-items-stretch #{!important};
+}
+
+.Add{
+    height: fit-content !important;
+    background-color: white !important;
+}
+.summaryHeight{
+    display: none !important;
+}
+
+.scrollHeight {
+    height: 57vh !important;
+}
+
+@media only screen and (max-width: 1280px) {
+    .Add {
+        height: fit-content !important;
+    }
+    .scrollHeight {
+        height: 350px !important;
+    }
+}
+
+@media only screen and (max-width: 959px) {
+    .summaryHeight {
+        display: block !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        z-index: 60;
+    }
+    .Add {
+        height: fit-content !important;
+
+    }
+    .scrollHeight {
+        height: 100% !important;
+    }
+}

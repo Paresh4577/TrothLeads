@@ -1,0 +1,18 @@
+<!-- region Main Heading -->
+<h1 class="new-head text-lg px-4 py-1.5 mb-4 rounded flex justify-between items-center font-semibold min-h-13">
+    {{title}}
+
+    <!-- region Heading Controls -->
+    <div class="flex gap-x-3  items-center text-md font-normal">
+        <button mat-raised-button class="new-button">Export</button>
+        <button mat-raised-button class="new-button" [routerLink]="RoutingConfig.VehicleTypeImport">Upload</button>
+        <button [routerLink]="['create']" mat-raised-button class="new-button">Add</button>
+    </div>
+</h1>
+<!-- endregion Heading Controls -->
+
+<!-- region dynamic list table component  -->
+<gnx-table-list [headArray]="columnDef" [listDataObservable]="VehicleTypeList$" [pagefilters]="pagefilters"
+    [masterName]="'Customer'" (onSort)="sortColumn($event)" (onSearch)="searchColumn($event)" (onNext)="nextPage()"
+    (onPrev)="previousPage()" (onLimitChange)="setLimit($event)"></gnx-table-list>
+<!-- endregion dynamic list table component  -->

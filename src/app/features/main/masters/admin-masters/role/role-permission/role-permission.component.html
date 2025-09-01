@@ -1,0 +1,43 @@
+<div class="px-4 pb-4 w-full h-full">
+  <div id="page-content" fxLayout="column">
+    <div id="page-header" fxLayout="column" fxFlex class="rounded sticky top-0 z-40 pt-4 bg-default">
+      <h1 class="new-head text-lg px-4 py-1.5 flex justify-between items-center font-semibold">
+        {{ title }}s  for : {{role.Name}}
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+          <button mat-raised-button type="button" (click)="saveFeatureActivity()">Save</button>
+          <button mat-raised-button type="button" (click)="cancel()">Cancel</button>
+        </div>
+      </h1>
+      </div>
+      <div class="role-permission-table" fxLayout="column" fxFlex>
+        <table mat-table [dataSource]="dataSource" class="gnx-table">
+          <!-- Dynamic Columns -->
+          <ng-container *ngFor="let displayColumn of displayedColumns" [matColumnDef]="displayColumn">
+            <th class="header" mat-header-cell *matHeaderCellDef>{{ displayColumn }}</th>
+  
+            <td class="mat-cell no-select" mat-cell *matCellDef="let element">
+              <span *ngIf="displayColumn === 'Feature'">
+                <strong> {{ element.FeatureName }} </strong>
+              </span>
+              <span *ngIf="displayColumn === 'All'">
+                <mat-checkbox (change)="updateAllPermission(element.FeatureKey, $event)" [checked]="checkall(element.FeatureKey)"> </mat-checkbox>
+              </span>
+  
+              <span *ngFor="let activity of element.Activities">
+                <span *ngIf="displayColumn === activity.ActivityName">
+                  <mat-checkbox [checked]="activity.Permission" (change)="updatePermission(activity, $event)">
+                  </mat-checkbox>
+                </span>
+              </span>
+            </td>
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="sticky top-[68px] bg-inherit z-40"></tr>
+          <tr class="z-10" mat-row *matRowDef="let element; columns: displayedColumns"></tr>
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="999">No data to display</td>
+          </tr>
+        </table>
+      </div>
+  </div>
+</div>

@@ -1,0 +1,91 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button>Download</button>
+            <button mat-raised-button class="new-button">Save</button>
+            <button mat-raised-button class="new-button" (click)="backClicked()">Cancel</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+
+
+        <div class="px-4 py-7 rounded bg-white">
+           <div class="grid md:flex gap-3 items-center">
+            
+            <div  *ngIf="!SelectedFile">
+                <input type="file" #ImportTemplate class="hidden" (change)="OnChangeFile(ImportTemplate.files)">
+                <button mat-raised-button class="form-button" (click)="ImportTemplate.click()">Select File</button>
+            </div>
+
+            <div class="flex gap-3 items-center"  *ngIf="SelectedFile">
+                <span class="font-bold">Selected File :</span>
+                <p  class="border-2 p-2 border-dashed  min-w-60">{{ SelectedFile ? SelectedFile.name : ""}}</p>
+            </div>
+
+
+                <div class="flex gap-3"  *ngIf="SelectedFile">
+                    <button mat-raised-button class="form-button" >Upload</button>
+                    <button mat-raised-button (click)="CancelUplod()"  >Cancel</button>
+                </div>
+
+
+           </div>
+
+<div class="mappingtable overflow-x-scroll overflow-y-hidden">
+    <table class="bg-white mt-5">
+        <thead class="bg-primary text-white h-8">
+            <tr>
+                <th>Vehicle Code</th>
+                <th>Vehicle Type</th>
+                <th>Maker/Brand Name</th>
+                <th>Model</th>
+                <th>Variant</th>
+                <th>Body Type</th>
+                <th>Cubic Capacity</th>
+                <th>Fuel</th>
+                <th>Power</th>
+                <th>Seating Capacity</th>
+                <th>Gross Vehicle Weight</th>
+                <th>No. of Wheels</th>
+                <th>Ex. Showroom Price</th>
+                <th>Price Year</th>
+                <th>Production</th>
+                <th>System Remarks</th>
+            </tr>
+        </thead>
+<tr>
+    <td colspan="99" class="h-10">No Records</td>
+</tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+      
+
+        </tr>
+
+
+    </table>
+</div>
+
+
+        </div>
+</div>

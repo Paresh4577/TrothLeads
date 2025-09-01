@@ -1,0 +1,194 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        {{ title }}
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" [disabled]="CustomerForm.invalid" (click)="submitform()"
+                *ngIf="mode == 'Create' || mode == 'Edit'">Save</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()"
+                *ngIf="mode == 'Edit' || mode == 'Create'">Cancel</button>
+
+            <button mat-raised-button class="new-button" (click)="backClicked()" *ngIf="mode == 'View'">Back</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+    <!-- endregion main heading -->
+
+    <!-- region form -->
+    <div class="px-4 py-7 rounded bg-white">
+        <form class="sm:w-120 text-md" [formGroup]="CustomerForm">
+
+            <div class="grid lg:grid-cols-[minmax(400px,260px)_minmax(400px,1fr)]
+            md:grid-cols-[minmax(300px,260px)_minmax(300px,1fr)]  gap-5 mt-4 grid-cols-1">
+
+                    <!--  Customer ID (Auto) -->
+                    <div class="relative">
+                        <div class="icon">
+                            <mat-icon>flag</mat-icon>
+                        </div>
+                        <input type="text" class="peer" id="CustomerID" formControlName="CustomerNo" placeholder="Auto" readonly/>
+                        <label for="CustomerID">Customer ID</label>
+                    </div>
+
+                    <!-- First name -->
+                    <div class="relative col-start-1">
+                        <div class="icon">
+                            <mat-icon>person</mat-icon>
+                        </div>
+                        <input type="text" AlphabetOnly class="peer" formControlName="FirstName" placeholder=" " maxlength="120" id="FirstName" />
+                        <label for="FirstName" class="mandatory">First Name</label>
+                    </div>
+
+                    <!-- Middle name -->
+                    <div class="relative">
+                        <div class="icon">
+                            <mat-icon>person</mat-icon>
+                        </div>
+                        <input type="text" AlphabetOnly class="peer" formControlName="MiddleName" placeholder=" " maxlength="120" id="MiddleName" />
+                        <label for="MiddleName">Middle Name</label>
+                    </div>
+
+                    <!-- Last name -->
+                    <div class="relative">
+                        <div class="icon">
+                            <mat-icon>person</mat-icon>
+                        </div>
+                        <input type="text" AlphabetOnly class="peer" formControlName="LastName" placeholder=" " maxlength="120" id="LastName" />
+                        <label for="LastName" class="mandatory">Last Name</label>
+                    </div>
+
+                    <!-- DOB -->
+                    <!-- <div class="relative">
+                        <div class="icon">
+                            <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </div>
+
+                        <input matInput type="text" placeholder=" " placeholder="__/__/____" datemask [matDatepicker]="picker" formControlName="DOB" class="peer" id="DateOfBirth" />
+
+                        <label for="DateOfBirth" class="mandatory">Date of Birth</label>
+                    </div> -->
+
+                    <!--  Group Head -->
+                    <div class="relative ">
+                        <div class="icon">
+                            <mat-icon> person_pin</mat-icon>
+                        </div>
+                        <div class="flex">
+                            <input type="text" class="peer" formControlName="GroupHeadName" placeholder=" " id="GroupHead" [matAutocomplete]="groupSearch" />
+                            <mat-autocomplete class="peer" #groupSearch="matAutocomplete" (optionSelected)="GroupHeadSelected($event)">
+                                <mat-option *ngFor="let group of GroupHeadName$ | async" [value]="group">
+                                    {{ group.Name }}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <button class="-m-5 z-10" type="button" *ngIf="editable" (click)="openDiolog('GroupHead','Select GroupHead')">
+                                <mat-icon class="-ml-2">
+                                    search
+                                </mat-icon>
+                            </button>
+                            <button *ngIf="CustomerForm.get('GroupHeadName').value && mode != 'View'" type="button" class="-m-7 z-10" aria-label="clear" matTooltip="Clear" (click)="clear('GroupHeadName', 'GroupHeadId')">
+                                <mat-icon>clear</mat-icon>
+                            </button>
+                            <label for=" GroupHead" class="mandatory">Group Head</label>
+                        </div>
+                    </div>
+
+                    <!-- PIN Code -->
+                    <div class="relative">
+                        <div class="icon">
+                            <mat-icon>pin_drop</mat-icon>
+                        </div>
+                        <div class="flex">
+                            <input type="text" Onlynumber maxlength="6" class="peer" formControlName="PinCodeNumber" placeholder=" " id="PincodeNumber" [matAutocomplete]="oppoSearch" />
+                            <mat-autocomplete class="peer" #oppoSearch="matAutocomplete" (optionSelected)="PinCodeSelected($event)">
+                                <mat-option *ngFor="let pincode of pincodes$ | async" [value]="pincode">
+                                    {{ pincode.PinCode }} {{ pincode.CityName }}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <button class="-m-5 z-10" type="button" *ngIf="editable" (click)="openDiolog('Pincode','Select Pincode')">
+                                <mat-icon class="-ml-2">
+                                    search
+                                </mat-icon>
+                            </button>
+                            <button *ngIf="CustomerForm.get('PinCodeNumber').value && mode != 'View'" type="button" class="-m-7 z-10" aria-label="clear" matTooltip="Clear" (click)="clear('PinCodeNumber', 'PinCodeId')">
+                                <mat-icon>clear</mat-icon>
+                            </button>
+                            <label for="PinCodeNumber" class="mandatory">PIN Code</label>
+                        </div>
+                    </div>
+
+                    <!--  City -->
+                    <div class="relative">
+                        <div class="icon">
+                            <mat-icon>location_city</mat-icon>
+                        </div>
+                        <input type="text" readonly class="peer" id="City" formControlName="CityName" placeholder=" " />
+                        <label for="City">City</label>
+                    </div>
+
+                    <!--  State -->
+                    <div class="relative">
+                        <div class="icon">
+                            <mat-icon>domain</mat-icon>
+                        </div>
+                        <input type="text" readonly class="peer" id="State" formControlName="StateName" placeholder=" " />
+                        <label for="State" class="mandatory">State</label>
+                    </div>
+
+                    <!--  Country -->
+                    <div class="relative">
+                        <div class="icon">
+                            <mat-icon>flag</mat-icon>
+                        </div>
+                        <input type="text" readonly class="peer" id="Country" formControlName="CountryName" placeholder=" " />
+                        <label for="Country">Country</label>
+                    </div>
+
+
+                    <!--   Email ID -->
+                    <div class="relative">
+                        <div class="icon">
+                            <mat-icon>mail</mat-icon>
+                        </div>
+                        <input type="text" class="peer" id="EmailID" formControlName="Email" placeholder=" " />
+                        <label for="EmailID">Email ID</label>
+                    </div>
+
+
+                    <!--  Mobile -->
+                    <div class="relative">
+                        <div class="icon">
+                            <mat-icon>phone</mat-icon>
+                        </div>
+                        <input type="text" class="peer" id="Mobile" Onlynumber maxlength="10" formControlName="MobileNo" placeholder=" " />
+                        <label for="Mobile" >Mobile</label>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="relative md:col-span-2">
+                        <div class="icon">
+                            <mat-icon>home</mat-icon>
+                        </div>
+                        <textarea name="" type="text" class="peer w-full" formControlName="Address" placeholder=" " id="Address"></textarea>
+                        <label for="Address" >Address</label>
+                    </div>
+                    
+                     <!-- Status -->
+                     <div class="font-medium py-3 grid grid-cols-[minmax(60px,100px)_minmax(60px,100px)]">
+                        <span for="Status" class="pr-2 py-1 font-medium ml-3">Status</span>
+                        <mat-slide-toggle color="primary" formControlName="Status" class="relative mt-1" (change)="onChange($event,'Status')">
+                            <span class="flex font-medium text-xl ml-3 mt-1.5">
+                                {{ f['Status'].value == 1 ? "Active" : "InActive" }}
+                            </span>
+                        </mat-slide-toggle>
+                     </div>
+            </div>
+
+            <!-- <button (click)="temp()">Test</button> -->
+        </form>
+    </div>
+    <!-- endregion form -->
+</div>

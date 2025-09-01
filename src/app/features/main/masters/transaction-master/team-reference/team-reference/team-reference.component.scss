@@ -1,0 +1,30 @@
+    .lableInputCheckbox {
+        label {
+            position: unset !important;
+            cursor: pointer !important;
+            background-color: transparent !important;
+            font-size: medium;
+            font-weight: 400;
+        }
+    }
+
+         .aaptimepicker {
+    
+            justify-content: center;
+            align-items: center;
+             select,
+             textarea {
+                 font-family: inherit !important;
+                 font-size: 100% !important;
+                 line-height: 1.15 !important;
+                 margin: 0 !important;
+                 border: none !important;
+                 background-image: none !important;
+                 width: 26px !important;
+                 padding: 0px !important;
+             }
+    
+             select {
+                 text-transform: none !important;
+             }
+         }

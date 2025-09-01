@@ -1,0 +1,909 @@
+<div class="px-4 pb-4 max-h-none w-full">
+    <!-- region main heading -->
+
+    <!-- region main heading -->
+    <div class="pt-4 sticky z-30 headingBorder top-0 w-full">
+        <!-- region main heading -->
+        <h1 class="new-head h-14 text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold">
+            {{ pagetitle }}
+            <div class="flex gap-x-3  items-center text-lg font-normal">
+                <button mat-raised-button class="new-button" (click)="backButton()">Back</button>
+                <button mat-raised-button class="new-button" (click)="ExpandCollaps()">
+                    {{isExpand ?'Collapse' : 'Expand All'}}
+                </button>
+            </div>
+        </h1>
+
+        <div class="">
+            <div class="px-4 py-4 rounded bg-white">
+                <mat-card class="bg-sky-100 px-4 py-3 gap-2 container mx-auto min-h-16">
+                    <div class="flex flex-wrap gap-3 justify-between px-4 sm:text-center">
+
+                        <!-- RFQ No -->
+                        <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                            <span class="text-center font-semibold">RFQ No</span>
+                            <span class="font-normal text-center">{{DisplayForm.RFQNo}}</span>
+                        </div>
+
+                        <!-- Customer name -->
+                        <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                            <span class="text-center font-semibold">Customer name</span>
+                            <span class="font-normal text-center">{{DisplayForm.ProposerName}}</span>
+                        </div>
+
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+    <!-- endregion main heading -->
+
+    <!-- Start of Body -->
+    <form [formGroup]="QNselectionForm">
+        <!-- Region Form -->
+        <div class="py-5 rounded">
+            <mat-stepper orientation="vertical" #stepper [linear]="true" [ngClass]="isExpand ? 'showstep' : ''">
+
+                <mat-step label="RFQ Details">
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                        <!-- RFQ No. -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>confirmation_number</mat-icon>
+                            </div>
+                            <input matInput maxlength="30" type="text" id="RFQNo" [value]="DisplayForm.RFQNo"
+                                placeholder=" " class="peer" readonly required />
+                            <label for="RFQNo" class="mandatory">RFQ No.</label>
+                        </div>
+
+                        <!-- RFQ Date -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-datepicker-toggle class="-ml-2 pointer-events-none"
+                                    matIconSuffix></mat-datepicker-toggle>
+                                <mat-datepicker #RFQDate></mat-datepicker>
+                            </div>
+                            <div class="flex">
+                                <input matInput type="text" id="RFQDate" placeholder="__/__/____" datemask
+                                    [value]="DisplayForm.RFQDate" [matDatepicker]="RFQDate" class="peer mb-1"
+                                    readonly />
+                                <label for="RFQDate" class="mandatory">RFQ Date</label>
+                            </div>
+                        </div>
+
+                        <!-- QN No. -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>confirmation_number</mat-icon>
+                            </div>
+                            <input matInput maxlength="30" type="text" id="QNNo" [value]="DisplayForm.QNNo"
+                                placeholder=" " class="peer" readonly required />
+                            <label for="QNNo" class="mandatory">QN No.</label>
+                        </div>
+
+                        <!-- QN Date -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-datepicker-toggle class="-ml-2 pointer-events-none"
+                                    matIconSuffix></mat-datepicker-toggle>
+                                <mat-datepicker #QNDate></mat-datepicker>
+                            </div>
+                            <div class="flex">
+                                <input matInput type="text" id="QNDate" placeholder="__/__/____" datemask
+                                    [value]="DisplayForm.QNDate" [matDatepicker]="QNDate" class="peer mb-1" readonly />
+                                <label for="QNDate" class="mandatory">QN Date</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3 flex flex-wrap gap-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white" type="button" mat-button matStepperNext>
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
+                <!-- First stepper -->
+                <mat-step label="Basic Details">
+
+                    <div class="grid lg:grid-cols-4 sm:grid-cols-2 gap-3 mt-4">
+
+                        <!-- Product Sub Category -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <mat-icon>category</mat-icon>
+                            </div>
+                            <input type="text" id="RFQNo" [value]="DisplayForm.SubCategoryName" placeholder=" "
+                                class="peer" readonly />
+                            <label for="VehicleCategory" class="mandatory">Product Sub Category</label>
+                        </div>
+
+                        <!-- Policy Type -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <mat-icon>timelapse</mat-icon>
+                            </div>
+                            <input matInput type="text" id="PolicyType" [value]="DisplayForm.PolicyType" placeholder=" "
+                                class="peer" readonly />
+                            <label for="PolicyType" class="mandatory">Policy Type</label>
+                        </div>
+                    </div>
+
+
+                    <div class="mt-3 flex flex-wrap gap-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white" type="button" mat-button matStepperPrevious>
+                            Back
+                        </button>
+                        <button class="bg-royal text-white" type="button" mat-button matStepperNext>
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
+
+                <mat-step label="Quotation Selection" [stepControl]="QuotationSelectionValidationControl()">
+                    <div class="py-7 min-w-full rounded bg-white" formArrayName="QNDocuments">
+
+                        <div *ngFor="let item of QNselection.controls; let i = index;" [formGroupName]="i">
+
+                            <div
+                                class="grid lg:grid-cols-[minmax(190px,20%)_minmax(150px,20%)_minmax(150px,20%)_minmax(150px,20%)_minmax(150px,5%)]
+                             md:grid-cols-[minmax(190px,1fr)_minmax(150px,1fr)_minmax(150px,1fr)] sm:grid-cols-2 gap-3 mt-4">
+
+                                <!-- Insurance Company -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>business</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" id="InsuranceCompanyName"
+                                        value="{{item.value.InsuranceCompanyShortName}}" placeholder=" " readonly>
+                                    <label for="InsuranceCompanyName" class="mandatory">Insurance Company</label>
+                                </div>
+
+                                <!-- Plan Name -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>tonality</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" id="PlanName" value="{{item.value.ProductName}}"
+                                        placeholder=" " readonly>
+                                    <!-- value="{{item.value.ProductName}}" placeholder=" " readonly> -->
+                                    <label for="PlanName" class="mandatory">Plan Name</label>
+                                </div>
+
+                                <!-- Sum Insured -->
+                                <div class="relative">
+                                    <div class="icon rs">₹</div>
+                                    <input type="text" class="peer" id="SumInsuredOrIDV"
+                                        value="{{item.value.SumInsured | indCurrencyWithoutSymbol}}" placeholder=" "
+                                        readonly>
+                                    <label for="SumInsuredOrIDV" class="mandatory">Sum Insured</label>
+                                </div>
+
+                                <!-- Gross Premium -->
+                                <div class="relative">
+                                    <div class="icon rs">₹</div>
+                                    <input type="text" class="peer" id="GrossPremium"
+                                        value="{{item.value.GrossPremium | indCurrencyWithoutSymbol}}" placeholder=" "
+                                        readonly>
+                                    <label for="GrossPremium" class="mandatory">Gross Premium</label>
+                                </div>
+
+                                <!-- Buy Button -->
+                                <div class="relative min-w-20">
+                                    <div class="dummy-formField justify-evenly max-w-24">
+                                        <span class="text-md mandatory">Buy</span>
+                                        <input type="radio" id="Buy" name="Buy" [checked]="item.value.Buy == true"
+                                            (click)="SelectBuy(i)">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="flex flex-wrap gap-3 mt-4">
+
+                        <!-- Additional Information -->
+                        <div class="relative min-w-48 max-w-72 w-screen">
+                            <div class="icon">
+                                <mat-icon>border_color</mat-icon>
+                            </div>
+                            <input type="text" class="peer" id="AdditionalInformation" placeholder=" "
+                                formControlName="Additionalinformation" />
+                            <label for="AdditionalInformation">Additional Information</label>
+                        </div>
+
+                        <!-- Reason (For Send Back/Reject) -->
+                        <div class="relative col-span-2 min-w-48 max-w-120 lg:w-screen">
+                            <div class="icon">
+                                <mat-icon>bubble_chart</mat-icon>
+                            </div>
+                            <input matInput type="text" placeholder=" " id="Remarks" class="peer" required
+                                formControlName="SendBackRejectDesc" />
+                            <label for="Remarks" class="mandatory">Reason (For Send Back/Reject)</label>
+                        </div>
+
+                        <div class="relative col-span-2">
+                            <button class="bg-royal text-white mx-3" mat-button (click)="SendBackButton()">
+                                Send Back
+                            </button>
+                            <button class="bg-royal text-white mx-3" mat-button (click)="DonloadQNdocument()">
+                                <mat-icon class="text-white">picture_as_pdf</mat-icon>
+                            </button>
+                            <button class="bg-royal text-white mx-3" mat-button
+                            (click)="openDiologShare()"
+                            >
+                                <mat-icon class="text-white">share</mat-icon>
+                            </button>
+                        </div>
+
+                    </div>
+
+
+                    <div class="mt-3 flex flex-wrap gap-3" *ngIf="!isExpand">
+
+                        <button class="bg-royal text-white" type="button" mat-button matStepperPrevious>
+                            Back
+                        </button>
+
+                        <button class="bg-royal text-white" type="button" mat-button matStepperNext
+                            (click)="QuotationSelectionValidationError()">
+                            Next
+                        </button>
+
+                    </div>
+
+                </mat-step>
+
+                <!-- Second stepper -->
+                <mat-step label="Product Category Details" [stepControl]="ProductCategoryValidationControl()">
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4 ">
+
+                        <!-- Sum insured -->
+                        <div class="relative">
+                            <div class="icon">
+                                <div class="icon rs">₹</div>
+                            </div>
+                            <input type="text" id="SumInsured" [value]="DisplayForm.SumInsures" readonly placeholder=" "
+                                class="peer" />
+                            <label for="SumInsured" class="mandatory">Sum insured</label>
+                        </div>
+
+                        <!-- Proposer Name -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <input type="text" id="ProposerName" [value]="DisplayForm.ProposerName" readonly
+                                placeholder=" " class="peer" />
+                            <label for="ProposerName" class="mandatory">Proposer Name</label>
+                        </div>
+
+                        <!-- Proposer Mobile No -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon class="-ml-2">smartphone</mat-icon>
+                            </div>
+                            <input type="text" id="ProposerMobileNo" [value]="DisplayForm.ProposerMobileNo" readonly
+                                onfocus="this.select()" placeholder=" " maxlength="10" class="peer" required />
+                            <label for="ProposerMobileNo" class="mandatory">Proposer Mobile No</label>
+                        </div>
+
+                        <!-- Proposer Mobile No -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon> email</mat-icon>
+                            </div>
+                            <input type="text" id="ProposerEmail" [value]="DisplayForm.ProposerEmail" readonly
+                                placeholder=" " class="peer" required />
+                            <label for="ProposerEmail" class="">Email ID</label>
+                        </div>
+
+                        <!-- Occupation -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>work</mat-icon>
+                            </div>
+                            <input type="text" id="Occupation" [value]="DisplayForm.Occupation" readonly placeholder=" "
+                                class="peer" />
+                            <label for="Occupation" class="mandatory">Occupation</label>
+                        </div>
+
+                        <!-- Designation -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>layers</mat-icon>
+                            </div>
+                            <input type="text" id="Occupation" [value]="DisplayForm.Designation" readonly
+                                placeholder=" " class="peer" />
+                            <label for="Designation" class="">Designation</label>
+                        </div>
+
+                        <!-- Remarks -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>bubble_chart</mat-icon>
+                            </div>
+                            <input readonly type="text" placeholder=" " [value]="DisplayForm.ProjectRemark"
+                                id="ProjectRemark" name="ProjectRemark" class="peer" />
+                            <label for="ProjectRemark" class="">Remarks</label>
+                        </div>
+
+
+                    </div>
+
+                    <p class="font-semibold text-base col-start-1 md:col-span-2 lg:col-span-3 pt-5"
+                        *ngIf="DisplayForm.CoverageDetail">
+                        Add Ons
+                    </p>
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4 CheckBoxLabel"
+                        *ngIf="DisplayForm.CoverageDetail">
+
+
+                        <!-- Accidental Death -->
+                        <div class="lg:min-w-64" *ngIf="DisplayForm.CoverageDetail?.AccidentalDeath">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="AccidentalDeath" class="peer mb-2" disabled
+                                    [checked]="DisplayForm.CoverageDetail?.AccidentalDeath" />
+                                <label for="AccidentalDeath" class="font-medium min-w-40">Accidental Death</label>
+                            </div>
+                        </div>
+
+                        <!-- Permanent Total Disability  -->
+                        <div class="lg:min-w-64" *ngIf="DisplayForm.CoverageDetail?.PermanentTotalDisability">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="PermanentTotalDisability" class="peer mb-2" [value]="true"
+                                    disabled [checked]="DisplayForm.CoverageDetail?.PermanentTotalDisability" />
+                                <label for="PermanentTotalDisability" class="font-medium min-w-40">Permanent Total
+                                    Disability</label>
+                            </div>
+                        </div>
+
+                        <!-- Permanent Partial Disability -->
+                        <div class="lg:min-w-72" *ngIf="DisplayForm.CoverageDetail?.PermanentPartialDisability">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="PermanentPartialDisability" class="peer mb-2" [value]="true"
+                                    disabled [checked]="DisplayForm.CoverageDetail?.PermanentPartialDisability" />
+                                <label for="PermanentPartialDisability" class="font-medium min-w-40">Permanent Partial
+                                    Disability</label>
+                            </div>
+                        </div>
+
+                        <!-- Ambulance Charge -->
+                        <div class="lg:min-w-64" *ngIf="DisplayForm.CoverageDetail?.AmbulanceCharge">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="AmbulanceCharge" class="peer mb-2" [value]="true" disabled
+                                    [checked]="DisplayForm.CoverageDetail?.AmbulanceCharge" />
+                                <label for="AmbulanceCharge" class="font-medium min-w-40">Ambulance Charge</label>
+                            </div>
+                        </div>
+
+                        <!-- Facture Care -->
+                        <div class="lg:min-w-64" *ngIf="DisplayForm.CoverageDetail?.FactureCare">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="FactureCare" class="peer mb-2" [value]="true" disabled
+                                    [checked]="DisplayForm.CoverageDetail?.FactureCare" />
+                                <label for="FactureCare" class="font-medium min-w-40">Facture Care</label>
+                            </div>
+                        </div>
+
+                        <!-- Loss of Income -->
+                        <div class="lg:min-w-64" *ngIf="DisplayForm.CoverageDetail?.LossOfIncome">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="LossOfIncome" class="peer mb-2" [value]="true" disabled
+                                    [checked]="DisplayForm.CoverageDetail?.LossOfIncome" />
+                                <label for="LossOfIncome" class="font-medium min-w-40">Loss of Income</label>
+                            </div>
+                        </div>
+
+                        <!-- Coma Benefit -->
+                        <div class="lg:min-w-64" *ngIf="DisplayForm.CoverageDetail?.ComaBenefit">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="ComaBenefit" class="peer mb-2" [value]="true" disabled
+                                    [checked]="DisplayForm.CoverageDetail?.ComaBenefit" />
+                                <label for="ComaBenefit" class="font-medium min-w-40">Coma Benefit</label>
+                            </div>
+                        </div>
+
+                        <!-- Accidental Hospitalization -->
+                        <div class="lg:min-w-64" *ngIf="DisplayForm.CoverageDetail?.AccidentalHospitalization">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="AccidentalHospitalization" class="peer mb-2" [value]="true"
+                                    disabled [checked]="DisplayForm.CoverageDetail?.AccidentalHospitalization" />
+                                <label for="AccidentalHospitalization" class="font-medium min-w-40">Accidental
+                                    Hospitalization</label>
+                            </div>
+                        </div>
+
+
+                        <!-- Other, Please Specify in Remarks -->
+                        <div class="lg:min-w-80" *ngIf="DisplayForm.CoverageDetail?.Other">
+                            <div class="lableInputbox">
+                                <input type="checkbox" id="Other" class="peer mb-2" disabled
+                                    [checked]="DisplayForm.CoverageDetail?.Other" />
+                                <label for="Other" class="font-medium min-w-40">Other, Please Specify in
+                                    Remarks</label>
+                            </div>
+                        </div>
+
+                        <!-- Other Remarks -->
+                        <div class="relative lg:min-w-64" *ngIf="DisplayForm.CoverageDetail.Other == true">
+                            <div class="icon">
+                                <mat-icon>bubble_chart</mat-icon>
+                            </div>
+                            <input type="text" class="peer" id="OtherDescription" placeholder=" "
+                                [value]="DisplayForm.CoverageDetail.OtherDescription" />
+                            <label for="OtherDescription" class="mandatory ">Specify Here..</label>
+                        </div>
+
+                    </div>
+
+
+                    <div class="mt-5">
+                        <p class="font-semibold text-base">
+                            Additional Details
+                        </p>
+                    </div>
+
+                    <div class="mt-2 gap-3 grid lg:grid-cols-4 sm:grid-cols-2" formGroupName="OtherDetail">
+
+                        <!-- Taken any surgery/ treatment till date? -->
+                        <div class="relative ">
+                            <div class="font-medium">
+                                <span class="mandatory">Taken any surgery/ treatment till date?</span>
+                            </div>
+
+                            <div class="relative flex gap-2 mt-2">
+                                <div class="lableInputbox min-w-15 flex">
+                                    <input class="peer" type="radio" id="AnySurgery" placeholder=""
+                                        formControlName="AnySurgery" [value]='true'>
+                                    <label for="AnySurgery" class="">Yes</label>
+                                </div>
+
+                                <div class="lableInputbox min-w-15 flex">
+                                    <input class="peer" type="radio" id="AnySurgery" formControlName="AnySurgery"
+                                        placeholder="" [value]="false">
+                                    <label for="AnySurgery" class="">No</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Details of Surgery taken -->
+                        <div class="relative min-w-56 max-h-11"
+                            *ngIf="QNselectionForm.get('OtherDetail.AnySurgery').value == true || QNselectionForm.get('OtherDetail.AnySurgery').value == 'true'">
+                            <div class="icon">
+                                <mat-icon>edit_document</mat-icon>
+                            </div>
+                            <input type="text" class="peer" id="SurgeryDesc" name="SurgeryDesc" placeholder=" "
+                                formControlName="SurgeryDesc" />
+                            <label for="SurgeryDesc" class="mandatory">Details of Surgery taken</label>
+                        </div>
+
+                    </div>
+
+
+                    <div class="mt-5">
+                        <p class="font-semibold text-base">
+                            Details of Nominee
+                        </p>
+                    </div>
+
+                    <div formArrayName="NomineeDetails">
+
+                        <ng-container *ngFor="let nominee of NomineeDetails.controls;let n = index">
+
+
+                            <div class="relative mt-5" [formGroupName]="n">
+
+                                <div class="grid lg:grid-cols-4 sm:grid-cols-2 gap-3">
+                                    <!-- Name -->
+                                    <div class="relative">
+                                        <div class="icon">
+                                            <mat-icon>person</mat-icon>
+                                        </div>
+                                        <input type="text" class="peer" id="Name" placeholder=" " AlphabetOnly
+                                            formControlName="Name" />
+                                        <label for="Name" class="">Name</label>
+                                    </div>
+
+                                    <!-- Date of Birth -->
+                                    <div class="relative ">
+                                        <div class="icon">
+                                            <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                                [for]="DateofBirth"></mat-datepicker-toggle>
+                                            <mat-datepicker #DateofBirth></mat-datepicker>
+                                        </div>
+                                        <div class="flex">
+                                            <input matInput type="text" id="DateofBirth" placeholder="__/__/____"
+                                                [max]="maxBirthDate" datemask [matDatepicker]="DateofBirth"
+                                                class="peer mb-1" formControlName="DOB" />
+                                            <label for="DateofBirth" class="">Date of Birth</label>
+                                        </div>
+                                    </div>
+
+
+                                    <!--  Relation with Life Assured -->
+                                    <div class="relative">
+                                        <div class="icon">
+                                            <mat-icon>people</mat-icon>
+                                        </div>
+                                        <select id="" formControlName="Relation">
+                                            <option value="">--Select--</option>
+                                            <option *ngFor="let item of PAnominneRelation" value="{{item.value}}">
+                                                {{item.name}}
+                                            </option>
+                                        </select>
+                                        <label for="Relation" class="">Relation with Proposer</label>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </ng-container>
+                    </div>
+
+
+
+                    <div class="mt-3 flex flex-wrap gap-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white" type="button" mat-button matStepperPrevious> Back
+                        </button>
+                        <button class="bg-royal text-white" type="button" mat-button matStepperNext
+                            (click)="ProductCategoryDetailsError()"> Next </button>
+                    </div>
+
+                </mat-step>
+
+                <!-- Fifth stepper -->
+                <mat-step label="KYC Details" [stepControl]="KYCDetailsValidationControl()">
+
+                    <div class="px-4 py-7 min-w-full rounded bg-white">
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3  mt-4">
+
+                            <!-- PAN Number -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>credit_card</mat-icon>
+                                </div>
+                                <input type="text" id="DocumentNo" placeholder=" " onfocus="this.select()" class="peer"
+                                    [maxlength]="'10'" formControlName="PANNo">
+                                <label for="DocumentNo" class="mandatory">PAN</label>
+                            </div>
+
+                            <!-- Attach PAN Card -->
+                            <div class="relative">
+                                <mat-icon *ngIf="QNselectionForm.value.PANDetails.FileName && mode!='view'"
+                                    (click)="removeKycDoc('PAN')"
+                                    class="absolute -right-2 -top-3 text-red-500 cursor-pointer z-10">cancel</mat-icon>
+                                <div class="dummy-formField justify-start">
+                                    <div class="icon">
+                                        <mat-icon>attach_file</mat-icon>
+                                    </div>
+                                    <input type="file" class="hidden" #PANAttachDocument
+                                        (change)="SelectKycDoc($event,'PAN')">
+                                    <p class="text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                        [ngClass]="mode!='view' ? 'cursor-pointer text-primary-500 hover:text-primary-500' : 'pointer-events-none' "
+                                        matTooltip="{{QNselectionForm.value.PANDetails?.FileName}}"
+                                        (click)="PANAttachDocument.click()">
+                                        {{QNselectionForm.value.PANDetails?.FileName || 'Choose File' | excerpt:'max' }}
+                                    </p>
+                                    <label for="AttachDocument" class="">Attach PAN Card</label>
+                                    <div class="flex justify-end absolute right-2 bg-white" matTooltip="View Document"
+                                        *ngIf="QNselectionForm.value.PANDetails?.FileName">
+                                        <mat-icon
+                                            (click)="ViewDocuments(QNselectionForm.value.PANDetails?.StorageFilePath)"
+                                            class="cursor-pointer">visibility</mat-icon>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                            <!-- Aadhar Number -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>credit_card</mat-icon>
+                                </div>
+                                <input type="text" id="DocumentNo" placeholder=" " onfocus="this.select()" class="peer"
+                                    [maxlength]="'12'" formControlName="AadharNo">
+
+                                <label for="DocumentNo" class="mandatory">Aadhar</label>
+                            </div>
+
+                            <!-- Attach Aadhar Card -->
+                            <div class="relative">
+                                <mat-icon *ngIf="QNselectionForm.value.AadharDetails.FileName && mode!='view'"
+                                    (click)="removeKycDoc('UID')"
+                                    class="absolute -right-2 -top-3 text-red-500 cursor-pointer z-10">cancel</mat-icon>
+                                <div class="dummy-formField justify-start">
+                                    <div class="icon">
+                                        <mat-icon>attach_file</mat-icon>
+                                    </div>
+                                    <input type="file" class="hidden" #UIDAttachDocument
+                                        (change)="SelectKycDoc($event,'UID')">
+                                    <p class="text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                        [ngClass]="mode!='view' ? 'cursor-pointer text-primary-500 hover:text-primary-500' : 'pointer-events-none' "
+                                        matTooltip="{{QNselectionForm.value.AadharDetails?.FileName}}"
+                                        (click)="UIDAttachDocument.click()">
+                                        {{QNselectionForm.value.AadharDetails?.FileName || 'Choose File' | excerpt:'max'
+                                        }}</p>
+                                    <label for="AttachDocument" class="">Attach Aadhar Card</label>
+                                    <div class="flex justify-end absolute right-2 bg-white" matTooltip="View Document"
+                                        *ngIf="QNselectionForm.value.AadharDetails?.FileName">
+                                        <mat-icon
+                                            (click)="ViewDocuments(QNselectionForm.value.AadharDetails?.StorageFilePath)"
+                                            class="cursor-pointer">visibility</mat-icon>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 flex flex-wrap gap-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white" mat-button matStepperPrevious> Back </button>
+                        <button class="bg-royal text-white" type="button" mat-button matStepperNext
+                            (click)="KYCDetailsValidationError()"> Next </button>
+                    </div>
+
+                </mat-step>
+
+                <!-- Six stepper -->
+                <mat-step label="Payment Mode Details" [stepControl]="PaymentModeDetailValidationControl()">
+
+                    <div class="px-4 py-5 min-w-full rounded bg-white">
+
+                        <div class="grid lg:grid-cols-[minmax(366px,366px)_minmax(200px,240px)]  gap-3 mt-4">
+                            <div class="lableInputbox custom-checkbox-label">
+                                <div>
+                                    <input class="peer" type="radio" id="PaymentModeCompany"
+                                        formControlName="PaymentMode" placeholder="" [value]="'Online'">
+                                </div>
+                                <div>
+                                    <label for="PaymentModeCompany" class="pl-1 flex-shrink-0 font-medium">Online
+                                        Payment to Insurance
+                                        company</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid lg:grid-cols-[minmax(366px,366px)_minmax(200px,240px)]  gap-3 mt-4">
+                            <div class="lableInputbox custom-checkbox-label">
+                                <div>
+                                    <input class="peer" type="radio" id="PaymentMode" formControlName="PaymentMode"
+                                        placeholder="" [value]="'Cheque'">
+                                </div>
+                                <div>
+                                    <label for="PaymentMode" class="pl-1 w-max flex-shrink-0 font-medium">A/C Payee
+                                        cheque in the Name of Insurance Company</label>
+                                </div>
+                            </div>
+
+                            <div class="relative w-80 " *ngIf="QNselectionForm.get('PaymentMode').value == 'Cheque'">
+                                <div class="icon">
+                                    <mat-icon>business</mat-icon>
+                                </div>
+                                <input type="text" formControlName="PaymentAccountName" class="peer"
+                                    id="InsuranceCompanyFullName" onfocus="this.select()"
+                                    name="InsuranceCompanyFullName" placeholder=" " maxlength="150" />
+                                <label class="mandatory " for="InsuranceCompanyFullName">Insurance Company - Full
+                                    Name</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3 flex flex-wrap gap-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white" mat-button matStepperPrevious> Back </button>
+                        <button class="bg-royal text-white" mat-button matStepperNext
+                            (click)="PaymentModeDetailsValidationError()"> Next </button>
+                    </div>
+
+                </mat-step>
+
+
+                <!-- Fifth stepper -->
+                <mat-step label="Team Details">
+
+                    <div class="min-w-full rounded bg-white">
+
+                        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 my-5">
+
+                            <!-- Branch -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>place</mat-icon>
+                                </div>
+                                <input matInput type="text" id="BranchName" [value]="DisplayForm.BranchName"
+                                    placeholder=" " class="peer" readonly />
+                                <label for="Branch" class="mandatory">Branch</label>
+                            </div>
+
+                            <!-- Sales Person Type  -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>group_work</mat-icon>
+                                </div>
+                                <input matInput type="text" id="SalesPersonType" [value]="DisplayForm.SalesPersonType"
+                                    placeholder=" " class="peer" readonly />
+                                <label for="SalesPersonType">Sales Person Type</label>
+                            </div>
+
+                            <!-- Sales Person -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <input matInput type="text" placeholder=" " maxlength="100" readonly
+                                    [value]="DisplayForm.SalesPersonName" id="Name" class="peer w-fit " required />
+                                <label for="Name" class="mandatory">Sales Person</label>
+                            </div>
+
+                            <!--  Team Reference -->
+                            <div class="relative" *ngIf="DisplayForm.SalesPersonType == 'Team Reference'">
+                                <div class="icon">
+                                    <mat-icon> person_pin</mat-icon>
+                                </div>
+                                <div class="flex">
+                                    <input type="text" readonly class="peer " [value]="DisplayForm.TeamReferenceName"
+                                        readonly placeholder=" " id="TeamReferenceName" />
+                                    <label for="TeamReferenceName">Team Reference</label>
+                                </div>
+                            </div>
+
+                            <!--  BDO -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>person_pin</mat-icon>
+                                </div>
+                                <input type="text" class="peer " [value]="DisplayForm.BDOName" readonly placeholder=" "
+                                    id="BDOName" />
+                                <label for="BDOName" class="mandatory ">BDO</label>
+                            </div>
+
+                            <!-- BDM -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>person_pin</mat-icon>
+                                </div>
+                                <input type="text" class="peer " [value]="DisplayForm.BDMName" readonly placeholder=" "
+                                    id="BDMName" />
+                                <label for="BDMName" class="mandatory ">BDM</label>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3 flex flex-wrap gap-3" *ngIf="!isExpand">
+                        <button class="bg-royal text-white" type="button" mat-button matStepperPrevious>
+                            Back
+                        </button>
+                        <button class="bg-royal text-white" type="button" mat-button matStepperNext>
+                            Next
+                        </button>
+                    </div>
+
+                </mat-step>
+
+                <!-- Sixth stepper -->
+                <mat-step label="Attachment Details" [stepControl]="DocumentAttachmentValidation()">
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+
+                        <!-- Select Document -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon> compass_calibration</mat-icon>
+                            </div>
+                            <select class="peer bg-white" #DocumentDropdown
+                                (change)="onDocumentSelectionChange($event)">
+                                <option value="">--Select--</option>
+                                <option [value]="option.DocumentType" *ngFor="let option of PolicyDocumentList">
+                                    {{option.DocumentTypeName}}
+                                </option>
+                            </select>
+                            <label for="">Select Document</label>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>border_color</mat-icon>
+                            </div>
+                            <input type="text" class="peer" id="AdditionalInformation" placeholder=" "
+                                formControlName="Additionalinformation" />
+                            <label for="AdditionalInformation">Additional Information</label>
+                        </div>
+
+
+                        <!-- Reason (Send Back / Reject) -->
+                        <div class="relative md:col-span-2">
+                            <div class="icon">
+                                <mat-icon>timelapse</mat-icon>
+                            </div>
+                            <input matInput type="text" id="Remarks" formControlName="SendBackRejectDesc"
+                                placeholder=" " class="peer" required />
+                            <label for="Remarks" class="mandatory">Reason (For Send Back/Reject)</label>
+                        </div>
+
+                    </div>
+
+                    <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-3 mt-4">
+                        <ng-container formArrayName="Documents" *ngFor="let doc of Documents.controls; let i=index">
+                            <ng-container [formGroupName]="i">
+
+                                <!-- Attachment Document -->
+                                <div class="relative ">
+                                    <div class="dummy-formField">
+                                        <mat-icon *ngIf="doc.value.Stage == DisplayForm.Stage && mode != 'view'"
+                                            (click)="RemoveDocuments(i)"
+                                            class="absolute -right-2 -top-3 text-red-500 cursor-pointer">cancel</mat-icon>
+                                        <div class="icon">
+                                            <mat-icon>attach_file</mat-icon>
+                                        </div>
+                                        <input type="file" class="hidden" id="AttachDocument"
+                                            (change)="SelectDocuments($event,i)" placeholder="" accept=".doc,.docx,.pdf"
+                                            #AttachDocument>
+                                        <p class="ml-10 text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                                            [ngClass]="doc.value.Stage == DisplayForm.Stage && mode != 'view' ? 'cursor-pointer text-primary-500 hover:text-primary-500' : 'pointer-events-none' "
+                                            matTooltip="{{doc.value.FileName}}" (click)="AttachDocument.click()">
+                                            {{ doc.value.FileName || 'Choose File' | excerpt:'max' }}
+                                        </p>
+                                        <label for="AttachDocument" class="mandatory w-fit min-w-max">
+                                            {{doc.value.DocumentTypeName}}
+                                        </label>
+                                        <div class="flex justify-end absolute right-2 bg-white"
+                                            matTooltip="View Document"
+                                            (click)="ViewDocuments(doc.value?.StorageFilePath)"
+                                            *ngIf="doc.value?.StorageFilePath">
+                                            <mat-icon class="cursor-pointer">visibility</mat-icon>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Remarks -->
+                                <div class="relative min-w-56 lg:col-span-2" *ngIf="doc.value.DocumentType == 'Other'">
+                                    <div class="icon">
+                                        <mat-icon>bubble_chart</mat-icon>
+                                    </div>
+                                    <input type="text" class="peer" id="DocumentRemarks" placeholder=" "
+                                        formControlName="Description" />
+                                    <label for="DocumentRemarks">Remarks</label>
+                                </div>
+
+                            </ng-container>
+                        </ng-container>
+
+                    </div>
+
+                    <div class="mt-3 flex flex-wrap gap-3">
+                        <button class="bg-royal text-white" type="button" *ngIf="!isExpand" mat-button
+                            matStepperPrevious> Back
+                        </button>
+                        <button class="bg-royal text-white" type="button" mat-button (click)="RejectButton()">
+                            Reject </button>
+                        <button class="bg-royal text-white" type="button" mat-button (click)="SendBackButton()">
+                            Send Back
+                        </button>
+                        <button class="bg-royal text-white" type="button" mat-button (click)="SubmitForm()"> Submit
+                        </button>
+                    </div>
+
+                </mat-step>
+
+            </mat-stepper>
+        </div>
+        <!-- Region Form End -->
+    </form>
+</div>

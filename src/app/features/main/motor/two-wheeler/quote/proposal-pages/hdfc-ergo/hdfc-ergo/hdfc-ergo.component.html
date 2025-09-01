@@ -1,0 +1,798 @@
+<!-- <router-outlet></router-outlet> -->
+
+
+<div class="px-4 pb-4 max-h-none w-full">
+    <!-- region Main Heading -->
+    <div class="sm:sticky top-0 z-40 bg-default pt-4">
+        <h1 class="new-head text-lg px-4 py-2 mb-1.5 rounded flex justify-between items-center font-semibold">
+            {{ pagetitle }}
+
+            <div class="flex gap-x-3 items-center text-lg font-normal">
+                <button mat-raised-button class="button button-primary" (click)="backClick()">
+                    Back
+                </button>
+
+            </div>
+        </h1>
+
+        <div class="">
+            <div class="px-4 py-7 rounded bg-white">
+                <mat-card class="bg-sky-100 px-4 py-3 gap-2 container mx-auto">
+
+                    <div class="grid sm:grid-cols-[minmax(130px,140px)_1fr] gap-5">
+
+
+                        <!-- Logo of company -->
+                        <div>
+                            <img class="w-20 h-20" src="{{icon}}" alt="Campany Icon" />
+                        </div>
+
+
+                        <div class="grid lg:grid-cols-7 md:grid-cols-4 sm:grid-cols-2 sm:text-center grid-cols-1 gap-4">
+
+                            <!-- VehicleNo -->
+                            <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                                <small>Vehicle No</small>
+                                <span class="font-bold"> {{f['PolicyDetail'].value.VehicleNo}} </span>
+                            </div>
+
+                            <!-- Policy Period -->
+                            <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                                <small>Policy Period</small>
+                                <span class="font-bold">{{f['PolicyDetail'].value.PolicyPeriod}} Year</span>
+                            </div>
+
+                            <!-- Business Type -->
+                            <div class="sm:grid-cols-1 grid grid-cols-2 text-slate-950">
+                                <small>Business Type</small>
+                                <span class="font-bold"> {{f['BusinessType'].value}} </span>
+                            </div>
+
+                            <!-- Policy Type -->
+                            <div class="sm:grid-cols-1 grid grid-cols-2">
+                                <small>Policy Type</small>
+                                <span class="font-bold"> {{f['PolicyType'].value}} </span>
+                            </div>
+
+                            <!-- Month & Year Of Mfg -->
+                            <div class="sm:grid-cols-1 grid grid-cols-2">
+                                <small>Month & Year Of Mfg</small>
+                                <span class="font-bold"> {{f['TwoWheelerDetail'].value.YearOfManufacture}} </span>
+                            </div>
+
+                            <!-- Registration Date -->
+                            <div class="sm:grid-cols-1 grid grid-cols-2">
+                                <small>Registration Date</small>
+                                <span class="font-bold"> {{f['TwoWheelerDetail'].value.DateofFirstRegistration | date:
+                                    'dd/MM/yyyy'}}
+                                </span>
+                            </div>
+
+                            <!-- RTO Code -->
+                            <div class="sm:grid-cols-1 grid grid-cols-2">
+                                <small>RTO Code</small>
+                                <span class="font-bold"> {{f['RTOCode'].value}} </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </mat-card>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="py-3">
+        <mat-stepper orientation="vertical" linear  #stepper>
+
+            <!-- First stepper -->
+            <mat-step [stepControl]="stepOneValidation()" label="Two Wheeler Owner Details & KYC">
+
+                <form [formGroup]="hdfcProposalForm">
+
+                    <div class="grid gap-5 p-4">
+
+                        <div *ngIf="hdfcProposalForm.get('CustomerDetail.CustomerType').value == MotorCustomerType.Individual"
+                            formGroupName="CustomerDetail"
+                            class="grid sm:grid-cols-2 lg:grid-cols-[minmax(100px,10%)_minmax(100px,30%)_minmax(100px,30%)_minmax(100px,30%)] gap-x-9 gap-y-5 mt-4">
+
+                            <!-- titles -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>title</mat-icon>
+                                </div>
+                                <select formControlName="Salutation" class="peer">
+                                    <option value="">Select</option>
+                                    <option *ngFor="let item of dropdownMaster.HDFCMotorFormalTitlesOptions"
+                                        value="{{item.value}}"> {{item.name}} </option>
+                                </select>
+                                <label for="Title" class="mandatory">Title</label>
+                            </div>
+
+
+                            <!-- First Name -->
+                            <div class="relative self-end">
+                                <div class="icon">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <input type="text" id="FirstName" formControlName="FirstName"
+                                    placeholder=" " class="peer" AlphabetOnly autocomplete="off">
+                                <label for="FirstName" class="mandatory">First Name</label>
+                            </div>
+
+                            <!-- Middle Name -->
+                            <div class="relative self-end">
+                                <div class="icon">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <input type="text" id="MiddleName" formControlName="MiddleName"
+                                    placeholder=" " class="peer" AlphabetOnly autocomplete="off">
+                                <label for="MiddleName">Middle Name</label>
+                            </div>
+
+                            <!-- Last Name -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <input type="text" id="LastName" formControlName="LastName" placeholder=" "
+                                    class="peer" AlphabetOnly autocomplete="off">
+                                <label for="LastName" class="mandatory">Last Name</label>
+                            </div>
+
+                            <!-- Gender  -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>person_outline</mat-icon>
+                                </div>
+                                <select id="Gender" name="Gender" formControlName="Gender" class="peer" placeholder=" ">
+                                    <option value="0">-- Select --</option>
+                                    <option class="example-radio-button" *ngFor="let option of genderList"
+                                        [value]="option.Code">
+                                        {{ option.Name }}
+                                    </option>
+
+                                </select>
+                                <label class="Gender" class="mandatory">Gender</label>
+                            </div>
+
+                            <!-- DOB  -->
+                            <div class="relative max-w-fit">
+                                <div class="flex">
+                                    <div class="icon">
+                                        <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                            [for]="dob"></mat-datepicker-toggle>
+                                        <mat-datepicker #dob></mat-datepicker>
+                                    </div>
+                                    <input matInput type="text" id="DOB" formControlName="DOB" [max]="maxDate"
+                                        class="peer" placeholder="__/__/____" datemask [matDatepicker]="dob" autocomplete="off">
+                                    <label for="DOB" class="mandatory">Date of Birth</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="hdfcProposalForm.get('CustomerDetail.CustomerType').value == MotorCustomerType.Corporate"
+                            formGroupName="CustomerDetail"
+                            class="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-9 gap-y-5 mt-4">
+                            <!-- Company Name -->
+                            <div class="relative self-end">
+                                <div class="icon">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <input type="text" id="CompanyName" formControlName="CompanyName"
+                                    placeholder=" " class="peer" AlphabetOnly autocomplete="off">
+                                <label for="CompanyName" class="mandatory">Company Name</label>
+                            </div>
+
+                            <!-- DOB  -->
+                            <div class="relative max-w-fit">
+                                <div class="flex">
+                                    <div class="icon">
+                                        <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                            [for]="CDOB"></mat-datepicker-toggle>
+                                        <mat-datepicker #CDOB></mat-datepicker>
+                                    </div>
+                                    <input matInput type="text" id="CDOB" formControlName="DOB" [max]="maxDate"
+                                        class="peer" placeholder="__/__/____" datemask [matDatepicker]="CDOB" autocomplete="off">
+                                    <label for="CDOB" class="mandatory">Company Start Date</label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div *ngIf="hdfcProposalForm.get('CustomerDetail.CustomerType').value == MotorCustomerType.Corporate"
+                            formGroupName="CustomerDetail"
+                            class="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-9 gap-y-5 mt-2">
+
+                            <!-- GSTIN -->
+                            <div class="relative self-end">
+                                <div class="icon">
+                                    <mat-icon>credit_card</mat-icon>
+                                </div>
+                                <input type="text" id="GSTINNo" formControlName="GSTINNo" AlphabetNumberOnly
+                                    placeholder=" " class="peer" maxlength="15" />
+                                <label for="GSTINNo">GSTIN</label>
+                            </div>
+                        </div>
+
+                        <div class="grid gap-5">
+                            <!-- KYC Details -->
+                            <div class="font-semibold flex">
+                                <p>KYC Details </p>
+                                <div *ngIf="isKYC" class="flex pl-1">
+                                    <mat-icon class="kycsuccess" title="Verified">
+                                        verified_user
+                                    </mat-icon>
+                                </div>
+                            </div>
+
+
+                            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-7">
+                                <!-- PAN -->
+                                <div class="relative">
+                                    <div class="icon">
+                                        <mat-icon>credit_card</mat-icon>
+                                    </div>
+                                    <input type="text" maxlength="14" formControlName="PanNumber" id="PANCard"
+                                        placeholder=" " class="peer">
+                                    <label for="PANCard" class="mandatory">PAN</label>
+                                </div>
+
+                                <!-- UID -->
+                                <div class="relative" *ngIf="this.hdfcProposalForm.get('CustomerDetail.CustomerType').value == MotorCustomerType.Individual">
+                                    <div class="icon">
+                                        <mat-icon>credit_card</mat-icon>
+                                    </div>
+                                    <input type="text" maxlength="14" formControlName="UID" id="UID" placeholder=" "
+                                        class="peer">
+                                    <label for="UID" class="">Aadhar</label>
+                                </div>
+
+                                <!-- CIN -->
+                                <div class="relative" *ngIf="hdfcProposalForm.get('CustomerDetail.CustomerType').value == MotorCustomerType.Corporate">
+                                    <div class="icon">
+                                        <mat-icon>credit_card</mat-icon>
+                                    </div>
+                                    <input type="text" maxlength="21" formControlName="CINnumber" id="CINnumber" placeholder=" " class="peer">
+                                    <label for="CINnumber" class="">CIN</label>
+                                </div>
+
+                                <!-- Campany type -->
+                                <div class="relative" *ngIf="hdfcProposalForm.get('CustomerDetail.CustomerType').value == MotorCustomerType.Corporate">
+                                    <div class="icon">
+                                        <mat-icon>domain</mat-icon>
+                                    </div>
+                                    <select formControlName="CampanyType" class="peer">
+                                        <option value="">Select</option>
+                                        <option *ngFor="let item of CampanyTypeList" value="{{item.CampanyType}}"> {{item.CampanyTypeName}} </option>
+
+                                    </select>
+                                    <label for="CampanyType" class="mandatory">Campany type</label>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </form>
+                <div class="py-4 px-4">
+                    <button class="form-button mr-3" (click)="stepOneError(stepper)" mat-button matStepperNext>
+                        Verify & Next
+                    </button>
+                    <!-- <button class="bg-royal text-white mx-3" mat-button matStepperNext>
+                        Next
+                    </button> -->
+                </div>
+
+            </mat-step>
+
+            <!-- Second stepper -->
+            <mat-step label="Personal Details">
+
+                <form [formGroup]="hdfcProposalForm">
+
+                    <div formGroupName="CustomerDetail" class="grid grid-cols-2 sm:grid-cols-1 lg:grid-cols-4 gap-y-5 gap-x-9 mt-4 px-4 pt-4">
+
+                        <div class="sm:col-span-2 lg:col-span-4 font-semibold">
+                            <p>Finance Details</p>
+                        </div>
+
+                        <!-- Finance Type -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>title</mat-icon>
+                            </div>
+                            <select formControlName="FinanceType" class="peer">
+                                <option value="">-- Select --</option>
+                                <option *ngFor="let item of dropdownMaster.HdfcErgoFinanceTypeOptions"
+                                    value="{{item.value}}"> {{item.value}} </option>
+
+                            </select>
+                            <label for="FinanceType" [ngClass]="hdfcProposalForm.get('CustomerDetail.FinancierName').value ? 'mandatory' : '' ">Finance Type</label>
+                        </div>
+                        <!-- Financier Name -->
+                        <div class="relative ">
+                            <div class="icon">
+                                <mat-icon> person_pin</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <input type="text" class="peer" placeholder=" " formControlName="FinancierName" id="FinancierName" [matAutocomplete]="FinancierNameSearch" />
+                                <mat-autocomplete class="peer" #FinancierNameSearch="matAutocomplete" (optionSelected)="PatchFinancierCode($event)">
+                                    <mat-option *ngFor="let fCode of financierCode$ | async" [value]="fCode">
+                                        {{ fCode.Name }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <button class="-m-5 z-10" type="button" (click)="openDiolog('FinancierCode','Select Financier Code')">
+                                    <mat-icon class="-ml-2">
+                                        search
+                                    </mat-icon>
+                                </button>
+                                <button *ngIf="hdfcProposalForm.get('CustomerDetail.FinancierName').value" type="button" class="-m-7 z-10" aria-label="clear" matTooltip="Clear" (click)="clearFinancierCode()">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                                <label for="FinancierCode" [ngClass]="hdfcProposalForm.get('CustomerDetail.FinanceType').value ? 'mandatory' : '' ">Financier Name</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div formGroupName="TwoWheelerDetail"
+                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-9 mt-4 p-4">
+
+                        <div class="sm:col-span-2 lg:col-span-4 font-semibold">
+                            <p>Two Wheeler Details</p>
+                        </div>
+
+                        <div class="relative min-w-36">
+                            <div class="icon">
+                                <mat-icon>explicit</mat-icon>
+                            </div>
+                            <input matInput maxlength="30" type="text" id="EngineNo" formControlName="EngineNo"
+                                placeholder=" " class="peer" required />
+                            <label for="EngineNo" class="mandatory">Engine No.</label>
+                        </div>
+
+                        <div class="relative min-w-36">
+                            <div class="icon">
+                                <mat-icon>dehaze</mat-icon>
+                            </div>
+                            <input [minlength]="minChassisNo" type="text" id="ChassisNo" formControlName="ChassisNo"
+                                placeholder=" " class="peer" required />
+                            <label for="ChassisNo" class="mandatory">Chassis No.</label>
+                        </div>
+
+
+                    </div>
+
+
+                    <div  formGroupName="PolicyDetail" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-9 px-4 pt-4" *ngIf="f['BusinessType'].value == 'Rollover'">
+
+                        <div class="sm:col-span-2 lg:col-span-4 font-semibold">
+                            <p> Previous Policy Details</p>
+                        </div>
+
+                        <!--  Previous PolicyNo -->
+                        <div class="relative">
+                            <div class="icon">
+                                <mat-icon>tonality</mat-icon>
+                            </div>
+                            <input type="text" id="PreviousPolicyNo" placeholder=" " maxlength="20" class="peer" formControlName="PreviousPolicyNo">
+                            <label for="PreviousPolicyNo" class="mandatory">Previous Policy No</label>
+                        </div>
+
+                        <!-- PreviousInsurer -->
+                        <div class="relative min-w-40 ">
+                            <div class="icon">
+                                <mat-icon>business</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <select class="peer bg-white" name="PreviousInsurer" formControlName="PreviousInsurer">
+                                    <option value="">--Select--</option>
+                                    <!-- <option *ngFor="let option of dropdownMaster.MotorTPInsurerNameButtonOptions" [value]="option.value">
+                                        {{ option.name }}
+                                    </option> -->
+                                    <option class="example-radio-button" *ngFor="let option of insurerList" [value]="option.Code">
+                                        {{ option.Name }}
+                                    </option>
+                                </select>
+
+                                <label for="PreviousInsurer" class="mandatory">Insurer Name</label>
+                            </div>
+                        </div>
+
+                        <!--  Current TP Policy No -->
+                        <div class="relative" *ngIf="f['PolicyType'].value == MotorPolicyType['Own Damage']">
+                            <div class="icon">
+                                <mat-icon>tonality</mat-icon>
+                            </div>
+                            <input type="text" id="CurrentTPPolicyNo" placeholder=" " maxlength="20" class="peer"
+                                formControlName="CurrentTPPolicyNo">
+                            <label for="CurrentTPPolicyNo" class="mandatory">Current TP Policy No</label>
+                        </div>
+
+                        <!-- Current TP Insurer -->
+                        <div class="relative min-w-40 " *ngIf="f['PolicyType'].value == MotorPolicyType['Own Damage']">
+                            <div class="icon">
+                                <mat-icon>business</mat-icon>
+                            </div>
+                            <div class="flex">
+                                <select class="peer bg-white" name="CurrentTPName" formControlName="CurrentTPName">
+                                    <option value="">--Select--</option>
+                                    <option class="example-radio-button" *ngFor="let option of insurerList" [value]="option.Code">
+                                        {{ option.Name }}
+                                    </option>
+                                </select>
+
+                                <label for="CurrentTPName" class="mandatory">Current TP Insurer</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div formGroupName="PolicyDetail" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-9 px-4 pt-4" 
+                    *ngIf="(f['BusinessType'].value == 'Rollover') && 
+                        (f['PolicyType'].value == MotorPolicyType['Comprehensive'] || f['PolicyType'].value == MotorPolicyType['Own Damage']) &&
+                        (f['TwoWheelerDetail'].value.ZeroDepreciation || f['TwoWheelerDetail'].value.InvoiceCover)">
+
+                        <div class="sm:col-span-2 lg:col-span-4 font-semibold">
+                            <p> Add-On Details</p>
+                        </div>
+
+
+                        <!--  Previous Policy ZeroDepreciation -->
+                        <div class="min-w-40" *ngIf="f['TwoWheelerDetail'].value.ZeroDepreciation">
+                            <span class="mandatory font-medium">Previous Policy ZeroDepreciation</span>
+                            <div class="relative flex gap-10 mt-2">
+                                <div class="lableInputbox">
+                                    <input type="radio" class="peer" formControlName="PreviousPolicyZeroDepreciation" id="PreviousPolicyZeroDepreciationdNo" [value]="false" />
+                                    <label class="" for="PreviousPolicyZeroDepreciationdNo">No</label>
+                                </div>
+                                <div class="lableInputbox">
+                                    <input type="radio" class="peer" formControlName="PreviousPolicyZeroDepreciation" id="PreviousPolicyZeroDepreciationYes" [value]="true" />
+                                    <label class="" for="PreviousPolicyZeroDepreciationYes">Yes</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!--  Previous Policy InvoiceCover -->
+                        <div class="min-w-40" *ngIf="f['TwoWheelerDetail'].value.InvoiceCover">
+                            <span class="mandatory font-medium">Previous Policy InvoiceCover</span>
+                            <div class="relative flex gap-10 mt-2">
+                                <div class="lableInputbox">
+                                    <input type="radio" class="peer" formControlName="PreviousPolicyInvoiceCover"
+                                        id="PreviousPolicyInvoiceCoverNo" [value]="false" />
+                                    <label class="" for="PreviousPolicyInvoiceCoverNo">No</label>
+                                </div>
+                                <div class="lableInputbox">
+                                    <input type="radio" class="peer" formControlName="PreviousPolicyInvoiceCover"
+                                        id="PreviousPolicyInvoiceCoverYes" [value]="true" />
+                                    <label class="" for="PreviousPolicyInvoiceCoverYes">Yes</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+
+
+                    </div>
+
+                    <div formGroupName="CustomerDetail">
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-9 p-4">
+                            <!-- Address Details -->
+                            <div class="sm:col-span-2 lg:col-span-4 font-semibold">
+                                <p>Permanent Address</p>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>home</mat-icon>
+                                </div>
+                                <input type="text" id="Address" formControlName="Address" placeholder=" " class="peer" maxlength="60" >
+                                <label for="Address" class="mandatory">Address</label>
+                            </div>
+
+                            <!-- Address 1 -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>home</mat-icon>
+                                </div>
+                                <input type="text" id="Address1" formControlName="Address1" placeholder=" " class="peer" maxlength="60" >
+                                <label for="Address1" class="mandatory">Address 1</label>
+                            </div>
+
+
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-9 p-4">
+                            <!-- PIN Code -->
+                            <!-- <div class="relative w-60">
+                                <div class="flex">
+                                    <div class="icon">
+                                        <mat-icon> pin_drop</mat-icon>
+                                    </div>
+                                    <input type="text" Onlynumber id="PINCode" maxlength="6" class="peer" matInput
+                                        formControlName="PinCode" [matAutocomplete]="oppoSearch" placeholder=" " required />
+                                    <mat-autocomplete #oppoSearch="matAutocomplete"
+                                        (optionSelected)="PinCodeSelected($event,'Permanent')">
+                                        <mat-option *ngFor="let pincode of pincodes$ | async" [value]="pincode">
+                                            {{ pincode.PinCode }} {{ pincode.CityName }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <button class="-m-5 z-10" type="button"
+                                        (click)="openDiologPincode('Pincode', 'Select PIN Code','Permanent')">
+                                        <mat-icon class="-ml-2">search</mat-icon>
+
+                                    </button>
+                                    <button *ngIf="hdfcProposalForm.get('CustomerDetail.PinCode').value" type="button"
+                                        class="-m-7 z-10" aria-label="clear" matTooltip="Clear"
+                                        (click)="clear('CustomerDetail.PinCode')">
+                                        <mat-icon>clear</mat-icon>
+                                    </button>
+                                    <label for="PINCode" class="mandatory">PIN Code</label>
+                                </div>
+                            </div> -->
+
+                            <div class="relative w-60">
+                                <div class="icon">
+                                    <mat-icon> pin_drop</mat-icon>
+                                </div>
+                                <input type="text" Onlynumber id="PINCode" maxlength="6" class="peer" formControlName="PinCode" placeholder=" " />
+                                <label for="PINCode" class="mandatory">PIN Code</label>
+                            </div>
+
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-9 p-4">
+                            <!-- Address Details -->
+                            <div class="sm:col-span-2 lg:col-span-4 font-semibold">
+                                <div class="flex flex-wrap gap-3 items-center">
+                                    <p>Correspondence Address</p>
+                        
+                                    <div class="lableInputbox custom-checkbox-label">
+                                        <div>
+                                            <input class="peer" type="checkbox" id="SameAsPermanentAddress"
+                                                formControlName="SameAsPermanentAddress" placeholder="">
+                                        </div>
+                                        <div>
+                                            <label for="SameAsPermanentAddress" class="pl-1 flex-shrink-0 font-medium">Same As Permanent
+                                                Address</label>
+                                        </div>
+                                    </div>
+                                </div>
+                        
+                            </div>
+                        
+                            <!-- Address -->
+                            <div class="relative" *ngIf="!hdfcProposalForm.get('CustomerDetail.SameAsPermanentAddress').value">
+                                <div class="icon">
+                                    <mat-icon>home</mat-icon>
+                                </div>
+                                <input type="text" id="Correspondence_Address1" formControlName="Correspondence_Address1" placeholder=" "
+                                    class="peer">
+                                <label for="Correspondence_Address1" class="">Address</label>
+                            </div>
+                        
+                            <!-- Address 1 -->
+                            <div class="relative" *ngIf="!hdfcProposalForm.get('CustomerDetail.SameAsPermanentAddress').value">
+                                <div class="icon">
+                                    <mat-icon>home</mat-icon>
+                                </div>
+                                <input type="text" id="Correspondence_Address2" formControlName="Correspondence_Address2" placeholder=" "
+                                    class="peer">
+                                <label for="Correspondence_Address2" class="">Address1</label>
+                            </div>
+                        
+                        
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-9 p-4"
+                            *ngIf="!hdfcProposalForm.get('CustomerDetail.SameAsPermanentAddress').value">
+                            <!-- PIN Code -->
+                            <div class="relative w-60">
+                                <div class="flex">
+                                    <div class="icon">
+                                        <mat-icon> pin_drop</mat-icon>
+                                    </div>
+                                    <input type="text" Onlynumber id="PINCode" maxlength="6" class="peer"
+                                        formControlName="Correspondence_PinCode" [matAutocomplete]="oppoSearch" placeholder=" " />
+                                    <mat-autocomplete #oppoSearch="matAutocomplete" (optionSelected)="PinCodeSelected($event,'Correspondence')">
+                                        <mat-option *ngFor="let pincode of correspondence_pincodes$ | async" [value]="pincode">
+                                            {{ pincode.PinCode }} {{ pincode.CityName }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <button class="-m-5 z-10" type="button"
+                                        (click)="openDiologPincode('Pincode', 'Select PIN Code','Correspondence')">
+                                        <mat-icon class="-ml-2">search</mat-icon>
+                        
+                                    </button>
+                                    <button *ngIf="hdfcProposalForm.get('CustomerDetail.Correspondence_PinCode').value" type="button"
+                                        class="-mx-7 z-10" aria-label="clear" matTooltip="Clear"
+                                        (click)="clear('CustomerDetail.Correspondence_PinCode')">
+                                        <mat-icon>clear</mat-icon>
+                                    </button>
+                                    <label for="PINCode" class="">PIN Code</label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-9 p-4">
+
+                            <!-- Contact Details -->
+                            <div class="sm:col-span-2 lg:col-span-4 font-semibold">
+                                <p>Contact Details</p>
+                            </div>
+
+                            <!-- Mobile -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>phone</mat-icon>
+                                </div>
+                                <input type="text" Onlynumber maxlength="10" id="Mobile" formControlName="MobileNo"
+                                    placeholder=" " class="peer">
+                                <label for="Mobile" class="mandatory">Mobile</label>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>email</mat-icon>
+                                </div>
+                                <input type="text" id="Email" placeholder=" " formControlName="Email" class="peer">
+                                <label for="Email" class="mandatory">Email</label>
+                            </div>
+
+
+                            <!--  Nominee Details -->
+                            <div class="sm:col-span-2 lg:col-span-4 font-semibold"  *ngIf="hdfcProposalForm.get('CustomerDetail.CustomerType').value == MotorCustomerType.Individual">
+                                <p>Nominee Details</p>
+                            </div>
+
+                            <!-- NomineeFirstName -->
+                            <div class="relative min-w-36"  *ngIf="hdfcProposalForm.get('CustomerDetail.CustomerType').value == MotorCustomerType.Individual">
+                                <div class="icon">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <input type="text" id="NomineeFirstName" formControlName="NomineeFirstName" AlphabetOnly
+                                    placeholder=" " class="peer">
+                                <label for="NomineeFirstName" class="mandatory ">First Name</label>
+                            </div>
+
+                            <!-- NomineeMiddleName -->
+                            <div class="relative min-w-36"  *ngIf="hdfcProposalForm.get('CustomerDetail.CustomerType').value == MotorCustomerType.Individual">
+                                <div class="icon">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <input type="text" id="NomineeMiddleName" formControlName="NomineeMiddleName" AlphabetOnly
+                                    placeholder=" " class="peer">
+                                <label for="NomineeMiddleName" class="">Middle Name</label>
+                            </div>
+
+                            <!-- NomineeLastName -->
+                            <div class="relative min-w-36"  *ngIf="hdfcProposalForm.get('CustomerDetail.CustomerType').value == MotorCustomerType.Individual">
+                                <div class="icon">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <input type="text" id="NomineeLastName" formControlName="NomineeLastName" AlphabetOnly
+                                    placeholder=" " class="peer">
+                                <label for="NomineeLastName" class="mandatory ">Last Name</label>
+                            </div>
+
+                            <!-- NomineeRelation -->
+                            <div class="relative min-w-[129.5px]" *ngIf="hdfcProposalForm.get('CustomerDetail.CustomerType').value == MotorCustomerType.Individual">
+                                <div class="icon">
+                                    <mat-icon>people</mat-icon>
+                                </div>
+                                <select id="NomineeRelation" name="NomineeRelation" formControlName="NomineeRelation"
+                                    class="peer" placeholder=" ">
+                                    <option value="">-- Select --</option>
+                                    <option class="example-radio-button" *ngFor="let option of nomineeRelationList"
+                                        [value]="option.Code">
+                                        {{ option.Name }}
+                                    </option>
+
+                                </select>
+                                <label for="NomineeRelation" class="mandatory ">Relation</label>
+                            </div>
+
+                            <!-- NomineeDOB -->
+                            <div class="relative max-w-fit" *ngIf="hdfcProposalForm.get('CustomerDetail.CustomerType').value == MotorCustomerType.Individual">
+                                <div class="flex">
+                                    <div class="icon">
+                                        <mat-datepicker-toggle class="-ml-2" matIconSuffix
+                                            [for]="NomineeDOB"></mat-datepicker-toggle>
+                                        <mat-datepicker #NomineeDOB></mat-datepicker>
+                                    </div>
+                                    <input matInput type="text" id="NomineeDOB" formControlName="NomineeDOB" [max]="maxDate"
+                                        class="peer" placeholder="__/__/____" datemask [matDatepicker]="NomineeDOB">
+                                    <label for="NomineeDOB" class="mandatory">Date of Birth</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div *ngIf="!nomineeIsAdult && hdfcProposalForm.get('CustomerDetail.CustomerType').value == MotorCustomerType.Individual" 
+                        formGroupName="CustomerDetail"
+                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-9 mt-4 p-4">
+
+                        <!--  Appointee Details -->
+                        <div class="sm:col-span-2 lg:col-span-4 font-semibold">
+                            <p>Appointee Details</p>
+                        </div>
+
+
+                        <!-- AppointeeFirstName -->
+                        <div class="relative min-w-36">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <input type="text" id="AppointeeFirstName" formControlName="AppointeeFirstName" AlphabetOnly
+                                placeholder=" " class="peer">
+                            <label for="AppointeeFirstName" class="mandatory ">First Name</label>
+                        </div>
+
+                        <!-- AppointeeMiddleName -->
+                        <div class="relative min-w-36">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <input type="text" id="AppointeeMiddleName" formControlName="AppointeeMiddleName"
+                                AlphabetOnly placeholder=" " class="peer">
+                            <label for="AppointeeMiddleName" class="">Middle Name</label>
+                        </div>
+
+                        <!-- AppointeeLastName -->
+                        <div class="relative min-w-36">
+                            <div class="icon">
+                                <mat-icon>person</mat-icon>
+                            </div>
+                            <input type="text" id="AppointeeLastName" formControlName="AppointeeLastName" AlphabetOnly
+                                placeholder=" " class="peer">
+                            <label for="AppointeeLastName" class="mandatory ">Last Name</label>
+                        </div>
+
+
+                        <!-- AppointeeRelation -->
+                        <div class="relative min-w-[129.5px]">
+                            <div class="icon">
+                                <mat-icon>people</mat-icon>
+                            </div>
+                            <select id="AppointeeRelation" name="AppointeeRelation" formControlName="AppointeeRelation"
+                                class="peer" placeholder=" ">
+                                <option value="0">-- Select --</option>
+                                <option class="example-radio-button" *ngFor="let option of nomineeRelationList"
+                                    [value]="option.Code">
+                                    {{ option.Name }}
+                                </option>
+
+                            </select>
+                            <label for="AppointeeRelation" class="mandatory ">Relation</label>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="p-4">
+                    <button class="bg-royal text-white" mat-button matStepperPrevious>
+                        Back
+                    </button>
+                    <button class="bg-royal text-white mx-3" (click)="CreateProposal()" mat-button matStepperNext>
+                        Proceed to Pay
+                    </button>
+                </div>
+
+            </mat-step>
+        </mat-stepper>
+    </div>
+
+
+</div>

@@ -1,0 +1,95 @@
+<form (ngSubmit)="submitBanner()">
+  <div class="row">
+    <!-- Banner Header Name -->
+    <div class="col-md-6 mb-3">
+      <input id="bannerHeaderName" type="text" [(ngModel)]="currentBanner.BannerHeaderName" name="bannerHeaderName"
+        class="form-control" required autocomplete="off" placeholder="Banner Header Name" />
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <select id="BannerType" [(ngModel)]="currentBanner.BannerType" name="BannerType" class="form-control" required>
+        <option value="" disabled selected hidden>-- Select Banner Type --</option>
+        <option *ngFor="let type of bannerTypes" [value]="type">
+          {{ type }}
+        </option>
+      </select>
+    </div>
+
+
+
+
+    <!-- Order Number -->
+    <div class="col-md-6 mb-3">
+      <input id="orderNo" type="number" [(ngModel)]="currentBanner.OrderNo" name="orderNo" class="form-control"
+        placeholder="Order Number" />
+    </div>
+    <div class="col-md-6 mb-3">
+
+
+      <input id="WebUrl" type="text" [(ngModel)]="currentBanner.WebUrl" name="WebUrl" class="form-control"
+        placeholder="Weburl" />
+
+
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Banner File Upload -->
+    <div class="col-md-6 mb-3">
+      <input id="bannerFile" type="file" (change)="onFileChange($event)" name="bannerFile" class="form-control"
+        accept="image/*" />
+    </div>
+
+    <!-- Product Dropdown -->
+<div class="col-md-6 mb-3">
+  <select
+    id="productId"
+    [(ngModel)]="currentBanner.ProductId"
+    name="productId"
+    class="form-control"
+    required
+  >
+    <option value=0 disabled selected hidden>-- Select Product --</option>
+    <option *ngFor="let product of products" [value]="product.ProductId">
+      {{ product.ProductName }}
+    </option>
+  </select>
+</div>
+
+
+    <!-- Is Active (Checkbox) -->
+    <div class="col-md-6 mb-3">
+      <div class="form-check mt-2">
+        <input id="isActive" type="checkbox" [(ngModel)]="currentBanner.IsActive" name="isActive"
+          class="form-check-input" />
+        <label for="isActive" class="form-check-label">Active</label>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div class="row">
+    <!-- Date Created (Read-Only) -->
+    <div class="col-md-6 mb-3">
+      <input id="dateCreated" type="text" [value]="currentBanner.DateCreated | date" name="dateCreated"
+        class="form-control-plaintext" readonly disabled placeholder="Auto-generated" />
+    </div>
+
+    <!-- Created By (Read-Only) -->
+    <div class="col-md-6 mb-3">
+      <input id="createdBy" type="text" [value]="currentBanner.CreatedBy" name="createdBy"
+        class="form-control-plaintext" readonly disabled placeholder="Auto-generated" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 mb-3 d-flex justify-content-end gap-2">
+      <button type="submit" class="btn btn-success">
+        Save
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="cancel()">
+        Cancel
+      </button>
+    </div>
+  </div>
+</form>

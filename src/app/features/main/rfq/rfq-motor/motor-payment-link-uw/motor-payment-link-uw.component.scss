@@ -1,0 +1,47 @@
+.headingBorder {
+    background-color: rgb(241, 245, 249) !important;
+}
+
+.searchBox {
+    background-color: rgb(240 249 255 / var(--tw-bg-opacity)) !important;
+    padding: 5px 15px !important;
+}
+
+mat-select {
+    @apply block pl-2 pr-3 w-full text-sm border border-accent-400 text-gray-900 bg-transparent rounded-lg dark:text-white dark:border-gray-600 focus:outline-none focus:ring-0 focus:border-primary-500 #{!important};
+    @apply bg-white #{!important};
+}
+
+.invisible {
+    display: block;
+    visibility: hidden;
+    height: 0;
+    width: 0;
+}
+
+::ng-deep.CustomBox {
+    padding-bottom: 0.50rem !important;
+    padding-top: 0.50rem !important;
+    font-size: 0.9rem !important;
+    padding-left: 8px !important;
+    width: 100% !important;
+}
+
+.dummy-formField {
+    @apply items-center px-2 text-gray-900 bg-white rounded-lg border border-gray-300 focus:outline-none focus:ring-0 focus:border-primary-500 #{!important};
+}
+
+
+
+span.mandatory {
+    @apply after:content-['*'] after:ml-1 after:text-red-500;
+}
+
+input[type=date] {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+}
+
+.headingBorder {
+    background-color: rgb(241, 245, 249) !important;
+}

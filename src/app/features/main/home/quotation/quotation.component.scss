@@ -1,0 +1,27 @@
+.boxlogo {
+    img {
+        width: 86%;
+        position: relative;
+        vertical-align: top;
+        top: 6px;
+        left: 5px;
+    }
+}
+
+
+:hover.card-hover{
+
+    background-color: #318BC9 !important;
+    color: white !important;
+    
+    mat-icon{
+        color: white !important;
+        cursor: pointer;
+    }
+    .btn-color{
+        color: #318BC9 !important;
+        background-color: white !important;
+        cursor: pointer;
+
+    }
+}

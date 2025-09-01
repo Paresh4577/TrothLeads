@@ -1,0 +1,513 @@
+<div id="main-container" class="flex flex-col h-screen" style="overflow-x: hidden; overflow-y: auto;">
+    <style>
+        #main-container::-webkit-scrollbar {
+            width: 1px;
+        }
+
+        #main-container::-webkit-scrollbar-track {
+            background: rgba(200, 200, 200, 0.3);
+        }
+
+        #main-container::-webkit-scrollbar-thumb {
+            background: rgba(100, 100, 100, 0.5);
+            border-radius: 3px;
+        }
+
+        #main-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(80, 80, 80, 0.7);
+        }
+    </style>
+    <header class="bg-white shadow-md p-2 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center space-x-3">
+            <!-- <mat-icon (click)="toggleSidebar()" class="cursor-pointer" style="color: dodgerblue;">menu</mat-icon> -->
+            <img src="images/logos/Troth.png" alt="Logo" class="h-10">
+        </div>
+        <!-- Navigation Bar - Desktop -->
+        <nav class="hidden md:flex space-x-1">
+             <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
+                routerLink="dashboard">
+                Dashboard
+            </button>
+             <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
+                routerLink="addview">
+                Add Lead
+            </button>
+            <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
+                routerLink="leadlist">
+                Leads
+            </button>
+           
+            <!-- <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
+                routerLink="ClaimIntimation">
+                Intimation
+            </button> -->
+            <!-- Replace the existing Intimation button with this dropdown -->
+            <div class="dropdown-container relative" (mouseenter)="onIntimationMouseEnter()"
+                (mouseleave)="onIntimationMouseLeave()">
+                <button
+                    class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200 flex items-center"
+                    [class.active]="isIntimationOpen" (click)="toggleIntimationDropdown()">
+                    Reports
+                    <svg class="w-4 h-4 ml-1 transform transition-transform duration-200"
+                        [class.rotate-180]="isIntimationOpen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                <!-- Intimation Dropdown Menu -->
+                <div class="dropdown-menu" [class.show]="isIntimationOpen" (click)="onIntimationDropdownClick($event)">
+                    <div class="dropdown-content">
+                        <button class="dropdown-item" (click)="DownloadLeadReport('MONTH')">
+                            <i class="fas fa-download mr-1 sm:mr-2 text-xs sm:text-sm"></i> Monthly Report
+                        </button>
+                        <button class="dropdown-item" (click)="DownloadLeadReport('WEEK')">
+                            <i class="fas fa-download mr-1 sm:mr-2 text-xs sm:text-sm"></i> Weekly Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+           
+            <!-- <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
+                routerLink="AllClaims">
+                Claims
+            </button> -->
+
+
+            <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
+                routerLink="setting">
+                Settings
+            </button>
+
+            <!-- <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
+                routerLink="ClaimmasterDatamanagement">
+                Master Data
+            </button>
+
+            <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
+                routerLink="ClaimInsurerContact">
+                Claim Insurer Contact
+            </button> -->
+
+            <!-- <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200">
+                Reports
+            </button> -->
+
+            <!-- Settings Dropdown -->
+            <!-- <div class="dropdown-container relative" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+                <button
+                    class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200 flex items-center"
+                    [class.active]="isSettingsOpen" (click)="toggleSettingsDropdown()">
+                    Settings
+                    <svg class="w-4 h-4 ml-1 transform transition-transform duration-200"
+                        [class.rotate-180]="isSettingsOpen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                <div class="dropdown-menu" [class.show]="isSettingsOpen" (click)="onDropdownClick($event)">
+                    <div class="dropdown-content">
+                        <button class="dropdown-item" (click)="navigateToRoute('AddInsuranceCompany')">
+                            Insurance Companies
+                        </button>
+
+                        <button class="dropdown-item" (click)="navigateToRoute('AddDocumentType')">
+                            Document Types
+                        </button>
+                        <button class="dropdown-item" (click)="navigateToRoute('AddClaimType')">
+                            Claim Types
+                        </button>
+                        <button class="dropdown-item" (click)="navigateToRoute('AddClaimStatus')">
+                            Claim Status
+                        </button>
+                        <button class="dropdown-item" (click)="navigateToRoute('InsurerContact')">
+                            Insurer Contact
+                        </button>
+                        <button class="dropdown-item" (click)="navigateToRoute('IntimationRule')">
+                            Intimation Rule
+                        </button>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" (click)="navigateToRoute('UserManagement')">
+                            <i class="fa-solid fa-users dropdown-icon"></i>
+                            User Management
+                        </button>
+                        <button class="dropdown-item" (click)="navigateToRoute('SystemSettings')">
+                            <i class="fa-solid fa-gear dropdown-icon"></i>
+                            System Settings
+                        </button>
+                    </div>
+                </div>
+            </div> -->
+        </nav>
+        <!-- Notofications -->
+        <div class="flex items-center space-x-3">
+            <button class="relative p-2 me-2 rounded-full hover:bg-gray-200 focus:outline-none" (click)="Notification()"
+                style="background: transparent; border: none; cursor: pointer;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="rgb(4, 100, 164)">
+                    <path
+                        d="M12 24c1.326 0 2.402-1.074 2.402-2.4h-4.804c0 1.326 1.076 2.4 2.402 2.4zm6.364-6v-5.4c0-3.072-1.728-5.64-4.766-6.372v-.828c0-.9-.738-1.638-1.638-1.638s-1.638.738-1.638 1.638v.828c-3.036.732-4.766 3.3-4.766 6.372v5.4l-2.4 2.4v.6h17.604v-.6l-2.396-2.4z" />
+                </svg>
+
+                <span *ngIf="notificationCount > 0"
+                    class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] sm:text-xs rounded-full h-4 sm:h-5 w-4 sm:w-5 flex items-center justify-center font-bold">
+                    {{ notificationCount > 99 ? '99+' : notificationCount }}
+                </span>
+            </button>
+
+            <div *ngIf="showNotificationPanel"
+                class="fixed inset-0 z-[1000] flex items-center justify-center bg-black bg-opacity-50 animate-fade-in notification-panel">
+                <!-- Popup Container -->
+                <div
+                    class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[80vh] overflow-hidden animate-scale-in">
+                    <!-- Header -->
+                    <div class="p-6 text-center relative" style="background-color: rgb(4, 100, 164);color: wheat;">
+                        <button (click)="closeNotificationPanel()"
+                            class="absolute top-4 right-4 w-8 h-8 bg-opacity-20 hover:bg-opacity-30 rounded-full flex items-center justify-center transition-all duration-200"
+                            aria-label="Close notifications"> <i class="fas fa-times text-white-600"></i>
+                        </button>
+                        <div class="text-white flex items-center justify-center mb-2">
+                            <i class="fa fa-bell text-2xl mr-3"></i>
+                            <h3 class="text-xl font-semibold">Notifications</h3>
+                        </div>
+                        <p class="text-blue-100 text-sm" *ngIf="notificationCount > 0">
+                            You have {{ notificationCount }} notification{{ notificationCount > 1 ? 's' : '' }}
+                        </p>
+                        <p class="text-blue-100 text-sm" *ngIf="notificationCount === 0">
+                            No new notifications
+                        </p>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="max-h-96 overflow-y-auto custom-scrollbar">
+                        <!-- No notifications message -->
+                        <div *ngIf="notificationCount === 0" class="text-center py-12 px-6">
+                            <i class="fas fa-bell-slash text-gray-400 text-5xl mb-4"></i>
+                            <p class="text-gray-500 text-lg">No notifications at this time</p>
+                            <p class="text-gray-400 text-sm mt-2">We'll notify you when something needs your attention
+                            </p>
+                        </div>
+
+                        <!-- Notification Items -->
+                        <div *ngFor="let item of getAllNotificationItems()"
+                            class="px-6 py-4 hover:bg-gray-50 cursor-pointer transition-colors duration-150 border-b border-gray-100 last:border-b-0"
+                            (click)="viewLeadFromNotification(item.LeadId)">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center flex-1">
+                                    <!-- Avatar -->
+                                    <div
+                                        class="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-user text-blue-600 text-sm"></i>
+                                    </div>
+                                    <!-- Lead Info -->
+                                    <div class="ml-3 flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <p class="text-sm font-medium text-gray-900">{{ item.LeadName || 'Unknown'
+                                                }}</p>
+                                            <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
+                                        </div>
+                                        <p class="text-xs text-gray-600 mt-1">{{ item.Phone }}</p>
+                                        <!-- Status and Assignment -->
+                                        <div class="flex items-center mt-2 space-x-2">
+                                            <span
+                                                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                                                [ngClass]="{
+                    'bg-blue-100 text-blue-800': item.Status === 'New',
+                    'bg-red-100 text-red-800': item.Status === 'Dropped',
+                    'bg-yellow-100 text-yellow-800': item.Status === 'Pending',
+                    'bg-gray-100 text-gray-800': !item.Status
+                  }">
+                                                {{ item.Status || 'Unknown' }}
+                                            </span>
+                                            <span *ngIf="item.AssignedToName" class="text-xs text-gray-500">
+                                                → {{ item.AssignedToName }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="bg-gray-50 px-6 py-4 flex space-x-3">
+                        <button (click)="closeNotificationPanel()"
+                            class="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg transition-colors duration-200 font-medium">
+                            Close
+                        </button>
+                        <button *ngIf="notificationCount > 0" (click)="markAllAsRead()"
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors duration-200 font-medium">
+                            Mark All Read
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <span class="text-black font-semibold underline underline-offset-4 decoration-green-500">{{ userName
+                }}</span>
+
+
+            <div class="relative" (clickOutside)="isDropdownOpen = false">
+                <i (click)="toggleDropdown()" class="bx bx-user-circle text-2xl cursor-pointer"
+                    style="color: dodgerblue;"></i>
+
+
+                <div *ngIf="isDropdownOpen" #dropdownMenu (document:click)="handleClickOutside($event)"
+                    class="absolute right-0 m-3 w-56 bg-white shadow-xl rounded-lg z-50 p-2">
+
+                    <div class="flex items-center space-x-2 px-4 py-2">
+                        <mat-icon class="bx bx-user-circle text-2xl cursor-pointer">account_circle</mat-icon>
+                        <span class="text-gray-800">{{userName}}</span>
+                    </div>
+
+
+                    <button
+                        class="flex items-center space-x-1 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
+                        <img
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAe1JREFUSEuNla1OxFAQhb8xGCxmHwMPBgkCw094BBKCIGwQGww/BgQJAoMAyZ9AwQPg8fAAGwwJJBgSyEC303bae2+7Vdtu75yZc86cCtFLAC3/qd/FDgiCuhPVO9lZ8BVGvzsA7O8UsC9RA6gO1Ct0T2AdW2U/TQ4QuZpdVIRVE7cCux49fAqvpLGVlkglN0EHsYnDtcnGAkjNE7TunZPSLHvHXfbaEsi6oHMqfKK8AOfABfAbcOhrJxzo+T1W2I4ugHD1D7YWd3RaGW/TFYHrnFPZF/TM1mEDGBjoCnCbdEIwgSDVM3kWdFphCzhxz7PNGyAcoPIAupADjLcdDoBvYAKYAt6rGiMxewrDsmxKcL+p4R7wJTCpQg+Vt2obDUAYlhGS2Fhn2dw+WlCUz/wkMKOwAxw1mtwF9oBHYN40MLlGOZddaqwF8VNotgjc280hcGqUbQr0rdqqoDcmftFwYfXmfcmyt+mRQr/uknKWO2A50Lca1QAyWbUWLeXuGu9LQNb1rMIHyCtotmiXwE9kMRuutQ0vdQo3OWnzpjlbE9dGDcMuyKJ65nh3+a9eW4TUKYpYMKAlFbxBLuVSNDXwj7xewfYGuRQZw3k28uFOVRgnJbpEjqRBC+XeOT6liu9BR0c+YhqcRfXznfwBlFbcIquH0ZoAAAAASUVORK5CYII=" />
+                        <span>Change Password</span>
+                    </button>
+
+
+                    <button (click)="logout()"
+                        class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer text-sm">
+                        <mat-icon class="text-gray-500 text-lg">logout</mat-icon>
+                        <span>Sign out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="flex flex-1">
+        <aside id="sidebar"
+            class="bg-white shadow-md space-y-4 transition-all duration-300 overflow-y-auto max-h-screen fixed top-14 left-0 bottom-0 z-50"
+            [ngClass]="{'w-64': isSidebarOpen, 'hidden': !isSidebarOpen}">
+            <style>
+                #sidebar::-webkit-scrollbar {
+                    width: 1px;
+                }
+
+                #sidebar::-webkit-scrollbar-track {
+                    background: rgba(220, 220, 220, 0.2);
+                }
+
+                #sidebar::-webkit-scrollbar-thumb {
+                    background: rgba(150, 150, 150, 0.4);
+                    border-radius: 3px;
+                }
+
+                #sidebar::-webkit-scrollbar-thumb:hover {
+                    background: rgba(120, 120, 120, 0.6);
+                }
+            </style>
+            <nav class="space-y-3 mt-4 ms-3">
+                <div routerLink="landing-home" routerLinkActive="active"
+                    class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                    [ngClass]="{'active': activeLink === 'landing-home'}" (click)="setActiveLink('landing-home')">
+                    <i class="bx bx-home text-2xl text-gray-700"></i>
+                    <span>Home</span>
+                </div>
+                <div *ngIf="showMasterModule" class="cursor-pointer" (click)="isMasterOpen = !isMasterOpen">
+                    <button
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
+                        <mat-icon>menu</mat-icon>
+                        <span>Master</span>
+                        <mat-icon class="ml-auto">{{ isMasterOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+                    </button>
+                </div>
+                <div *ngIf="isMasterOpen" class="pl-6 space-y-2">
+                    <div routerLink="hospitals" routerLinkActive="active"
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        [ngClass]="{'active': activeLink === 'hospitals'}" (click)="setActiveLink('hospitals')">
+                        <i class='bx bxs-plus-square text-2xl text-gray-700'></i>
+                        <span>Hospitals</span>
+                    </div>
+                    <div routerLink="garages" routerLinkActive="active"
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        [ngClass]="{'active': activeLink === 'garages'}" (click)="setActiveLink('garages')">
+                        <i class="material-icons">garage</i>
+                        <span>Garages</span>
+                    </div>
+                    <div routerLink="vehicles" routerLinkActive="active"
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        [ngClass]="{'active': activeLink === 'vehicles'}" (click)="setActiveLink('vehicles')">
+                        <i class="material-icons">drive_eta</i>
+                        <span>Vehicles</span>
+                    </div>
+                    <div routerLink="companies" routerLinkActive="active"
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        [ngClass]="{'active': activeLink === 'companies'}" (click)="setActiveLink('companies')">
+                        <mat-icon class="text-2xl text-gray-700">business</mat-icon>
+                        <span>Company</span>
+                    </div>
+                    <div routerLink="state" routerLinkActive="active"
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        [ngClass]="{'active': activeLink === 'state'}" (click)="setActiveLink('state')">
+                        <mat-icon class="text-2xl text-gray-700">map</mat-icon>
+                        <span>State</span>
+                    </div>
+                    <div routerLink="city" routerLinkActive="active"
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        [ngClass]="{'active': activeLink === 'city'}" (click)="setActiveLink('city')">
+                        <mat-icon class="text-2xl text-gray-700">location_city</mat-icon>
+                        <span>City</span>
+                    </div>
+                    <div routerLink="banner" routerLinkActive="active"
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        [ngClass]="{'active': activeLink === 'banner'}" (click)="setActiveLink('banner')">
+                        <mat-icon class="text-2xl text-gray-700">campaign</mat-icon>
+                        <span>Banners</span>
+                    </div>
+                    <div routerLink="procut-header" routerLinkActive="active"
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        [ngClass]="{'active': activeLink === 'procut-header'}" (click)="setActiveLink('procut-header')">
+                        <mat-icon class="text-2xl text-gray-700">storefront</mat-icon>
+
+                        <span>Product Header</span>
+                    </div>
+                </div>
+                <div routerLink="users" routerLinkActive="active"
+                    class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                    [ngClass]="{'active': activeLink === 'users'}" (click)="setActiveLink('users')">
+                    <mat-icon class="text-2xl text-gray-700">person</mat-icon>
+                    <span>Users</span>
+                </div>
+                <div *ngIf="productModule" routerLink="products" routerLinkActive="active"
+                    class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                    [ngClass]="{'active': activeLink === 'products'}" (click)="setActiveLink('products')">
+                    <mat-icon class="text-2xl text-gray-700">category</mat-icon>
+                    <span>Product</span>
+                </div>
+                <div *ngIf="showMasterModule" routerLink="Policies" routerLinkActive="active"
+                    class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                    [ngClass]="{'active': activeLink === 'Policies'}" (click)="setActiveLink('Policies')">
+                    <mat-icon class="text-2xl text-gray-700">policy</mat-icon>
+                    <span>Policies</span>
+                </div>
+                <!-- <div routerLink="grouppolicydashboard" routerLinkActive="active"
+                    class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                    [ngClass]="{'active': activeLink === 'grouppolicydashboard'}" (click)="setActiveLink('grouppolicydashboard')">
+                    <mat-icon class="text-2xl text-gray-700">group policy</mat-icon>
+                    <span>Group Policy</span>
+                </div> -->
+                <div routerLink="leadlist" routerLinkActive="active"
+                    class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                    [ngClass]="{'active': activeLink === 'leadlist'}" (click)="setActiveLink('leadlist')">
+                    <mat-icon class="text-2xl text-gray-700">assignment_ind</mat-icon>
+                    <span>Leads</span>
+                </div>
+
+                <div *ngIf="showMasterModule" routerLink="RenewPolicy" routerLinkActive="active"
+                    class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                    [ngClass]="{'active': activeLink === 'RenewPolicy'}" (click)="setActiveLink('RenewPolicy')">
+                    <mat-icon class="text-2xl text-gray-700">policy</mat-icon>
+                    <span>Renew Policy</span>
+                </div>
+
+                <!-- <div *ngIf="claimsModule" (click)="isClaimsOpen = !isClaimsOpen"
+                    class="flex items-center justify-between text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
+                    <div class="flex items-center space-x-3">
+                        <mat-icon class="text-2xl text-gray-700">receipt_long</mat-icon>
+                        <span>Claims</span>
+                    </div>
+                    <mat-icon>{{ isClaimsOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+                </div> -->
+
+                <div *ngIf="isClaimsOpen" class="pl-6 space-y-2">
+                    <div routerLink="Claims" routerLinkActive="active"
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        [ngClass]="{'active': activeLink === 'Claims'}" (click)="setActiveLink('Claims')">
+                        <mat-icon class="text-2xl text-gray-700">post_add</mat-icon>
+                        <span>Claim Register</span>
+                    </div>
+                    <div routerLink="getClaimAssignment" routerLinkActive="active"
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        [ngClass]="{'active': activeLink === 'getClaimAssignment'}"
+                        (click)="setActiveLink('getClaimAssignment')">
+                        <mat-icon class="text-2xl text-gray-700">assignment_ind</mat-icon>
+                        <span>Assign Claim</span>
+                    </div>
+                    <div routerLink="ClaimForward" routerLinkActive="active"
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        [ngClass]="{'active': activeLink === 'ClaimForward'}" (click)="setActiveLink('ClaimForward')">
+                        <mat-icon class="text-2xl text-blue-600">send</mat-icon>
+                        <span>Claim Forward</span>
+                    </div>
+                    <div routerLink="ClaimDecision" routerLinkActive="active"
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        [ngClass]="{'active': activeLink === 'ClaimDecision'}" (click)="setActiveLink('ClaimDecision')">
+                        <mat-icon class="text-2xl text-green-600">check_circle</mat-icon>
+                        <span>Claim Decision</span>
+                    </div>
+                </div>
+                <!-- <div *ngIf="reportsModule" class="cursor-pointer" (click)="isReportsOpen = !isReportsOpen">
+                    <button class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
+                        <mat-icon>menu</mat-icon>
+                        <span>Reports</span>
+                        <mat-icon class="ml-auto">{{ isReportsOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+                    </button>
+                </div> -->
+                <div *ngIf="isReportsOpen" class="pl-6 space-y-2">
+                    <div routerLink="reports" routerLinkActive="active"
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        [ngClass]="{'active': activeLink === 'reports'}" (click)="setActiveLink('reports')">
+                        <i class='bx bxs-plus-square text-2xl text-gray-700'></i>
+                        <span>MIS Report</span>
+                    </div>
+                </div>
+
+                <div *ngIf="useraccesspermission" (click)="isUseAcessOpen = !isUseAcessOpen"
+                    class="flex items-center justify-between text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer">
+                    <div class="flex items-center space-x-3">
+                        <mat-icon class="text-2xl text-gray-700">group</mat-icon>
+                        <span>Access Control</span>
+                    </div>
+                    <mat-icon>{{ isUseAcessOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+                </div>
+                <div *ngIf="isUseAcessOpen" class="pl-6 space-y-2">
+                    <div routerLink="settings" routerLinkActive="active"
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        [ngClass]="{'active': activeLink === 'settings'}" (click)="setActiveLink('settings')">
+                        <mat-icon class="text-2xl text-gray-700">badge</mat-icon>
+                        <span>Role</span>
+                    </div>
+                    <div routerLink="adminlist" routerLinkActive="active"
+                        class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        [ngClass]="{'active': activeLink === 'adminlist'}" (click)="setActiveLink('adminlist')">
+                        <mat-icon class="text-2xl text-gray-700">admin_panel_settings</mat-icon>
+                        <span>Admin</span>
+                    </div>
+                </div>
+
+                <div routerLink="privacyPolicy" routerLinkActive="active" *ngIf="useraccesspermission"
+                    class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                    [ngClass]="{'active': activeLink === 'privacyPolicy'}" (click)="setActiveLink('settings')">
+                    <mat-icon class="text-2xl text-gray-700">privacy_tip</mat-icon>
+                    <span>Privacy Policy</span>
+                </div>
+                <div routerLink="SMSLogs" routerLinkActive="active"
+                    class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                    [ngClass]="{'active': activeLink === 'SMSLogs'}" (click)="setActiveLink('settings')">
+                    <mat-icon class="text-2xl text-gray-700">sms</mat-icon>
+                    <span>SMS Logs</span>
+                </div>
+                <!-- <div routerLink="/getSupport" routerLinkActive="active" *ngIf="useraccesspermission"
+                    class="flex items-center space-x-3 text-gray-700 hover:text-black-600 p-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                    [ngClass]="{'active': activeLink === 'getSupport'}" (click)="setActiveLink('settings')">
+                <mat-icon class="text-2xl text-gray-700">perm_phone_msg</mat-icon>
+                    <span>Contact Us</span>
+                </div> -->
+            </nav>
+        </aside>
+        <div class="flex-1 p-6 transition-all duration-300" [class.ml-64]="isSidebarOpen"
+            [style.margin-left]="isSidebarOpen ? '16rem' : '0'"
+            [style.min-width]="isSidebarOpen ? 'calc(100vw - 16rem)' : '100vw'"
+            [style.width]="isSidebarOpen ? 'calc(100% - 16rem)' : '100%'" style="overflow-x: auto;">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

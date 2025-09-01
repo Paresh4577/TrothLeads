@@ -1,0 +1,27 @@
+span {
+    font-weight: bold;
+}
+
+.headingBorder {
+    background-color: rgb(241, 245, 249) !important;
+}
+
+::ng-deep.CustomLabel {
+    color: rgb(100 116 139 / 1) !important;
+    font-size: 0.9rem !important;
+    padding-left: 8px;
+    font-weight: normal !important;
+}
+
+::ng-deep.CustomBox {
+    display: flex !important;
+    padding-bottom: 0.50rem !important;
+    padding-top: 0.50rem !important;
+    font-size: 0.8125rem !important;
+    padding-left: 8px !important;
+    width: 30% !important;
+    border-radius: 0.5rem !important;
+    border-width: 1px !important;
+    border-color: rgb(203 213 225 / 1) !important;
+    background-color: rgb(255 255 255 / 1) !important;   
+}

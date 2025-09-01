@@ -1,0 +1,113 @@
+<div class="p-4 h-full w-full">
+    <!-- region main heading -->
+    <h1 class="new-head text-xl px-4 py-2 rounded flex justify-between items-center font-semibold">
+        Previous Policy Details
+
+        <!-- region main heading controls-->
+        <div class="flex gap-x-3  items-center text-lg font-normal">
+            <button mat-raised-button class="new-button" (click)="SubmitData()">Save</button>
+            <button mat-raised-button class="new-button" (click)="close()">Cancel</button>
+        </div>
+        <!-- endregion main heading controls-->
+    </h1>
+
+
+    <div class="py-5">
+        <form [formGroup]="PreviousPolicyDetailsForm">
+            <div class="grid gap-4 md:grid-cols-2 py-3 lg:grid-cols-3">
+
+                <!-- Previous Insurance Company -->
+                <div class="relative min-w-72">
+                    <div class="icon">
+                        <mat-icon>domain</mat-icon>
+                    </div>
+                    <select class="peer bg-white" formControlName="PrevPolicyInsurComp">
+                        <option [value]="''">Select</option>
+                        <option [disabled]="PreviousPolicyDetailsForm.get('InsuranceCompanyCode').value == Company.Code"
+                            *ngFor="let Company Of data.InsuranceCompany | async" [value]="Company.Code">
+                            {{Company.ShortName}}
+                        </option>
+                    </select>
+                    <label for="" class="mandatory">Previous Insurance Company</label>
+
+                </div>
+
+                <!--  Sum Inssured -->
+                <div class="relative">
+                    <div class="icon rs">₹</div>
+                    <input type="text" class="peer " Onlynumber maxlength="15" id="PAPremium" onfocus="this.select()"
+                        placeholder=" " formControlName="PrevPolicySumInsured" />
+                    <label for="PAPremium" class="mandatory">Sum Inssured</label>
+                </div>
+
+                <!-- Attach Previous Policy Document -->
+                <div class="relative max-w-64">
+                    <div class="dummy-formField ">
+                        <div class="icon">
+                            <mat-icon>attach_file</mat-icon>
+                        </div>
+                        <input accept=".doc,.docx,.pdf" type="file" class="hidden" #AttachMandateCopy [disabled]="!true"
+                            (change)="selectedPrevPolicyDocument($event)">
+                        <p class="ml-10 text-primary-500 cursor-pointer hover:text-primary-500 overflow-hidden whitespace-nowrap"
+                            [ngClass]="true ? 'cursor-pointer text-primary-500 hover:text-primary-500' : 'pointer-events-none' "
+                            matTooltip="{{this.PreviousPolicyDetailsForm.value.PrevPolicyDoc.FileName}}"
+                            (click)="AttachMandateCopy.click()">
+                            {{ this.PreviousPolicyDetailsForm.value.PrevPolicyDoc.FileName ||
+                            'Choose File' | excerpt:'max' }}</p>
+                        <label for="AttachMandateCopy">Attach Previous Policy Document</label>
+                        <div class="flex justify-end absolute right-2 bg-white" (click)="removeDocument()"
+                            *ngIf="this.PreviousPolicyDetailsForm.value.PrevPolicyDoc.ImageUploadName"
+                            matTooltip="Remove Policy Copy">
+                            <mat-icon class="cursor-pointer">clear</mat-icon>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="relative" *ngIf="CategoryCode != CategoryCodeEnum.Motor">
+                    <div class="icon">
+                        <mat-icon>compass_calibration</mat-icon>
+                    </div>
+                    <select class="peer bg-white" formControlName="PrevPolicyType">
+                        <option value="">Select</option>
+                        <option [value]="option" *ngFor="let option of data.SubCategoryWisePolicyType">
+                            {{ option }}
+                        </option>
+                    </select>
+                    <label for="" class="mandatory">Policy Type</label>
+
+                </div> -->
+                <!-- Police Type  -->
+                <div class="relative" *ngIf="data.formGroupData.CategoryCode== CategoryCodeEnum.Motor">
+                    <div class="icon">
+                        <mat-icon>compass_calibration</mat-icon>
+                    </div>
+
+                    <select id="" formControlName="PrevPolicyType">
+                        <option value="">--Select--</option>
+                        <option [value]="'1 OD + 1 TP'">1 OD + 1 TP</option>
+                        <option [value]="'1 OD + 3 TP'" *ngIf="data.formGroupData.SubCategoryCode == SubCategoryCodeEnum.PrivateCar">
+                            1 OD + 3 TP</option>
+                        <option [value]="'1 OD + 5 TP'" *ngIf="data.formGroupData.SubCategoryCode == SubCategoryCodeEnum.TwoWheeler">
+                            1 OD + 5 TP</option>
+                        <option [value]="'SAOD'"
+                            *ngIf="data.formGroupData.SubCategoryCode==SubCategoryCodeEnum.PrivateCar || data.formGroupData.SubCategoryCode==SubCategoryCodeEnum.TwoWheeler">
+                            SAOD</option>
+                        <option [value]="'SATP'">SATP</option>
+                    </select>
+                    <label for="PolicyType" class="mandatory">Police Type</label>
+                </div>
+
+                <!-- Policy Period -->
+                <div class="relative">
+                    <div class="icon">
+                        <mat-icon>timelapse</mat-icon>
+                    </div>
+                    <input type="text" class="peer " Onlynumber maxlength="15" id="PAPremium" placeholder=" "
+                        formControlName="PrevPolicyPeriod" onfocus="this.select()" />
+                    <label for="PAPremium" class="">Policy Period</label>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>

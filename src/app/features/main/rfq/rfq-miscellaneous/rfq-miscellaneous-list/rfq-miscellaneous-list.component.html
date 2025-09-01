@@ -1,0 +1,17 @@
+<!-- region Main Heading -->
+<h1 class="new-head text-lg px-4 py-3 mb-4 rounded flex justify-between items-center font-semibold">
+    {{title}}
+
+    <!-- region Heading Controls -->
+    <div class="flex gap-x-3  items-center text-md font-normal"
+        *ngIf="StageCode == '' || StageCode == null || StageCode == undefined ">
+        <button (click)="addButton()" mat-raised-button class="new-button" *ngIf="canDisplayCreateBtn">Add</button>
+    </div>
+
+</h1>
+<!-- region dynamic list table component  -->
+<gnx-table [headArray]="columnDef" [listDataObservable]="RFQList$" [masterName]="'TransactionList'"
+    (onSort)="sortColumn($event)" (onSearch)="searchColumn($event)" (onNext)="nextPage()" (onPrev)="previousPage()"
+    (onLimitChange)="setLimit($event)">
+</gnx-table>
+<!-- endregion dynamic list table component  -->

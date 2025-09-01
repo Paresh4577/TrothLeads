@@ -1,0 +1,1183 @@
+///////add claim html///////////
+<div class="min-h-screen bg-gray-50 py-0 px-0 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+      <!-- Compact Card Header -->
+      <div class="px-4 py-2" style="background-color:  var(--title-bg);">
+        <div class="flex items-center justify-between">
+          <h5 class="text-base font-semibold text-white flex items-center">
+
+            Claim Registration
+          </h5>
+
+        </div>
+      </div>
+      <!-- Card Body -->
+      <div class="px-0 py-2">
+        <!-- Policy Details Section -->
+        <div class="mb-2 bg-gray-100">
+          <h5 class=" text-sm font-medium flex items-center mb-3 section-header">
+            <i class="fas fa-shield-alt text-primary mr-2" style="color:  var(--title-bg);"></i> Policy Details
+          </h5>
+          <form [formGroup]="claimForm" *ngIf="currentSection === 'policy'">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 m-3">
+              <!-- Policy Dropdown -->
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-id-card mr-1 text-primary"></i> Policy
+                </p>
+                <select id="policyId" formControlName="policyId"
+                  class="form-control form-select bg-white mt-1 w-full text-sm text-gray-800" required="">
+                  <option [ngValue]="null" disabled>Select Policy</option>
+                  <option *ngFor="let policy of policies" [ngValue]="policy.PolicyId">{{ policy.PolicyNo }}</option>
+                </select>
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('policyId')?.touched && claimForm.get('policyId')?.invalid">
+                  Policy is required.
+                </div>
+              </div>
+
+              <!-- Claim Type Dropdown -->
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-tag mr-1 text-primary"></i> Claim Type
+                </p>
+                <select id="productId" formControlName="productId"
+                  class="form-control form-select bg-white mt-1 w-full text-sm text-gray-800" required="">
+                  <option [ngValue]="null" disabled>Select Claim Type</option>
+                  <option *ngFor="let product of products" [value]="product.ProductId">{{ product.ProductName }}
+                  </option>
+                </select>
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('productId')?.touched && claimForm.get('productId')?.invalid">
+                  Claim type is required.
+                </div>
+              </div>
+
+            </div>
+            <div class="mt-4 ms-3">
+              <button type="button" class="btn btn-primary" (click)="nextSection('user')">Next</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- User Information Section -->
+        <div class="mb-2 bg-gray-100">
+          <h5 class="text-md font-medium flex items-center mb-3 section-header">
+            <i class="fas fa-user text-primary mr-2"></i> Policy Holder Information
+          </h5>
+
+          <form [formGroup]="claimForm" *ngIf="currentSection === 'user'">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 m-3">
+
+              <!-- User Select -->
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-id-card mr-1 text-primary"></i> Policy Holder
+                </p>
+                <select id="userId" formControlName="userId" class="form-control form-select">
+                  <option [ngValue]="null" disabled selected>Select Policy Holder</option>
+                  <option *ngFor="let user of users" [value]="user.UserId">{{ user.UserName }}</option>
+                </select>
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('userId')?.touched && claimForm.get('userId')?.errors?.['required']">
+                  User is required.
+                </div>
+              </div>
+
+              <!-- Phone Number -->
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-mobile-alt mr-1 text-primary"></i> Phone Number
+                </p>
+                <input id="phoneNumber" formControlName="phoneNumber" type="text"
+                  class="form-control bg-white mt-1 w-full text-sm text-gray-800" placeholder="Phone Number" />
+                <div *ngIf="claimForm.get('phoneNumber')?.touched && claimForm.get('phoneNumber')?.errors?.['required']"
+                  class="text-red-600 text-xs mt-1">
+                  Phone number is required.
+                </div>
+                <div *ngIf="claimForm.get('phoneNumber')?.touched && claimForm.get('phoneNumber')?.errors?.['pattern']"
+                  class="text-red-500 text-xs mt-1">
+                  Phone number must be a 10-digit number.
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-envelope mr-1 text-primary"></i> Email
+                </p>
+                <input id="email" formControlName="email" type="email"
+                  class="form-control bg-white mt-1 w-full text-sm text-gray-800" placeholder="Email Address" />
+                <div *ngIf="claimForm.get('email')?.touched && claimForm.get('email')?.errors?.['required']"
+                  class="text-red-600 text-xs mt-1">
+                  Email is required.
+                </div>
+                <div *ngIf="claimForm.get('email')?.touched && claimForm.get('email')?.errors?.['email']"
+                  class="text-red-500 text-xs mt-1">
+                  Please enter a valid email address.
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Buttons -->
+            <div class="mt-4 ms-3 flex justify-start space-x-2">
+              <button type="button" class="btn btn-outline-secondary" (click)="nextSection('policy')">Back</button>
+              <button type="button" class="btn btn-primary" (click)="nextSection('company')">Next</button>
+            </div>
+          </form>
+        </div>
+
+
+        <!-- Company and Employee Details Section -->
+        <div class="mb-2 bg-gray-100">
+          <h5 class="text-md font-medium flex items-center mb-3 section-header">
+            <i class="fas fa-building text-primary mr-2"></i> Insurance Company Details
+          </h5>
+          <form [formGroup]="claimForm" *ngIf="currentSection === 'company'">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 m-3">
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-building mr-1 text-primary"></i> Insurance Company
+                </p>
+                <select id="CompanyId" formControlName="CompanyId"
+                  class="form-control form-select bg-white mt-1 w-full text-sm text-gray-800">
+                  <option [ngValue]="null" disabled selected>Select Insurance Company</option>
+                  <option *ngFor="let company of companies" [value]="company.CompanyId">{{ company.CompanyName }}
+                  </option>
+                </select>
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('CompanyId')?.touched && claimForm.get('CompanyId')?.invalid">
+                  Insurance Company is required.
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 ms-3 flex justify-start space-x-2">
+              <button type="button" class="btn btn-outline-secondary" (click)="nextSection('user')">Back</button>
+              <button type="button" class="btn btn-primary" (click)="nextSection('other')">Next</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Other Details Section -->
+        <div class="mb-2 bg-gray-100">
+          <h5 class="text-md font-medium flex items-center mb-3 section-header">
+            <i class="fas fa-info-circle text-primary mr-2"></i> Claim Details
+          </h5>
+          <form [formGroup]="claimForm" *ngIf="currentSection === 'other'">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 m-3">
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-calendar-day mr-1 text-primary"></i> Submission Date
+                </p>
+                <input id="submissionDate" formControlName="submissionDate" type="datetime-local"
+                  class="form-control bg-white mt-1 w-full text-sm text-gray-800" />
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('submissionDate')?.touched && claimForm.get('submissionDate')?.invalid">
+                  Submission Date is required.
+                </div>
+              </div>
+
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-money-bill-wave mr-1 text-primary"></i> Claim Amount
+                </p>
+                <input id="claimAmount" formControlName="claimAmount" type="number"
+                  class="form-control bg-white mt-1 w-full text-sm text-gray-800" placeholder="Claim Amount" />
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('claimAmount')?.touched && claimForm.get('claimAmount')?.invalid">
+                  Claim Amount is required.
+                </div>
+                <div *ngIf="claimForm.get('claimAmount')?.touched && claimForm.get('claimAmount')?.invalid"
+                  class="text-red-500 text-xs mt-1">
+                  Claim amount must be non-negative
+                </div>
+              </div>
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-id-card mr-1 text-primary"></i> Claim Status
+                </p>
+                <select id="ClaimStatusId" formControlName="ClaimStatusId" class="form-control form-select">
+                  <option [ngValue]="null" disabled>Select Status</option>
+                  <option *ngFor="let claim of claimStatuses" [value]="claim.ClaimStatusId">
+                    {{ claim.ClaimStatus }}
+                  </option>
+                </select>
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('ClaimStatusId')?.touched && claimForm.get('ClaimStatusId')?.invalid">
+                  Claim Status is required.
+                </div>
+              </div>
+              <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+                <p class="text-xs font-medium text-primary-dark flex items-center">
+                  <i class="fas fa-id-card mr-1 text-primary"></i> Claim Description
+                </p>
+                <textarea id="description" formControlName="description" rows="4" class="form-control"
+                  placeholder="Enter claim description..."></textarea>
+                <div class="text-red-600 text-xs mt-1"
+                  *ngIf="claimForm.get('description')?.touched && claimForm.get('description')?.invalid">
+                  Description is required.
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 ms-3 flex justify-start space-x-2">
+              <button type="button" class="btn btn-outline-secondary" (click)="nextSection('company')">Back</button>
+              <button type="button" class="btn btn-primary" (click)="nextSection('documents')">Next</button>
+            </div>
+          </form>
+        </div>
+
+
+        <!-- Claim Documents Section with Preview -->
+        <div class="mb-2 bg-gray-100">
+          <h5 class="text-md font-medium flex items-center mb-3 section-header">
+            <i class="fas fa-folder-open text-primary mr-2"></i> Claim Documents
+          </h5>
+          <form [formGroup]="claimForm" (ngSubmit)="onSubmit()" *ngIf="currentSection === 'documents'">
+            <div class="grid grid-cols-1 gap-3 m-3">
+              <div class="">
+                <div formArrayName="claimDocuments">
+                  <div *ngFor="let doc of claimDocuments.controls; let i=index" [formGroupName]="i"
+                    class="grid grid-cols-1 md:grid-cols-12 gap-3 mb-3 border-b border-gray-200 pb-3">
+
+                    <!-- Document Name -->
+                    <div class="md:col-span-3">
+                      <p class="text-xs font-medium text-primary-dark flex items-center">
+                        <i class="fas fa-file-alt mr-1 text-primary"></i> Document Type
+                      </p>
+                      <select formControlName="docName" class="form-control bg-white mt-1 w-full text-sm text-gray-800"
+                        placeholder="Select Document Type">
+                        <option value="" disabled selected>Select Document Type</option>
+                        <option value="Aadhar Card">Aadhar Card</option>
+                        <option value="PAN Card">PAN Card</option>
+                        <option value="Driving Licence">Driving Licence</option>
+                        <option value="Passport">Passport</option>
+                        <option value="Voter ID">Voter ID</option>
+                        <option value="Ration Card">Ration Card</option>
+                        <option value="Insurance Policy">Insurance Policy</option>
+                        <option value="Medical Report">Medical Report</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+
+                    <!-- Status Dropdown -->
+                    <div class="md:col-span-2">
+                      <p class="text-xs font-medium text-primary-dark flex items-center">
+                        <i class="fas fa-info-circle mr-1 text-primary"></i> Status
+                      </p>
+                      <select formControlName="status" class="form-control bg-white mt-1 w-full text-sm text-gray-800"
+                        placeholder="Select Status">
+                        <option value="" disabled>Select Status</option>
+                        <option value="Not-Verified">Not-Verified</option>
+                        <option value="Verified">Verified</option>
+                        <option value="Rejected">Rejected</option>
+                      </select>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="md:col-span-4">
+                      <p class="text-xs font-medium text-primary-dark flex items-center">
+                        <i class="fas fa-upload mr-1 text-primary"></i> File Upload
+                      </p>
+                      <div class="mt-1 flex items-center">
+                        <input type="file" class="hidden" id="file-upload-{{i}}" (change)="onFileSelected($event, i)" />
+                        <label for="file-upload-{{i}}" class="btn btn-outline-primary text-sm cursor-pointer">
+                          <i class="fas fa-cloud-upload-alt mr-1"></i> Choose File
+                        </label>
+                        <span id="file-name-{{i}}" class="ml-2 text-sm text-gray-600 hidden"></span>
+                        <input formControlName="docPath" type="hidden" />
+                      </div>
+                    </div>
+
+                    <!-- Remove Button -->
+                    <div class="md:col-span-3 flex items-end gap-2">
+
+                      <button type="button" (click)="removeDocument(i)" class="btn btn-outline-danger text-sm mr-2">
+                        <i class="fas fa-trash mr-1"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Add Document Button -->
+                  <button type="button" (click)="addDocument()" class="btn btn-outline-primary mt-2">
+                    <i class="fas fa-plus-circle mr-1"></i> Add Document
+                  </button>
+                </div>
+                <!-- Update your existing document summary table to include the View button -->
+                <div class="mt-6 ms-3" *ngIf="claimForm.get('claimDocuments')?.value?.length > 0">
+                  <h6 class="text-md font-semibold mb-2">Claim Document Summary</h6>
+                  <div class="overflow-x-auto">
+                    <table class="table-auto w-full border border-black-500 text-sm bg-white">
+                      <thead class="text-left text-gray-700">
+                        <tr>
+                          <th class="p-2 border">#</th>
+                          <th class="p-2 border">Document Type</th>
+                          <th class="p-2 border">Status</th>
+                          <th class="p-2 border">Actions</th> <!-- Added Actions column -->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let doc of claimForm.get('claimDocuments')?.value; let i = index" class="border-t">
+                          <td class="p-2 border">{{ i + 1 }}</td>
+                          <td class="p-2 border">{{ doc.docName }}</td>
+                          <td class="p-2 border">
+                            <span class="" [ngClass]="{
+                'bg-green-500': doc.status === 'Verified',
+                'bg-red-500': doc.status === 'Rejected',
+                'bg-orange-400': doc.status === 'Not-Verified'
+              }"></span>
+                            {{ doc.status }}
+                          </td>
+                          <td class="p-2 border">
+                            <button type="button"
+                              *ngIf="previewUrls.has(i)"
+                              class="btn btn-outline-primary btn-sm"
+                              (click)="openPreview(i)">
+                              <i class="fas fa-eye mr-1"></i> Preview
+                            </button>
+                          </td>
+                          
+                          
+                          
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Add this modal to the bottom of your template -->
+                <div class="modal fade" id="documentPreviewModal" tabindex="-1"
+                  aria-labelledby="documentPreviewModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="documentPreviewModalLabel">Document Preview</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body text-center">
+                        <!-- The document preview will be inserted here by JavaScript -->
+                        <div id="documentPreviewContent"></div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form Navigation and Submit Buttons -->
+            <div class="mt-4 ms-3 flex justify-start space-x-2">
+              <button type="button" class="btn btn-outline-secondary" (click)="nextSection('other')">
+                <i class="fas fa-arrow-left mr-1"></i> Back
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-check-circle mr-1"></i> Submit Claim
+              </button>
+            </div>
+
+            <!-- Messages -->
+            <div *ngIf="errorMessage" class="alert alert-danger mt-4">
+              <i class="fas fa-exclamation-triangle me-2"></i> {{ errorMessage }}
+            </div>
+            <div *ngIf="successMessage" class="alert alert-success mt-4">
+              <i class="fas fa-check-circle me-2"></i> {{ successMessage }}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bg-primary {
+    background-color: var(--title-bg);
+  }
+
+  .text-primary {
+    color: var(--title-bg);
+  }
+
+  .border-primary {
+    border-color: var(--title-bg);
+  }
+
+  .bg-primary-light {
+    background-color: rgba(4, 100, 164, 0.3);
+  }
+
+  .text-primary-light {
+    color: rgba(4, 100, 164, 0.7);
+  }
+
+  .bg-primary-lighter {
+    background-color: rgba(4, 100, 164, 0.1);
+  }
+
+  .bg-primary-badge {
+    background-color: rgba(4, 100, 164, 0.2);
+  }
+
+  .text-primary-dark {
+    color: rgb(3, 80, 131);
+  }
+
+  .border-primary-lightest {
+    border-color: rgba(4, 100, 164, 0.2);
+  }
+
+  .text-primary-lightest {
+    color: rgba(4, 100, 164, 0.5);
+  }
+
+  .btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .btn-primary {
+    background-color: var(--title-bg);
+    color: white;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background-color: rgb(3, 80, 131);
+  }
+
+  .btn-outline-secondary {
+    background-color: white;
+    color: rgb(4, 100, 164);
+    border: 1px solid var(--title-bg);
+  }
+
+  .btn-outline-secondary:hover {
+    background-color: rgba(4, 100, 164, 0.1);
+  }
+
+  .btn-outline-danger {
+    background-color: white;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+  }
+
+  .btn-outline-danger:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+  }
+
+  .btn-outline-primary {
+    background-color: white;
+    color: var(--title-bg);
+    border: 1px solid var(--title-bg);
+  }
+
+  .btn-outline-primary:hover {
+    background-color: rgba(4, 100, 164, 0.1);
+  }
+
+  .form-control {
+    border: 1px solid rgba(4, 100, 164, 0.2);
+    border-radius: 4px;
+    padding: 6px 12px;
+  }
+
+  .form-control:focus {
+    border-color: var(--title-bg);
+    box-shadow: 0 0 5px rgba(4, 100, 164, 0.3);
+  }
+
+  .form-select {
+    border: 1px solid rgba(4, 100, 164, 0.2);
+    border-radius: 4px;
+    padding: 6px 12px;
+    background-color: white;
+  }
+
+  .form-select:focus {
+    border-color: rgb(4, 100, 164);
+    box-shadow: 0 0 5px rgba(4, 100, 164, 0.3);
+  }
+
+  .invalid-feedback {
+    color: #dc3545;
+    font-size: 12px;
+  }
+
+  .alert {
+    border-radius: 4px;
+    padding: 10px;
+  }
+
+  .alert-danger {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+  }
+
+  .alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+  }
+
+  .section-header {
+    background-color: #e0f2fe;
+    /* Light Sky Blue */
+    padding: 10px 12px;
+    border-radius: 6px;
+    color: #0369a1;
+    /* Darker blue text */
+    font-weight: 500;
+  }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////Ts of add claim /////////
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { authService } from '../../../auth/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+
+@Component({
+  selector: 'app-add-claim',
+  standalone: false,
+  templateUrl: './add-claim.component.html',
+  styleUrl: './add-claim.component.scss'
+})
+export class AddClaimComponent {
+  claimForm: FormGroup;
+  currentSection: string = 'documents';
+  filePreviewUrls: { [key: number]: string } = {};
+  previewUrls: Map<number, string> = new Map(); // index -> blob URL
+  id = 0;
+  products: any[] = [];
+  claimStatuses: any[] = [];
+  companies: any[] = [];
+  users: any[] = [];
+  employees: any[] = [];
+  policies: any[] = [];
+  isEditing: boolean = false;
+  errorMessage: string | null = null;
+  successMessage: string | null = null;
+  uploadedFiles: Map<number, File> = new Map(); // Store uploaded files by index
+  documentOptions: string[] = ['Aadhaar Card', 'PAN Card', 'Driving License', 'RC Book'];
+
+
+  constructor(private fb: FormBuilder, private authService: authService, private router: Router, private route: ActivatedRoute) {
+    this.claimForm = this.fb.group({
+      claimId: [null],
+      policyId: [null, Validators.required], // Required as it's critical for the claim
+      ClaimStatusId: [this.isEditing ? null : 11, Validators.required],
+      assignedUser: ['', Validators.required],
+      claimType: [null, Validators.required],
+      fullName: [''],
+      phoneNumber: ['', Validators.required, Validators.pattern('^[0-9]{10}$')], // Optional but must be valid if provided
+      email: ['', Validators.required, Validators.email], // Optional but must be valid if provided
+      submissionDate: [this.getTodayDate(), Validators.required],
+      resolutionDate: [null, Validators.required],
+      claimStatus: [null, Validators.required],
+      createdBy: ['System', Validators.required],
+      userId: [null, Validators.required],
+      CompanyId: [null, Validators.required],
+      empId: [null],
+      productId: [null, Validators.required],
+      description: ['', Validators.required],
+      claimAmount: ['', Validators.required, Validators.min(0)], // Optional but must be non-negative if provided
+      approvedAmount: [null, Validators.required],
+      submissionMethod: ['Mobile'],
+      platform: ['iOS'],
+      device: ['iPhone'],
+      claimDocuments: this.fb.array([
+        this.fb.group({
+          docName: [''],
+          status: [''],
+          orderNo: [1],
+          docPath: ['']// Added for file path tracking
+        }),
+      ]),
+    });
+  }
+
+  get claimDocument(): FormArray {
+    return this.claimForm.get('claimDocuments') as FormArray;
+  }
+
+  getTodayDate(): string {
+    const now = new Date();
+    console.log("Now", now)
+    return now.toISOString().slice(0, 16); // "YYYY-MM-DDTHH:mm"
+  }
+
+
+  loadClaimData(claimId: number): void {
+    this.authService.getClaimById(claimId).subscribe({
+      next: (claim) => {
+        console.log('claims is', claim);
+
+        if (claim) {
+          this.claimForm.patchValue({
+            claimId: claim.ClaimId ?? null,
+            policyId: claim.PolicyId ?? null,
+            ClaimStatusId: claim.ClaimStatusId ?? null,
+            assignedUser: claim.AssignedUser ?? '',
+            claimType: claim.ClaimType ?? null,
+            fullName: claim.FullName ?? '',
+            phoneNumber: claim.PhoneNumber ?? '',
+            email: claim.Email ?? '',
+            submissionDate: claim.SubmissionDate
+              ? claim.SubmissionDate.slice(0, 16)
+              : null,
+            resolutionDate: claim.ResolutionDate
+              ? claim.ResolutionDate.slice(0, 16)
+              : null,
+            claimStatus: claim.ClaimStatusId ?? null,
+            createdBy: claim.CreatedBy ?? 'System',
+            userId: claim.UserId ?? null,
+            CompanyId: claim.CompanyId ?? null,
+            empId: claim.empId ?? null,
+            productId: claim.ProductId ?? null,
+            description: claim.Description ?? '',
+            claimAmount: claim.claimAmount ?? '',
+            approvedAmount: claim.ApprovedAmount ?? null,
+            submissionMethod: claim.SubmissionMethod ?? 'Mobile',
+            platform: claim.Platform ?? 'iOS',
+            device: claim.Device ?? 'iPhone',
+          });
+
+          // Handle claim documents if any
+          const docsArray = this.claimForm.get('claimDocuments') as FormArray;
+          docsArray.clear(); // Clear existing documents
+
+          if (claim.ClaimDocuments && Array.isArray(claim.ClaimDocuments)) {
+            claim.ClaimDocuments.forEach((doc: any) => {
+              docsArray.push(
+                this.fb.group({
+                  docName: [doc.DocName ?? ''],
+                  status: [doc.status ?? ''],
+                  orderNo: [doc.OrderNo ?? 1],
+                  docPath: [doc.DocPath ?? '']
+                })
+              );
+            });
+          } else {
+            // Ensure at least one document input exists
+            docsArray.push(
+              this.fb.group({
+                docName: [''],
+                status: [''],
+                orderNo: [1],
+                docPath: ['']
+              })
+            );
+          }
+        }
+      },
+      error: (err) => {
+        this.errorMessage = 'Failed to load claim data.';
+        console.error(err);
+        this.router.navigate(['/claims']);
+      },
+    });
+  }
+
+  clearForm(): void {
+    // Reset form and clear uploaded files
+    this.claimForm.reset();
+    this.uploadedFiles.clear();
+
+    // Clear the FormArray and add one empty document
+    while (this.claimDocuments.length !== 0) {
+      this.claimDocuments.removeAt(0);
+    }
+    this.addDocument();
+
+    // Reset specific fields to their default values
+    this.claimForm.patchValue({
+      submissionDate: new Date().toISOString().slice(0, 16),
+      claimStatus: 'Pending',
+      createdBy: 'System',
+      submissionMethod: 'Mobile',
+      platform: 'iOS',
+      device: 'iPhone',
+      policyId: null,
+      ClaimStatusId: null,
+      productId: null,
+      userId: null,
+      claimType: null,
+      CompanyId: null,
+      empId: null
+    });
+
+    // Clear messages
+    this.errorMessage = null;
+    this.successMessage = null;
+  }
+
+  ngOnInit(): void {
+    this.loadDropdownData();
+    this.route.paramMap.subscribe((params) => {
+      const claimId = Number(params.get('claimId')); // Assuming route param is 'hospitalId'
+      if (claimId) {
+        this.isEditing = true;
+        this.loadClaimData(claimId);
+      }
+    });
+  }
+
+  loadDropdownData(): void {
+    this.authService.getProducts().subscribe({
+      next: (products) => (this.products = products),
+      error: (err) => console.error('Error loading products:', err),
+    });
+
+    this.authService.getCompanies().subscribe({
+      next: (companies) => (this.companies = companies),
+      error: (err) => console.error('Error loading companies:', err),
+    });
+
+    this.authService.getUsers().subscribe({
+      next: (users) => (this.users = users),
+      error: (err) => console.error('Error loading users:', err),
+    });
+
+    this.authService.getPolicies().subscribe({
+      next: (policies) => (this.policies = policies),
+      error: (err) => console.error('Error loading policies:', err),
+    });
+
+    this.authService.getEmployees().subscribe({
+      next: (employees) => (this.employees = employees),
+      error: (err) => console.error('Error loading employees:', err),
+    });
+
+    this.authService.getClaimStatus().subscribe({
+      next: (claimStatuses) => (this.claimStatuses = claimStatuses),
+      error: (err) => console.error('Error loading claim status:', err),
+    });
+  }
+
+  get claimDocuments(): FormArray {
+    return this.claimForm.get('claimDocuments') as FormArray;
+  }
+
+  addDocument(): void {
+    // Instead of trying to get values from non-existent form controls,
+    // just create a new empty document entry
+    this.claimDocuments.push(
+      this.fb.group({
+        docName: [''],
+        status: [''],
+        orderNo: [this.claimDocuments.length + 1],
+        docPath: ['']
+      })
+    );
+    
+    // No need to reset the form since we're just adding an empty document
+  }
+
+
+  removeDocument(index: number): void {
+    // Also remove any associated file
+    this.uploadedFiles.delete(index);
+    this.claimDocuments.removeAt(index);
+
+    // Re-order the remaining documents
+    for (let i = 0; i < this.claimDocuments.length; i++) {
+      this.claimDocuments.at(i).get('orderNo')?.setValue(i + 1);
+    }
+  }
+
+
+
+  // onFileSelected(event: any, index: number): void {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     // Store the file for later upload
+  //     this.uploadedFiles.set(index, file);
+
+  //     // Auto-fill document name if empty
+  //     const documentControl = this.claimDocuments.at(index);
+  //     if (!documentControl.get('docName')?.value) {
+  //       documentControl.get('docName')?.setValue(file.name);
+  //     }
+
+  //     // Important: Clear the docPath field here - it will be populated after successful upload
+  //     documentControl.get('docPath')?.setValue('');
+
+  //     // Show a preview or indication that file is selected
+  //     const fileNameElement = document.getElementById(`file-name-${index}`);
+  //     if (fileNameElement) {
+  //       fileNameElement.textContent = file.name;
+  //       fileNameElement.classList.remove('hidden');
+  //     }
+  //   }
+  // }
+
+  onFileSelected(event: any, index: number): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.uploadedFiles.set(index, file);
+  
+      const documentControl = this.claimDocuments.at(index);
+      if (!documentControl.get('docName')?.value) {
+        documentControl.get('docName')?.setValue(file.name);
+      }
+  
+      // Preview URL saved only for UI
+      if (this.isPreviewable(file.type)) {
+        const tempUrl = URL.createObjectURL(file);
+        this.previewUrls.set(index, tempUrl); // ✅ use this for preview only
+      }
+  
+      // Don't store temp URL in docPath, avoid duplicate DB insert
+      documentControl.get('docPath')?.setValue('');
+  
+      const fileNameElement = document.getElementById(`file-name-${index}`);
+      if (fileNameElement) {
+        fileNameElement.textContent = file.name;
+        fileNameElement.classList.remove('hidden');
+      }
+    }
+  }
+  
+  openPreview(index: number): void {
+    const url = this.previewUrls.get(index);
+    if (url) {
+      window.open(url, '_blank');
+    }
+  }
+  
+  isPreviewable(fileType: string): boolean {
+    const previewableTypes = [
+      'application/pdf',
+      'image/jpeg',
+      'image/png',
+      'image/gif',
+      'image/bmp',
+      'image/webp',
+      'text/plain',
+      'text/html'
+    ];
+    return previewableTypes.includes(fileType);
+  }
+  previewDocument(docPath: string): void {
+    if (!docPath) {
+      this.errorMessage = 'No document available to preview';
+      setTimeout(() => this.errorMessage = null, 3000);
+      return;
+    }
+
+    // Open the document in a new tab
+    window.open(docPath, '_blank');
+  }
+  
+  
+
+
+
+ 
+  
+
+
+  // uploadDocument(file: File, docData: any, claimId: number): Observable<any> {
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+  //   formData.append('DocName', docData.docName || file.name);
+  //   formData.append('ClaimDocId', '0'); // New document, so use 0
+  //   formData.append('ClaimId', claimId.toString()); // Use dynamic ClaimId
+  //   formData.append('OrderNo', docData.orderNo.toString());
+  //   formData.append('DocCreatedBy', 'System');
+  //   formData.append('DocIsActive', 'true');
+
+  //   console.log('formdata claimid', formData);
+
+  //   return this.authService.uploadClaimDocument(formData).pipe(
+  //     catchError(error => {
+  //       console.error('Error uploading document:', error);
+  //       return throwError(() => new Error(`Failed to upload ${docData.docName}`));
+  //     })
+  //   );
+  // }
+  uploadDocument(file: File, docData: any, claimId: number): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('DocName', docData.docName || file.name);
+    formData.append('ClaimDocId', '0'); // New document, so use 0
+    formData.append('ClaimId', claimId.toString());
+    formData.append('OrderNo', docData.orderNo.toString());
+    formData.append('DocCreatedBy', 'System');
+    formData.append('DocIsActive', 'true');
+
+    return this.authService.uploadClaimDocument(formData).pipe(
+      catchError(error => {
+        console.error('Error uploading document:', error);
+        return throwError(() => new Error(`Failed to upload ${docData.docName}`));
+      })
+    );
+  }
+
+
+
+
+  // async uploadAllDocuments(claimId: number): Promise<string[]> {
+  //   const docPaths: string[] = [];
+
+  //   // Create an array of promises for each upload
+  //   const uploadPromises = Array.from(this.uploadedFiles.entries()).map(([index, file]) => {
+  //     if (index < this.claimDocuments.length) {
+  //       const docData = this.claimDocuments.at(index).value;
+
+  //       return this.uploadDocument(file, docData, claimId)
+  //         .toPromise()
+  //         .then(response => {
+  //           // Extract the docPath from the response
+  //           let docPath = '';
+
+  //           // Check if response has the expected structure with docPath/DocFileName
+  //           if (response && response.length > 0 && response[0]) {
+  //             // Your API returns an array with result objects
+  //             docPath = response[0].DocFileName || '';
+  //             console.log("docpath iss", docPath)
+  //             // Update the form control with the path
+  //             this.claimDocuments.at(index).get('docFileName')?.setValue(docPath);
+  //           }
+
+  //           return docPath;
+  //         })
+  //         .catch(error => {
+  //           console.error(`Error uploading document at index ${index}:`, error);
+  //           throw new Error(`Failed to upload document`);
+  //         });
+  //     }
+  //     return Promise.resolve(''); // Return empty string for any invalid index
+  //   });
+
+  //   // Wait for all uploads to complete
+  //   if (uploadPromises.length > 0) {
+  //     try {
+  //       const results = await Promise.all(uploadPromises);
+  //       return results.filter(path => path); // Filter out any empty paths
+  //     } catch (error) {
+  //       console.error('Error during document uploads:', error);
+  //       throw error;
+  //     }
+  //   }
+
+  //   return docPaths;
+  // }
+  async uploadAllDocuments(claimId: number): Promise<string[]> {
+    const docPaths: string[] = [];
+
+    // Create an array of promises for each upload
+    const uploadPromises = Array.from(this.uploadedFiles.entries()).map(([index, file]) => {
+      if (index < this.claimDocuments.length) {
+        const docData = this.claimDocuments.at(index).value;
+
+        return this.uploadDocument(file, docData, claimId)
+          .toPromise()
+          .then(response => {
+            // Extract the docPath from the response
+            let docPath = '';
+
+            // Check if response has the expected structure with docPath/DocFileName
+            if (response && response.length > 0 && response[0]) {
+              // Your API returns an array with result objects
+              docPath = response[0].DocFileName || '';
+              
+              // Update the form control with the path
+              this.claimDocuments.at(index).get('docPath')?.setValue(docPath);
+            }
+
+            return docPath;
+          })
+          .catch(error => {
+            console.error(`Error uploading document at index ${index}:`, error);
+            throw new Error(`Failed to upload document`);
+          });
+      }
+      return Promise.resolve(''); // Return empty string for any invalid index
+    });
+
+    // Wait for all uploads to complete
+    if (uploadPromises.length > 0) {
+      try {
+        const results = await Promise.all(uploadPromises);
+        return results.filter(path => path); // Filter out any empty paths
+      } catch (error) {
+        console.error('Error during document uploads:', error);
+        throw error;
+      }
+    }
+
+    return docPaths;
+  }
+
+
+
+  async onSubmit(): Promise<void> {
+    console.log('Claim data is ', this.claimForm.value);
+    console.log('isEditing is ', this.isEditing);
+
+    // Validate required fields
+    if (!this.claimForm.value.policyId || !this.claimForm.value.claimAmount) {
+      console.log('Returned due to missing required fields');
+      this.errorMessage = 'Please fill in all required fields (Policy, Claim Amount).';
+      setTimeout(() => (this.errorMessage = null), 3000);
+      return;
+    }
+
+    const documents = this.claimForm.get('claimDocuments')?.value || [];
+
+    const allVerified = documents.every((doc: any) => doc.status === 'Verified');
+
+    if (!allVerified) {
+      this.errorMessage = 'All documents must be verified before submitting the claim.';
+      this.successMessage = '';
+      return;
+    }
+
+    try {
+      // Create a properly formatted ClaimReqDto object
+      const formValues = this.claimForm.value;
+
+      // Filter out documents that don't have a name or path
+      const validDocuments = formValues.claimDocuments
+        .filter((doc: any) => doc.docName && doc.docPath)
+        .map((doc: any) => ({
+          DocName: doc.docName,
+          OrderNo: doc.orderNo,
+          DocPath: doc.docPath,
+        }));
+      //all done
+      const claimData = {
+        ClaimId: this.isEditing ? formValues.claimId : 0,
+        PolicyId: formValues.policyId,
+        ClaimStatusId: this.isEditing ? formValues.ClaimStatusId : 11,
+        CompanyId: formValues.CompanyId,
+        FullName: formValues.fullName,
+        PhoneNumber: formValues.phoneNumber,
+        Email: formValues.email,
+        SubmissionDate: formValues.submissionDate ? new Date(formValues.submissionDate).toISOString() : null,
+        Description: formValues.description,
+        ClaimAmount: formValues.claimAmount,
+        ProductId: formValues.productId,
+        UserId: formValues.userId,
+        EmpId: formValues.empId,
+        IsActive: true,
+        ClaimDocuments: validDocuments,
+      };
+
+      let newClaimId: number | null = null;
+
+      // If editing, update the claim
+      if (this.isEditing) {
+        await this.authService.updateClaim(claimData.ClaimId, claimData).toPromise();
+        newClaimId = claimData.ClaimId; // Use existing ClaimId for updates
+        console.log('Claim updated successfully!');
+        this.successMessage = 'Claim updated successfully!';
+        this.errorMessage = null;
+      } else {
+        // Create a new claim and get the ClaimId from the response
+        const response = await this.authService.createClaim(claimData).toPromise();
+        console.log('Claim only res:', response);
+        const parsedData = JSON.parse(response.responseData);
+        newClaimId = parsedData.ClaimId;
+        console.log('Claim id new bhindi:', newClaimId);
+        console.log('Claim added successfully with ClaimId:', newClaimId);
+        this.successMessage = 'Claim added successfully!';
+        this.errorMessage = null;
+      }
+
+      // Upload documents if there are any, using the newClaimId
+      let documentPaths: string[] = [];
+      if (this.uploadedFiles.size > 0 && newClaimId) {
+        documentPaths = await this.uploadAllDocuments(newClaimId);
+        console.log('Uploaded document paths:', documentPaths);
+      }
+
+      // Navigate after success
+      setTimeout(() => {
+        this.router.navigate(['/Claims']);
+      }, 1500);
+    } catch (error: any) {
+      this.errorMessage = 'Failed to process claim: ' + error.message;
+      console.error('Error submitting claim:', error);
+      setTimeout(() => (this.errorMessage = null), 3000);
+    }
+  }
+
+  
+
+  nextSection(section: string): void {
+    // Allow going back without validation
+    const sectionOrder = ['policy', 'user', 'company', 'other', 'documents'];
+    const currentIndex = sectionOrder.indexOf(this.currentSection);
+    const nextIndex = sectionOrder.indexOf(section);
+
+    // If going backwards, skip validation
+    if (nextIndex < currentIndex) {
+      this.currentSection = section;
+      return;
+    }
+
+    let sectionControls: string[] = [];
+
+    // Define controls per section
+    switch (this.currentSection) {
+      case 'policy':
+        sectionControls = ['policyId', 'productId'];
+        break;
+      case 'user':
+        sectionControls = ['userId', 'phoneNumber', 'email'];
+        break;
+      case 'company':
+        sectionControls = ['CompanyId', 'empId'];
+        break;
+      case 'other':
+        sectionControls = ['SubmissionDate', 'createdBy', 'claimAmount', 'ClaimStatusId', 'description'];
+        break;
+      case 'documents':
+        sectionControls = [];
+        break;
+    }
+
+    let isValid = true;
+
+   
+    for (const controlName of sectionControls) {
+      const control = this.claimForm.get(controlName);
+      if (control) {
+        control.markAsTouched();
+        if (control.invalid) {
+          isValid = false;
+        }
+      }
+    }
+
+    if (isValid) {
+      this.currentSection = section;
+    }
+  }
+
+
+  
+
+
+}

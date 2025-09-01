@@ -1,0 +1,150 @@
+.bg-primary {
+    background-color: var(--title-bg);
+  }
+  
+  .text-primary {
+    color: var(--title-bg);
+  }
+  
+  .border-primary {
+    border-color: var(--title-bg);
+  }
+  
+  .bg-primary-light {
+    background-color: rgba(4, 100, 164, 0.3);
+  }
+  
+  .text-primary-light {
+    color: rgba(4, 100, 164, 0.7);
+  }
+  
+  .bg-primary-lighter {
+    background-color: rgba(4, 100, 164, 0.1);
+  }
+  
+  .bg-primary-badge {
+    background-color: rgba(4, 100, 164, 0.2);
+  }
+  
+  .text-primary-dark {
+    color: rgb(3, 80, 131);
+  }
+  
+  .border-primary-lightest {
+    border-color: rgba(4, 100, 164, 0.2);
+  }
+  
+  .text-primary-lightest {
+    color: rgba(4, 100, 164, 0.5);
+  }
+  
+  .btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .btn-primary {
+    background-color: var(--title-bg);
+    color: white;
+    border: none;
+  }
+  
+  .btn-primary:hover {
+    background-color: rgb(3, 80, 131);
+  }
+  
+  .btn-outline-secondary {
+    background-color: white;
+    color: rgb(4, 100, 164);
+    border: 1px solid var(--title-bg);
+  }
+  
+  .btn-outline-secondary:hover {
+    background-color: rgba(4, 100, 164, 0.1);
+  }
+  
+  .btn-outline-danger {
+    background-color: white;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+  }
+  
+  .btn-outline-danger:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+  }
+  
+  .btn-outline-primary {
+    background-color: white;
+    color: var(--title-bg);
+    border: 1px solid var(--title-bg);
+  }
+  
+  .btn-outline-primary:hover {
+    background-color: rgba(4, 100, 164, 0.1);
+  }
+  
+  .form-control {
+    border: 1px solid rgba(4, 100, 164, 0.2);
+    border-radius: 4px;
+    padding: 6px 12px;
+  }
+  
+  .form-control:focus {
+    border-color: var(--title-bg);
+    box-shadow: 0 0 5px rgba(4, 100, 164, 0.3);
+  }
+  
+  .form-select {
+    border: 1px solid rgba(4, 100, 164, 0.2);
+    border-radius: 4px;
+    padding: 6px 12px;
+    background-color: white;
+  }
+  
+  .form-select:focus {
+    border-color: rgb(4, 100, 164);
+    box-shadow: 0 0 5px rgba(4, 100, 164, 0.3);
+  }
+  
+  .invalid-feedback {
+    color: #dc3545;
+    font-size: 12px;
+  }
+  
+  .alert {
+    border-radius: 4px;
+    padding: 10px;
+  }
+  
+  .alert-danger {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+  }
+  
+  .alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+  }
+  
+  .section-header {
+    background-color: #e0f2fe;
+    padding: 10px 12px;
+    border-radius: 6px;
+    color: #0369a1;
+    font-weight: 500;
+  }
+  /* Add this to global styles */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}

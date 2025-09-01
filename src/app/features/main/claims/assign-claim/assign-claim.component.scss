@@ -1,0 +1,84 @@
+/* Custom styles for the claims list */
+.card {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+  }
+  
+  .table-container {
+    max-height: calc(100vh - 350px);
+    overflow-y: auto;
+    border-radius: 6px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+    font-size: 14px;
+  }
+  
+  th {
+    background: #f9fafb;
+    color: #4b5563;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  tr {
+    border-top: 1px solid #e5e7eb;
+    transition: background 0.2s;
+  }
+  
+  tr:hover {
+    background: #f9fafb;
+  }
+  
+  button {
+    background: #2563eb;
+    color: #ffffff;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+  
+  button:hover {
+    background: #1d4ed8;
+  }
+  
+  button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.5);
+  }
+  
+  .status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  
+  .status-pending {
+    background: #fef3c7;
+    color: #d97706;
+  }
+  
+  .status-approved {
+    background: #d1fae5;
+    color: #047857;
+  }
+  
+  .status-rejected {
+    background: #fee2e2;
+    color: #b91c1c;
+  }

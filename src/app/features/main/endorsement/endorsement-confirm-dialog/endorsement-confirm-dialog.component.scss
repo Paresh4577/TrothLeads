@@ -1,0 +1,11 @@
+.ordiv {
+    background-color: lightgray;
+    text-align: center;
+}
+
+::ng-deep .endorsement-confirm-dialog{
+    .mat-mdc-dialog-container,
+    .mdc-dialog__surface{
+            padding: 5px !important;
+        }
+}

@@ -1,0 +1,615 @@
+<div class="px-4 pb-4 max-h-none w-full">
+  <!-- region main heading -->
+  <div class="sm:sticky top-0 pt-4 z-40 bg-default">
+    <h1 class="new-head text-lg px-4 py-1.5 rounded flex justify-between items-center font-semibold">
+      {{ pagetitle }}
+
+      <div class="flex gap-x-3  items-center text-lg font-normal">
+        <button (click)="backClick()" mat-raised-button class="new-button">
+          Back to Quotations
+        </button>
+      </div>
+    </h1>
+    <!-- endregion main heading -->
+      <gnx-info-header [Icon]="logo"
+                      [InsuredPeople]="InsuredPeople"
+                      [member]="member"
+                      [ReqSumInsured]="ReqSumInsured"
+                      [PolicyType]="PolicyType"
+                      [PolicyPeriod]="Policies?.PolicyPeriodName"
+                      [TotalPremium]="Policies?.AddOnvalue"
+                      [LSInsurer]="Insurer"
+
+      >
+      </gnx-info-header>
+
+    <!-- <div class="px-4 py-7 rounded bg-white">
+      <mat-card class="bg-sky-100 px-4 py-3 gap-2 container mx-auto">
+        <div
+          class="grid lg:grid-cols-[minmax(140px,150px)_minmax(200px,1fr)_1fr_1fr_1fr_1fr] md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-6">
+
+          <div>
+            <img class="w-30 h-15" src="{{ logo }}" alt="logo" />
+          </div>
+
+          <div class="sm:grid-cols-1 grid grid-cols-[minmax(100px,250px)_minmax(250px,500px)] self-center">
+            <div class="flex gap-3">
+              <small><span class="font-bold"> {{ InsuredPeople }}</span> Person<span *ngIf="InsuredPeople > 1">s</span>
+                Insured</small>
+            </div>
+
+            <div class="grid grid-cols-7 w-fit">
+              <div *ngFor="let item of member" class="h-min">
+                <img src="{{ item.member }}" alt="" class="h-7 w-7" />
+              </div>
+            </div>
+          </div>
+          <div class="sm:grid-cols-1 grid grid-cols-2 self-center">
+            <small>Sum Insured</small>
+            <span class="font-bold text-black">
+              {{ ReqSumInsured | indCurrency }}
+            </span>
+          </div>
+          <div class="sm:grid-cols-1 grid grid-cols-2 self-center">
+            <small>Policy Type</small>
+            <span class="font-bold text-black"> {{ PolicyType }}</span>
+          </div>
+          <div class="sm:grid-cols-1 grid grid-cols-2 self-center">
+            <small>Policy Period</small>
+            <span class="font-bold text-black">
+              {{ Policies?.PolicyPeriodName }}</span>
+          </div>
+          <div class="sm:grid-cols-1 grid grid-cols-2 self-center">
+            <small>Gross Premium</small>
+            <span class="font-bold text-black">
+              {{ Policies?.AddOnvalue | indCurrency }}</span>
+            <small>Inclusive of Taxes</small>
+          </div>
+        </div>
+      </mat-card>
+    </div> -->
+  </div>
+  <!-- region form -->
+
+  <div class="py-3">
+    <mat-stepper orientation="vertical" linear #stepper>
+
+      <!-- First stepper -->
+      <mat-step [stepControl]="StepOneSubmit(stepper)" label="Proposer Details">
+        <form [formGroup]="BuyGoDigitForm">
+          <div formGroupName="PolicyHolder" class="md:grid space-y-4 grid-cols-2 lg:grid-cols-3 gap-x-9 mt-4">
+            <!-- First Name -->
+            <div class="relative self-end">
+              <div class="icon">
+                <mat-icon>person</mat-icon>
+              </div>
+              <input type="text" id="FirstName" AlphabetOnly formControlName="FirstName" placeholder=" " class="peer">
+              <label for="FirstName" class="mandatory">First Name</label>
+            </div>
+
+            <!-- Middle Name -->
+            <div class="relative self-end">
+              <div class="icon">
+                <mat-icon>person</mat-icon>
+              </div>
+              <input type="text" id="MiddleName" AlphabetOnly formControlName="MiddleName" placeholder=" " class="peer">
+              <label for="MiddleName">Middle Name</label>
+            </div>
+
+
+            <!-- Last Name -->
+            <div class="relative">
+              <div class="icon">
+                <mat-icon>person</mat-icon>
+              </div>
+              <input type="text" id="LastName" AlphabetOnly formControlName="LastName" placeholder=" " class="peer">
+              <label for="LastName" class="mandatory">Last Name</label>
+            </div>
+
+
+            <!-- Gender  -->
+            <div class="relative">
+              <div class="icon">
+                <mat-icon>person_outline</mat-icon>
+              </div>
+              <select id="Gender" name="Gender" class="peer" formControlName="Gender" placeholder=" ">
+                <option value="0">-- Select --</option>
+                <option class="example-radio-button" *ngFor="let option of GenderList" [value]="option.Code">
+                  {{ option.Name }}
+                </option>
+              </select>
+              <label class="Gender" class="mandatory">Gender</label>
+            </div>
+
+            <!-- DOB  -->
+            <div class="relative max-w-fit">
+              <div class="flex">
+                <div class="icon">
+                  <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="dob"></mat-datepicker-toggle>
+                  <mat-datepicker #dob></mat-datepicker>
+                </div>
+                <input matInput type="text" id="DOB" formControlName="DOB" class="peer" placeholder="__/__/____"
+                  datemask [matDatepicker]="dob" [max]="maxBirthDate">
+                <label for="DOB" class="mandatory">Date of Birth</label>
+              </div>
+            </div>
+
+            <!-- Marital -->
+
+            <div class="relative min-w-36">
+              <div class="icon">
+                <mat-icon>people</mat-icon>
+              </div>
+              <select id="Marital" name="Marital" class="peer" formControlName="Marital" placeholder=" ">
+                <option value="0">-- Select --</option>
+                <option class="example-radio-button" *ngFor="let option of MaritalList" [value]="option.Code">{{
+                  option.Name }}</option>
+              </select>
+              <label for="Marital" class="mandatory ">Marital Status</label>
+            </div>
+
+
+            <div class="col-span-2 lg:col-span-3 font-semibold">
+              <p>Address</p>
+            </div>
+            <!-- Address -->
+            <div class="relative">
+              <div class="icon">
+                <mat-icon>home</mat-icon>
+              </div>
+              <input type="text" id="Address" formControlName="Address" placeholder=" " class="peer">
+              <label for="Address" class="mandatory">Address</label>
+            </div>
+
+            <!-- PIN Code -->
+            <div class="relative w-60">
+              <div class="flex">
+                <div class="icon">
+                  <mat-icon> pin_drop</mat-icon>
+                </div>
+                <input type="text" id="PINCode" maxlength="6" class="peer" matInput formControlName="PinCode"
+                  [matAutocomplete]="oppoSearch" placeholder=" " required />
+                <mat-autocomplete #oppoSearch="matAutocomplete" (optionSelected)="HolderPinCodeSelected($event)">
+                  <mat-option *ngFor="let pincode of pinCodes$ | async" [value]="pincode">
+                    {{ pincode.PinCode }} {{ pincode.CityName }}
+                  </mat-option>
+                </mat-autocomplete>
+                <button class="-m-5 z-10" type="button" (click)="openDiologPincode('PIN', 'Select PIN Code')">
+                  <mat-icon class="-ml-2">search</mat-icon>
+                </button>
+                <button *ngIf="BuyGoDigitForm.get('PolicyHolder.PinCode').value" type="button" class="-m-7 z-10"
+                  aria-label="clear" matTooltip="Clear" (click)="clear('PolicyHolder.PinCode')">
+                  <mat-icon>clear</mat-icon>
+                </button>
+                <label for="PINCode" class="mandatory">PIN Code</label>
+              </div>
+            </div>
+            <!-- City -->
+            <div class="relative">
+              <div class="icon">
+                <mat-icon>location_city</mat-icon>
+              </div>
+              <input type="text" readonly id="City" formControlName="City" placeholder=" " class="peer">
+              <label for="City" class="mandatory">City</label>
+            </div>
+            <!-- State -->
+            <div class="relative">
+              <div class="icon">
+                <mat-icon>domain</mat-icon>
+              </div>
+              <input type="text" readonly id="State" formControlName="StateName" placeholder=" " class="peer">
+              <label for="State" class="mandatory">State</label>
+            </div>
+            <!-- Contact Details -->
+            <div class="col-span-2 lg:col-span-3 font-semibold">
+              <p>Contact Details</p>
+            </div>
+            <!-- Mobile -->
+            <div class="relative">
+              <div class="icon">
+                <mat-icon>phone</mat-icon>
+              </div>
+              <input type="text" Onlynumber maxlength="10" id="Mobile" formControlName="Mobile" placeholder=" "
+                class="peer">
+              <label for="Mobile" class="mandatory">Mobile</label>
+            </div>
+            <!-- Email -->
+            <div class="relative">
+              <div class="icon">
+                <mat-icon>email</mat-icon>
+              </div>
+              <input type="text" id="Email" formControlName="Email" placeholder=" " maxlength="60" class="peer">
+              <label for="Email" class="mandatory">Email</label>
+            </div>
+
+
+
+          </div>
+          <!-- KYC Details -->
+          <div formGroupName="PolicyHolder">
+            <div class="md:grid space-y-8 grid-cols-2 lg:grid-cols-3 gap-x-9 mt-7">
+              <p class="col-span-2 lg:col-span-3 font-semibold">Document Details (Any One)</p>
+              <!-- Pan -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon>credit_card</mat-icon>
+                </div>
+                <input type="text" maxlength="10" id="Pan" formControlName="PanNo" placeholder=" " class="peer">
+                <label for="Pan" class="mandatory">PAN</label>
+              </div>
+
+              <!-- Aadhar -->
+              <div class="relative">
+                <div class="icon">
+                  <mat-icon>credit_card</mat-icon>
+                </div>
+                <input type="text" maxlength="12" id="UID" formControlName="UID" placeholder=" " class="peer">
+                <label for="UID" class="mandatory">Aadhar</label>
+              </div>
+
+            </div>
+          </div>
+        </form>
+        <div class="mt-3">
+          <button class="form-button mr-3" mat-button matStepperNext (click)="StepThreeError()">
+            Next
+          </button>
+        </div>
+      </mat-step>
+
+      <!-- Second stepper -->
+      <mat-step [stepControl]="" label="Insured Member Details">
+        <form [formGroup]="BuyGoDigitForm" class="py-2" action="">
+          <!-- member region start -->
+          <div formArrayName="PolicyMemberDetails">
+            <div *ngFor="let items of member; let i = index" class="py-2">
+              <div [formGroupName]="i"
+                class="border -mx-3 px-2 py-2 md:grid grid-cols-[minmax(50px,90px)_minmax(300px,1fr)]">
+                <div class="mt-4 col-start-1">
+                  <div class="w-fit h-fit">
+                    <div>
+                      <img src="{{ items.member }}" alt="img" />
+                    </div>
+                    <div>
+                      <p class="text-center">{{ items.title }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="md:grid space-y-8 lg:grid-cols-3 grid-cols-2 sm:gap-x-2 md:gap-x-9 py-3">
+                  <!-- First Name -->
+
+                  <div class="relative self-end min-w-36">
+                    <div class="icon">
+                      <mat-icon>person</mat-icon>
+                    </div>
+                    <input type="text" id="FirstName{{ i }}" AlphabetOnly formControlName="FirstName" placeholder=" " maxlength="60" class="peer" />
+                    <label for="FirstName{{ i }}" class="mandatory">First Name</label>
+                  </div>
+
+                  <!-- Middle Name -->
+
+                  <div class="relative self-end min-w-36">
+                    <div class="icon">
+                      <mat-icon>person</mat-icon>
+                    </div>
+                    <input type="text" id="MiddleName{{ i }}" AlphabetOnly formControlName="MiddleName" placeholder=" " maxlength="60" class="peer" />
+                    <label for="MiddleName{{ i }}">Middle Name</label>
+                  </div>
+
+                  <!-- LastName -->
+
+                  <div class="relative min-w-36">
+                    <div class="icon">
+                      <mat-icon>person</mat-icon>
+                    </div>
+                    <input type="text" id="LastName{{ i }}" AlphabetOnly formControlName="LastName" placeholder=" " maxlength="60" class="peer" />
+                    <label for="LastName{{ i }}" class="mandatory">Last Name</label>
+                  </div>
+
+                  <!-- DOB -->
+
+                  <div class="relative max-w-fit min-w-36">
+                    <div class="flex">
+                      <div class="icon">
+                        <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </div>
+                      <input matInput id="DOB{{ i }}" type="text" formControlName="DOB" class="peer"
+                        placeholder="__/__/____" datemask [matDatepicker]="picker" [max]="maxBirthDate" />
+                      <label for="DOB{{ i }}" class="mandatory">Date of Birth</label>
+                    </div>
+                  </div>
+
+                  <!-- Gender -->
+
+                  <div class="relative min-w-[134px]">
+                    <div class="icon">
+                      <mat-icon>person_outline</mat-icon>
+                    </div>
+
+                    <input type="text" readonly id="Gender{{ i }}" name="Gender" class="peer" formControlName="Gender"
+                      placeholder=" ">
+                    <label for="Gender{{ i }}" class="mandatory">Gender</label>
+                  </div>
+
+                  <!-- Marital -->
+                  <div class="relative min-w-[134px]">
+                    <div class="icon">
+                      <mat-icon>wc</mat-icon>
+                    </div>
+                    <select id="Marital{{ i }}" name="Marital" class="peer" formControlName="Marital" placeholder=" ">
+                      <option value="0">-- Select --</option>
+                      <option class="example-radio-button" *ngFor="let option of MaritalList" [value]="option.Code">
+                        {{ option.Name }}
+                      </option>
+                    </select>
+                    <label for="Marital{{ i }}" class="mandatory">Marital Status</label>
+                  </div>
+
+                  <!-- height & weight -->
+                  <div class="grid lg:grid-cols-2 md:col-span-2 gap-7">
+                    <div class="grid md:grid-rows-2 gap-3 md:gap-0">
+                        <div>
+                            <p class="font-semibold text-base">Height</p>
+                        </div>
+                        <div class="grid-cols-2 grid gap-7">
+                            <!-- height -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon> border_vertical</mat-icon>
+                                </div>
+                                <input type="text" Onlynumber maxlength="3" id="HeightInFeet{{i}}" formControlName="HeightInFeet" placeholder=" " class="peer" (keyup)="SetCM(i)">
+                                <label for="HeightInFeet{{i}}" class="mandatory ">Feet</label>
+                            </div>
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon> border_vertical</mat-icon>
+                                </div>
+                                <input type="text" Onlynumber maxlength="3" id="HeightInInch{{i}}" formControlName="HeightInInch" placeholder=" " class="peer" (keyup)="SetCM(i)">
+                                <label for="HeightInInch{{i}}" class="mandatory ">Inch</label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-rows-2 gap-3 md:gap-0">
+                        <div>
+                            <p class="font-semibold text-base">Weight</p>
+                        </div>
+                        <div class="grid-cols-2 grid gap-7">
+
+                            <!-- weight -->
+                            <div class="relative">
+                                <div class="icon">
+                                    <mat-icon>blur_on</mat-icon>
+                                </div>
+                                <input type="text" Onlynumber maxlength="3" id="WeightKG{{i}}" formControlName="WeightKG" placeholder=" " class="peer">
+                                <label for="WeightKG{{i}}" class="mandatory ">KG</label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                </div>
+
+                <div class="col-start-2 md:grid space-y-8 lg:grid-cols-3 grid-cols-2 sm:gap-x-4 md:gap-x-9 py-3">
+                  <p class="font-semibold text-base col-start-1 md:col-span-2 lg:col-span-3 pt-5">
+                    Address
+                  </p>
+                  <!-- Street -->
+                  <div class="relative">
+                    <div class="icon">
+                      <mat-icon> blur_linear</mat-icon>
+                    </div>
+                    <input type="text" id="Street{{ i }}" formControlName="Street" placeholder=" " class="peer" />
+                    <label for="Street{{ i }}" class="mandatory">Street</label>
+                  </div>
+                  <!-- PIN Code -->
+                  <div class="relative">
+                    <div class="icon">
+                      <mat-icon> pin_drop</mat-icon>
+                    </div>
+                    <div class="flex">
+                      <input type="text" id="Pincode{{ i }}" formControlName="PinCode" class="peer" matInput
+                        placeholder=" " [matAutocomplete]="PinCodeSearch" maxlength="6" />
+                      <mat-autocomplete #PinCodeSearch="matAutocomplete"
+                        (optionSelected)="PinCodeSelected($event, i)">
+                        <mat-option *ngFor="let pincode of memberDetailPinCodes$ | async" [value]="pincode">
+                          {{ pincode.PinCode }} {{ pincode.CityName }}
+                        </mat-option>
+                      </mat-autocomplete>
+                      <button class="-m-5 z-10" type="button" (click)="
+                          openDiologPincode('Pincode', 'Select Pin code', i)
+                        ">
+                        <mat-icon class="-ml-2">search</mat-icon>
+                      </button>
+                      <label for="Pincode{{ i }}" class="mandatory">PIN Code</label>
+                    </div>
+                  </div>
+                  <!-- City -->
+                  <div class="relative">
+                    <div class="icon">
+                      <mat-icon>location_city</mat-icon>
+                    </div>
+                    <input type="text" readonly id="City{{ i }}" formControlName="City" placeholder=" " class="peer" />
+                    <label for="City{{ i }}" class="mandatory">City</label>
+                  </div>
+
+                  <!-- StateCode -->
+                  <div class="relative">
+                    <div class="icon">
+                      <mat-icon>domain</mat-icon>
+                    </div>
+                    <input type="text" readonly id="StateCode{{ i }}" maxlength="3" formControlName="StateName"
+                      placeholder=" " class="peer" />
+                    <label for="StateCode{{ i }}" class="mandatory">State</label>
+                  </div>
+
+                  <!-- CountryCode -->
+                  <div class="relative">
+                    <div class="icon">
+                      <mat-icon>flag</mat-icon>
+                    </div>
+                    <input type="text" readonly id="CountryCode{{ i }}" formControlName="CountryName" placeholder=" "
+                      maxlength="3" class="peer" />
+                    <label for="CountryCode{{ i }}" class="mandatory">Country</label>
+                  </div>
+                </div>
+
+                <!-- Nominee Details -->
+                <div class="col-start-2 md:grid space-y-8 lg:grid-cols-3 grid-cols-2 sm:gap-x-4 md:gap-x-9 py-3">
+                  <p class="font-semibold text-base col-start-1 md:col-span-2 lg:col-span-3 pt-5">
+                    Nominee Details
+                  </p>
+
+                  <!-- Nominee First Name -->
+                  <div class="relative min-w-36">
+                    <div class="icon">
+                      <mat-icon>person</mat-icon>
+                    </div>
+                    <input type="text" id="NomineeFirstName{{ i }}" AlphabetOnly formControlName="NomineeFirstName" placeholder=" "
+                      class="peer" />
+                    <label for="NomineeFirstName{{ i }}" class="mandatory">First Name</label>
+                  </div>
+
+                  <!-- Nominee Last Name -->
+                  <div class="relative min-w-36">
+                    <div class="icon">
+                      <mat-icon>person</mat-icon>
+                    </div>
+                    <input type="text" id="NomineeLastName{{ i }}" AlphabetOnly formControlName="NomineeLastName" placeholder=" "
+                      class="peer" />
+                    <label for="NomineeLastName{{ i }}" class="mandatory">Last Name</label>
+                  </div>
+
+                  <!-- DOB -->
+
+                  <div class="relative max-w-fit min-w-36">
+                    <div class="flex">
+                      <div class="icon">
+                        <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                      </div>
+                      <input matInput id="NomineeDOB{{ i }}" type="text" formControlName="NomineeDOB" class="peer"
+                        placeholder="__/__/____" datemask [matDatepicker]="picker1" [max]="maxBirthDate" />
+                      <label for="NomineeDOB{{ i }}" class="mandatory">Date of Birth</label>
+                    </div>
+                  </div>
+
+                  <!-- Gender -->
+
+                  <div class="relative min-w-[134px]">
+                    <div class="icon">
+                      <mat-icon>person_outline</mat-icon>
+                    </div>
+                    <select id="NomineeGender{{ i }}" name="NomineeGender" class="peer" formControlName="NomineeGender"
+                      placeholder=" ">
+                      <option value="0">-- Select --</option>
+                      <option class="example-radio-button" *ngFor="let option of GenderList" [value]="option.Code">
+                        {{ option.Name }}
+                      </option>
+                    </select>
+                    <label for="NomineeGender{{ i }}" class="mandatory">Gender</label>
+                  </div>
+
+                  <!-- Nominee Relation -->
+                  <div class="relative min-w-[129.5px]">
+                    <div class="icon">
+                      <mat-icon>people</mat-icon>
+                    </div>
+                    <select id="NomineeRelation{{ i }}" name="NomineeRelation" class="peer"
+                      formControlName="NomineeRelation" placeholder=" ">
+                      <option value="0">-- Select --</option>
+                      <option class="example-radio-button" *ngFor="let option of NomineeRelationList"
+                        [value]="option.Code">
+                        {{ option.Name }}
+                      </option>
+                    </select>
+                    <label for="NomineeRelation{{ i }}" class="mandatory">Relation</label>
+                  </div>
+                </div>
+
+                <!-- Medical Questions -->
+                <div formGroupName="Medical" class="md:col-start-2">
+                  <div formArrayName="MedicalQuestions">
+                    <p class="font-semibold text-base py-5">Medical Questions</p>
+                    <ul class="list-inside list-decimal space-y-3 pl-3 md:pl-0">
+                      <li *ngFor="let Que of MedicalQuestionsList,let Q = index" class="w-full mt-que py-2 dark:border-opacity-50">
+                        {{ Que.Questions.Text }}
+                        <div [formGroupName]="Q">
+                          <div class="py-2">
+                            <input type="radio" formControlName="IsApplicable" [value]=true class="" (change)="clearSubAnswers()"/>
+                            <span (click)="radioLabel(i,Q,true)" class="pr-5 pl-1 font-medium -mt-1 cursor-pointer">Yes</span>
+
+                            <input type="radio" formControlName="IsApplicable" [value]=false class="" (change)="clearSubAnswers()" />
+                            <span (click)="radioLabel(i,Q,false)" class="pl-1 font-medium -mt-1 cursor-pointer">No</span>
+                          </div>
+                          <div formArrayName="SubQuestions">
+                            <ul *ngIf="memberDetailsAsArray.at(i).get('Medical.MedicalQuestions').at(Q).get('IsApplicable').value" class="list-inside list-[lower-roman] space-y-3 pl-3 md:pl-5 pt-5">
+                              <li *ngFor="let SubQue of Que.ChildQuestion,let SQ = index">
+                                {{SubQue.Text}}
+                                <div [formGroupName]="SQ">
+                                  <div class="py-2" *ngIf="SubQue.AnswerType == 'BOOLEAN'">
+                                    <input type="radio" formControlName="IsApplicable" [value]="True" class=""/>
+                                    <span (click)="radioLabelSub(i,Q,SQ,true)" class="pr-5 pl-1 font-medium -mt-1 cursor-pointer">Yes</span>
+
+                                    <input type="radio" formControlName="IsApplicable" [value]="False" class=""/>
+                                    <span (click)="radioLabelSub(i,Q,SQ,false)" class="pl-1 font-medium -mt-1 cursor-pointer">No</span>
+                                  </div>
+                                  <div *ngIf="SubQue.AnswerType == 'TEXT_DESCRIPTION'" class="relative mt-2 ">
+                                    <textarea name="" id="{{SubQue.QuestionCode}}{{i}}{{Q}}{{SQ}}" formControlName="DetailAnswer" class="peer w-full rounded-md border border-accent-400" placeholder=" "></textarea>
+                                    <label for="{{SubQue.QuestionCode}}{{i}}{{Q}}{{SQ}}">Description</label>
+                                  </div>
+
+                                  <div *ngIf="SubQue.AnswerType == 'DOMAIN'" class="relative mt-2 max-w-fit">
+
+                                    <select id="{{SubQue.QuestionCode}}{{i}}{{Q}}{{SQ}}" name="DetailAnswer"
+                                      class="peer" formControlName="DetailAnswer" placeholder=" ">
+                                      <option value="0">-- Select --</option>
+                                      <option class="example-radio-button" *ngFor="let option of SubQue.DomainList" [value]="option.Value">{{option.Key}}</option>
+
+                                    </select>
+
+
+                                    <label for="{{SubQue.QuestionCode}}{{i}}{{Q}}{{SQ}}">Select</label>
+                                  </div>
+
+                                  <div *ngIf="SubQue.AnswerType == 'DATE'" class="relative max-w-fit mt-2">
+                                    <div class="flex">
+                                      <div class="icon">
+                                        <mat-datepicker-toggle class="-ml-2" matIconSuffix [for]="TryError"></mat-datepicker-toggle>
+                                        <mat-datepicker #TryError></mat-datepicker>
+                                      </div>
+                                      <input matInput id="{{SubQue.QuestionCode}}{{i}}{{Q}}{{SQ}}" type="text" formControlName="DetailAnswer" class="peer" placeholder="__/__/____" datemask [matDatepicker]="TryError" />
+                                      <label for="{{SubQue.QuestionCode}}{{i}}{{Q}}{{SQ}}" class="mandatory">Date of Diagnosis</label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <!-- member region end  -->
+
+        <div class="mt-3">
+          <button class="form-button m-2" mat-button matStepperPrevious>
+            Back
+          </button>
+          <button class="form-button m-2" mat-button matStepperNext (click)="ProceedToPay()">
+            Proceed to Pay
+          </button>
+        </div>
+      </mat-step>
+
+    </mat-stepper>
+  </div>
+</div>

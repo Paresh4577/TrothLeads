@@ -1,0 +1,16 @@
+span {
+    font-weight: bold;
+}
+
+.inputfile {
+    opacity: 0;
+    overflow: hidden;
+}
+
+span.mandatory {
+    @apply after:content-['*'] after:ml-1 after:text-red-500;
+}
+
+.headingBorder {
+    background-color: rgb(241, 245, 249) !important;
+}

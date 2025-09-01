@@ -1,0 +1,291 @@
+<div class="w-full max-w-8xl mx-auto space-y-8 p-6 bg-gray-50 min-h-screen">
+  <!-- Statistics Cards Section -->
+  <div *ngIf="!showLogsOnly" class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
+    <!-- Header Section -->
+    <div class="bg-[rgb(4,100,164)] text-white p-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <h2 class="text-lg font-semibold">Dashboard Statistics</h2>
+      </div>
+      <button (click)="goBack()"
+        style="color: white; background-color: #1976d2; border: none; padding: 8px 16px; border-radius: 6px; font-size: 14px; display: inline-flex; align-items: center; cursor: pointer;">
+        <i class="bx bx-arrow-back mr-1" style="font-size: 16px;"></i>
+        Back
+      </button>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Total Leads Card -->
+        <div
+          class="group relative bg-white p-3 rounded-xl border border-blue-200 hover:shadow-2xl shadow-lg transition-all duration-300 hover:-translate-y-1"
+          (click)="goToAllLeads()" style="cursor: pointer;">
+          <div class="absolute top-0 right-0 w-12 h-12 bg-blue-200 opacity-20 rounded-full -mr-6 -mt-6"></div>
+          <div class="relative">
+            <div class="flex items-center justify-between">
+              <div class="flex-1">
+                <h4 class="text-[rgb(4,100,164)] text-[10px] font-semibold uppercase tracking-wider opacity-80">Total
+                  Leads</h4>
+                <p class="text-[rgb(4,100,164)] text-xl font-bold mt-1">{{ stats?.TotalLeads || 0 }}</p>
+                <p class="text-[rgb(4,100,164)] text-[10px] mt-1">All time leads</p>
+              </div>
+              <div
+                class="bg-blue-200 bg-opacity-50 p-2 rounded-lg group-hover:scale-105 transition-transform duration-300">
+                <i class="bx bx-user-plus text-[rgb(4,100,164)] text-lg"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leads Today Card -->
+        <div
+          class="group relative bg-white p-3 rounded-xl border border-emerald-200 hover:shadow-2xl shadow-lg transition-all duration-300 hover:-translate-y-1">
+          <div class="absolute top-0 right-0 w-12 h-12 bg-emerald-200 opacity-20 rounded-full -mr-6 -mt-6"></div>
+          <div class="relative">
+            <div class="flex items-center justify-between">
+              <div class="flex-1">
+                <h4 class="text-[rgb(4,100,164)] text-[10px] font-semibold uppercase tracking-wider opacity-80">Leads
+                  Today</h4>
+                <p class="text-[rgb(4,100,164)] text-xl font-bold mt-1">{{ stats?.LeadsToday || 0 }}</p>
+                <p class="text-[rgb(4,100,164)] text-[10px] mt-1">Today's new leads</p>
+              </div>
+              <div
+                class="bg-emerald-200 bg-opacity-50 p-2 rounded-lg group-hover:scale-105 transition-transform duration-300">
+                <i class="bx bx-calendar-plus text-[rgb(4,100,164)] text-lg"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Converted Today Card -->
+        <div
+          class="group relative bg-white p-3 rounded-xl border border-green-200 hover:shadow-2xl shadow-lg transition-all duration-300 hover:-translate-y-1">
+          <div class="absolute top-0 right-0 w-12 h-12 bg-green-200 opacity-20 rounded-full -mr-6 -mt-6"></div>
+          <div class="relative">
+            <div class="flex items-center justify-between">
+              <div class="flex-1">
+                <h4 class="text-[rgb(4,100,164)] text-[10px] font-semibold uppercase tracking-wider opacity-80">
+                  Converted Today</h4>
+                <p class="text-[rgb(4,100,164)] text-xl font-bold mt-1">{{ stats?.ConvertedToday || 0 }}</p>
+                <p class="text-[rgb(4,100,164)] text-[10px] mt-1">Today's conversions</p>
+              </div>
+              <div
+                class="bg-green-200 bg-opacity-50 p-2 rounded-lg group-hover:scale-105 transition-transform duration-300">
+                <i class="bx bx-check-circle text-[rgb(4,100,164)] text-lg"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pending Follow-up Card -->
+        <div
+          class="group relative bg-white p-3 rounded-xl border border-amber-200 hover:shadow-2xl shadow-lg transition-all duration-300 hover:-translate-y-1">
+          <div class="absolute top-0 right-0 w-12 h-12 bg-amber-200 opacity-20 rounded-full -mr-6 -mt-6"></div>
+          <div class="relative">
+            <div class="flex items-center justify-between">
+              <div class="flex-1">
+                <h4 class="text-[rgb(4,100,164)] text-[10px] font-semibold uppercase tracking-wider opacity-80">Pending
+                  Follow-up</h4>
+                <p class="text-[rgb(4,100,164)] text-xl font-bold mt-1">{{ stats?.PendingFollowUp || 0 }}</p>
+                <p class="text-[rgb(4,100,164)] text-[10px] mt-1">Requires attention</p>
+              </div>
+              <div
+                class="bg-amber-200 bg-opacity-50 p-2 rounded-lg group-hover:scale-105 transition-transform duration-300">
+                <i class="bx bx-time text-[rgb(4,100,164)] text-lg"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assigned To You Card -->
+        <div
+          class="group relative bg-white p-3 rounded-xl border border-purple-200 hover:shadow-2xl shadow-lg transition-all duration-300 hover:-translate-y-1">
+          <div class="absolute top-0 right-0 w-12 h-12 bg-purple-200 opacity-20 rounded-full -mr-6 -mt-6"></div>
+          <div class="relative">
+            <div class="flex items-center justify-between">
+              <div class="flex-1">
+                <h4 class="text-[rgb(4,100,164)] text-[10px] font-semibold uppercase tracking-wider opacity-80">Assigned
+                  To You</h4>
+                <p class="text-[rgb(4,100,164)] text-xl font-bold mt-1">{{ stats?.AssignedToYou || 0 }}</p>
+                <p class="text-[rgb(4,100,164)] text-[10px] mt-1">Your active leads</p>
+              </div>
+              <div
+                class="bg-purple-200 bg-opacity-50 p-2 rounded-lg group-hover:scale-105 transition-transform duration-300">
+                <i class="bx bx-user-check text-[rgb(4,100,164)] text-lg"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Converted This Week Card -->
+        <div
+          class="group relative bg-white p-3 rounded-xl border border-cyan-200 hover:shadow-2xl shadow-lg transition-all duration-300 hover:-translate-y-1">
+          <div class="absolute top-0 right-0 w-12 h-12 bg-cyan-200 opacity-20 rounded-full -mr-6 -mt-6"></div>
+          <div class="relative">
+            <div class="flex items-center justify-between">
+              <div class="flex-1">
+                <h4 class="text-[rgb(4,100,164)] text-[10px] font-semibold uppercase tracking-wider opacity-80">
+                  Converted This Week</h4>
+                <p class="text-[rgb(4,100,164)] text-xl font-bold mt-1">{{ stats?.ThisWeekConverted || 0 }}</p>
+                <p class="text-[rgb(4,100,164)] text-[10px] mt-1">Weekly performance</p>
+              </div>
+              <div
+                class="bg-cyan-200 bg-opacity-50 p-2 rounded-lg group-hover:scale-105 transition-transform duration-300">
+                <i class="bx bx-trending-up text-[rgb(4,100,164)] text-lg"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pie Chart Section -->
+  <div *ngIf="!showLogsOnly" class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
+    <!-- Header Section -->
+    <div class="bg-[rgb(4,100,164)] text-white p-4">
+      <div class="flex items-center space-x-3">
+        <h2 class="text-lg font-semibold">Leads by Source</h2>
+      </div>
+    </div>
+
+    <!-- Chart Content -->
+    <div class="p-8">
+      <div class="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-100">
+        <div class="flex justify-center">
+          <ngx-charts-pie-chart [results]="pieChartData" [legend]="true" [labels]="true" [doughnut]="true"
+            [explodeSlices]="false" [animations]="true" [view]="[600, 400]">
+          </ngx-charts-pie-chart>
+        </div>
+
+        <!-- Fallback for when no chart data -->
+        <div *ngIf="!pieChartData || pieChartData.length === 0" class="text-center py-16">
+          <div class="bg-gray-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+            <i class="bx bx-pie-chart-alt-2 text-4xl text-gray-400"></i>
+          </div>
+          <h3 class="text-gray-600 font-medium text-lg mb-2">No Chart Data Available</h3>
+          <p class="text-gray-500">Data will appear here once leads are added to the system</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weekly Report Section -->
+  <div *ngIf="!showLogsOnly" class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
+    <!-- Header Section -->
+    <div class="bg-[rgb(4,100,164)] text-white p-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-6 h-6 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+          <span class="text-white text-sm">📊</span>
+        </div>
+        <h2 class="text-lg font-semibold">Weekly Leads Report</h2>
+      </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 p-6">
+      <div class="flex flex-wrap gap-4 items-center">
+        <div class="text-sm text-gray-600 font-medium">
+          <i class="bx bx-filter-alt mr-2"></i>
+          Filters will be displayed here
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart Content -->
+    <div class="p-8">
+      <div class="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-100">
+        <div class="flex justify-center">
+          <ngx-charts-bar-vertical-2d [results]="weeklyChartData" [xAxis]="true" [yAxis]="true" [legend]="true"
+            [showDataLabel]="true" [roundEdges]="true" [animations]="true" [view]="[800, 400]">
+          </ngx-charts-bar-vertical-2d>
+        </div>
+
+        <!-- Fallback for when no chart data -->
+        <div *ngIf="!weeklyChartData || weeklyChartData.length === 0" class="text-center py-16">
+          <div class="bg-gray-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+            <i class="bx bx-bar-chart-alt-2 text-4xl text-gray-400"></i>
+          </div>
+          <h3 class="text-gray-600 font-medium text-lg mb-2">No Report Data Available</h3>
+          <p class="text-gray-500 mb-1">No data available for the selected period</p>
+          <p class="text-sm text-gray-400">Try selecting a different date range or add more leads</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Log Section -->
+  <div class="max-w-full mx-auto">
+    <!-- Header -->
+    <div class="mb-6 flex justify-between items-center">
+      <div>
+        <div class="text-2xl font-semibold text-gray-900 mb-2">Activity Log</div>
+        <div class="text-gray-600">Track and monitor lead activities</div>
+      </div>
+      <button *ngIf="!showLogsOnly" (click)="toggleLogsView()"
+        class="bg-[rgb(4,100,164)] text-white border-none px-4 py-2 rounded-lg text-sm font-medium hover:bg-[rgb(3,80,130)] transition-colors duration-200">
+        <i class="fas fa-eye"></i>
+        View All Logs
+      </button>
+      <button *ngIf="showLogsOnly" (click)="toggleLogsView()"
+        class="bg-[rgb(4,100,164)] text-white border-none px-4 py-2 rounded-lg text-sm font-medium hover:bg-[rgb(3,80,130)] transition-colors duration-200">
+        <i class="bx bx-arrow-back mr-1"></i> Back to Dashboard
+      </button>
+    </div>
+
+    <!-- Table Container -->
+    <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-x-auto">
+      <!-- Table Header -->
+      <div class="bg-gray-100 border-b border-gray-200">
+        <div class="grid grid-cols-[1fr_1fr_3fr_1fr] gap-4 min-w-[800px]">
+          <div class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Activity ID
+          </div>
+          <div class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Activity Type
+          </div>
+          <div class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Description
+          </div>
+          <div class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Date
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Body -->
+      <div class="divide-y divide-gray-200">
+        <!-- Angular Loop -->
+        <div *ngFor="let log of (showLogsOnly ? allLeadsLog : (allLeadsLog | slice:0:5))"
+          class="hover:bg-gray-50 transition-colors duration-200">
+          <div class="grid grid-cols-[1fr_1fr_3fr_1fr] gap-4 items-center min-w-[800px]">
+
+            <!-- Activity ID -->
+            <div class="px-6 py-4">
+              <div class="text-sm font-mono text-gray-900 bg-gray-100 px-2 py-1 rounded inline-block">
+                {{ log.ActivityLogId }}
+              </div>
+            </div>
+
+            <!-- Activity Type -->
+            <div class="px-6 py-4">
+              <div>{{ log.ActivityType }}</div>
+            </div>
+
+            <!-- Description -->
+            <div class="px-6 py-4">
+              <div class="text-sm text-gray-900">{{ log.Description }}</div>
+            </div>
+
+            <!-- Date -->
+            <div class="px-6 py-4 text-sm text-gray-900">
+              <div>{{ log.DateOfActivity | date:'MMM d, y' }}</div>
+              <div class="text-gray-500">{{ log.DateOfActivity | date:'h:mm a' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

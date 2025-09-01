@@ -1,0 +1,137 @@
+<form (ngSubmit)="submitGarage()">
+
+
+
+  <div class="row">
+
+
+    <!-- Garage Name -->
+    <div class="col-md-6 mb-3">
+
+      <input id="garageName" type="text" [(ngModel)]="currentGarage.GarageName" name="garageName" class="form-control"
+        required autocomplete="off" placeholder="Garage Name" />
+    </div>
+
+    <!-- Garage Code -->
+    <div class="col-md-6 mb-3">
+      <input id="garageCode" type="text" [(ngModel)]="currentGarage.GarageCode" name="garageCode" class="form-control"
+        placeholder="Garage Code" />
+    </div>
+  </div>
+
+  <!-- State Dropdown -->
+  <div class="row">
+    <div class="col-md-6 mb-3">
+
+      <select class="form-control" [(ngModel)]="currentGarage.StateId" name="stateId" required
+        (change)="onStateChange($event)">
+        <option [ngValue]="null" disabled selected>Select State</option>
+        <option *ngFor="let state of states" [value]="state.StateId">
+          {{ state.StateName }}
+        </option>
+      </select>
+    </div>
+
+
+    <div class="col-md-6 mb-3">
+      <select class="form-control" [(ngModel)]="currentGarage.CityId" name="cityId" required
+        [disabled]="!currentGarage.StateId">
+        <option [ngValue]="null" disabled selected>Select City</option>
+        <option *ngFor="let city of filteredCities" [value]="city.CityId">
+          {{ city.CityName }}
+        </option>
+      </select>
+    </div>
+
+  </div>
+
+
+  <div class="row">
+    <!-- Logo URL -->
+    <div class="col-md-6 mb-3">
+      <input id="logo" type="text" [(ngModel)]="currentGarage.Logo" name="logo" class="form-control"
+        placeholder="Logo URL" />
+    </div>
+    <!-- Email -->
+    <div class="col-md-6 mb-3">
+
+      <input id="email" type="email" [(ngModel)]="currentGarage.Email" name="email" class="form-control"
+        placeholder="Email" />
+    </div>
+  </div>
+
+
+  <div class="row">
+    <!-- Contact -->
+    <div class="col-md-6 mb-3">
+
+      <input id="contact" type="text" [(ngModel)]="currentGarage.Contact" name="contact" class="form-control"
+        placeholder="Contact Number" />
+    </div>
+
+    <!-- Contact Person -->
+    <div class="col-md-6 mb-3">
+
+      <input id="contactPerson" type="text" [(ngModel)]="currentGarage.ContactPerson" name="contactPerson"
+        class="form-control" placeholder="Contact Person" />
+    </div>
+  </div>
+
+
+
+  <div class="row">
+    <!-- Address -->
+    <div class="col mb-3">
+
+      <textarea id="address" rows="3" [(ngModel)]="currentGarage.Address" name="address" class="form-control"
+        placeholder="Address"></textarea>
+    </div>
+
+    <div class="col mb-3">
+
+      <textarea id="description" rows="3" [(ngModel)]="currentGarage.Description" name="description"
+        class="form-control" placeholder="Description"></textarea>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Is Active (Checkbox) -->
+    <div class="col-md-6 mb-3">
+
+      <div class="form-check mt-2">
+        <input id="isActive" type="checkbox" [(ngModel)]="currentGarage.IsActive" name="isActive"
+          class="form-check-input" />
+        <label for="isActive" class="form-check-label">Active</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Read-Only Fields (Optional) -->
+  <div class="row">
+    <!-- Date Created (Read-Only) -->
+    <div class="col-md-6 mb-3">
+
+      <input id="dateCreated" type="text" [value]="currentGarage.DateCreated | date" name="dateCreated"
+        class="form-control-plaintext" readonly disabled placeholder="Auto-generated" />
+    </div>
+
+    <!-- Created By (Read-Only) -->
+    <div class="col-md-6 mb-3">
+
+      <input id="createdBy" type="text" [value]="currentGarage.CreatedBy" name="createdBy"
+        class="form-control-plaintext" readonly disabled placeholder="Auto-generated" />
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="row">
+    <div class="col-md-12 mb-3 d-flex justify-content-end gap-2">
+      <button type="submit" class="btn btn-success">
+        Save
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="cancel()">
+        Cancel
+      </button>
+    </div>
+  </div>
+</form>

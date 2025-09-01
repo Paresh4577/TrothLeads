@@ -1,0 +1,462 @@
+<div class="min-h-screen bg-gray-50 py-4 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- User Profile Card -->
+    <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+      <!-- Compact Card Header -->
+      <div class="bg-primary px-4 py-2">
+        <div class="flex items-center justify-between">
+          <h5 class="text-base font-semibold text-white flex items-center">
+            <i class="fas fa-user-circle mr-2 text-white-500 text-lg"></i> 
+            User: <span class="text-white ml-1">{{ userDetails?.UserName || 'N/A' }}</span>
+          </h5>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary-badge text-white">
+            <i class="fas fa-circle text-[8px] text-green-400 mr-1"></i> Active
+          </span>
+        </div>
+      </div>
+      <!-- Card Body -->
+      <div class="px-5 py-4">
+        <!-- Basic Information Section with Icons -->
+        <div class="mb-6">
+          <h4 class="text-md font-medium text-gray-700 flex items-center mb-3">
+            <i class="fas fa-info-circle text-primary mr-2"></i> Basic Information
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+              <p class="text-xs font-medium text-primary-dark flex items-center">
+                <i class="fas fa-user-tag mr-1 text-primary"></i> First Name
+              </p>
+              <p class="mt-1 text-sm font-semibold text-gray-800">{{ userDetails?.FirstName || 'N/A' }}</p>
+            </div>
+            <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+              <p class="text-xs font-medium text-primary-dark flex items-center">
+                <i class="fas fa-user-tag mr-1 text-primary"></i> Last Name
+              </p>
+              <p class="mt-1 text-sm font-semibold text-gray-800">{{ userDetails?.LastName || 'N/A' }}</p>
+            </div>
+
+            <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+              <p class="text-xs font-medium text-primary-dark flex items-center">
+                <i class="fas fa-user-tag mr-1 text-primary"></i> Username
+              </p>
+              <p class="mt-1 text-sm font-semibold text-gray-800">{{ userDetails?.UserName || 'N/A' }}</p>
+            </div>
+            <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+              <p class="text-xs font-medium text-primary-dark flex items-center">
+                <i class="fas fa-mobile-alt mr-1 text-primary"></i> Mobile
+              </p>
+              <p class="mt-1 text-sm font-semibold text-gray-800">{{ userDetails?.Mobile || 'N/A' }}</p>
+            </div>
+            <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+              <p class="text-xs font-medium text-primary-dark flex items-center">
+                <i class="fas fa-envelope mr-1 text-primary"></i> Email
+              </p>
+              <p class="mt-1 text-sm font-semibold text-gray-800">{{ userDetails?.EmailAddress || 'N/A' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Details Section with Icons -->
+        <div class="mb-6">
+          <h4 class="text-md font-medium text-gray-700 flex items-center mb-3">
+            <i class="fas fa-id-card text-primary mr-2"></i> Personal Details
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+              <p class="text-xs font-medium text-primary-dark flex items-center">
+                <i class="fas fa-birthday-cake mr-1 text-primary"></i> Birthdate
+              </p>
+              <p class="mt-1 text-sm font-semibold text-gray-800">
+                {{ userDetails?.Birthdate ? (userDetails.Birthdate | date: 'yyyy-MM-dd') : 'N/A' }}
+              </p>
+            </div>
+            <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+              <p class="text-xs font-medium text-primary-dark flex items-center">
+                <i class="fas fa-venus-mars mr-1 text-primary"></i> Gender
+              </p>
+              <p class="mt-1 text-sm font-semibold text-gray-800">{{ userDetails?.Gender? (userDetails.Gender | titlecase) :'N/A'}}  </p>
+            </div>
+            <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+              <p class="text-xs font-medium text-primary-dark flex items-center">
+                <i class="fas fa-heart mr-1 text-primary"></i> Marital Status
+              </p>
+              <p class="mt-1 text-sm font-semibold text-gray-800">{{ userDetails?.MaritalStatus? (userDetails.MaritalStatus | titlecase): 'N/A' }}</p>
+            </div>
+            <div class="bg-primary-lighter p-3 rounded-md border border-primary-lightest">
+              <p class="text-xs font-medium text-primary-dark flex items-center">
+                <i class="fas fa-briefcase mr-1 text-primary"></i> Occupation
+              </p>
+              <p class="mt-1 text-sm font-semibold text-gray-800">{{ userDetails?.Occupation? (userDetails.Occupation | titlecase): 'N/A' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Horizontal Scroller for Tabs with Icons -->
+        <div class="mb-4">
+          <div class="relative">
+            <div class="flex space-x-8 pb-2 overflow-x-auto scrollbar-hide">
+              <button 
+              (click)="activeTab = 'policies'; loadPolicies()" 
+              [class]="activeTab === 'policies' ? 'bg-primary text-white' : 'bg-white text-primary border border-primary'"
+              class="flex-shrink-0 px-3 py-1.5 rounded text-xs font-medium transition-colors flex items-center mx-2">
+              <i class="fas fa-shield-alt mr-1"></i> Policies
+            </button>
+              <button 
+                (click)="activeTab = 'claims'" 
+                [class]="activeTab === 'claims' ? 'bg-primary text-white' : 'bg-white text-primary border border-primary'"
+                class="flex-shrink-0 px-3 py-1.5 rounded text-xs font-medium transition-colors flex items-center mx-2">
+                <i class="fas fa-file-alt mr-1"></i> Claims
+              </button>
+              <button 
+                (click)="activeTab = 'vehicles'" 
+                [class]="activeTab === 'vehicles' ? 'bg-primary text-white' : 'bg-white text-primary border border-primary'"
+                class="flex-shrink-0 px-3 py-1.5 rounded text-xs font-medium transition-colors flex items-center mx-2">
+                <i class="fas fa-car mr-1"></i> Vehicles
+              </button>
+              <button 
+                (click)="activeTab = 'FamilyMembers'" 
+                [class]="activeTab === 'FamilyMembers' ? 'bg-primary text-white' : 'bg-white text-primary border border-primary'"
+                class="flex-shrink-0 px-3 py-1.5 rounded text-xs font-medium transition-colors flex items-center mx-2">
+                <i class="fas fa-users mr-1"></i> Family
+              </button>
+              <button 
+                (click)="activeTab = 'Nominees'" 
+                [class]="activeTab === 'Nominees' ? 'bg-primary text-white' : 'bg-white text-primary border border-primary'"
+                class="flex-shrink-0 px-3 py-1.5 rounded text-xs font-medium transition-colors flex items-center mx-2">
+                <i class="fas fa-user-tie mr-1"></i> Nominees
+              </button>
+             
+            </div>
+            <!-- Fade effect for horizontal scroller -->
+            <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+          </div>
+        </div>
+        <!-- Tab Content with Vertical Scroller -->
+        <div class="overflow-auto" style="max-height: 400px;">
+
+            <!-- Policies Section -->
+           <div *ngIf="activeTab === 'policies' && policies?.length">
+  <h3 class="text-md font-medium text-gray-700 flex items-center mb-3">
+    <i class="fas fa-shield-alt text-primary mr-2"></i> Policies
+  </h3>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-primary-lighter">
+        <!-- First Row: Icons Only -->
+        <tr class="leading-none">
+          <th class="px-4 py-1 text-center"><i class="fas fa-file-contract text-sm text-primary-dark"></i></th>
+          <th class="px-4 py-1 text-center"><i class="fas fa-tag text-sm text-primary-dark"></i></th>
+          <th class="px-4 py-1 text-center"><i class="fas fa-calendar-day text-sm text-primary-dark"></i></th>
+          <th class="px-4 py-1 text-center"><i class="fas fa-calendar-times text-sm text-primary-dark"></i></th>
+          <th class="px-4 py-1 text-center"><i class="fas fa-dollar-sign text-sm text-primary-dark"></i></th>
+        </tr>
+
+        <!-- Second Row: Text Labels -->
+        <tr>
+          <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Policy Number</th>
+          <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Policy Type</th>
+          <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Start Date</th>
+          <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">End Date</th>
+          <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Premium Amount</th>
+        </tr>
+      </thead>
+
+      <tbody class="bg-white divide-y divide-gray-200">
+        <tr *ngFor="let policy of policies" class="hover:bg-primary-lightest">
+          <td class="px-4 py-3 text-sm text-center text-gray-900">{{ policy.PolicyNo || 'N/A' }}</td>
+          <td class="px-4 py-3 text-sm text-center text-gray-900">{{ policy.PolicyType || 'N/A' }}</td>
+          <td class="px-4 py-3 text-sm text-center text-gray-900">
+            {{ policy.PolicyStartDate ? (policy.PolicyStartDate | date:'yyyy-MM-dd') : 'N/A' }}
+          </td>
+          <td class="px-4 py-3 text-sm text-center text-gray-900">
+            {{ policy.PolicyEndDate ? (policy.PolicyEndDate | date:'yyyy-MM-dd') : 'N/A' }}
+          </td>
+          <td class="px-4 py-3 text-sm text-center text-gray-900">{{ policy.TotalPremium || 'N/A' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+          <!-- Claims Section -->
+          <div *ngIf="activeTab === 'claims' && userDetails?.Claims?.length">
+            <h4 class="text-md font-medium text-gray-700 flex items-center mb-3">
+              <i class="fas fa-file-alt text-primary mr-2"></i> Claims
+            </h4>
+          
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-primary-lighter">
+                  <!-- First Row: Icons -->
+                  <tr class="leading-none">
+                    <th class="px-4 py-1 text-center text-sm"><i class="fas fa-user-shield text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center text-sm"><i class="fas fa-tag text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center text-sm"><i class="fas fa-user text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center text-sm"><i class="fas fa-phone text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center text-sm"><i class="fas fa-envelope text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center text-sm"><i class="fas fa-paper-plane text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center text-sm"><i class="fas fa-calendar-check text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center text-sm"><i class="fas fa-info-circle text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center text-sm"><i class="fas fa-info-circle text-primary-dark"></i></th>
+                  </tr>
+                
+                  <!-- Second Row: Labels -->
+                  <tr>
+                    <th class="px-4 py-2 text-xs text-center font-medium text-primary-dark uppercase tracking-wider">Assigned User</th>
+                    <th class="px-4 py-2 text-xs text-center font-medium text-primary-dark uppercase tracking-wider">Type</th>
+                    <th class="px-4 py-2 text-xs text-center font-medium text-primary-dark uppercase tracking-wider">Full Name</th>
+                    <th class="px-4 py-2 text-xs text-center font-medium text-primary-dark uppercase tracking-wider">Phone</th>
+                    <th class="px-4 py-2 text-xs text-center font-medium text-primary-dark uppercase tracking-wider">Email</th>
+                    <th class="px-4 py-2 text-xs text-center font-medium text-primary-dark uppercase tracking-wider">Submission Date</th>
+                    <th class="px-4 py-2 text-xs text-center font-medium text-primary-dark uppercase tracking-wider">Resolution Date</th>
+                    <th class="px-4 py-2 text-xs text-center font-medium text-primary-dark uppercase tracking-wider">Status</th>
+                    <th class="px-4 py-2 text-xs text-center font-medium text-primary-dark uppercase tracking-wider">View Documents</th>
+                  </tr>
+                </thead>
+                
+          
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr *ngFor="let claim of userDetails.Claims" class="hover:bg-primary-lightest">
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ claim.AssignedUser }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ claim.ClaimType }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ claim.FullName || 'N/A' }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ claim.PhoneNumber || 'N/A' }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ claim.Email || 'N/A' }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">
+                      {{ claim?.SubmissionDate ? (claim.SubmissionDate | date:'yyyy-MM-dd') : 'N/A' }}
+                    </td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ claim.ResolutionDate || 'N/A' }}</td>
+                    <td class="px-4 py-3 text-sm text-center">
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                        [ngClass]="{
+                          'bg-green-100 text-green-800': claim.ClaimStatusName === 'Approved',
+                          'bg-yellow-100 text-yellow-800': claim.ClaimStatusName === 'Pending',
+                          'bg-red-100 text-red-800': claim.ClaimStatusName === 'Rejected',
+                          'bg-primary-lighter text-primary-dark': !['Approved', 'Pending', 'Rejected'].includes(claim.ClaimStatusName)
+                        }">
+                        {{ claim.ClaimStatusName || 'N/A' }}
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 text-sm text-center">
+                      <button class="btn" (click)="navigateToViewDocument(claim.ClaimId)">
+                        <i class="bx bx-show text-2xl"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+
+          <!-- Vehicles Section -->
+          <div *ngIf="activeTab === 'vehicles' && userDetails?.Vehicles?.length">
+            <h3 class="text-md font-medium text-gray-700 flex items-center mb-3">
+              <i class="fas fa-car text-primary mr-2"></i> Vehicles
+            </h3>
+          
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-primary-lighter">
+                  <!-- First Row: Icons Only -->
+                  <tr class="leading-none">
+                    <th class="px-4 py-1 text-center"><i class="fas fa-car-alt text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-user text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-phone text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-car-side text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-calendar-day text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-gas-pump text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-industry text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-shield-alt text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-eye text-sm text-primary-dark"></i></th>
+                  </tr>
+          
+                  <!-- Second Row: Text Labels -->
+                  <tr>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Vehicle No</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Owner Name</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Vehicle Category</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Maker Model</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Fuel Type</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Insurance Company</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Registered City</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Insurance Expiry</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">View</th>
+                  </tr>
+                </thead>
+          
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr *ngFor="let vehicle of userDetails.Vehicles" class="hover:bg-primary-lightest">
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ vehicle.VehicleNo }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ vehicle.owner_name }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ vehicle.vehicle_category }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ vehicle.maker_model || 'N/A' }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ vehicle.fuel_type || 'N/A' }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ vehicle.insurance_company || 'N/A' }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ vehicle.registered_at || 'N/A' }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ vehicle.insurance_upto || 'N/A' }}</td>
+                    <td class="px-4 py-3 text-sm text-center">
+                      
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+
+          <!-- Family Members Section -->
+          <div *ngIf="activeTab === 'FamilyMembers' && userDetails?.FamilyMembers?.length">
+            <h3 class="text-md font-medium text-gray-700 flex items-center mb-3">
+              <i class="fas fa-users text-primary mr-2"></i> Family Members
+            </h3>
+          
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-primary-lighter">
+                  <!-- First Row: Icons Only -->
+                  <tr class="leading-none">
+                    <th class="px-4 py-1 text-center"><i class="fas fa-user text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-users-cog text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-venus-mars text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-phone text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-birthday-cake text-sm text-primary-dark"></i></th>
+                  </tr>
+          
+                  <!-- Second Row: Text Labels -->
+                  <tr>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Name</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Relation</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Gender</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Phone</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">DOB</th>
+                  </tr>
+                </thead>
+          
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr *ngFor="let member of userDetails.FamilyMembers" class="hover:bg-primary-lightest">
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ member.Name }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ member.Relation }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ member.Gender }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ member.Phone }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ member.DOB || 'N/A' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+
+          <!-- Nominees Section -->
+          <div *ngIf="activeTab === 'Nominees' && userDetails?.Nominees?.length">
+            <h3 class="text-md font-medium text-gray-700 flex items-center mb-3">
+              <i class="fas fa-user-tie text-primary mr-2"></i> Nominees
+            </h3>
+          
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-primary-lighter">
+                  <!-- First Row: Icons Only -->
+                  <tr class="leading-none">
+                    <th class="px-4 py-1 text-center"><i class="fas fa-user text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-users-cog text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-venus-mars text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-phone text-sm text-primary-dark"></i></th>
+                    <th class="px-4 py-1 text-center"><i class="fas fa-birthday-cake text-sm text-primary-dark"></i></th>
+                  </tr>
+          
+                  <!-- Second Row: Text Labels -->
+                  <tr>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Name</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Relation</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Gender</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">Phone</th>
+                    <th class="px-4 py-2 text-xs font-medium text-primary-dark uppercase tracking-wider text-center">DOB</th>
+                  </tr>
+                </thead>
+          
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr *ngFor="let nominee of userDetails.Nominees" class="hover:bg-primary-lightest">
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ nominee.Name }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ nominee.Relation }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ nominee.Gender }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">{{ nominee.Phone }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-gray-900">
+                      {{ nominee?.DOB ? (nominee.DOB | date:'yyyy-MM-dd') : 'N/A' }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+
+        
+
+          <!-- Empty State -->
+          <div *ngIf="(activeTab === 'claims' && !userDetails?.Claims?.length) || 
+                     (activeTab === 'vehicles' && !userDetails?.Vehicles?.length) || 
+                     (activeTab === 'FamilyMembers' && !userDetails?.FamilyMembers?.length) || 
+                     (activeTab === 'Nominees' && !userDetails?.Nominees?.length) || 
+                     (activeTab === 'policies' && !policies?.length)" 
+               class="text-center py-8 bg-primary-lighter rounded-lg border border-primary-lightest">
+            <i class="fas fa-folder-open text-3xl text-primary-light mb-3"></i>
+            <h3 class="text-sm font-medium text-gray-700">No {{activeTab}} records found</h3>
+            <p class="mt-1 text-xs text-gray-900">This user doesn't have any {{activeTab}} information available.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Custom color definitions */
+  .bg-primary {
+    background-color: rgb(4, 100, 164);
+  }
+  .text-primary {
+    color: rgb(4, 100, 164);
+  }
+  .border-primary {
+    border-color: rgb(4, 100, 164);
+  }
+  .bg-primary-light {
+    background-color: rgba(4, 100, 164, 0.3); /* Lighter shade for hover or secondary elements */
+  }
+  .text-primary-light {
+    color: rgba(4, 100, 164, 0.7); /* Slightly lighter for contrast */
+  }
+  .bg-primary-lighter {
+    background-color: rgba(4, 100, 164, 0.1); /* Very light for backgrounds */
+  }
+  .bg-primary-badge {
+    background-color: rgba(4, 100, 164, 0.2); /* Slightly darker for badge contrast */
+  }
+  .text-primary-dark {
+    color: rgb(3, 80, 131); /* Darker shade for text */
+  }
+  .border-primary-lightest {
+    border-color: rgba(4, 100, 164, 0.2); /* Lightest for borders */
+  }
+  .text-primary-lightest {
+    color: rgba(4, 100, 164, 0.5); /* Lightest for icons or subtle elements */
+  }
+
+  /* Custom scrollbar styling */
+  .scrollbar-hide::-webkit-scrollbar {
+    height: 4px;
+  }
+  .scrollbar-hide::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  .scrollbar-hide::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+  }
+  .scrollbar-hide::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+</style>

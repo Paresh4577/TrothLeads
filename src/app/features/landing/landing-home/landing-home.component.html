@@ -1,0 +1,248 @@
+<!-- Scrollable Container -->
+<div id="scrollable-container" style="max-height: 80vh; overflow-y: auto; padding-right: 20px;">
+    <style>
+        #scrollable-container::-webkit-scrollbar {
+            width: 1px;
+            /* Reduced scrollbar width for vertical scrollbar */
+        }
+
+        #scrollable-container::-webkit-scrollbar-track {
+            background: rgba(220, 220, 220, 0.2);
+            /* More transparent and lighter gray track */
+        }
+
+        #scrollable-container::-webkit-scrollbar-thumb {
+            background: rgba(150, 150, 150, 0.4);
+            /* More transparent and lighter gray thumb */
+            border-radius: 3px;
+        }
+
+        #scrollable-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(120, 120, 120, 0.6);
+            /* Slightly darker but still transparent and lighter gray on hover */
+        }
+    </style>
+
+    <div class="bg-white border rounded-lg shadow-sm p-2"
+        style="min-height: 80px; margin-top: 10px; position: relative; font-family: 'Roboto', sans-serif;">
+        <div class="container">
+            <h4 class="text-dark font-weight-bold mb-0" style="font-size: 1.25rem; color: #343a40;">Today's Statistics
+            </h4>
+        </div>
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-sm-6 col-lg-4 mb-3" (click)="goToUsers()">
+                    <div class="card-box">
+                        <div class="card-content">
+                            <h5>Total Users (Today)</h5>
+                            <h2>{{ animatedTodayUserCount }}</h2>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Today's Claim -->
+                <ng-container *ngIf="showCards">
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                        <div class="card-box">
+                            <div class="card-content">
+                                <h5>Total Claims (Today)</h5>
+                                <h2>{{ animatedTodayClaimCount }}</h2>
+                            </div>
+                            <div class="icon-wrapper">
+                                <i class="bi bi-file-earmark-text-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- Today's Completed Claim -->
+                <div class="col-sm-6 col-lg-4 mb-3">
+                    <div class="card-box">
+                        <div class="card-content">
+                            <h5>Total Completed Claims (Today)</h5>
+                            <h2>{{ animatedTodaysCompletedClaimCount }}</h2>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Today's Rejected Claim -->
+                <div class="col-sm-6 col-lg-4 mb-3">
+                    <div class="card-box">
+                        <div class="card-content">
+                            <h5>Total Rejected Claims (Today)</h5>
+                            <h2>{{ animatedTodaysRejectedClaimCount }}</h2>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Today's Pending Claim -->
+                <div class="col-sm-6 col-lg-4 mb-3">
+                    <div class="card-box">
+                        <div class="card-content">
+                            <h5>Total Pending Claims (Today)</h5>
+                            <h2>{{ animatedTodaysPendingClaimCount }}</h2>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Today's Claim On Hold -->
+                <div class="col-sm-6 col-lg-4 mb-3">
+                    <div class="card-box">
+                        <div class="card-content">
+                            <h5>Total Claims On Hold (Today)</h5>
+                            <h2>{{ animatedTodaysOnHoldClaimCount }}</h2>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-pause-circle-fill"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Today's In-Progress Claims -->
+                <div class="col-sm-6 col-lg-4 mb-3">
+                    <div class="card-box">
+                        <div class="card-content">
+                            <h5>Total In-Progress Claims (Today)</h5>
+                            <h2>{{ animatedTodaysInProgressClaimCount }}</h2>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-arrow-repeat"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Today's Total Claim Submitted -->
+                <div class="col-sm-6 col-lg-4 mb-3">
+                    <div class="card-box">
+                        <div class="card-content">
+                            <h5>Total Submitted Claims (Today)</h5>
+                            <h2>{{ animatedTodaysSubmittedClaimCount }}</h2>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- New Container -->
+    <div class="bg-white border rounded-lg shadow-sm p-2"
+        style="min-height: 80px; margin-top: 40px; position: relative; font-family: 'Roboto', sans-serif;">
+        <div class="container">
+            <h4 class="text-dark font-weight-bold mb-0" style="font-size: 1.25rem; color: #343a40;">Total Statistics
+            </h4>
+        </div>
+        <div class="container mt-4">
+            <div class="row">
+                <!-- Total Users -->
+                <div class="col-sm-6 col-lg-4 mb-3" (click)="goToUsers()">
+                    <div class="card-box">
+                        <div class="card-content">
+                            <h5>Total Users</h5>
+                            <h2>{{ animatedtotalUser }}</h2>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Total Claims -->
+                <div class="col-sm-6 col-lg-4 mb-3" (click)="goToClaims()">
+                    <div class="card-box">
+                        <div class="card-content">
+                            <h5>Total Claims</h5>
+                            <h2>{{ animatedClaimCount }}</h2>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-file-earmark-text-fill"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Total Claim Completed -->
+                <div class="col-sm-6 col-lg-4 mb-3">
+                    <div class="card-box">
+                        <div class="card-content">
+                            <h5>Total Claim Completed</h5>
+                            <h2>{{ animatedCompletedClaimCount }}</h2>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Total Claim Rejected -->
+                <div class="col-sm-6 col-lg-4 mb-3 mt-3">
+                    <div class="card-box">
+                        <div class="card-content">
+                            <h5>Total Claim Rejected</h5>
+                            <h2>{{ animatedRejectedClaimCount }}</h2>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Total Claim Pending -->
+                <div class="col-sm-6 col-lg-4 mb-3 mt-3">
+                    <div class="card-box">
+                        <div class="card-content">
+                            <h5>Total Claim Pending</h5>
+                            <h2>{{ animatedPendingClaimCount }}</h2>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Total Claim On Hold -->
+                <div class="col-sm-6 col-lg-4 mb-3 mt-3">
+                    <div class="card-box">
+                        <div class="card-content">
+                            <h5>Total Claim On Hold</h5>
+                            <h2>{{ animatedOnHoldClaimCount }}</h2>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-pause-circle-fill"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Total In-Progress Claims -->
+                <div class="col-sm-6 col-lg-4 mb-3 mt-3">
+                    <div class="card-box">
+                        <div class="card-content">
+                            <h5>Total In-Progress Claims</h5>
+                            <h2>{{ animatedInProgressClaimCount }}</h2>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-arrow-repeat"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Submitted Claims -->
+                <div class="col-sm-6 col-lg-4 mb-3 mt-3">
+                    <div class="card-box">
+                        <div class="card-content">
+                            <h5>Total Submitted Claims</h5>
+                            <h2>{{ animatedSubmittedClaimCount }}</h2>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
