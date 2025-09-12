@@ -92,6 +92,7 @@ import { CompanydetaiComponent } from './features/main/grouppolicy/companydetai/
 import { PolicydetailComponent } from './features/main/grouppolicy/policydetail/policydetail.component';
 import { HradminportalComponent } from './features/main/grouppolicy/hradminportal/hradminportal.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { LeadReportsComponent } from './features/main/leads/lead-reports/lead-reports.component';
 
 @NgModule({
   declarations: [
@@ -152,6 +153,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     CompanydetaiComponent,
     PolicydetailComponent,
     HradminportalComponent,
+    LeadReportsComponent,
   ],
   imports: [
     CommonModule,

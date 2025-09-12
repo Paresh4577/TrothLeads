@@ -92,7 +92,7 @@
                     {{ lead?.Source || '-' }}
                   </p>
                 </div>
-                <div>
+                <div *ngIf="lead?.PolicyNo">
                   <label class="text-sm font-medium text-gray-500 uppercase tracking-wide">Policy No</label>
                   <p class="mt-1 text-gray-900 flex items-center">
                     <svg class="w-4 h-4 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,7 +102,18 @@
                     {{ lead?.PolicyNo || lead?.PolicyNumber || '-' }}
                   </p>
                 </div>
-                <div>
+                <div *ngIf="lead?.Source === 'Chat'">
+                  <label class="text-sm font-medium text-gray-500 uppercase tracking-wide">Lead Intent</label>
+                  <p class="mt-1 text-gray-900 flex items-center">
+                    <svg class="w-4 h-4 mr-2 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                      </path>
+                    </svg>
+                    {{ lead?.VisitorChoice || '-' }}
+                  </p>
+                </div>
+                <div *ngIf="lead?.Source != 'Chat'">
                   <label class="text-sm font-medium text-gray-500 uppercase tracking-wide">Type</label>
                   <p class="mt-1 text-gray-900 flex items-center">
                     <svg class="w-4 h-4 mr-2 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,14 +123,24 @@
                     {{ lead?.type || lead?.PolicyType || '-' }}
                   </p>
                 </div>
-                <div>
-                  <label class="text-sm font-medium text-gray-500 uppercase tracking-wide">Policy Action</label>
+                <div *ngIf="lead?.Source === 'Chat'">
+                  <label class="text-sm font-medium text-gray-500 uppercase tracking-wide">Lead Action</label>
                   <p class="mt-1 text-gray-900 flex items-center">
                     <svg class="w-4 h-4 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                     </svg>
                     {{ lead?.PolicyAction || '-' }}
+                  </p>
+                </div>
+                <div *ngIf="lead?.policyfile">
+                  <label class="text-sm font-medium text-gray-500 uppercase tracking-wide">Attachment</label>
+                  <p class="mt-1 text-gray-900 flex items-center">
+                    <a style="text-decoration: none;" [href]="lead?.policyfile" target="_blank"
+                      class="flex items-center text-blue-600 hover:underline">
+                      <i class="fas fa-eye text-lg me-2"></i>
+                      View Document
+                    </a>
                   </p>
                 </div>
 
@@ -147,7 +168,7 @@
                     {{ lead?.Email || '-' }}
                   </p>
                 </div>
-                <div>
+                <div *ngIf="lead?.Source != 'Chat'">
                   <label class="text-sm font-medium text-gray-500 uppercase tracking-wide">Category</label>
                   <p class="mt-1 text-gray-900 flex items-center">
                     <svg class="w-4 h-4 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,10 +176,10 @@
                         d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
                       </path>
                     </svg>
-                    {{ lead?.CategoryName || '-' }}
+                    {{ lead?.ProductName || '-' }}
                   </p>
                 </div>
-                <div>
+                <div *ngIf="lead?.Source === 'Chat'">
                   <label class="text-sm font-medium text-gray-500 uppercase tracking-wide">Policy Type</label>
                   <p class="mt-1 text-gray-900 flex items-center">
                     <svg class="w-4 h-4 mr-2 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,17 +190,19 @@
                     {{ lead?.PolicyType || '-' }}
                   </p>
                 </div>
-                <div>
-                  <label class="text-sm font-medium text-gray-500 uppercase tracking-wide">Visitor Choice</label>
+                <div *ngIf="lead?.Source === 'Chat' && lead?.Vehiclenumber">
+                  <label class="text-sm font-medium text-gray-500 uppercase tracking-wide">Vehicle Number</label>
                   <p class="mt-1 text-gray-900 flex items-center">
-                    <svg class="w-4 h-4 mr-2 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 mr-2 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                       </path>
                     </svg>
-                    {{ lead?.VisitorChoice || '-' }}
+                    {{ lead?.Vehiclenumber || '-' }}
                   </p>
                 </div>
+
+
               </div>
             </div>
 
@@ -241,42 +264,71 @@
               Timeline
             </h3>
           </div>
-          <!-- In leadview.component.html, Timeline section -->
           <div class="p-4">
-            <div *ngIf="followUps.length > 0; else noFollowUps" class="space-y-4">
-              <div *ngFor="let follow of followUps" class="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
+            <div *ngIf="getSortedTimelineItems().length > 0; else noFollowUps" class="space-y-4">
+
+              <!-- Timeline Items (Sorted by Date DESC) -->
+              <div *ngFor="let item of getSortedTimelineItems()"
+                class="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
                 <div class="flex-shrink-0">
                   <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                    <svg *ngIf="follow.Comment.includes('Status changed')" class="w-5 h-5 text-blue-600" fill="none"
+                    <!-- Lead Created Icon -->
+                    <svg *ngIf="item.type === 'created'" class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <!-- Lead Assigned Icon -->
+                    <svg *ngIf="item.type === 'assigned'" class="w-5 h-5 text-blue-600" fill="none"
                       stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <!-- Status Change Icon -->
+                    <svg *ngIf="item.type === 'followup' && item.data.Comment.includes('Status changed')"
+                      class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                     </svg>
-                    <i *ngIf="!follow.Comment.includes('Status changed')" class="fas fa-user text-blue-600"></i>
+                    <!-- Regular Follow-up Icon -->
+                    <i *ngIf="item.type === 'followup' && !item.data.Comment.includes('Status changed')"
+                      class="fas fa-bell text-blue-600"></i>
+
                   </div>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="text-gray-900 font-medium">
-                    {{ follow.Comment }} by {{ follow.Username || userName }}
-                  </p>
+                  <!-- Lead Created -->
+                  <p *ngIf="item.type === 'created'" class="text-gray-900 font-medium">Lead Created</p>
+
+                  <!-- Lead Assigned -->
+                  <p *ngIf="item.type === 'assigned'" class="text-gray-900 font-medium">Lead Assigned to {{
+                    lead?.AssignedToName }}</p>
+
+                  <!-- Follow-up -->
+                  <p *ngIf="item.type === 'followup'" class="text-gray-900 font-medium">{{ item.data.Comment }}</p>
+
                   <div class="mt-2 flex items-center space-x-4 text-sm text-gray-500">
-                    <span class="flex items-center">
+                    <!-- User Info (for follow-ups and assigned) -->
+                    <span *ngIf="item.type === 'followup'" class="flex items-center">
                       <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                       </svg>
-                      {{ follow.AssignedToName || 'System User' }}
+                      {{ item.data.AssignedToName || 'System User' }}
                     </span>
+
+                    <!-- Date/Time -->
                     <span class="flex items-center">
                       <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                       </svg>
-                      {{ follow.CreatedAt | date:'medium' }}
+                      {{ item.dateTime | date:'medium' }}
                     </span>
                   </div>
                 </div>
               </div>
+
             </div>
             <ng-template #noFollowUps>
               <div class="text-center py-8">
@@ -285,7 +337,7 @@
                     d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
                   </path>
                 </svg>
-                <p class="mt-2 text-gray-500">No follow-up records found.</p>
+                <p class="mt-2 text-gray-500">No timeline records found.</p>
               </div>
             </ng-template>
           </div>
@@ -366,13 +418,13 @@
                   </svg>
                   Update
                 </button>
-                <button type="button" (click)="goBack()"
+                <!-- <button type="button" (click)="goBack()"
                   class="px-4 py-2 border border-gray-300 m-2 rounded-full text-gray-700 hover:bg-gray-50 transition-colors duration-200">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                   </svg>
-                </button>
+                </button> -->
               </div>
             </div>
           </div>

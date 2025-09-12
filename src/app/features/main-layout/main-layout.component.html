@@ -24,11 +24,11 @@
         </div>
         <!-- Navigation Bar - Desktop -->
         <nav class="hidden md:flex space-x-1">
-             <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
+            <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
                 routerLink="dashboard">
                 Dashboard
             </button>
-             <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
+            <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
                 routerLink="addview">
                 Add Lead
             </button>
@@ -36,13 +36,17 @@
                 routerLink="leadlist">
                 Leads
             </button>
-           
+            <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
+                routerLink="leadreports">
+                Reports
+            </button>
+
             <!-- <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
                 routerLink="ClaimIntimation">
                 Intimation
             </button> -->
             <!-- Replace the existing Intimation button with this dropdown -->
-            <div class="dropdown-container relative" (mouseenter)="onIntimationMouseEnter()"
+            <!-- <div class="dropdown-container relative" (mouseenter)="onIntimationMouseEnter()"
                 (mouseleave)="onIntimationMouseLeave()">
                 <button
                     class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200 flex items-center"
@@ -52,30 +56,33 @@
                         [class.rotate-180]="isIntimationOpen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
-                </button>
+                </button> -->
 
                 <!-- Intimation Dropdown Menu -->
-                <div class="dropdown-menu" [class.show]="isIntimationOpen" (click)="onIntimationDropdownClick($event)">
+                <!-- <div class="dropdown-menu" [class.show]="isIntimationOpen" (click)="onIntimationDropdownClick($event)">
                     <div class="dropdown-content">
-                        <button class="dropdown-item" (click)="DownloadLeadReport('MONTH')">
+                         <button class="dropdown-item" (click)="DownloadLeadReport('MONTH')">
                             <i class="fas fa-download mr-1 sm:mr-2 text-xs sm:text-sm"></i> Monthly Report
                         </button>
                         <button class="dropdown-item" (click)="DownloadLeadReport('WEEK')">
                             <i class="fas fa-download mr-1 sm:mr-2 text-xs sm:text-sm"></i> Weekly Report
-                        </button>
+                        </button> 
+                        <button class="dropdown-item" routerLink="/leadreports">
+                            <i class="fas fa-calendar-alt mr-1"></i> Custom Report (Range)
+                        </button> 
                     </div>
-                </div>
-            </div>
+                </div> 
+            </div>-->
 
 
-           
+
             <!-- <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
                 routerLink="AllClaims">
                 Claims
             </button> -->
 
 
-            <button class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
+            <button *ngIf="userName === 'whitepearl'" class="nav-item px-4 py-2 rounded-md text-black hover:bg-gray-100 transition-colors duration-200"
                 routerLink="setting">
                 Settings
             </button>

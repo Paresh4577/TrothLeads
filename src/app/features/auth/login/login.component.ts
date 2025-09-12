@@ -99,9 +99,11 @@ export class LoginComponent {
           localStorage.setItem('policyno', responseData[0].PolicyNo);
           localStorage.setItem('isteamlead', responseData[0].IsTeamLead);
           localStorage.setItem('ISHR',responseData[0].ISHR);
+           localStorage.setItem('RoleMasterId',responseData[0].RoleMasterId);
           localStorage.setItem('HrMobile',responseData[0].HrMobile);
            localStorage.setItem('HrId',responseData[0].HrId);
-           localStorage.setItem('IsEmployee',responseData[0].isEmployee)
+           localStorage.setItem('IsEmployee',responseData[0].isEmployee);
+             localStorage.setItem('Employeecode',responseData[0].Employeecode);
           localStorage.setItem(
             'modulePermissions',
             JSON.stringify(permissions)

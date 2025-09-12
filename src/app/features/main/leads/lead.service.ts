@@ -9,7 +9,7 @@ export class LeadService {
   private apiUrl = 'https://apiwp.troth.co.in/api/AdminLead';
   private getEmployee = 'https://apiwp.troth.co.in/api/AdminAccess/GetAdmin';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // 1. Get Leads (with pagination)
   // getLeads(payload: any): Observable<any> {
@@ -28,7 +28,15 @@ export class LeadService {
   //   return this.http.post(`${this.apiUrl}/GetLeads`, requestBody);
   // }
 
-   getAllLeadsLog(): Observable<any> {
+  getLeadsBySource(): Observable<any> {
+    const requestBody = {
+      pageNo: 0,
+      pageSize: 0
+    };
+    return this.http.post(`${this.apiUrl}/GetLeadsBySource`, requestBody);
+  }
+
+  getAllLeadsLog(): Observable<any> {
     const requestBody = {
       pageNo: 0,
       pageSize: 0
@@ -36,9 +44,17 @@ export class LeadService {
     return this.http.post<any>(`${this.apiUrl}/GetAllLeadsLog`, requestBody);
   }
 
+  getAllLeadcategories(): Observable<any> {
+    const requestBody = {
+      pageNo: 0,
+      pageSize: 0
+    };
+    return this.http.post<any>(`${this.apiUrl}/GetAllLeadCategories`, requestBody);
+  }
+
   getLeads(payload: any): Observable<any> {
     console.log('payload is ', payload.AssignedToUserId);
-    
+
     const requestBody = {
       LeadId: payload.LeadId || null,
       Search: payload.Search || '',
@@ -49,10 +65,10 @@ export class LeadService {
       AssignedToUserId: payload.AssignedToUserId || null,
       CategoryName: payload.CategoryName || ''
     };
-    
+
     console.log('Final request body:', requestBody);
     return this.http.post(`${this.apiUrl}/GetLeads`, requestBody);
-}
+  }
 
   updateLead(payload: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/UpdateLead`, { leadReqDto: payload });
@@ -154,6 +170,23 @@ export class LeadService {
       responseType: 'blob',
     });
   }
+  downloadLeadReportByRange(fromDate: string, toDate: string) {
+    return this.http.post(
+      `${this.apiUrl}/DownloadLeadReportExcel`,
+      { FilterType: 'RANGE', FromDate: fromDate, ToDate: toDate },
+      { responseType: 'blob' }
+    );
+  }
+  getLeadsByRange(fromDate: string, toDate: string): Observable<any> {
+    const requestBody = {
+      pageNo: 0,
+      pageSize: 0,
+      FromDate:fromDate,
+      ToDate:toDate
+    };
+    return this.http.post<any>(`${this.apiUrl}/GetLeads`, requestBody);
+  }
+
 
   getNotificactionForNewLead(loginid: any) {
     return this.http.post(

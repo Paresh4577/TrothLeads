@@ -34,7 +34,7 @@ export class LeadviewComponent {
   lead: any;
   followUpForm!: FormGroup;
   leadId!: number;
-  userName:any;
+  userName: any;
   followUps: any[] = [];
   constructor(
     private fb: FormBuilder,
@@ -47,7 +47,7 @@ export class LeadviewComponent {
     this.statusControl = new FormControl('');
     this.leadId = Number(this.route.snapshot.paramMap.get('id'));
     this.userName = localStorage.getItem('token');
-    console.log("username is",this.userName)
+    console.log("username is", this.userName)
     this.fetchFollowUps(this.leadId);
     this.followUpForm = this.fb.group({
       Comment: ['', Validators.required],
@@ -106,8 +106,7 @@ export class LeadviewComponent {
         if (res?.responseData) {
           const parsed = JSON.parse(res.responseData);
           this.lead = parsed.length ? parsed[0] : null;
-
-          // ✅ Set status dropdown value AFTER lead is loaded
+          console.log('Lead Details:', this.lead);
           if (this.lead?.Status) {
             this.statusControl.setValue(this.lead.Status);
           }
@@ -133,7 +132,12 @@ export class LeadviewComponent {
       this.leadService.addFollowUp(payload).subscribe((res: any) => {
         console.log("res", res);
         if (res.type === 'Success') {
-          alert('Follow-up added');
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Note added',
+            confirmButtonColor: '#3085d6'
+          });
           const followUp = res.responseData ? JSON.parse(res.responseData) : null;
 
           // Schedule reminder for the newly added follow-up
@@ -282,7 +286,7 @@ export class LeadviewComponent {
       clearTimeout(this.reminderTimeout);
     }
   }
-  goBack(){
+  goBack() {
     this.router.navigate(['leadlist'])
   }
 
@@ -307,39 +311,84 @@ export class LeadviewComponent {
   // }
 
   updateStatus() {
-  const oldStatus = this.lead?.Status;
-  const newStatus = this.statusControl.value;
-  const payload = {
-    LeadId: this.leadId,
-    Status: newStatus,
-    UpdatedBy: 999,
-  };
+    const oldStatus = this.lead?.Status;
+    const newStatus = this.statusControl.value;
+    const payload = {
+      LeadId: this.leadId,
+      Status: newStatus,
+      UpdatedBy: 999,
+    };
 
-  this.leadService.updateLeadStatus(payload).subscribe((res: any) => {
-    if (res?.status === '200') {
-      // Add status change to follow-ups
-      const statusChangePayload = {
-        LeadId: this.leadId,
-        Comment: `Status changed from ${oldStatus} to ${newStatus}`,
-        CreatedBy: 999,
-        ReminderDateTime: null,
-      };
-      
-      this.leadService.addFollowUp(statusChangePayload).subscribe((followUpRes: any) => {
-        if (followUpRes.type === 'Success') {
-          alert('Lead status updated');
-          this.fetchFollowUps(this.leadId); // Refresh timeline
-          this.fetchLeadDetails(); // Refresh lead details
-        }
-      });
-    } else {
-      alert('Failed to update status');
-      this.fetchLeadDetails();
-    }
-  });
-}
+    this.leadService.updateLeadStatus(payload).subscribe((res: any) => {
+      if (res?.status === '200') {
+        // Add status change to follow-ups
+        const statusChangePayload = {
+          LeadId: this.leadId,
+          Comment: `Status changed from ${oldStatus} to ${newStatus}`,
+          CreatedBy: 999,
+          ReminderDateTime: null,
+        };
+
+        this.leadService.addFollowUp(statusChangePayload).subscribe((followUpRes: any) => {
+          if (followUpRes.type === 'Success') {
+            Swal.fire({
+              icon: 'info', 
+              title: 'Lead Status Updated',
+              //text: 'The lead Status have been successfully updated.',
+              confirmButtonColor: '#17a2b8'
+            });
+            this.fetchFollowUps(this.leadId); // Refresh timeline
+            this.fetchLeadDetails(); // Refresh lead details
+          }
+        });
+      } else {
+        alert('Failed to update status');
+        this.fetchLeadDetails();
+      }
+    });
+  }
 
   back() {
     this.router.navigate(['/leads']);
   }
+
+  getSortedTimelineItems() {
+  const timelineItems: any[] = [];
+
+  // Add Lead Created item
+  if (this.lead?.CreatedAt) {
+    timelineItems.push({
+      type: 'created',
+      dateTime: this.lead.CreatedAt,
+      data: null
+    });
+  }
+
+  // Add Lead Assigned item (if assigned to someone)
+  if (this.lead?.AssignedToName && this.lead.AssignedToName.trim() !== '' && this.lead.AssignedToName !== ' ') {
+    timelineItems.push({
+      type: 'assigned',
+      dateTime: this.lead.UpdatedAt || this.lead.CreatedAt, // Use UpdatedAt if available, else CreatedAt
+      data: null
+    });
+  }
+
+  // Add Follow-ups
+  if (this.followUps && this.followUps.length > 0) {
+    this.followUps.forEach(followUp => {
+      timelineItems.push({
+        type: 'followup',
+        dateTime: followUp.CreatedAt,
+        data: followUp
+      });
+    });
+  }
+
+  // Sort by dateTime in descending order (latest first)
+  return timelineItems.sort((a, b) => {
+    const dateA = new Date(a.dateTime);
+    const dateB = new Date(b.dateTime);
+    return dateB.getTime() - dateA.getTime();
+  });
+}
 }

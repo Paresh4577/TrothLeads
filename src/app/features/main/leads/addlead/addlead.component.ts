@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LeadService } from '../lead.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-addlead',
@@ -24,7 +25,7 @@ export class AddleadComponent {
     private leadService: LeadService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.leadId = Number(this.route.snapshot.paramMap.get('id'));
@@ -38,7 +39,9 @@ export class AddleadComponent {
       Source: ['Manual', Validators.required],
       CategoryId: [null, Validators.required],
       AssignedToUserId: [null],
-      CreatedBy: [999], // static, override later
+      CreatedBy: [999],
+      type: [''],
+      PolicyNo: ['']
     });
 
     this.fetchCategory();
@@ -53,7 +56,7 @@ export class AddleadComponent {
       });
     }
   }
-  goBack(){
+  goBack() {
     this.router.navigate(['leadlist'])
   }
 
@@ -94,7 +97,12 @@ export class AddleadComponent {
         payload.LeadId = this.leadId;
         this.leadService.updateLead(payload).subscribe((res: any) => {
           if (res?.status === '200') {
-            alert('Lead updated successfully!');
+            Swal.fire({
+              icon: 'info', // You could also use 'warning' or 'success'
+              title: 'Success',
+              text: 'Lead Updated Successfully',
+              confirmButtonColor: '#17a2b8' // A different color for clarity
+            });
             this.router.navigate(['/leadlist']);
           } else {
             alert('Error: ' + res.message);
@@ -103,7 +111,12 @@ export class AddleadComponent {
       } else {
         this.leadService.saveLead(payload).subscribe((res: any) => {
           if (res?.status === '200') {
-            alert('Lead added successfully!');
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Lead Saved Successfully',
+              confirmButtonColor: '#3085d6'
+            });
             this.router.navigate(['/leadlist']);
           } else {
             alert('Error: ' + res.message);

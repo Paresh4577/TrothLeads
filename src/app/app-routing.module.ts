@@ -78,6 +78,7 @@ import { CompanydetaiComponent } from './features/main/grouppolicy/companydetai/
 import { PolicydetailComponent } from './features/main/grouppolicy/policydetail/policydetail.component';
 import { HradminportalComponent } from './features/main/grouppolicy/hradminportal/hradminportal.component';
 import { Router } from '@angular/router';
+import { LeadReportsComponent } from './features/main/leads/lead-reports/lead-reports.component';
 
 /**
  * Main application routes configuration
@@ -113,6 +114,7 @@ const routes: Routes = [
     path: '',
     canActivate: [AuthGuard], // Enforce authentication for all child routes
     children: [
+      { path: 'leadreports', component: LeadReportsComponent },
       { path: 'landing-home', component: LandingHomeComponent },
       { path: 'hospitals', component: HospitalsComponent },
       { path: 'addHospital', component: AddHospitalComponent },

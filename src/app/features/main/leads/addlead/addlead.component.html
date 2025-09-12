@@ -54,6 +54,21 @@
             <input type="text" formControlName="Message" placeholder="Enter message"
               class="w-full p-3 border border-blue-200 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" />
           </div>
+          <div>
+            <label class="block text-sm font-medium text-blue-600 mb-2">Lead Purpose</label>
+            <select formControlName="type"
+              class="w-full p-3 border border-blue-200 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+              <option value="">-- Select Purpose Of Lead --</option>
+              <option value="Buy Policy">Buy Policy</option>
+              <option value="Renew Policy">Renew Policy</option>
+              <option value="Other Policy Renewal">Other Policy Renewal</option>
+            </select>
+          </div>
+          <div *ngIf="leadForm.get('type')?.value !== 'Buy Policy'">
+            <label class="block text-sm font-medium text-blue-600 mb-2">Policy Number (optional)</label>
+            <input type="text" formControlName="PolicyNo" placeholder="Enter Policy Number"
+              class="w-full p-3 border border-blue-200 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" />
+          </div>
         </div>
       </div>
 
@@ -74,7 +89,7 @@
             <label class="block text-sm font-medium text-blue-600 mb-2">Category</label>
             <select formControlName="CategoryId"
               class="w-full p-3 border border-blue-200 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-              <option value="0">-- Select Category --</option>
+              <option value="null">-- Select Category --</option>
               <option *ngFor="let cat of categories" [value]="cat.CategoryId">{{ cat.CategoryName }}</option>
             </select>
           </div>
@@ -83,7 +98,7 @@
             <label class="block text-sm font-medium text-blue-600 mb-2">Assign To</label>
             <select formControlName="AssignedToUserId"
               class="w-full p-3 border border-blue-200 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-              <option value="0">-- Select Employee --</option>
+              <option value="null">-- Select Employee --</option>
               <option *ngFor="let user of users" [value]="user.UserAdminId">
                 {{ user.Name }}
               </option>

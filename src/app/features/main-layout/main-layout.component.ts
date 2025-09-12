@@ -11,6 +11,7 @@ import { LeadService } from '../main/leads/lead.service';
   styleUrl: './main-layout.component.scss'
 })
 export class MainLayoutComponent {
+  roleId: any = localStorage.getItem('RoleMasterId');
   isSettingsOpen: boolean=false;
   isIntimationOpen: boolean=false;
     followUpNotifications: any[] = [];

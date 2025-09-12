@@ -1,0 +1,254 @@
+<!-- <div class="p-6 bg-white shadow-md rounded-xl max-w-lg mx-auto mt-10">
+    <h2 class="text-xl font-semibold mb-4">Download Lead Report</h2>
+
+    <form (ngSubmit)="downloadReport()" #reportForm="ngForm">
+        
+        <div class="mb-4">
+            <label for="fromDate" class="block mb-1 text-sm font-medium">From Date</label>
+            <input type="date" id="fromDate" class="w-full border rounded-md p-2" [(ngModel)]="fromDate" name="fromDate"
+                required />
+        </div>
+
+        <div class="mb-4">
+            <label for="toDate" class="block mb-1 text-sm font-medium">To Date</label>
+            <input type="date" id="toDate" class="w-full border rounded-md p-2" [(ngModel)]="toDate" name="toDate"
+                required />
+        </div>
+
+        <div class="flex items-end">
+            <button (click)="previewReport()" class="bg-blue-600 text-white px-4 py-2 rounded">
+                Preview
+            </button>
+        </div>
+
+        
+
+        <button type="submit" [disabled]="!reportForm.form.valid"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg">
+            Download Report
+        </button>
+    </form>
+</div> -->
+
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+    <form (ngSubmit)="downloadReport()" #reportForm="ngForm">
+        <div class="grid grid-cols-1 md:grid-cols-6 gap-3 items-end">
+             
+            <!-- From Date -->
+            <div>
+                <label for="fromDate" class="block mb-2 text-sm font-medium text-gray-700">From Date</label>
+                <input type="date" id="fromDate" 
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
+                       [(ngModel)]="fromDate" name="fromDate" required />
+            </div>
+             
+            <!-- To Date -->
+            <div>
+                <label for="toDate" class="block mb-2 text-sm font-medium text-gray-700">To Date</label>
+                <input type="date" id="toDate" 
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
+                       [(ngModel)]="toDate" name="toDate" required />
+            </div>
+             
+            <!-- Action Buttons -->
+            <div class="flex gap-2">
+                <button type="button" (click)="previewReport()" style="border-radius: 30px;"
+                        class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md">
+                    <i class="fa-solid fa-eye text-xs"></i>
+                    Preview
+                </button>
+                
+                <button type="submit" [disabled]="!reportForm.form.valid" style="border-radius: 30px;"
+                        class="flex-1 bg-green-500 hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md">
+                    <i class="fa-solid fa-download text-xs"></i>
+                    Download
+                </button>
+            </div>
+         
+        </div>
+    </form>
+</div>
+
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lead</th>
+
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source
+                    </th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status
+                    </th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created
+                    </th>
+                    <!-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th> -->
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let lead of leads" class="hover:bg-gray-50 transition-colors duration-150">
+                    <!-- Lead Info with Avatar -->
+                    <td class="px-4 py-2 whitespace-nowrap">
+                        <div class="flex items-center">
+
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">{{ lead.Name || '-' }}</div>
+                                <div class="text-sm text-gray-500">{{ lead.Email || '-' }}</div>
+                                <div class="text-sm text-gray-900">{{ lead.Phone || '-' }}</div>
+                            </div>
+
+                        </div>
+                    </td>
+
+                    <!-- Contact
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900">{{ lead.Phone || '-' }}</div>
+            </td> -->
+
+                    <!-- Source -->
+                    <td class="px-4 py-2 whitespace-nowrap">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" [ngClass]="{
+                'bg-blue-100 text-blue-800': lead.Source === 'Manual',
+                'bg-emerald-100 text-emerald-800': lead.Source === 'Call',
+                'bg-orange-100 text-orange-800': lead.Source === 'Mobile',
+                'bg-yellow-100 text-yellow-800': lead.Source === 'GetQuotes',
+                'bg-pink-100 text-pink-800': lead.Source === 'Advertisement',
+                'bg-amber-100 text-amber-800': lead.Source === 'Cold Call',
+                'bg-purple-100 text-purple-800': lead.Source === 'Online Store',
+                'bg-cyan-100 text-cyan-800': lead.Source === 'External Referral',
+                'bg-gray-200 text-gray-800': lead.Source === 'Partner',
+                'bg-indigo-100 text-indigo-800': lead.Source === 'Seminar Partner',
+                'bg-teal-100 text-teal-800': lead.Source === 'Web Download',
+                'bg-red-100 text-red-800': lead.Source === 'Chat',
+                'bg-gray-100 text-gray-800': !lead.Source
+              }">
+                            <i class="fas mr-1" [ngClass]="{
+                  'fa-hand-paper': lead.Source === 'Manual',
+                  'fa-phone': lead.Source === 'Call',
+                  'fa-mobile-alt': lead.Source === 'Mobile',
+                  'fa-quote-right': lead.Source === 'GetQuotes',
+                  'fa-bullhorn': lead.Source === 'Advertisement',
+                  'fa-phone-slash': lead.Source === 'Cold Call',
+                  'fa-store': lead.Source === 'Online Store',
+                  'fa-external-link-alt': lead.Source === 'External Referral',
+                  'fa-handshake': lead.Source === 'Partner',
+                  'fa-chalkboard-teacher': lead.Source === 'Seminar Partner',
+                  'fa-download': lead.Source === 'Web Download',
+                  'fa-comments': lead.Source === 'Chat',
+                  'fa-question': !lead.Source
+                }"></i>
+                            {{ lead.Source || '-' }}
+                        </span>
+                    </td>
+
+                    <!-- Status -->
+                    <td class="px-4 py-2 whitespace-nowrap">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" [ngClass]="{
+                'bg-blue-100 text-blue-800': lead.Status === 'New',
+                'bg-green-100 text-green-800': lead.Status === 'Qualified',
+                'bg-red-100 text-red-800': lead.Status === 'Unqualified',
+                'bg-yellow-100 text-yellow-800': lead.Status === 'In Progress',
+                'bg-orange-100 text-orange-800': lead.Status === 'Attempted To Contact',
+                'bg-purple-100 text-purple-800': lead.Status === 'Contact In Future',
+                'bg-cyan-100 text-cyan-800': lead.Status === 'Contacted',
+                'bg-gray-200 text-gray-800': lead.Status === 'Not Contacted',
+                'bg-yellow-200 text-yellow-900': lead.Status === 'Junk Lead',
+                'bg-pink-100 text-pink-800': lead.Status === 'Lost Lead',
+                'bg-green-200 text-green-900': lead.Status === 'Converted',
+                'bg-red-200 text-red-900': lead.Status === 'Dropped',
+                'bg-gray-100 text-gray-800': !lead.Status,
+                'bg-yellow-300 text-yellow-900': lead.Status === 'Pending'
+              }">
+                            <i class="fas mr-1" [ngClass]="{
+                  'fa-star': lead.Status === 'New',
+                  'fa-check': lead.Status === 'Qualified',
+                  'fa-times': lead.Status === 'Unqualified',
+                  'fa-clock': lead.Status === 'In Progress' || lead.Status === 'Pending',
+                  'fa-exclamation-triangle': lead.Status === 'Attempted To Contact',
+                  'fa-calendar': lead.Status === 'Contact In Future',
+                  'fa-phone': lead.Status === 'Contacted',
+                  'fa-ban': lead.Status === 'Not Contacted',
+                  'fa-trash': lead.Status === 'Junk Lead',
+                  'fa-sad-tear': lead.Status === 'Lost Lead',
+                  'fa-trophy': lead.Status === 'Converted',
+                  'fa-times-circle': lead.Status === 'Dropped',
+                  'fa-pause': lead.Status === 'Pending',
+                  'fa-question': !lead.Status
+                }"></i>
+                            {{ lead.Status || 'Unknown' }}
+                        </span>
+                    </td>
+
+                    <!-- Created Date -->
+                    <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
+                        <div>{{ lead.CreatedAt ? (lead.CreatedAt | date:'dd/MM/yyyy') : '-' }}</div>
+                        <div class="text-xs">{{ lead.CreatedAt ? (lead.CreatedAt | date:'hh:mm a') : '' }}</div>
+                    </td>
+
+
+
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Pagination -->
+  <div
+    class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4 rounded-lg shadow-sm">
+    <div class="flex-1 flex justify-between sm:hidden">
+      <button (click)="changePage(-1)" [disabled]="pageNo === 1"
+        class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
+        Previous
+      </button>
+      <button (click)="changePage(1)" [disabled]="pageNo >= totalPages"
+        class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
+        Next
+      </button>
+    </div>
+    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between"
+      >
+      <div>
+        <p class="text-sm text-gray-700">
+          Showing page <span class="font-medium">{{ pageNo }}</span> of <span class="font-medium">{{ totalPages
+            }}</span>
+        </p>
+      </div>
+      <div>
+        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+          <!-- First Page -->
+          <button (click)="goToPage(1)" [disabled]="pageNo === 1"
+            class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
+            <i class="fas fa-angle-double-left"></i>
+          </button>
+          <!-- Previous Page -->
+          <button (click)="changePage(-1)" [disabled]="pageNo === 1"
+            class="relative inline-flex items-center px-2 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <!-- Page Numbers -->
+          <ng-container *ngFor="let page of getPageNumbers(); let i = index">
+            <button (click)="goToPage(page)" [ngClass]="{
+              'bg-blue-600 text-white border-blue-600 hover:bg-blue-700': pageNo === page,
+              'bg-white text-gray-500 border-gray-300 hover:bg-gray-50': pageNo !== page
+            }"
+              class="relative inline-flex items-center px-4 py-2 border text-sm font-medium transition-colors duration-200">
+              {{ page }}
+            </button>
+          </ng-container>
+          <!-- Next Page -->
+          <button (click)="changePage(1)" [disabled]="pageNo >= totalPages"
+            class="relative inline-flex items-center px-2 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+          <!-- Last Page -->
+          <button (click)="goToPage(totalPages)" [disabled]="pageNo >= totalPages"
+            class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-Medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
+            <i class="fas fa-angle-double-right"></i>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </div>

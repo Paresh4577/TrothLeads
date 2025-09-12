@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { authService } from '../../auth/auth.service';
 import { Router } from '@angular/router';
 import { LeadService } from './lead.service';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-leads',
   standalone: false,
@@ -13,6 +14,7 @@ export class LeadsComponent {
   allLeadsLog: any[] = [];
   allLeads: any[] = [];
   filteredLeads: any[] = [];
+  leadCategories: any[] = [];
   private searchDebounceHandle: any;
   showNotificationPanel = false;
   notificationCount = 0;
@@ -77,16 +79,36 @@ export class LeadsComponent {
   loginId: any;
   constructor(private leadService: LeadService, private router: Router) { }
   ngOnInit(): void {
+    this.loginId = localStorage.getItem('UserId');
+    console.log('Login Id in ngOnInit: ', this.loginId);
     this.fetchLeads();
     this.fetchUsers();
     this.leadService.syncData();
     this.fetchAllLeadsLog();
-    this.loginId = localStorage.getItem('UserId');
+    this.loadLeadCategories();
+    this.Notification();
+   
 
     console.log('Login Id is ', this.loginId);
   }
   editLead(id: number) {
     this.router.navigate(['/editlead', id]);
+  }
+
+  loadLeadCategories(): void {
+    this.leadService.getAllLeadcategories().subscribe({
+      next: (res) => {
+        if (res) {
+          this.leadCategories = res.responseData ? JSON.parse(res.responseData) : [];
+          console.log('Lead Categories:', this.leadCategories);
+        } else {
+          console.error('Failed to fetch lead categories:', res.message);
+        }
+      },
+      error: (err) => {
+        console.error('API error while fetching lead categories:', err);
+      }
+    });
   }
 
   // Add this method to your LeadsComponent class
@@ -145,7 +167,7 @@ export class LeadsComponent {
     console.log('payload from fetchLeads ', payload);
 
     this.leadService.getLeads(payload).subscribe((res: any) => {
-      console.log('lead from ts ', res.responseData);
+     
 
       if (res?.responseData) {
         this.leads = JSON.parse(res.responseData);
@@ -193,7 +215,12 @@ export class LeadsComponent {
 
     this.leadService.assignLeadToEmployee(payload).subscribe((res: any) => {
       if (res?.status === 'success' || res?.Status === '200') {
-        alert('Lead assigned successfully');
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Lead Assigned Successfully',
+          confirmButtonColor: '#3085d6'
+        });
         this.fetchLeads(); // reload list
       } else {
         alert('Assignment failed: ' + res.message);
@@ -295,6 +322,7 @@ export class LeadsComponent {
   }
 
   Notification() {
+    console.log('🔔 Notification called for:', this.loginId);
     // Reset notifications
     this.notifications = [];
     this.newLeadNotifications = [];
@@ -403,7 +431,7 @@ export class LeadsComponent {
     this.leadService.getAllLeadsLog().subscribe({
       next: (res) => {
         this.allLeadsLog = res?.responseData ? JSON.parse(res.responseData) : [];
-        console.log("alleadslog",this.allLeadsLog)
+        console.log("alleadslog", this.allLeadsLog)
       },
       error: (err) => {
         console.error('Error fetching leads log:', err);
