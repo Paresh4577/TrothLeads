@@ -131,7 +131,7 @@ export class LeadviewComponent {
 
       this.leadService.addFollowUp(payload).subscribe((res: any) => {
         console.log("res", res);
-        if (res.type === 'Success') {
+        if (res.status === 'success') {
           Swal.fire({
             icon: 'success',
             title: 'Success',
@@ -320,7 +320,7 @@ export class LeadviewComponent {
     };
 
     this.leadService.updateLeadStatus(payload).subscribe((res: any) => {
-      if (res?.status === '200') {
+      if (res?.responseData) {
         // Add status change to follow-ups
         const statusChangePayload = {
           LeadId: this.leadId,
@@ -329,8 +329,8 @@ export class LeadviewComponent {
           ReminderDateTime: null,
         };
 
-        this.leadService.addFollowUp(statusChangePayload).subscribe((followUpRes: any) => {
-          if (followUpRes.type === 'Success') {
+        this.leadService.addFollowUp(statusChangePayload).subscribe((res: any) => {
+          
             Swal.fire({
               icon: 'info', 
               title: 'Lead Status Updated',
@@ -339,7 +339,7 @@ export class LeadviewComponent {
             });
             this.fetchFollowUps(this.leadId); // Refresh timeline
             this.fetchLeadDetails(); // Refresh lead details
-          }
+          
         });
       } else {
         alert('Failed to update status');

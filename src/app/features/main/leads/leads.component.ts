@@ -86,7 +86,7 @@ export class LeadsComponent {
     this.leadService.syncData();
     this.fetchAllLeadsLog();
     this.loadLeadCategories();
-    this.Notification();
+    //this.Notification();
    
 
     console.log('Login Id is ', this.loginId);

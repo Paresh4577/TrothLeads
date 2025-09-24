@@ -37,7 +37,7 @@ export class AddleadComponent {
       Email: ['', [Validators.required, Validators.email]],
       Message: [''],
       Source: ['Manual', Validators.required],
-      CategoryId: [null, Validators.required],
+      ProductId: [null, Validators.required],
       AssignedToUserId: [null],
       CreatedBy: [999],
       type: [''],
@@ -63,6 +63,7 @@ export class AddleadComponent {
   fetchCategory() {
     this.leadService.getCat().subscribe((res: any) => {
       this.categories = JSON.parse(res.responseData || '[]');
+      console.log("hello",this.categories);
     });
   }
 
@@ -70,7 +71,6 @@ export class AddleadComponent {
     this.leadService.getEmp().subscribe((res: any) => {
       const companyId = localStorage.getItem('companyid');
       const userId = localStorage.getItem('UserId');
-      console.log(res.responseData);
       this.users = JSON.parse(res.responseData || '[]').filter(
         (u: any) => u.IsEmployee
       );

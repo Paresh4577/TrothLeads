@@ -45,6 +45,7 @@ export class DashboardComponent {
     this.empCode = localStorage.getItem('Employeecode');
     console.log("emp code", this.empCode)
     this.userName = localStorage.getItem('token');
+     console.log("uname", this.userName)
     const payload = {
       UserId: Number(localStorage.getItem('UserId')),
 
